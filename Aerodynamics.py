@@ -298,3 +298,4 @@ def aerodynamics(quarter_sweep, wingspan, W_start_cruise, W_end_cruise, taper,
 
     print("strutted")
     print(strutted[0] * 290 / 1000 / 1000 / 3600 / range / 75 / crj_fuel)
+
