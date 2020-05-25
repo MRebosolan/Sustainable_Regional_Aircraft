@@ -1,6 +1,7 @@
+###########################################################
 # Parameters
 
-MTOW = 36000
+MTOW = 36000#kg
 V_S, V_C, V_D, V_B, V_A = 0, 0, 0, 0, 0
 V = 0 #Quadratic variable
 G_W, rho, CNmax, S, CLmax, CLa = 0, 0, 0, 0, 0, 0
@@ -12,6 +13,13 @@ Ude = 0 #depends on altitude in ft (above or below 20k)
 mug = 0 
 cbar = 0
 
+###########################################################
+#Conversions
+MTOW = 2.20462*MTOW
+G_W = 2.20462*G_W
+
+##########################################################
+#Calculations
 # Gross Weight (G_W)
 # Same as ramp weight but also considering taxiing fuel
 
