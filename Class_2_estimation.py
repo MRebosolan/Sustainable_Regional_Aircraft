@@ -10,7 +10,7 @@ nacelle_group
 
 propulsion_group =
 engine_installation
-air_induction
+air_induction # included in nacelle
 exhaust
 power_controls
 fuel_system
