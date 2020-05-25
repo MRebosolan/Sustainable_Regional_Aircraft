@@ -36,7 +36,8 @@ V_C = V_B+43#kts
 # Determination of Design Limit Load Factor (nlim pos min)
 
 nlimpos = 2.1+24000/(G_W+10000)
-#nlimpos<3.8
+#nlimpos<3.8 @W_TO
+#nlimpos>2.5 always
 #nlim=4.4
 
 nlimneg = 0.4*nlim
@@ -50,6 +51,11 @@ nlim = 1 + (Kg*Ude*V*CLa)/(498*(G_W/S))
 # Determination of Design Manoeuvering Speed (V_A minimum)
 
 V_A = V_S*nlim**(1/2)
+
+#Determination of Design Diving Speed (V_D minimum)
+
+V_D = 1.25*V_C
+
 
 
 
