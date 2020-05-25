@@ -36,3 +36,4 @@ water
 safety_equipment
 trapped_fuel
 cargo_equipment
+
