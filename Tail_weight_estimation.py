@@ -10,6 +10,8 @@ def hor_tail_weight(Kh, Sh, VD, half_chord_sweep_hor):
     return hor_tail_weight
 
 def Kv_fin_mounted(Sh, zh, Sv, bv):
+    #Already verified via hand calculation
+    #To be used for fin mounted horizontal tails
     Kv = (1 + 0.15*((Sh*zh) / (Sv*bv)))
     return Kv
 
