@@ -1,24 +1,30 @@
-# Parameter
+# Parameters
 
-V_S = 0
-G_W = 0 
-rho = 0
-CNmax = 0
-S = 0
-CLmax = 0 
-V_C = 0 
-kc = 33
-nlimpos = 0
-nlim = 0 #usually 4.4 but check 
-nlimneg = 0
-V_A = 0
-V_B =0 
+MTOW = 36000
+V_S, V_C, V_D, V_B, V_A = 0, 0, 0, 0, 0
 V = 0 #Quadratic variable
+G_W, rho, CNmax, S, CLmax, CLa = 0, 0, 0, 0, 0, 0
+kc = 33
+nlimpos, nlimneg = 0, 0
+nlim = 0 #usually 4.4 but check 
 Kg = 0 #Gust alleviation factor
 Ude = 0 #depends on altitude in ft (above or below 20k)
 mug = 0 
-CLa = 0
 cbar = 0
+
+# Gross Weight (G_W)
+# Same as ramp weight but also considering taxiing fuel
+
+G_W = MTOW/0.99
+
+# Determination of Design Limit Load Factor (nlim pos min)
+
+nlimpos = 2.1+24000/(G_W+10000)
+#nlimpos<3.8 @W_TO
+#nlimpos>2.5 always
+#nlim=4.4
+
+nlimneg = 0.4*nlim
 
 # Determination of Stall Speed
 
@@ -32,15 +38,6 @@ CLmax = 1.1*CNmax
 
 V_C = kc*(G_W/S)**(1/2)
 V_C = V_B+43#kts
-
-# Determination of Design Limit Load Factor (nlim pos min)
-
-nlimpos = 2.1+24000/(G_W+10000)
-#nlimpos<3.8 @W_TO
-#nlimpos>2.5 always
-#nlim=4.4
-
-nlimneg = 0.4*nlim
 
 #Construction of Gust Load Factor Lines
 
