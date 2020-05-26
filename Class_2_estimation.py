@@ -18,9 +18,9 @@ power_controls
 equipment=
 
 flight_control
-hydraulics
+hydraulics #see appendix A
 electrical system
-instrumentation
+instrumentation #jorn
 airconditioning_pressurization
 oxygen_system
 APU
