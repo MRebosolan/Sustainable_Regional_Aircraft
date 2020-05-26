@@ -66,33 +66,18 @@ W_equipment = APU + cargo_equipment + furnishing + instrumentation + oxygen_syst
 
 # equipment=
 
-# flight_control
-# hydraulics #see appendix A
-# electrical system
-# instrumentation #done
-# airconditioning_pressurization# done
-# oxygen_system #done
-# APU # matteo
-# furnishing #jorn
-# baggage_cargo
-# operational_items #included in furnishing
-# ballast #tbd
-# paint
-
-# misc
+flight_control_weight = flightcontrols.flight_controls(MTOW)
+electrical_system_weight = electrical.electrical_torenbeek(V_pax)
+instrumentation_weight = instrumentation.instrumentation_torenbeek(MTOW)
+airconditioning_pressurization_weight = pressurization.pressure_system_weight(lpax)
+oxygen_system_weight = oxygen.oxygen_system_weight(Npax)
+APU_weight = apu.APU_weight_estimation(MTOW)
+furnishing_weight = furnishing.furnishing_gd(N_fdc, N_pax, N_cc, MTOW, P_c)
+baggage_weight = cargo.cargo_handling_weight(Sff)
+paint_weight = paint.paint(MTOW)
 
 
-# # furnishing =
-# # flight_deck
-# # cabin_accomodations
-# # emergency_equipment
 
 
-# # operational_items =
-# # crew
-# # supplies
-# # water
-# # safety_equipment
-# # trapped_fuel
-# # cargo_equipment
+
 
