@@ -21,11 +21,26 @@ import Wing_weight_estimation as wing
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
 W_struct = wing + empennage + fuselage + nacelles + landing_gear
 
 W_powerplant = engines + fuel_system + power_controls 
 
 W_equipment = APU + cargo_equipment + furnishing + instrumentation + oxygen_system + paint + pressurization + flight_control + electrical
+
+
+
 
 
 
