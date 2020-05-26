@@ -1,1 +1,0 @@
-#trentatre trentini entrarono a trento tutti e trentatre trotterellando
