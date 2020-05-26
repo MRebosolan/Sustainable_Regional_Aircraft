@@ -29,15 +29,14 @@ G_W = 2.20462*G_W
 class Envelope:
     
     
-    def G_W(MTOW):
-        return MTOW/0.99
+    G_W=MTOW/0.99
     
     # Determination of Design Limit Load Factor (nlim pos min)
     
-    def nlimpos(G_W):
-        if 2.1+24000/(G_W+10000)<(3.8*MTOW):
-            if 2.1+24000/(G_W+10000)>2.5:
-                return 2.1+24000/(G_W+10000)
+    nlimpos=2.1+24000/(G_W+10000)
+#        if 2.1+24000/(G_W+10000)<(3.8*MTOW):
+#            if 2.1+24000/(G_W+10000)>2.5:
+#                return 
     #nlimpos<3.8 @W_TO
     #nlimpos>2.5 always
     #nlim=4.4
@@ -47,8 +46,7 @@ class Envelope:
     
     # Preiliminary Design Assumption
     
-    def CNmax(CLmax):
-        return 1.1*CLmax
+    CNmax=1.1*CLmax
     
     # Determination of Stall Speed
     
@@ -84,7 +82,7 @@ class Envelope:
     def V_D(V_C):
         return 1.25*V_C
     
-print(CNmax(CLmax))       
+
 
 
 
