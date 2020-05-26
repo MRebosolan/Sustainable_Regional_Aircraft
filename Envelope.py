@@ -7,7 +7,7 @@ import numpy as np
 MTOW = 36000#kg
 V_S, V_C, V_D, V_B, V_A = 0, 0, 0, 0, 0
 V = 0 #Quadratic variable
-G_W, rho, CNmax, S, CLmax, CLa = 0, 0.00080329261, 2.1, 88.04879, 0, 0
+G_W, rho, S, CLmax, CLa = 0, 0.00080329261, 88.04879, 1.4, 0
 kc = 33
 nlimpos, nlimneg = 0, 0
 nlim = 4.4 #usually 4.4 but check 
@@ -18,8 +18,8 @@ cbar = 0
 
 ###########################################################
 #Conversions
-MTOW = 2.20462*MTOW
-G_W = 2.20462*G_W
+MTOW = 2.20462*MTOW 
+G_W = 2.20462*G_W 
 
 ##########################################################
 #Calculations
@@ -83,6 +83,8 @@ class Envelope:
     
     def V_D(V_C):
         return 1.25*V_C
+    
+print(CNmax(CLmax))       
 
 
 
