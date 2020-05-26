@@ -18,8 +18,8 @@ def W_wing(W_zfw, b, half_sweep, n_ult, S, t_r):
     factor = 1 + 0.02-0.05 - 0.05 # + 0.02 for spoilers. - 0.05 for wing mounted engines. -0.05 for non wing mounted gear. fowler flaps: add 0.02
     return x*y*z *factor
 
-weight = W_wing(44245+18055, 76, np.radians(27), 3.5*1.5, 760, 2.16)
-print (weight)
+# weight = W_wing(44245+18055, 76, np.radians(27), 3.5*1.5, 760, 2.16)
+# print (weight)
 # weight_kg = W_wing(20069+8190, 23.2, np.radians(27), 3.5*1.5, 70.6, 0.66)
 # print(weight_kg)
 
@@ -31,5 +31,5 @@ def gd_wing(MTOW, AR, half_sweep, n_ult, S, t_over_c, taper, mach_h):
 
     return upper*factor/lower
 
-gdweight = gd_wing(75000, 7.62, np.radians(27), 3.5*1.5, 760, 0.1, 0.3, 0.5)
-print (gdweight)
+# gdweight = gd_wing(75000, 7.62, np.radians(27), 3.5*1.5, 760, 0.1, 0.3, 0.5)
+# print (gdweight)
