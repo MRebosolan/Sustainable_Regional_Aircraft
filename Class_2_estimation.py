@@ -5,35 +5,45 @@ wing_group
 tail_group
 body_group
 landing_group
-control_group
 nacelle_group
 
+ #still missing
+
 propulsion_group =
-engine_installation
-air_induction # included in nacelle
-exhaust
-power_controls
-fuel_system
-thrust_reverser
+engine_installation #matteo
+
+fuel_system 
+power_controls 
 
 equipment=
-apu
-instrumentation
+
+flight_control
 hydraulics
-fuel_system_2
-air_conditioning
+electrical system
+instrumentation
+airconditioning_pressurization
+oxygen_system
+APU
 furnishing
+baggage_cargo
+operational_items
+ballast
+paint
 
-furnishing =
-flight_deck
-cabin_accomodations
-emergency_equipment
+misc
 
-operational_items =
-crew
-supplies
-water
-safety_equipment
-trapped_fuel
-cargo_equipment
+
+# furnishing =
+# flight_deck
+# cabin_accomodations
+# emergency_equipment
+
+
+# operational_items =
+# crew
+# supplies
+# water
+# safety_equipment
+# trapped_fuel
+# cargo_equipment
 
