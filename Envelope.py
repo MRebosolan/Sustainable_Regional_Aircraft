@@ -1,3 +1,6 @@
+import numpy as np
+
+
 ###########################################################
 # Parameters
 
@@ -46,27 +49,37 @@ def CNmax(CLmax):
 
 # Determination of Stall Speed
 
-V_S = (2(G_W/S)/rho*CNmax)**(1/2)
-
+def V_S(G_W,S,rho,CNmax):
+    return np.sqrt((2(G_W/S)/rho*CNmax))
 
 # Determination of Design Cruise Speed (V_C minimum)
 
-V_C = kc*(G_W/S)**(1/2)
-V_C = V_B+43#kts
+def V_C(kc,G_W,S):
+    return np.sqrt(kc*(G_W/S))
+    
+def V_B(V_C):
+    return V_C-43#kts
 
 #Construction of Gust Load Factor Lines
 
-mug = 2*(G_W/S)/(rho*cbar*CLa)
-Kg = 0.88*mug/(5.3+mug)
-nlim = 1 + (Kg*Ude*V*CLa)/(498*(G_W/S))
+def mug(G_W,S,rho,cbar,CLa):
+    return 2*(G_W/S)/(rho*cbar*CLa)
+
+def Kg(mug):
+    return 0.88*mug/(5.3+mug)
+
+def nlim(Kg,Ude,V,Cla,G_W,S):
+    return 1 + (Kg*Ude*V*CLa)/(498*(G_W/S))
 
 # Determination of Design Manoeuvering Speed (V_A minimum)
 
-V_A = V_S*nlim**(1/2)
+def V_A(V_S,nlim):
+    return np.sqrt(V_S*nlim)
 
 #Determination of Design Diving Speed (V_D minimum)
 
-V_D = 1.25*V_C
+def V_D(V_C):
+    return 1.25*V_C
 
 
 
