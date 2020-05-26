@@ -19,23 +19,31 @@ import Wing_weight_estimation as wing
 
 
 
+W_wing_gd = wing.gd_wing(MTOW, AR, half_sweep, n_ult, S, t_over_c, taper, mach_h)
+W_fuselage_GD = fuselage.W_fuselage_gd (rho, V_dive, MTOW, lf, hf)
+W_nacelle_GD = nacelle.W_nacelle_gd (A_inlet, ln, p2)
+
+W_wing = wing.W_wing(W_zfw, b, half_sweep, n_ult, S, t_r)
+W_empennage = tail.vert_tail_weight()+ tail.hor_tail_weight()
+W_fuselage = fuselage.W_fuselage_torenbeek(V_d, lh, wf, hf, S_fgs) 
+W_nacelles = nacelles.W_nacelle_torenbeek(T_TO)
+landing_gear = LG.LG_weight(Kgr, Wto, Ag, Bg, Cg, Dg)
+
+
+W_engines = engine.engine_weight(dry_thrust_SL, num_engines)
+
+W_fuel_system = fuelsystem.W_fuelsystem (N_t, K_fsp, W_f)
+
+W_power_controls = powercontrols.total(lf, b, W_e, pneumatic = True)
 
 
 
 
 
 
+W_struct = W_wing + W_empennage + W_fuselage + W_nacelles + landing_gear
 
-
-
-
-
-
-
-
-W_struct = wing + empennage + fuselage + nacelles + landing_gear
-
-W_powerplant = engines + fuel_system + power_controls 
+W_powerplant = W_engines + W_fuel_system + W_power_controls 
 
 W_equipment = APU + cargo_equipment + furnishing + instrumentation + oxygen_system + paint + pressurization + flight_control + electrical
 
