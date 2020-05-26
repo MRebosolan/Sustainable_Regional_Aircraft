@@ -4,10 +4,10 @@
 MTOW = 36000#kg
 V_S, V_C, V_D, V_B, V_A = 0, 0, 0, 0, 0
 V = 0 #Quadratic variable
-G_W, rho, CNmax, S, CLmax, CLa = 0, 0, 0, 0, 0, 0
+G_W, rho, CNmax, S, CLmax, CLa = 0, 0.00080329261, 2.1, 88.04879, 0, 0
 kc = 33
 nlimpos, nlimneg = 0, 0
-nlim = 0 #usually 4.4 but check 
+nlim = 4.4 #usually 4.4 but check 
 Kg = 0 #Gust alleviation factor
 Ude = 0 #depends on altitude in ft (above or below 20k)
 mug = 0 
@@ -23,24 +23,31 @@ G_W = 2.20462*G_W
 # Gross Weight (G_W)
 # Same as ramp weight but also considering taxiing fuel
 
-G_W = MTOW/0.99
+def G_W(MTOW):
+    return MTOW/0.99
 
 # Determination of Design Limit Load Factor (nlim pos min)
 
-nlimpos = 2.1+24000/(G_W+10000)
+def nlimpos(G_W):
+    if 2.1+24000/(G_W+10000)<(3.8*MTOW):
+        if 2.1+24000/(G_W+10000)>2.5:
+            return 2.1+24000/(G_W+10000)
 #nlimpos<3.8 @W_TO
 #nlimpos>2.5 always
 #nlim=4.4
 
-nlimneg = 0.4*nlim
+def nlimneg(nlim):
+    return 0.4*nlim
+
+# Preiliminary Design Assumption
+
+def CNmax(CLmax):
+    return 1.1*CLmax
 
 # Determination of Stall Speed
 
 V_S = (2(G_W/S)/rho*CNmax)**(1/2)
 
-# Preiliminary Design Assumption
-
-CLmax = 1.1*CNmax
 
 # Determination of Design Cruise Speed (V_C minimum)
 
