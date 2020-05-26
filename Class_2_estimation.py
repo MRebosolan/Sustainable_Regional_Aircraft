@@ -21,53 +21,59 @@ import Wing_weight_estimation as wing
 
 
 
+W_struct = wing + empennage + fuselage + nacelles + landing_gear
 
-OEW =
+W_powerplant = engines + fuel_system + power_controls +
 
-structural = 
-wing_group
-tail_group
-body_group
-landing_group
-nacelle_group
-
- #still missing
-
-propulsion_group =
-engine_installation #matteo
-
-fuel_system 
-power_controls 
-
-equipment=
-
-flight_control
-hydraulics #see appendix A
-electrical system
-instrumentation #jorn
-airconditioning_pressurization
-oxygen_system
-APU
-furnishing
-baggage_cargo
-operational_items
-ballast
-paint
-
-misc
+W_equipment = APU + cargo_equipment + furnishing + instrumentation + oxygen_system + paint + pressurization + flight_control
 
 
-# furnishing =
-# flight_deck
-# cabin_accomodations
-# emergency_equipment
+# OEW =
+
+# structural =
+# wing_group
+# tail_group
+# body_group
+# landing_group
+# nacelle_group
+
+#  #still missing
+
+# propulsion_group =
+# engine_installation #matteo
+
+# fuel_system
+# power_controls
+
+# equipment=
+
+# flight_control
+# hydraulics #see appendix A
+# electrical system
+# instrumentation #done
+# airconditioning_pressurization# done
+# oxygen_system #done
+# APU # matteo
+# furnishing #jorn
+# baggage_cargo
+# operational_items #included in furnishing
+# ballast #tbd
+# paint
+
+# misc
 
 
-# operational_items =
-# crew
-# supplies
-# water
-# safety_equipment
-# trapped_fuel
-# cargo_equipment
+# # furnishing =
+# # flight_deck
+# # cabin_accomodations
+# # emergency_equipment
+
+
+# # operational_items =
+# # crew
+# # supplies
+# # water
+# # safety_equipment
+# # trapped_fuel
+# # cargo_equipment
 

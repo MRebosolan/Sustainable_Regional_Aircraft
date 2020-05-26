@@ -10,5 +10,5 @@ def furnishing_gd(N_fdc, N_pax, N_cc, MTOW, P_c):
         +109*((N_pax*(1+P_c)/100)**0.505) + 0.771*(MTOW/1000)
         
 
-def furnishing_torenbeek(MTOW, W_F):
-    return 0.211*((MTOW-W_F)**0.91)
+# def furnishing_torenbeek(MTOW, W_F):
+#     return 0.211*((MTOW-W_F)**0.91)
