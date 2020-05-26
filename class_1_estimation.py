@@ -177,7 +177,50 @@ def CLASS1WEIGHTHYBRID(ratio):
     HYDROGEN=FUEL-KEROSENE
     INFO=[int(MTOW),int(OEW),int(FUEL),int(W_payload),int(MZFW),int(KEROSENE),int(HYDROGEN)]
     return(INFO)    
+FULLHYDRO=[27208, 17246, 1986, 7975, 25221, 219, 1766]
+mtowlist=[]
+xlist=[]
+oewlist=[]
+kerosenelist=[]
+hydrogenlist=[]
+tfuellist=[]
+import matplotlib.pyplot as plt
+
+
+for i in range(0,101):
+    outputc1h=CLASS1WEIGHTHYBRID(i/100)
+    mtowlist.append(outputc1h[0])
+    oewlist.append(outputc1h[1])
+    kerosenelist.append(outputc1h[5])
+    hydrogenlist.append(outputc1h[6])
+    tfuellist.append(outputc1h[2])
     
+    xlist.append(i)
+
+plt.subplot(1,2,1)
+plt.plot(xlist,mtowlist,label='MTOW')  
+plt.plot(xlist,oewlist,label='OEW')
+plt.plot([0,100],[28992,28992],label='MTOW kerosene reserve frac')
+plt.plot([0,100],[18273,18273],label='OEW kerosene reserve frac')
+
+plt.ylabel('WEIGHT [kg]')
+plt.xlabel('%MASS OF HYDROGEN IN MIXTURE')
+plt.legend()
+
+plt.subplot(1,2,2)
+plt.plot(xlist,kerosenelist,label='kerosene mass')
+plt.plot(xlist,hydrogenlist,label='hydrogen mass')
+plt.plot(xlist,tfuellist,label='total fuel mass')
+plt.plot([0,100],[660,660],label='kerosene in kerosene reserve frac')
+plt.plot([0,100],[2084,2084],label='hydrogen in kerosene reserve frac')
+plt.plot([0,100],[2744,2744],label='total fuel in kerosene reserve frac')
+
+plt.ylabel('WEIGHT [kg]')
+plt.xlabel('%MASS OF HYDROGEN IN MIXTURE')
+plt.legend()
+plt.show() 
+    
+
+RATIO20PERCENTHYDROGEN=[34036, 20214, 5846, 7975, 28189, 4676, 1169]
 RATIO60PERCENTHYDROGEN=[30187, 18480, 3731, 7975, 26455, 1492, 2239]    
 hydroandkerosenereserve=[28992, 18273, 2744, 7975, 26248, 660, 2084]
-FULLHDYRO=[27208, 17246, 1986, 7975, 25221, 219, 1766]
