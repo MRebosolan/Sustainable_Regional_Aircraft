@@ -53,10 +53,13 @@ V_S=(np.sqrt(2*(91.391484)/(rho*CNmax)))*0.592484
 
 # Determination of Design Cruise Speed (V_C minimum)
 
+V_B=161.6#kts
+#V_B=196.33#kts
+
 V_C=np.sqrt(91.391484)*kc
+V_C=V_B+43#kts
 #V_C=186.91#kts
-    
-V_B=V_C-43#kts
+
 
 V_H=175#kts
 
@@ -107,10 +110,10 @@ constlist2= np.arange(V_A,V_D)
 lits=np.arange(0,V_C)
 
 plt.plot(constlist,nlimpos*np.ones(300),'--',color = 'r')
-plt.plot(np.arange(0,V_C),np.linspace(1,nlimpos,187),'--',color = 'g')
-plt.plot(np.arange(0,V_C),np.linspace(1,-1,187),'--',color = 'g')
-plt.plot(np.arange(0,V_D),np.linspace(1,nlimpos,369),'--',color = 'g')
-plt.plot(np.arange(0,V_D),np.linspace(1,-1,369),'--',color = 'g')
+plt.plot(np.arange(0,V_C),np.linspace(1,nlimpos,205),'--',color = 'g')
+plt.plot(np.arange(0,V_C),np.linspace(1,-1,205),'--',color = 'g')
+plt.plot(np.arange(0,V_D),np.linspace(1,nlimpos,256),'--',color = 'g')
+plt.plot(np.arange(0,V_D),np.linspace(1,-1,256),'--',color = 'g')
 plt.plot(V_C*np.ones(100),np.linspace(nlimpos,0,100),'--',color = 'g')
 plt.plot(V_A*np.ones(100),np.linspace(nlimpos,0,100),'--',color = 'g')
 plt.plot(V_H*np.ones(100),np.linspace(0,-1,100),'--',color = 'g')
