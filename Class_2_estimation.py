@@ -52,7 +52,7 @@ lf = toft(input.lf)
 hf = toft(input.hf)
 A_inlet = tosqft(input.A_inlet)
 ln = toft(input.ln)
-p2 = input.p2 #to psf, its some sort of pressure of the engine
+
 
 b = toft(nput.b)
 t_r= toft(input.t_r)
@@ -104,7 +104,7 @@ while abs((OEW_class1_kg - OEWINPUT)*100/OEWINPUT)>= 0.5 and iterate < 5000:
 
     W_wing_gd = wing.gd_wing(MTOW, AR, half_sweep, n_ult, S, t_over_c, taper, mach_h)
     W_fuselage_GD = fuselage.W_fuselage_gd (rho, V_dive, MTOW, lf, hf)
-    W_nacelle_GD = nacelles.W_nacelle_gd (A_inlet, ln, p2)
+    W_nacelle_GD = nacelles.W_nacelle_torenbeek (T_TO)
     
     W_wing = wing.W_wing(W_zfw, b, half_sweep, n_ult, S, t_r)
     W_empennage = tail.vert_tail_weight()+ tail.hor_tail_weight()
