@@ -17,7 +17,7 @@ V_dive = 300 #estimate, knots
 lf = 30 #estimate, lil shorter than CRJ as 5 seat rows are used
 hf = 2 #estimate
 A_inlet = 1.17 #m
-ln =
+ln = 0.8129 #m 1/4 of CRJ engine length
 p2 =
 W_zfw = #zero f
 b = #wingspan [m]
@@ -36,8 +36,7 @@ P_c =
 Sff =
 N_eng = 2
 N_t =
-rho_hydrogen = 33.2307 #lb/gal
-
+rho_hydrogen = 71 #g/l
 H_to_ker_ratio =
 
 LD_c = 15
