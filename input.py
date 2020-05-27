@@ -38,8 +38,8 @@ N_t = 2
 rho_hydrogen = 71 #g/l
 H_to_ker_ratio = 0
 Sh = 20.75
-half_sweep_hor = 20 #deg
-half_sweep_vert = 35 #deg
+half_chord_sweep_hor = 20 #deg
+half_chord_sweep_vert = 35 #deg
 
 Sv = 13.36
 bv = 7.57 #m good ol' CRJ700

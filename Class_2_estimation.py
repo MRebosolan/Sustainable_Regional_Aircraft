@@ -19,7 +19,8 @@ import Wing_weight_estimation as wing
 from class_1_estimation import CLASS1WEIGHTHYBRID
 import input
 
-
+import numpy as np
+import matplotlib.pyplot as plt
 def to_pounds(kg):
     return kg * 2.20462262
 
@@ -71,12 +72,12 @@ P_c = input.P_c #should be in psf
 Sff = tosqft(input.Sff)
 
 #tails:
-Sv = input.Sv
+Sv = tosqft(input.Sv)
 half_chord_sweep_hor = input.half_chord_sweep_hor
 half_chord_sweep_vert = input.half_chord_sweep_vert
-bv = input.bv
-Sh = input.Sh
-zh = input.zh
+bv = toft(input.bv)
+Sh = tosqft(input.Sh)
+zh = toft(input.zh)
 
 
 N_eng = input.N_eng
@@ -159,7 +160,7 @@ while abs((OEW_class1_kg - OEWINPUT)*100/OEWINPUT)>= 0.5 and iterate < 5000:
     
     W_struct = W_wing + W_empennage + W_fuselage + W_nacelles + W_landing_gear
     
-    W_powerplant = W_engines + W_fuel_system + W_power_controls
+    W_powerplant = W_engines + W_fuel_system + W_power_controls[0]
     
     W_equipment = APU_weight + cargo_equipment_weight + furnishing_weight + instrumentation_weight + oxygen_system_weight + paint_weight + airconditioning_pressurization_weight + flight_control_weight + electrical_system_weight
     
@@ -170,6 +171,7 @@ while abs((OEW_class1_kg - OEWINPUT)*100/OEWINPUT)>= 0.5 and iterate < 5000:
     OEWINPUT = to_kg(OEW_class2)
     OEW_plot_class2.append(OEWINPUT)
 
-
+plt.figure()
 plt.plot(np.arange(0, len(OEW_plot_class1)), OEW_plot_class1)
 plt.plot(np.arange(0, len(OEW_plot_class2)), OEW_plot_class2)
+plt.show()
