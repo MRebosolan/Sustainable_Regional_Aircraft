@@ -48,7 +48,6 @@ lh =input.lg
 T_TO = input.T_TO
 
 Kgr =
-Ag, Bg, Cg, Dg = #look at LG_weight_estimation.py for coefficients
 V_pax = input.V_pax
 lpax =input.lpax
 Npax =input.Npax
