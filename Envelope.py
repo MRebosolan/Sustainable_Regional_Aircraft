@@ -5,9 +5,9 @@ import matplotlib.pyplot as plt
 # Parameters
 
 MTOW = 36000#kg
-V_S, V_C, V_D, V_B, V_A = 0, 0, 0, 0, 0
+V_S, V_C, V_D, V_B, V_A, V_H = 0, 0, 0, 0, 0, 0
 V = 0 #Quadratic variable
-G_W, rho, S, CLmax, CLa, CNmax = 0, 0.00080329261, 88.04879, 1.4, 0, 0 
+G_W, rho, S, CLmax, CLa, CNmax = 0, 0.00080329261, 871.88, 1.8, 0, 0 
 kc = 33
 nlimpos, nlimneg = 0, 0
 nlim = 4.4 #usually 4.4 but check 
@@ -17,9 +17,10 @@ mug = 0
 cbar = 0
 
 ###########################################################
-#Conversions
+#Conversions to Imperial 
 MTOW = 2.20462*MTOW 
 G_W = 2.20462*G_W 
+S = 10.7639*S
 
 ##########################################################
 #Calculations
@@ -27,6 +28,7 @@ G_W = 2.20462*G_W
 # Same as ramp weight but also considering taxiing fuel
 
 G_W=MTOW/0.99
+#S=MTOW*10.7639/(4375.84)
 
 # Determination of Design Limit Load Factor (nlim pos min)
 
@@ -46,26 +48,27 @@ CNmax=1.1*CLmax
 
 # Determination of Stall Speed
 
-#V_S=np.sqrt((2(G_W/S)/rho*CNmax))
-V_S=130#kts
+V_S=(np.sqrt(2*(91.391484)/(rho*CNmax)))*0.592484
+V_S=137#kts
 
 # Determination of Design Cruise Speed (V_C minimum)
 
 V_C=np.sqrt(kc*(G_W/S))
-V_C=200#kts
+V_C=295#kts
     
 V_B=V_C-43#kts
-V_B=190#kts
+
+V_H=175#kts
 
 # Determination of Design Manoeuvering Speed (V_A minimum)
 
 V_A=np.sqrt(V_S*nlim)
-V_A=160#kts
+V_A=217#kts
 
 #Determination of Design Diving Speed (V_D minimum)
 
 V_D=1.25*V_C
-V_D=240#kts    
+V_D=369#kts    
 
 #Construction of Gust Load Factor Lines
 
@@ -81,18 +84,52 @@ def nlim(Kg,Ude,V,Cla,G_W,S):
 ################################################################
 # Plotting
 
-quadlist1=[0,1,nlimpos]
-quadlist2=[0,V_S,V_A]
-quad=np.polyfit(quadlist1,quadlist2,2)    
+# Quadratics
+quadlist1=[0,V_S,V_A]
+quadlist2=[0,1,nlimpos]
+quadlist3=[0,V_S,V_H]
+quadlist4=[0,-0.6,-1]
+
+quad = np.polyfit(quadlist1, quadlist2, 2)
+quad2 = np.polyfit(quadlist3, quadlist4, 2)
+f = np.poly1d(quad)
+f2 = np.poly1d(quad2)
+
+x_new = np.linspace(quadlist1[0], quadlist1[-1], 50)
+x_new2 = np.linspace(quadlist3[0], quadlist3[-1], 50)
+y_new = f(x_new)
+y_new2 = f2(x_new2)
+
+
+# Linears
 constlist= np.arange(0,300)
-constlist4= np.arange(V_A,V_D)
+constlist2= np.arange(V_A,V_D)
+lits=np.arange(0,V_C)
 
+plt.plot(constlist,nlimpos*np.ones(300),'--',color = 'r')
+plt.plot(np.arange(0,V_C),np.linspace(1,nlimpos,295),'--',color = 'g')
+plt.plot(np.arange(0,V_C),np.linspace(1,-1,295),'--',color = 'g')
+plt.plot(np.arange(0,V_D),np.linspace(1,nlimpos,369),'--',color = 'g')
+plt.plot(np.arange(0,V_D),np.linspace(1,-1,369),'--',color = 'g')
+plt.plot(V_C*np.ones(100),np.linspace(nlimpos,0,100),'--',color = 'g')
+plt.plot(V_A*np.ones(100),np.linspace(nlimpos,0,100),'--',color = 'g')
+plt.plot(V_H*np.ones(100),np.linspace(0,-1,100),'--',color = 'g')
+plt.plot(constlist,-1*np.ones(300),'--', color = 'r')
+plt.plot(constlist2,nlimpos*np.ones(V_D-V_A),'b')
+plt.plot(V_D*np.ones(100),np.linspace(nlimpos,0,100),'b')
+plt.plot(np.arange(V_C,V_D),np.arange(-1,0,1/74),'b')
+plt.plot(np.linspace(V_H,V_C,100),-1*np.ones(100),'b')
+plt.plot(x_new,y_new,'b')
+plt.plot(x_new2,y_new2,'b')
+plt.text(V_A,nlimpos,'A')
+plt.text(V_H,-1,'H')
+plt.text(V_C,-1,'F')
+plt.text(V_D,0,'E')
+plt.text(V_D,nlimpos,'D')
+plt.text(V_C,nlimpos,'C')
 
-plt.plot(constlist,nlimpos*np.ones(300),'--')
-plt.plot(constlist,nlimneg*np.ones(300),'--')
-plt.plot(constlist4,nlimpos*np.ones(80))
-plt.plot(V_D*np.ones(4),np.arange(nlimpos,nlimneg+1,-1.0))
-plt.plot(np.arange(V_C,V_D),np.arange(nlimneg,nlimneg+1,1/40))
+plt.ylim(-3,5)
+
 
 plt.axhline(y=0, color='k')
 plt.axvline(x=0, color='k')
