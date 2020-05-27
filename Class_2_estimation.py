@@ -42,7 +42,7 @@ half_sweep = input.half_sweep
 n_max =  input.n_max
 n_ult = 1.5* n_max
 
-S = tosqft(input.S)
+# S = tosqft(input.S)
 t_over_c = input.t_over_c
 taper = input.taper	
 mach_h = input.mach_h
@@ -54,12 +54,12 @@ A_inlet = tosqft(input.A_inlet)
 ln = toft(input.ln)
 
 
-b = toft(nput.b)
+# b = toft(input.b)
 t_r= toft(input.t_r)
 widthf = toft(input.widthf) #max fuselage width
 S_fgs = tosqft(input.S_fgs) #fuselage gross shell area
 lh = toft(input.lh)
-T_TO = to_pounds(input.T_TO/9.81)
+# T_TO = to_pounds(input.T_TO/9.81)
 
 Kgr = input.Kgr
 V_pax = input.V_pax / (0.3048**3)
@@ -69,10 +69,21 @@ N_fdc =input.N_fdc
 N_cc =input.N_cc
 P_c = input.P_c #should be in psf
 Sff = tosqft(input.Sff)
-T_dry_SL = T_TO
+
+#tails:
+Sv = input.Sv
+half_chord_sweep_hor = input.half_chord_sweep_hor
+half_chord_sweep_vert = input.half_chord_sweep_vert
+bv = input.bv
+Sh = input.Sh
+zh = input.zh
+
 
 N_eng = input.N_eng
 N_t = input.N_t
+wingloading = input.wingloading #still metric
+powerloading = input.powerloading
+
 
 
 
@@ -90,6 +101,15 @@ OEW_plot_class2 = []
 while abs((OEW_class1_kg - OEWINPUT)*100/OEWINPUT)>= 0.5 and iterate < 5000:
     class1 = CLASS1WEIGHTHYBRID(ratio,OEWINPUT)
     MTOW_kg = class1[0]
+    S_metric = MTOW_kg /wingloading
+    b_metric = (S_metric * AR)**0.5
+    T_TO_metric = MTOW_kg*powerloading
+    T_TO = to_pounds(T_TO_metric/9.81)
+    T_dry_SL = T_TO
+    b = toft(b_metric)
+    S = tosqft(S_metric)
+    
+    
     OEW_class1_kg = class1[1]
     OEW_plot_class1.append(OEW_class1_kg)
     M_zfw_kg = class1[4]
@@ -107,7 +127,7 @@ while abs((OEW_class1_kg - OEWINPUT)*100/OEWINPUT)>= 0.5 and iterate < 5000:
     W_nacelle_GD = nacelles.W_nacelle_torenbeek (T_TO)
     
     W_wing = wing.W_wing(W_zfw, b, half_sweep, n_ult, S, t_r)
-    W_empennage = tail.vert_tail_weight()+ tail.hor_tail_weight()
+    W_empennage = tail.vert_tail_weight( Sv, V_dive, half_chord_sweep_vert, bv, Sh, zh)+ tail.hor_tail_weight(Sh, V_dive, half_chord_sweep_hor)
     W_fuselage = fuselage.W_fuselage_torenbeek(V_dive, lh, widthf, hf, S_fgs)
     W_nacelles = nacelles.W_nacelle_torenbeek(T_TO)
     W_landing_gear = LG.LG_weight(Kgr, MTOW)
