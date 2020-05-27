@@ -38,8 +38,7 @@ nlimpos=2.1+24000/(G_W+10000)
 #nlimpos>2.5 always
 #nlim=4.4
 
-def nlimneg(nlim):
-    return 0.4*nlim
+nlimneg= -0.4*nlim
 
 # Preiliminary Design Assumption
 
@@ -82,9 +81,18 @@ def V_D(V_C):
 ################################################################
 # Plotting
     
-constlist = V_S*[3]
+constlist= np.arange(0,100)
+constlist2= nlimpos*np.ones(100)
+constlist3= nlimneg*np.ones(100)
 
-plt.plot
+plt.plot(constlist,constlist2,'--')
+plt.plot(constlist,constlist3,'--')
+
+plt.axhline(y=0, color='k')
+plt.axvline(x=0, color='k')
+
+plt.show()
+
 
 
 
