@@ -48,6 +48,14 @@ V_c=230.3
 V_c2=0.8*V_c
 V_loiter=0.6*V_c
 
+cj_ck = 1.98291 * 10 ** (-5)  # kerosene cj
+cj_c = cj_ck * 0.349 * H_to_ker_ratio + cj_ck * (1 - H_to_ker_ratio)
+
+cj_ck2 = 1.84128 * 10 ** (-5)
+cj_c2 = cj_ck2 * 0.349 * H_to_ker_ratio + cj_ck2 * (1 - H_to_ker_ratio)
+cj_kloiter = 1.41637 * 10 ** (-5)
+cj_loiter = cj_kloiter * 0.349 * H_to_ker_ratio + cj_kloiter * (1 - H_to_ker_ratio)
+
 W_pax=93 #includes luggage kg
 W_cargo=1000 #kg
 n_crew= N_fdc+N_cc
