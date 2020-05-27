@@ -110,7 +110,7 @@ while abs((OEW_class1_kg - OEWINPUT)*100/OEWINPUT)>= 0.5 and iterate < 5000:
     W_empennage = tail.vert_tail_weight()+ tail.hor_tail_weight()
     W_fuselage = fuselage.W_fuselage_torenbeek(V_dive, lh, widthf, hf, S_fgs)
     W_nacelles = nacelles.W_nacelle_torenbeek(T_TO)
-    W_landing_gear = LG.LG_weight(Kgr, MTOW, Ag, Bg, Cg, Dg)
+    W_landing_gear = LG.LG_weight(Kgr, MTOW)
     
     
     #--------- EQUIPMENT WEIGHT ------------#
@@ -149,3 +149,7 @@ while abs((OEW_class1_kg - OEWINPUT)*100/OEWINPUT)>= 0.5 and iterate < 5000:
     
     OEWINPUT = to_kg(OEW_class2)
     OEW_plot_class2.append(OEWINPUT)
+
+
+plt.plot(np.arange(0, len(OEW_plot_class1)), OEW_plot_class1)
+plt.plot(np.arange(0, len(OEW_plot_class2)), OEW_plot_class2)

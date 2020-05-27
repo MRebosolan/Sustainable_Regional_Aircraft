@@ -37,7 +37,6 @@ N_t = 2
 rho_hydrogen = 71 #g/l
 H_to_ker_ratio = 0
 
-
 LD_c = 15
 LD_c2 = 17
 LD_loiter = 17
