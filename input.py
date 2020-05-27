@@ -1,5 +1,6 @@
 #input parameters
 import numpy as np
+import Tail_weight_estimation as tail
 
 # MTOM = 36000 # estimate, [kg]
 # MTOW = MTOM * 9.81 #N
@@ -36,6 +37,13 @@ N_eng = 2
 N_t = 2
 rho_hydrogen = 71 #g/l
 H_to_ker_ratio = 0
+Sh =
+half_sweep_hor =
+half_sweep_vert =
+zh =
+Sv =
+bv =
+Kv = tail.Kv_fin_mounted(Sh, zh, Sv, bv)
 
 LD_c = 15
 LD_c2 = 17
