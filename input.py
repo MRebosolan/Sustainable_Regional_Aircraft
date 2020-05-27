@@ -52,3 +52,5 @@ W_cargo=1000 #kg
 n_crew= N_fdc+N_cc
 W_payload=Npax*W_pax+W_cargo
 Design_range=2000#[km]
+
+hydrogenratio = 0

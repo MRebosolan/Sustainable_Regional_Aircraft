@@ -27,7 +27,6 @@ def to_kg (lbs):
     return lbs/2.20462262
 #------------- INPUT PARAMETERS ----------------#
 
-MTOW = input.MTOW
 AR = input.AR
 half_sweep = input.half_sweep
 n_max =  input.n_max
@@ -67,16 +66,22 @@ N_t = input.N_t
 K_fsp = input.K_fsp
 W_fuel = input.W_fuel
 
-#call class 1 here
-class1 = CLASS1WEIGHTHYBRID(ratio,OEWINPUT = 0)
-MTOW = class1[0]
-OEW_class1 = class1[1]
-M_zfw = class1[4]
-M_fuel = class1[2]
 
+ratio = input.hydrogenratio
 
-while abs((OEW_class1 - OEW_class2)*100/OEW_class2)>= 0.5:
-    class1 = CLASS1WEIGHTHYBRID(ratio,OEWINPUT = 0)
+iterate = 0
+OEWINPUT = 0
+
+while abs((OEW_class1 - OEW_class2)*100/OEW_class2)>= 0.5 and iterate < 5000:
+    class1 = CLASS1WEIGHTHYBRID(ratio,OEWINPUT)
+    MTOW_kg = class1[0]
+    OEW_class1_kg = class1[1]
+    M_zfw_kg = class1[4]
+    # M_fuel_kg = class1[2]
+    
+    OEW_class1 = to_pounds(OEW_class1_kg)
+    MTOW = to_pounds(MTOW_kg)
+
     
 #--------- STRUCTURAL WEIGHT --------------#
 
@@ -107,7 +112,7 @@ paint_weight = paint.paint(MTOW)
 
 W_engines = engine.engine_weight(T_dry_SL, N_eng)
 # W_fuel_system = fuelsystem.W_fuelsystem (N_t, K_fsp, W_fuel)
-W_fuel_system = class1[-1]
+W_fuel_system = to_pounds(class1[-1])
 W_power_controls = powercontrols.total(lf, b, W_engines, pneumatic = True)
 
 
