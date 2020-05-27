@@ -56,7 +56,7 @@ ln = toft(input.ln)
 
 b = toft(nput.b)
 t_r= toft(input.t_r)
-wf = toft(input.wf) #max fuselage width
+widthf = toft(input.widthf) #max fuselage width
 S_fgs = tosqft(input.S_fgs) #fuselage gross shell area
 lh = toft(input.lh)
 T_TO = to_pounds(input.T_TO/9.81)
@@ -108,7 +108,7 @@ while abs((OEW_class1_kg - OEWINPUT)*100/OEWINPUT)>= 0.5 and iterate < 5000:
     
     W_wing = wing.W_wing(W_zfw, b, half_sweep, n_ult, S, t_r)
     W_empennage = tail.vert_tail_weight()+ tail.hor_tail_weight()
-    W_fuselage = fuselage.W_fuselage_torenbeek(V_dive, lh, wf, hf, S_fgs)
+    W_fuselage = fuselage.W_fuselage_torenbeek(V_dive, lh, widthf, hf, S_fgs)
     W_nacelles = nacelles.W_nacelle_torenbeek(T_TO)
     W_landing_gear = LG.LG_weight(Kgr, MTOW, Ag, Bg, Cg, Dg)
     

@@ -46,7 +46,7 @@ V_c=230.3
 V_c2=0.8*V_c
 V_loiter=0.6*V_c
 
-cj_ck = 1.98291 * 10 ** (-5)  # kerosene cj
+cj_ck = 1.6 * 10 ** (-5)  # kerosene cj
 cj_c = cj_ck * 0.349 * H_to_ker_ratio + cj_ck * (1 - H_to_ker_ratio)
 
 cj_ck2 = 1.84128 * 10 ** (-5)
