@@ -21,10 +21,11 @@ import input
 #------------- INPUT PARAMETERS ----------------#
 
 MTOW = input.MTOW
-AR =
-half_sweep =
-n_max = 
+AR = input.AR
+half_sweep = input.half_sweep
+n_max =  input.n_max
 n_ult = 1.5* n_max
+<<<<<<< HEAD
 S =
 t_over_c =
 taper =
@@ -43,20 +44,47 @@ wf = 13.911 #max fuselage width
 S_fgs = #fuselage gross shell area
 lh =
 T_TO =
+=======
+S = input.S
+t_over_c = input.t_over_c
+taper = input.taper	
+mach_h = input.mach_h
+rho = 1.225 #estimate, still convert to imperial!!!
+V_dive = input.V_dive
+lf = input.lf
+hf =input.hf
+A_inlet = input.A_inlet
+ln = input.ln
+p2 = input.p2
+W_zfw = input.W_zfw
+b = input.b
+t_r= input.t_r
+wf = input.wf #max fuselage width
+S_fgs = input.S_fgs #fuselage gross shell area
+lh =input.lg
+T_TO = input.T_TO
+>>>>>>> ffc7b3d9454bf07fad6bc6faee31974e90da061a
 Kgr =
 Ag, Bg, Cg, Dg = #look at LG_weight_estimation.py for coefficients
-V_pax =
-lpax =
-Npax =
-N_fdc =
-N_cc =
-P_c =
-Sff =
+V_pax = input.V_pax
+lpax =input.lpax
+Npax =input.Npax
+N_fdc =input.N_fdc
+N_cc =input.N_cc
+P_c = input.P_c
+Sff = input.Sff
 T_dry_SL = T_TO
+<<<<<<< HEAD
 N_eng = 2
 N_t =
 K_fsp = 33.0862
 W_fuel =
+=======
+N_eng = input.N_eng
+N_t = input.N_t
+K_fsp = input.K_fsp
+W_fuel = input.W_fuel
+>>>>>>> ffc7b3d9454bf07fad6bc6faee31974e90da061a
 
 
 #--------- STRUCTURAL WEIGHT --------------#

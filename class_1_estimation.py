@@ -13,7 +13,7 @@ def CLASS1WEIGHT(hydro):
     LD_c=15
     LD_c2=17
     LD_loiter=17
-    
+    HYDROGEN_DENSITY=70.8
     V_c=230.3
     V_c2=0.8*V_c
     V_loiter=0.6*V_c
@@ -83,7 +83,9 @@ def CLASS1WEIGHT(hydro):
     MZFW=MTOW-FUEL
     KEROSENE=MTOW*(Mff8-Mff10)
     HYDROGEN=FUEL-KEROSENE
-    INFO=[int(MTOW),int(OEW),int(FUEL),int(W_payload),int(MZFW),int(KEROSENE),int(HYDROGEN)]
+    HYDROGENVOLUME=HYDROGEN/HYDROGEN_DENSITY
+
+    INFO=[int(MTOW),int(OEW),int(FUEL),int(W_payload),int(MZFW),int(KEROSENE),int(HYDROGEN),int(HYDROGENVOLUME)]
     return(INFO)
     
     
@@ -99,6 +101,8 @@ def CLASS1WEIGHTHYBRID(ratio):
     W_payload=n_pax*W_pax+W_cargo
     Design_range=2000#[km]
     g=9.81
+    HYDROGEN_DENSITY=70.8 #kg per cubic meter
+    CABIN_LENGTH=20#meters
     
     LD_c=15
     LD_c2=17
@@ -175,7 +179,9 @@ def CLASS1WEIGHTHYBRID(ratio):
     MZFW=MTOW-FUEL
     KEROSENE=(1-ratio)*FUEL
     HYDROGEN=FUEL-KEROSENE
-    INFO=[int(MTOW),int(OEW),int(FUEL),int(W_payload),int(MZFW),int(KEROSENE),int(HYDROGEN)]
+    HYDROGENVOLUME=HYDROGEN/HYDROGEN_DENSITY
+    TANK_DIAMETER=2*(HYDROGENVOLUME/CABIN_LENGTH/3.14159)**0.5
+    INFO=[int(MTOW),int(OEW),int(FUEL),int(W_payload),int(MZFW),int(KEROSENE),int(HYDROGEN),HYDROGENVOLUME,TANK_DIAMETER]
     return(INFO)    
 FULLHYDRO=[27208, 17246, 1986, 7975, 25221, 219, 1766]
 mtowlist=[]
@@ -184,6 +190,10 @@ oewlist=[]
 kerosenelist=[]
 hydrogenlist=[]
 tfuellist=[]
+
+hvollist=[]
+tdiameterlist=[]
+
 import matplotlib.pyplot as plt
 
 
@@ -194,10 +204,12 @@ for i in range(0,101):
     kerosenelist.append(outputc1h[5])
     hydrogenlist.append(outputc1h[6])
     tfuellist.append(outputc1h[2])
+    hvollist.append(outputc1h[7])
+    tdiameterlist.append(outputc1h[8])
     
     xlist.append(i)
 
-plt.subplot(1,2,1)
+plt.subplot(2,2,1)
 plt.plot(xlist,mtowlist,label='MTOW')  
 plt.plot(xlist,oewlist,label='OEW')
 plt.plot([0,100],[28992,28992],label='MTOW kerosene reserve frac')
@@ -207,7 +219,7 @@ plt.ylabel('WEIGHT [kg]')
 plt.xlabel('%MASS OF HYDROGEN IN MIXTURE')
 plt.legend()
 
-plt.subplot(1,2,2)
+plt.subplot(2,2,2)
 plt.plot(xlist,kerosenelist,label='kerosene mass')
 plt.plot(xlist,hydrogenlist,label='hydrogen mass')
 plt.plot(xlist,tfuellist,label='total fuel mass')
@@ -216,6 +228,17 @@ plt.plot([0,100],[2084,2084],label='hydrogen in kerosene reserve frac')
 plt.plot([0,100],[2744,2744],label='total fuel in kerosene reserve frac')
 
 plt.ylabel('WEIGHT [kg]')
+plt.xlabel('%MASS OF HYDROGEN IN MIXTURE')
+plt.legend()
+plt.subplot(2,2,3)
+plt.plot(xlist,hvollist,label='Hydrogen volume')
+plt.ylabel('Volume [CUBIC METERS]')
+plt.xlabel('%MASS OF HYDROGEN IN MIXTURE')
+plt.legend()
+
+plt.subplot(2,2,4)
+plt.plot(xlist,tdiameterlist,label='Tank diameter')
+plt.ylabel('Meters')
 plt.xlabel('%MASS OF HYDROGEN IN MIXTURE')
 plt.legend()
 plt.show() 
