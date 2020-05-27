@@ -38,7 +38,7 @@ nlimpos=2.1+24000/(G_W+10000)
 #nlimpos>2.5 always
 #nlim=4.4
 
-nlimneg= -0.4*nlim
+nlimneg=-0.4*nlim
 
 # Preiliminary Design Assumption
 
@@ -46,16 +46,26 @@ CNmax=1.1*CLmax
 
 # Determination of Stall Speed
 
-def V_S(G_W,S,rho,CNmax):
-    return np.sqrt((2(G_W/S)/rho*CNmax))
+#V_S=np.sqrt((2(G_W/S)/rho*CNmax))
+V_S=130#kts
 
 # Determination of Design Cruise Speed (V_C minimum)
 
-def V_C(kc,G_W,S):
-    return np.sqrt(kc*(G_W/S))
+V_C=np.sqrt(kc*(G_W/S))
+V_C=200#kts
     
-def V_B(V_C):
-    return V_C-43#kts
+V_B=V_C-43#kts
+V_B=190#kts
+
+# Determination of Design Manoeuvering Speed (V_A minimum)
+
+V_A=np.sqrt(V_S*nlim)
+V_A=160#kts
+
+#Determination of Design Diving Speed (V_D minimum)
+
+V_D=1.25*V_C
+V_D=240#kts    
 
 #Construction of Gust Load Factor Lines
 
@@ -68,28 +78,26 @@ def Kg(mug):
 def nlim(Kg,Ude,V,Cla,G_W,S):
     return 1 + (Kg*Ude*V*CLa)/(498*(G_W/S))
 
-# Determination of Design Manoeuvering Speed (V_A minimum)
-
-def V_A(V_S,nlim):
-    return np.sqrt(V_S*nlim)
-
-#Determination of Design Diving Speed (V_D minimum)
-
-def V_D(V_C):
-    return 1.25*V_C
-    
 ################################################################
 # Plotting
-    
-constlist= np.arange(0,100)
-constlist2= nlimpos*np.ones(100)
-constlist3= nlimneg*np.ones(100)
 
-plt.plot(constlist,constlist2,'--')
-plt.plot(constlist,constlist3,'--')
+quadlist1=[0,1,nlimpos]
+quadlist2=[0,V_S,V_A]
+quad=np.polyfit(quadlist1,quadlist2,2)    
+constlist= np.arange(0,300)
+constlist4= np.arange(V_A,V_D)
+
+
+plt.plot(constlist,nlimpos*np.ones(300),'--')
+plt.plot(constlist,nlimneg*np.ones(300),'--')
+plt.plot(constlist4,nlimpos*np.ones(80))
+plt.plot(V_D*np.ones(4),np.arange(nlimpos,nlimneg+1,-1.0))
+plt.plot(np.arange(V_C,V_D),np.arange(nlimneg,nlimneg+1,1/40))
 
 plt.axhline(y=0, color='k')
 plt.axvline(x=0, color='k')
+
+
 
 plt.show()
 
