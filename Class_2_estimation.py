@@ -18,6 +18,8 @@ import Tail_weight_estimation as tail
 import Wing_weight_estimation as wing
 import input
 
+
+
 #------------- INPUT PARAMETERS ----------------#
 
 MTOW = input.MTOW
@@ -61,8 +63,10 @@ N_t = input.N_t
 K_fsp = input.K_fsp
 W_fuel = input.W_fuel
 
+#call class 1 here
 
-
+while abs((OEW_class1 - OEW_class2)*100/OEW_class2)>= 0.5:
+    return
 #--------- STRUCTURAL WEIGHT --------------#
 
 W_wing_gd = wing.gd_wing(MTOW, AR, half_sweep, n_ult, S, t_over_c, taper, mach_h)
