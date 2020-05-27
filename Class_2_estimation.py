@@ -16,6 +16,7 @@ import power_controls_weight_estimation as powercontrols
 import Pressurization_system_weight_estimation as pressurization
 import Tail_weight_estimation as tail
 import Wing_weight_estimation as wing
+from class_1_estimation import CLASS1WEIGHTHYBRID
 import input
 
 
@@ -39,7 +40,7 @@ hf =input.hf
 A_inlet = input.A_inlet
 ln = input.ln
 p2 = input.p2
-W_zfw = input.W_zfw
+# W_zfw = input.W_zfw
 b = input.b
 t_r= input.t_r
 wf = input.wf #max fuselage width
@@ -47,7 +48,7 @@ S_fgs = input.S_fgs #fuselage gross shell area
 lh =input.lh
 T_TO = input.T_TO
 
-Kgr =
+Kgr = input.Kgr
 V_pax = input.V_pax
 lpax =input.lpax
 Npax =input.Npax
@@ -63,9 +64,15 @@ K_fsp = input.K_fsp
 W_fuel = input.W_fuel
 
 #call class 1 here
+class1 = CLASS1WEIGHTHYBRID(ratio,OEWINPUT = 0)
+MTOW = class1[0]
+OEW_class1 = class1[1]
+M_zfw = class1[4]
+M_fuel = class1[2]
+
 
 while abs((OEW_class1 - OEW_class2)*100/OEW_class2)>= 0.5:
-    return
+    
 #--------- STRUCTURAL WEIGHT --------------#
 
 W_wing_gd = wing.gd_wing(MTOW, AR, half_sweep, n_ult, S, t_over_c, taper, mach_h)
