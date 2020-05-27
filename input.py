@@ -39,8 +39,14 @@ N_t =
 K_fsp = 33.2307 #lb/gal
 W_fuel =
 
+LD_c = 15
+LD_c2 = 17
+LD_loiter = 17
 
- 
+V_c=230.3
+V_c2=0.8*V_c
+V_loiter=0.6*V_c
+
 W_pax=93 #includes luggage kg
 W_cargo=1000 #kg
 n_crew= N_fdc+N_cc
