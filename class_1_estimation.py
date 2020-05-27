@@ -92,7 +92,7 @@ import input
     
     
 
-def CLASS1WEIGHTHYBRID(H_to_ker_ratio = input.H_to_ker_ratio,OEWINPUT = 0):
+def CLASS1WEIGHTHYBRID(H_to_ker_ratio = input.H_to_ker_ratio,OEWINPUT = 1):
     W_hydrosys=H_to_ker_ratio*1200
     e=2.71828182846
     n_pax= input.Npax
@@ -176,7 +176,7 @@ def CLASS1WEIGHTHYBRID(H_to_ker_ratio = input.H_to_ker_ratio,OEWINPUT = 0):
     
     MTOW=(b_reg+W_payload)/(1-a_reg-FUELFRACMTOW)
     
-    if OEWINPUT!=0:
+    if OEWINPUT!=1:
         MTOW=(OEWINPUT+W_payload)/(1-FUELFRACMTOW)
     FUEL=FUELFRACMTOW*MTOW
     OEW=MTOW-W_payload-FUEL
