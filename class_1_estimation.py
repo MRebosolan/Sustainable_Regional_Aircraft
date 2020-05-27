@@ -115,7 +115,7 @@ def CLASS1WEIGHTHYBRID(H_to_ker_ratio = input.H_to_ker_ratio,OEWINPUT = 1):
     
     R_c=Design_range-100 #km, correct for take off and landing covered distance
     
-    cj_ck=1.98291*10**(-5) #kerosene cj
+    cj_ck=1.6*10**(-5) #kerosene cj
     cj_c=cj_ck*0.349*H_to_ker_ratio+cj_ck*(1-H_to_ker_ratio)
     
     cj_ck2=1.84128*10**(-5)
