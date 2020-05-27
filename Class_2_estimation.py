@@ -92,7 +92,7 @@ W_struct = W_wing + W_empennage + W_fuselage + W_nacelles + landing_gear
 
 W_powerplant = W_engines + W_fuel_system + W_power_controls
 
-W_equipment = APU_weight + cargo_equipment_weight + furnishing_weight + instrumentation_weight + oxygen_system_weight + paint + pressurization + flight_control_weight + electrical_system_weight
+W_equipment = APU_weight + cargo_equipment_weight + furnishing_weight + instrumentation_weight + oxygen_system_weight + paint_weight + airconditioning_pressurization_weight + flight_control_weight + electrical_system_weight
 
 
 
