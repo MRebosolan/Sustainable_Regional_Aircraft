@@ -56,7 +56,7 @@ p2 = input.p2 #to psf, its some sort of pressure of the engine
 
 b = toft(nput.b)
 t_r= toft(input.t_r)
-wf = toft(input.wf) #max fuselage width
+widthf = toft(input.widthf) #max fuselage width
 S_fgs = tosqft(input.S_fgs) #fuselage gross shell area
 lh = toft(input.lh)
 T_TO = to_pounds(input.T_TO/9.81)
@@ -104,11 +104,11 @@ while abs((OEW_class1_kg - OEWINPUT)*100/OEWINPUT)>= 0.5 and iterate < 5000:
 
     W_wing_gd = wing.gd_wing(MTOW, AR, half_sweep, n_ult, S, t_over_c, taper, mach_h)
     W_fuselage_GD = fuselage.W_fuselage_gd (rho, V_dive, MTOW, lf, hf)
-    W_nacelle_GD = nacelles.W_nacelle_gd (A_inlet, ln, p2)
+    # W_nacelle_GD = nacelles.W_nacelle_gd (A_inlet, ln, p2)
     
     W_wing = wing.W_wing(W_zfw, b, half_sweep, n_ult, S, t_r)
     W_empennage = tail.vert_tail_weight()+ tail.hor_tail_weight()
-    W_fuselage = fuselage.W_fuselage_torenbeek(V_dive, lh, wf, hf, S_fgs)
+    W_fuselage = fuselage.W_fuselage_torenbeek(V_dive, lh, widthf, hf, S_fgs)
     W_nacelles = nacelles.W_nacelle_torenbeek(T_TO)
     W_landing_gear = LG.LG_weight(Kgr, MTOW, Ag, Bg, Cg, Dg)
     
@@ -149,3 +149,4 @@ while abs((OEW_class1_kg - OEWINPUT)*100/OEWINPUT)>= 0.5 and iterate < 5000:
     
     OEWINPUT = to_kg(OEW_class2)
     OEW_plot_class2.append(OEWINPUT)
+    
