@@ -17,52 +17,86 @@ import Pressurization_system_weight_estimation as pressurization
 import Tail_weight_estimation as tail
 import Wing_weight_estimation as wing
 
+#------------- INPUT PARAMETERS ----------------#
+
+MTOW =
+AR =
+half_sweep =
+n_ult =
+S =
+t_over_c =
+taper =
+mach_h =
+rho =
+V_dive =
+lf =
+hf =
+A_inlet =
+ln =
+p2 =
+W_zfw =
+b =
+t_r=
+wf = #max fuselage width
+S_fgs = #fuselage gross shell area
+lh =
+T_TO =
+Kgr =
+Ag, Bg, Cg, Dg = #look at LG_weight_estimation.py for coefficients
+#look at LG_weight_estimation.py for coefficients
+V_pax =
+lpax =
+Npax =
+N_fdc =
+N_cc =
+P_c =
+Sff =
+T_dry_SL =
+N_eng =
+N_t =
+K_fsp =
+W_f =
+W_e =
+
 
 
 W_wing_gd = wing.gd_wing(MTOW, AR, half_sweep, n_ult, S, t_over_c, taper, mach_h)
 W_fuselage_GD = fuselage.W_fuselage_gd (rho, V_dive, MTOW, lf, hf)
-W_nacelle_GD = nacelle.W_nacelle_gd (A_inlet, ln, p2)
+W_nacelle_GD = nacelles.W_nacelle_gd (A_inlet, ln, p2)
 
 W_wing = wing.W_wing(W_zfw, b, half_sweep, n_ult, S, t_r)
 W_empennage = tail.vert_tail_weight()+ tail.hor_tail_weight()
-W_fuselage = fuselage.W_fuselage_torenbeek(V_d, lh, wf, hf, S_fgs) 
+W_fuselage = fuselage.W_fuselage_torenbeek(V_dive, lh, wf, hf, S_fgs)
 W_nacelles = nacelles.W_nacelle_torenbeek(T_TO)
-landing_gear = LG.LG_weight(Kgr, Wto, Ag, Bg, Cg, Dg)
+landing_gear = LG.LG_weight(Kgr, MTOW, Ag, Bg, Cg, Dg)
 
 
-W_engines = engine.engine_weight(dry_thrust_SL, num_engines)
+flight_control_weight = flightcontrols.flight_controls(MTOW)
+electrical_system_weight = electrical.electrical_torenbeek(V_pax)
+instrumentation_weight = instrumentation.instrumentation_torenbeek(MTOW)
+airconditioning_pressurization_weight = pressurization.pressure_system_weight(lpax)
+oxygen_system_weight = oxygen.oxygen_system_weight(Npax)
+APU_weight = apu.APU_weight_estimation(MTOW)
+furnishing_weight = furnishing.furnishing_gd(N_fdc, Npax, N_cc, MTOW, P_c)
+cargo_equipment_weight = cargo.cargo_handling_weight(Sff)
+paint_weight = paint.paint(MTOW)
 
+
+
+W_engines = engine.engine_weight(T_dry_SL, N_eng)
 W_fuel_system = fuelsystem.W_fuelsystem (N_t, K_fsp, W_f)
-
 W_power_controls = powercontrols.total(lf, b, W_e, pneumatic = True)
-
-
-
-
 
 
 W_struct = W_wing + W_empennage + W_fuselage + W_nacelles + landing_gear
 
-W_powerplant = W_engines + W_fuel_system + W_power_controls 
+W_powerplant = W_engines + W_fuel_system + W_power_controls
 
-W_equipment = APU + cargo_equipment + furnishing + instrumentation + oxygen_system + paint + pressurization + flight_control + electrical
-
-
+W_equipment = APU_weight + cargo_equipment_weight + furnishing_weight + instrumentation_weight + oxygen_system_weight + paint + pressurization + flight_control_weight + electrical_system_weight
 
 
 
 
-
-
-
-# OEW =
-
-# structural =
-# wing_group
-# tail_group
-# body_group
-# landing_group
-# nacelle_group
 
 #  #still missing
 
@@ -73,19 +107,6 @@ W_equipment = APU + cargo_equipment + furnishing + instrumentation + oxygen_syst
 # power_controls
 
 # equipment=
-
-flight_control_weight = flightcontrols.flight_controls(MTOW)
-electrical_system_weight = electrical.electrical_torenbeek(V_pax)
-instrumentation_weight = instrumentation.instrumentation_torenbeek(MTOW)
-airconditioning_pressurization_weight = pressurization.pressure_system_weight(lpax)
-oxygen_system_weight = oxygen.oxygen_system_weight(Npax)
-APU_weight = apu.APU_weight_estimation(MTOW)
-furnishing_weight = furnishing.furnishing_gd(N_fdc, N_pax, N_cc, MTOW, P_c)
-baggage_weight = cargo.cargo_handling_weight(Sff)
-paint_weight = paint.paint(MTOW)
-
-
-
 
 
 
