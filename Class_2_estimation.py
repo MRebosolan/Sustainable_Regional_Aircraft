@@ -60,7 +60,7 @@ T_dry_SL = T_TO
 
 N_eng = input.N_eng
 N_t = input.N_t
-K_fsp = input.K_fsp
+rho_hydrogen = input.rho_hydrogen
 W_fuel = input.W_fuel
 
 #call class 1 here
@@ -101,7 +101,7 @@ paint_weight = paint.paint(MTOW)
 #------------ POWER PLANT WEIGHT ------------#
 
 W_engines = engine.engine_weight(T_dry_SL, N_eng)
-W_fuel_system = fuelsystem.W_fuelsystem (N_t, K_fsp, W_fuel)
+W_fuel_system = fuelsystem.W_fuelsystem (N_t, rho_hydrogen, W_fuel)
 W_power_controls = powercontrols.total(lf, b, W_engines, pneumatic = True)
 
 

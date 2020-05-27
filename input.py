@@ -36,8 +36,9 @@ P_c =
 Sff =
 N_eng = 2
 N_t =
-K_fsp = 33.2307 #lb/gal
+rho_hydrogen = 33.2307 #lb/gal
 W_fuel =
+H_to_ker_ratio =
 
 LD_c = 15
 LD_c2 = 17
