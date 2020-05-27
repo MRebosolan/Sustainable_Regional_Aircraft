@@ -1,5 +1,5 @@
 import numpy as np
-
+import matplotlib.pyplot as plt
 
 ###########################################################
 # Parameters
@@ -79,8 +79,12 @@ def V_A(V_S,nlim):
 def V_D(V_C):
     return 1.25*V_C
     
+################################################################
+# Plotting
+    
+constlist = V_S*[3]
 
-
+plt.plot
 
 
 
