@@ -1,3 +1,5 @@
+import numpy as np
+
 import APU_weight_estimation as apu
 import Cargo_handling_weight_estimation as cargo
 import electrical_system_weight_estimation as electrical
@@ -18,23 +20,47 @@ import Tail_weight_estimation as tail
 import Wing_weight_estimation as wing
 
 
+#starting values
+
+MTOW = 60000
+AR = 8
+half_sweep = np.radians(27)
+n_max = 3
+n_ult = 3*1.5
+S = 80 * 0.3048**2
+t_over_c = 0.1 
+taper = 0.4 
+mach_h = 0.5 
+
+rho = 1.225 
+V_dive = 300 
+lf = 70
+hf = 7
+wf = 7
+S_fgs = np.pi * lf *(hf+wf)/2
+
+T_TO = 20000
+
+
+
+
 
 W_wing_gd = wing.gd_wing(MTOW, AR, half_sweep, n_ult, S, t_over_c, taper, mach_h)
 W_fuselage_GD = fuselage.W_fuselage_gd (rho, V_dive, MTOW, lf, hf)
-W_nacelle_GD = nacelle.W_nacelle_gd (A_inlet, ln, p2)
+# W_nacelle_GD = nacelles.W_nacelle_gd (A_inlet, ln, p2)
 
 W_wing = wing.W_wing(W_zfw, b, half_sweep, n_ult, S, t_r)
 W_empennage = tail.vert_tail_weight()+ tail.hor_tail_weight()
-W_fuselage = fuselage.W_fuselage_torenbeek(V_d, lh, wf, hf, S_fgs) 
+W_fuselage = fuselage.W_fuselage_torenbeek(V_dive, lh, wf, hf, S_fgs) 
 W_nacelles = nacelles.W_nacelle_torenbeek(T_TO)
-landing_gear = LG.LG_weight(Kgr, Wto, Ag, Bg, Cg, Dg)
+landing_gear = LG.LG_weight(Kgr, MTOW, Ag, Bg, Cg, Dg)
 
 
-W_engines = engine.engine_weight(dry_thrust_SL, num_engines)
+W_engines = engine.engine_weight(T_TO, num_engines)
 
 W_fuel_system = fuelsystem.W_fuelsystem (N_t, K_fsp, W_f)
 
-W_power_controls = powercontrols.total(lf, b, W_e, pneumatic = True)
+W_power_controls = powercontrols.total(lf, b, W_engines, pneumatic = True)
 
 
 
