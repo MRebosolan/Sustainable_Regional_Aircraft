@@ -20,7 +20,11 @@ from class_1_estimation import CLASS1WEIGHTHYBRID
 import input
 
 
+def to_pounds(kg):
+    return kg * 2.20462262
 
+def to_kg (lbs):
+    return lbs/2.20462262
 #------------- INPUT PARAMETERS ----------------#
 
 MTOW = input.MTOW
@@ -72,6 +76,7 @@ M_fuel = class1[2]
 
 
 while abs((OEW_class1 - OEW_class2)*100/OEW_class2)>= 0.5:
+    class1 = CLASS1WEIGHTHYBRID(ratio,OEWINPUT = 0)
     
 #--------- STRUCTURAL WEIGHT --------------#
 
@@ -101,7 +106,8 @@ paint_weight = paint.paint(MTOW)
 #------------ POWER PLANT WEIGHT ------------#
 
 W_engines = engine.engine_weight(T_dry_SL, N_eng)
-W_fuel_system = fuelsystem.W_fuelsystem (N_t, K_fsp, W_fuel)
+# W_fuel_system = fuelsystem.W_fuelsystem (N_t, K_fsp, W_fuel)
+W_fuel_system = class1[-1]
 W_power_controls = powercontrols.total(lf, b, W_engines, pneumatic = True)
 
 
