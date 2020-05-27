@@ -37,13 +37,14 @@ N_eng = 2
 N_t = 2
 rho_hydrogen = 71 #g/l
 H_to_ker_ratio = 0
-Sh =
-half_sweep_hor = 20 #deg CRJ700
-half_sweep_vert = 35 #deg CRJ700
-zh =
-Sv =
+Sh = 20.75
+half_sweep_hor = 20 #deg
+half_sweep_vert = 35 #deg
+
+Sv = 13.36
 bv = 7.57 #m good ol' CRJ700
-Kv = tail.Kv_fin_mounted(Sh, zh, Sv, bv)
+bh = 8.54 #estimation, m
+zh = bv * 0.95
 
 LD_c = 15
 LD_c2 = 17
