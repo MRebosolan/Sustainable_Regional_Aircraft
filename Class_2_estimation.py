@@ -16,10 +16,11 @@ import power_controls_weight_estimation as powercontrols
 import Pressurization_system_weight_estimation as pressurization
 import Tail_weight_estimation as tail
 import Wing_weight_estimation as wing
+import input
 
 #------------- INPUT PARAMETERS ----------------#
 
-MTOW =
+MTOW = input.MTOW
 AR =
 half_sweep =
 n_max = 
