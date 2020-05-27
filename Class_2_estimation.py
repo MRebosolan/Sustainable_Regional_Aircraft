@@ -25,6 +25,16 @@ def to_pounds(kg):
 
 def to_kg (lbs):
     return lbs/2.20462262
+
+def toft (m):
+    return m /0.3048
+
+def tom (ft):
+    return ft*0.3048
+
+def tosqft(m2):
+    return m2 / (0.3048*0.3048)
+
 #------------- INPUT PARAMETERS ----------------#
 
 AR = input.AR
@@ -36,14 +46,14 @@ S = tosqft(input.S)
 t_over_c = input.t_over_c
 taper = input.taper	
 mach_h = input.mach_h
-rho = 1.225 #estimate, still convert to imperial!!!
-V_dive = input.V_dive
+rho = 1.225 * 0.0624279606 #estimate, in lbs/ft3
+V_dive = input.V_dive #is already in KEAS
 lf = toft(input.lf)
 hf = toft(input.hf)
 A_inlet = tosqft(input.A_inlet)
 ln = toft(input.ln)
-p2 = input.p2
-# W_zfw = input.W_zfw
+p2 = input.p2 #to psf, its some sort of pressure of the engine
+
 b = toft(nput.b)
 t_r= toft(input.t_r)
 wf = toft(input.wf) #max fuselage width
@@ -57,7 +67,7 @@ lpax = toft(input.lpax)
 Npax =input.Npax
 N_fdc =input.N_fdc
 N_cc =input.N_cc
-P_c = input.P_c
+P_c = input.P_c #should be in psf
 Sff = tosqft(input.Sff)
 T_dry_SL = T_TO
 
@@ -68,10 +78,10 @@ N_t = input.N_t
 
 ratio = input.H_to_ker_ratio
 
+#setting initial values to zero
 iterate = 0
 OEWINPUT = 1
 OEW_class1_kg = 2
-
 OEW_plot_class1 = []
 OEW_plot_class2 = []
 

@@ -19,10 +19,9 @@ hf = 2 #estimate
 A_inlet = 1.17 #m
 ln =
 p2 =
-W_zfw = #zero f
 b = #wingspan [m]
 t_r=  #maximum thickness at root [m]
-wf = #max fuselage width
+widthf = #max fuselage width
 S_fgs = #fuselage gross shell area
 lh =
 T_TO = MTOW*powerloading
@@ -38,7 +37,7 @@ N_eng = 2
 N_t =
 rho_hydrogen = 33.2307 #lb/gal
 
-H_to_ker_ratio =
+H_to_ker_ratio = 0
 
 LD_c = 15
 LD_c2 = 17
