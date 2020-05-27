@@ -38,7 +38,7 @@ p2 =
 W_zfw =
 b =
 t_r=
-wf = #max fuselage width
+wf = 13.911 #max fuselage width
 S_fgs = #fuselage gross shell area
 lh =
 T_TO =
@@ -54,7 +54,7 @@ Sff =
 T_dry_SL = T_TO
 N_eng = 2
 N_t =
-K_fsp =
+K_fsp = 33.0862
 W_fuel =
 
 
