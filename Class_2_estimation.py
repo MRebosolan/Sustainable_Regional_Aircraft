@@ -63,7 +63,7 @@ T_dry_SL = T_TO
 
 N_eng = input.N_eng
 N_t = input.N_t
-K_fsp = input.K_fsp
+rho_hydrogen = input.rho_hydrogen
 W_fuel = input.W_fuel
 
 
@@ -82,7 +82,7 @@ while abs((OEW_class1 - OEW_class2)*100/OEW_class2)>= 0.5 and iterate < 5000:
     OEW_class1 = to_pounds(OEW_class1_kg)
     MTOW = to_pounds(MTOW_kg)
 
-    
+
 #--------- STRUCTURAL WEIGHT --------------#
 
 W_wing_gd = wing.gd_wing(MTOW, AR, half_sweep, n_ult, S, t_over_c, taper, mach_h)

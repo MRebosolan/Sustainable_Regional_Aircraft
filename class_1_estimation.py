@@ -91,10 +91,9 @@ import input
 #    return(INFO)
     
     
-    
-    
-def CLASS1WEIGHTHYBRID(ratio,OEWINPUT = 0):
-    W_hydrosys=ratio*1200
+
+def CLASS1WEIGHTHYBRID(H_to_ker_ratio = input.H_to_ker_ratio,OEWINPUT = 0):
+    W_hydrosys=H_to_ker_ratio*1200
     e=2.71828182846
     n_pax= input.Npax
     W_pax= input.W_pax
@@ -103,7 +102,7 @@ def CLASS1WEIGHTHYBRID(ratio,OEWINPUT = 0):
     W_payload=input.W_payload
     Design_range= input.Design_range
     g=9.81
-    HYDROGEN_DENSITY= input.K_fsp
+    HYDROGEN_DENSITY= input.rho_hydrogen
     CABIN_LENGTH= input.lpax
     
     LD_c=input.LD_c
@@ -117,12 +116,12 @@ def CLASS1WEIGHTHYBRID(ratio,OEWINPUT = 0):
     R_c=Design_range-100 #km, correct for take off and landing covered distance
     
     cj_ck=1.98291*10**(-5) #kerosene cj
-    cj_c=cj_ck*0.349*ratio+cj_ck*(1-ratio)
+    cj_c=cj_ck*0.349*H_to_ker_ratio+cj_ck*(1-H_to_ker_ratio)
     
     cj_ck2=1.84128*10**(-5)
-    cj_c2=cj_ck2*0.349*ratio+cj_ck2*(1-ratio)
+    cj_c2=cj_ck2*0.349*H_to_ker_ratio+cj_ck2*(1-H_to_ker_ratio)
     cj_kloiter=1.41637*10**(-5)
-    cj_loiter=cj_kloiter*0.349*ratio+cj_kloiter*(1-ratio)
+    cj_loiter=cj_kloiter*0.349*H_to_ker_ratio+cj_kloiter*(1-H_to_ker_ratio)
     
     np_c=0.82
     np_loiter=0.77
@@ -136,25 +135,25 @@ def CLASS1WEIGHTHYBRID(ratio,OEWINPUT = 0):
     trapped=0.001 #Trapped fuel as fraction of MTOW
     
     ###FUEL FRACTIONS---ROSKAM---VERIFIED
-    end1=0.99+(1-0.99)*ratio*(1-0.349)
+    end1=0.99+(1-0.99)*H_to_ker_ratio*(1-0.349)
     Mff1=end1
     
-    end2=0.99+(1-0.99)*ratio*(1-0.349)
+    end2=0.99+(1-0.99)*H_to_ker_ratio*(1-0.349)
     Mff2=Mff1*end2
     
-    end3=0.995+(1-0.995)*ratio*(1-0.349)
+    end3=0.995+(1-0.995)*H_to_ker_ratio*(1-0.349)
     Mff3=Mff2*end3
     
-    end4=0.98+(1-0.98)*ratio*(1-0.349)
+    end4=0.98+(1-0.98)*H_to_ker_ratio*(1-0.349)
     Mff4=Mff3*end4
     
     end5=1/e**(R_c*1000*g*cj_c/LD_c/V_c)
     Mff5=Mff4*end5
     
-    end6=0.99+(1-0.99)*ratio*(1-0.349)
+    end6=0.99+(1-0.99)*H_to_ker_ratio*(1-0.349)
     Mff6=Mff5*end6
     
-    end7=0.99+(1-0.99)*ratio*(1-0.349)
+    end7=0.99+(1-0.99)*H_to_ker_ratio*(1-0.349)
     Mff7=Mff6*end7
     
     end8=1/e**(R_c2*1000*g*cj_c2/LD_c2/V_c2)
@@ -164,10 +163,10 @@ def CLASS1WEIGHTHYBRID(ratio,OEWINPUT = 0):
     end9=1/e**(t_loiter*g*cj_loiter/LD_loiter)
     Mff9=Mff8*end9
     
-    end10=0.99+(1-0.99)*ratio*(1-0.349)
+    end10=0.99+(1-0.99)*H_to_ker_ratio*(1-0.349)
     Mff10=Mff9*end10
     
-    end11=0.992+(1-0.992)*ratio*(1-0.349)
+    end11=0.992+(1-0.992)*H_to_ker_ratio*(1-0.349)
     Mff11=Mff10*end11
     
     FUELFRACMTOW=1-Mff11
@@ -182,7 +181,7 @@ def CLASS1WEIGHTHYBRID(ratio,OEWINPUT = 0):
     FUEL=FUELFRACMTOW*MTOW
     OEW=MTOW-W_payload-FUEL
     MZFW=MTOW-FUEL
-    KEROSENE=(1-ratio)*FUEL
+    KEROSENE=(1-H_to_ker_ratio)*FUEL
     HYDROGEN=FUEL-KEROSENE
     HYDROGENVOLUME=HYDROGEN/HYDROGEN_DENSITY
     
