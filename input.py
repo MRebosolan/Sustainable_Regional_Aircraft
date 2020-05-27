@@ -1,8 +1,8 @@
 #input parameters
 import numpy as np
 
-MTOM = 36000 # estimate, [kg]
-MTOW = MTOM * 9.81 #N
+# MTOM = 36000 # estimate, [kg]
+# MTOW = MTOM * 9.81 #N
 AR = 8 # estimate, [-]
 half_sweep = np.cos(27 ) #estimate, [degrees]
 n_max = 3 #estimate
@@ -37,7 +37,7 @@ Sff =
 N_eng = 2
 N_t =
 rho_hydrogen = 33.2307 #lb/gal
-W_fuel =
+
 H_to_ker_ratio =
 
 LD_c = 15
@@ -53,5 +53,3 @@ W_cargo=1000 #kg
 n_crew= N_fdc+N_cc
 W_payload=Npax*W_pax+W_cargo
 Design_range=2000#[km]
-
-hydrogenratio = 0
