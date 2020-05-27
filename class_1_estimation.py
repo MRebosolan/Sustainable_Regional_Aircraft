@@ -1,3 +1,5 @@
+import input
+
 ##Class I Weight estimation
 #def CLASS1WEIGHT(hydro):
 #    W_hydrosys=1200
@@ -89,38 +91,37 @@
 #    return(INFO)
     
     
-    
-    
-def CLASS1WEIGHTHYBRID(ratio,OEWINPUT = 0):
-    W_hydrosys=ratio*1200
+
+def CLASS1WEIGHTHYBRID(H_to_ker_ratio = input.H_to_ker_ratio,OEWINPUT = 0):
+    W_hydrosys=H_to_ker_ratio*1200
     e=2.71828182846
-    n_pax=75
-    W_pax=97 #includes luggage
-    W_cargo=1000
-    n_crew=4
-    W_payload=n_pax*W_pax+W_cargo
-    Design_range=2000#[km]
+    n_pax= input.Npax
+    W_pax= input.W_pax
+    W_cargo= input.W_cargo
+    n_crew= input.n_crew
+    W_payload=input.W_payload
+    Design_range= input.Design_range
     g=9.81
-    HYDROGEN_DENSITY=70.8 #kg per cubic meter
-    CABIN_LENGTH=20#meters
+    HYDROGEN_DENSITY= input.rho_hydrogen
+    CABIN_LENGTH= input.lpax
     
-    LD_c=15
-    LD_c2=17
-    LD_loiter=17
-    
-    V_c=230.3
-    V_c2=0.8*V_c
-    V_loiter=0.6*V_c
+    LD_c=input.LD_c
+    LD_c2=input.LD_c2
+    LD_loiter=input.LD_loiter
+
+    V_c= input.V_c
+    V_c2= input.V_c2
+    V_loiter= input.V_loiter
     
     R_c=Design_range-100 #km, correct for take off and landing covered distance
     
-    cj_ck=1.6*10**(-5) #kerosene cj
-    cj_c=cj_ck*0.349*ratio+cj_ck*(1-ratio)
+    cj_ck=1.98291*10**(-5) #kerosene cj
+    cj_c=cj_ck*0.349*H_to_ker_ratio+cj_ck*(1-H_to_ker_ratio)
     
-    cj_ck2=1.6*10**(-5)
-    cj_c2=cj_ck2*0.349*ratio+cj_ck2*(1-ratio)
+    cj_ck2=1.84128*10**(-5)
+    cj_c2=cj_ck2*0.349*H_to_ker_ratio+cj_ck2*(1-H_to_ker_ratio)
     cj_kloiter=1.41637*10**(-5)
-    cj_loiter=cj_kloiter*0.349*ratio+cj_kloiter*(1-ratio)
+    cj_loiter=cj_kloiter*0.349*H_to_ker_ratio+cj_kloiter*(1-H_to_ker_ratio)
     
     np_c=0.82
     np_loiter=0.77
@@ -134,25 +135,25 @@ def CLASS1WEIGHTHYBRID(ratio,OEWINPUT = 0):
     trapped=0.001 #Trapped fuel as fraction of MTOW
     
     ###FUEL FRACTIONS---ROSKAM---VERIFIED
-    end1=0.99+(1-0.99)*ratio*(1-0.349)
+    end1=0.99+(1-0.99)*H_to_ker_ratio*(1-0.349)
     Mff1=end1
     
-    end2=0.99+(1-0.99)*ratio*(1-0.349)
+    end2=0.99+(1-0.99)*H_to_ker_ratio*(1-0.349)
     Mff2=Mff1*end2
     
-    end3=0.995+(1-0.995)*ratio*(1-0.349)
+    end3=0.995+(1-0.995)*H_to_ker_ratio*(1-0.349)
     Mff3=Mff2*end3
     
-    end4=0.98+(1-0.98)*ratio*(1-0.349)
+    end4=0.98+(1-0.98)*H_to_ker_ratio*(1-0.349)
     Mff4=Mff3*end4
     
     end5=1/e**(R_c*1000*g*cj_c/LD_c/V_c)
     Mff5=Mff4*end5
     
-    end6=0.99+(1-0.99)*ratio*(1-0.349)
+    end6=0.99+(1-0.99)*H_to_ker_ratio*(1-0.349)
     Mff6=Mff5*end6
     
-    end7=0.99+(1-0.99)*ratio*(1-0.349)
+    end7=0.99+(1-0.99)*H_to_ker_ratio*(1-0.349)
     Mff7=Mff6*end7
     
     end8=1/e**(R_c2*1000*g*cj_c2/LD_c2/V_c2)
@@ -162,10 +163,10 @@ def CLASS1WEIGHTHYBRID(ratio,OEWINPUT = 0):
     end9=1/e**(t_loiter*g*cj_loiter/LD_loiter)
     Mff9=Mff8*end9
     
-    end10=0.99+(1-0.99)*ratio*(1-0.349)
+    end10=0.99+(1-0.99)*H_to_ker_ratio*(1-0.349)
     Mff10=Mff9*end10
     
-    end11=0.992+(1-0.992)*ratio*(1-0.349)
+    end11=0.992+(1-0.992)*H_to_ker_ratio*(1-0.349)
     Mff11=Mff10*end11
     
     FUELFRACMTOW=1-Mff11
@@ -180,7 +181,7 @@ def CLASS1WEIGHTHYBRID(ratio,OEWINPUT = 0):
     FUEL=FUELFRACMTOW*MTOW
     OEW=MTOW-W_payload-FUEL
     MZFW=MTOW-FUEL
-    KEROSENE=(1-ratio)*FUEL
+    KEROSENE=(1-H_to_ker_ratio)*FUEL
     HYDROGEN=FUEL-KEROSENE
     HYDROGENVOLUME=HYDROGEN/HYDROGEN_DENSITY
     
@@ -188,7 +189,7 @@ def CLASS1WEIGHTHYBRID(ratio,OEWINPUT = 0):
     TANK_DIAMETER=2*(HYDROGENVOLUME/CABIN_LENGTH/3.14159)**0.5
     TANK_SURFACE_AREA = CABIN_LENGTH*3.14159*TANK_DIAMETER + 3.14159*TANK_DIAMETER**2
     TANK_MATERIAL_DENSITY = 2825 #MONOLITHIC METAL Aluminium alloy 2219 KG/M3
-    TANK_THICKNESS = 5 # thickness in mm
+    TANK_THICKNESS = 3 # thickness in mm
     STRUCTURAL_TANK_MASS = TANK_SURFACE_AREA*TANK_MATERIAL_DENSITY*TANK_THICKNESS*10**(-3) #tank mass exluding insulation + other systems required
     
     INFO=[MTOW,OEW,FUEL,W_payload,(MZFW),(KEROSENE),(HYDROGEN),HYDROGENVOLUME,TANK_DIAMETER,STRUCTURAL_TANK_MASS]

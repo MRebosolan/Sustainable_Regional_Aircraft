@@ -19,9 +19,9 @@ hf =
 A_inlet =
 ln =
 p2 =
-W_zfw =
-b =
-t_r=
+W_zfw = #zero f
+b = #wingspan [m]
+t_r=  #maximum thickness at root [m]
 wf = #max fuselage width
 S_fgs = #fuselage gross shell area
 lh =
@@ -36,13 +36,22 @@ P_c =
 Sff =
 N_eng = 2
 N_t =
-K_fsp = 33.2307 #lb/gal
+rho_hydrogen = 33.2307 #lb/gal
 W_fuel =
+H_to_ker_ratio =
 
+LD_c = 15
+LD_c2 = 17
+LD_loiter = 17
 
- 
+V_c=230.3
+V_c2=0.8*V_c
+V_loiter=0.6*V_c
+
 W_pax=93 #includes luggage kg
 W_cargo=1000 #kg
 n_crew= N_fdc+N_cc
 W_payload=Npax*W_pax+W_cargo
 Design_range=2000#[km]
+
+hydrogenratio = 0
