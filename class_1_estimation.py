@@ -95,7 +95,7 @@ def CLASS1WEIGHTHYBRID(ratio,OEWINPUT = 0):
     W_hydrosys=ratio*1200
     e=2.71828182846
     n_pax=75
-    W_pax=93 #includes luggage
+    W_pax=97 #includes luggage
     W_cargo=1000
     n_crew=4
     W_payload=n_pax*W_pax+W_cargo
@@ -114,10 +114,10 @@ def CLASS1WEIGHTHYBRID(ratio,OEWINPUT = 0):
     
     R_c=Design_range-100 #km, correct for take off and landing covered distance
     
-    cj_ck=1.98291*10**(-5) #kerosene cj
+    cj_ck=1.6*10**(-5) #kerosene cj
     cj_c=cj_ck*0.349*ratio+cj_ck*(1-ratio)
     
-    cj_ck2=1.84128*10**(-5)
+    cj_ck2=1.6*10**(-5)
     cj_c2=cj_ck2*0.349*ratio+cj_ck2*(1-ratio)
     cj_kloiter=1.41637*10**(-5)
     cj_loiter=cj_kloiter*0.349*ratio+cj_kloiter*(1-ratio)
@@ -188,7 +188,7 @@ def CLASS1WEIGHTHYBRID(ratio,OEWINPUT = 0):
     TANK_DIAMETER=2*(HYDROGENVOLUME/CABIN_LENGTH/3.14159)**0.5
     TANK_SURFACE_AREA = CABIN_LENGTH*3.14159*TANK_DIAMETER + 3.14159*TANK_DIAMETER**2
     TANK_MATERIAL_DENSITY = 2825 #MONOLITHIC METAL Aluminium alloy 2219 KG/M3
-    TANK_THICKNESS = 3 # thickness in mm
+    TANK_THICKNESS = 5 # thickness in mm
     STRUCTURAL_TANK_MASS = TANK_SURFACE_AREA*TANK_MATERIAL_DENSITY*TANK_THICKNESS*10**(-3) #tank mass exluding insulation + other systems required
     
     INFO=[MTOW,OEW,FUEL,W_payload,(MZFW),(KEROSENE),(HYDROGEN),HYDROGENVOLUME,TANK_DIAMETER,STRUCTURAL_TANK_MASS]
