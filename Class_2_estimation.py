@@ -18,6 +18,8 @@ import Tail_weight_estimation as tail
 import Wing_weight_estimation as wing
 import input
 
+
+
 #------------- INPUT PARAMETERS ----------------#
 
 MTOW = input.MTOW
@@ -25,6 +27,7 @@ AR = input.AR
 half_sweep = input.half_sweep
 n_max =  input.n_max
 n_ult = 1.5* n_max
+
 S = input.S
 t_over_c = input.t_over_c
 taper = input.taper	
@@ -43,8 +46,8 @@ wf = input.wf #max fuselage width
 S_fgs = input.S_fgs #fuselage gross shell area
 lh =input.lg
 T_TO = input.T_TO
+
 Kgr =
-Ag, Bg, Cg, Dg = #look at LG_weight_estimation.py for coefficients
 V_pax = input.V_pax
 lpax =input.lpax
 Npax =input.Npax
@@ -53,12 +56,16 @@ N_cc =input.N_cc
 P_c = input.P_c
 Sff = input.Sff
 T_dry_SL = T_TO
+
 N_eng = input.N_eng
 N_t = input.N_t
 K_fsp = input.K_fsp
 W_fuel = input.W_fuel
 
+#call class 1 here
 
+while abs((OEW_class1 - OEW_class2)*100/OEW_class2)>= 0.5:
+    return
 #--------- STRUCTURAL WEIGHT --------------#
 
 W_wing_gd = wing.gd_wing(MTOW, AR, half_sweep, n_ult, S, t_over_c, taper, mach_h)
