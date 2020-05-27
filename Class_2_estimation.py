@@ -25,26 +25,7 @@ AR = input.AR
 half_sweep = input.half_sweep
 n_max =  input.n_max
 n_ult = 1.5* n_max
-<<<<<<< HEAD
-S =
-t_over_c =
-taper =
-mach_h =
-rho =
-V_dive =
-lf =
-hf =
-A_inlet =
-ln =
-p2 =
-W_zfw =
-b =
-t_r=
-wf = 13.911 #max fuselage width
-S_fgs = #fuselage gross shell area
-lh =
-T_TO =
-=======
+
 S = input.S
 t_over_c = input.t_over_c
 taper = input.taper	
@@ -63,7 +44,7 @@ wf = input.wf #max fuselage width
 S_fgs = input.S_fgs #fuselage gross shell area
 lh =input.lg
 T_TO = input.T_TO
->>>>>>> ffc7b3d9454bf07fad6bc6faee31974e90da061a
+
 Kgr =
 Ag, Bg, Cg, Dg = #look at LG_weight_estimation.py for coefficients
 V_pax = input.V_pax
@@ -74,17 +55,12 @@ N_cc =input.N_cc
 P_c = input.P_c
 Sff = input.Sff
 T_dry_SL = T_TO
-<<<<<<< HEAD
-N_eng = 2
-N_t =
-K_fsp = 33.0862
-W_fuel =
-=======
+
 N_eng = input.N_eng
 N_t = input.N_t
 K_fsp = input.K_fsp
 W_fuel = input.W_fuel
->>>>>>> ffc7b3d9454bf07fad6bc6faee31974e90da061a
+
 
 
 #--------- STRUCTURAL WEIGHT --------------#
