@@ -44,7 +44,7 @@ b = input.b
 t_r= input.t_r
 wf = input.wf #max fuselage width
 S_fgs = input.S_fgs #fuselage gross shell area
-lh =input.lg
+lh =input.lh
 T_TO = input.T_TO
 
 Kgr =

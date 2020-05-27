@@ -22,22 +22,23 @@ p2 =
 W_zfw =
 b =
 t_r=
-wf = #max fuselage width
+wf = 4.24 #max fuselage width [m]
 S_fgs = #fuselage gross shell area
-lh =
+lh = #distance between wing and tail aerodynamic centers
 T_TO = MTOW*powerloading
 Kgr = 1.08
-V_pax =
+V_pax = 282.391 #from wf,lpax [m^3]
 lpax = 20 # estimate, meters
 Npax = 75
 N_fdc = 2 #probably, pilots
 N_cc = 2 #probably, cabin crew
-P_c =
-Sff =
+P_c = #design cabin pressure
+Sff = #freight floor area
 N_eng = 2
 N_t =
-K_fsp = 33.2307 #lb/gal
+K_fsp = 71 #g/l
 W_fuel =
+W_hydrosys = 1200
 
 
  

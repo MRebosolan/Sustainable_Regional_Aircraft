@@ -1,19 +1,22 @@
+import input
+
+
 #Class I Weight estimation
 def CLASS1WEIGHT(hydro):
-    W_hydrosys=1200
+    W_hydrosys= input.W_hydrosys
     e=2.71828182846
-    n_pax=75
-    W_pax=93 #includes luggage
-    W_cargo=1000
-    n_crew=4
-    W_payload=n_pax*W_pax+W_cargo
-    Design_range=2000#[km]
+    n_pax= input.Npax
+    W_pax= input.W_pax
+    W_cargo= input.W_cargo
+    n_crew= input.n_crew
+    W_payload= input.W_payload
+    Design_range= input.Design_range
     g=9.81
     
     LD_c=15
     LD_c2=17
     LD_loiter=17
-    HYDROGEN_DENSITY=70.8
+    HYDROGEN_DENSITY= input.K_fsp
     V_c=230.3
     V_c2=0.8*V_c
     V_loiter=0.6*V_c
@@ -101,7 +104,7 @@ def CLASS1WEIGHTHYBRID(ratio):
     W_payload=n_pax*W_pax+W_cargo
     Design_range=2000#[km]
     g=9.81
-    HYDROGEN_DENSITY=70.8 #kg per cubic meter
+    HYDROGEN_DENSITY= input.K
     CABIN_LENGTH=20#meters
     
     LD_c=15
