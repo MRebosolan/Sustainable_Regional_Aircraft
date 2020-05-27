@@ -25,8 +25,7 @@ wf = #max fuselage width
 S_fgs = #fuselage gross shell area
 lh =
 T_TO =
-# Kgr =
-# Ag, Bg, Cg, Dg = #look at LG_weight_estimation.py for coefficients
+Kgr = 1.08
 V_pax =
 lpax =
 Npax = 75
@@ -37,7 +36,7 @@ Sff =
 T_dry_SL = T_TO
 N_eng = 2
 N_t =
-K_fsp =
+K_fsp = 33.2307 #lb/gal
 W_fuel =
 
 
