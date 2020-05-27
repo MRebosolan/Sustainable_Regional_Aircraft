@@ -22,7 +22,8 @@ import Wing_weight_estimation as wing
 MTOW =
 AR =
 half_sweep =
-n_ult =
+n_max = 
+n_ult = 1.5* n_max
 S =
 t_over_c =
 taper =
@@ -50,12 +51,12 @@ N_fdc =
 N_cc =
 P_c =
 Sff =
-T_dry_SL =
-N_eng =
+T_dry_SL = T_TO
+N_eng = 2
 N_t =
 K_fsp =
-W_f =
-W_e =
+W_fuel =
+
 
 #--------- STRUCTURAL WEIGHT --------------#
 
@@ -85,8 +86,8 @@ paint_weight = paint.paint(MTOW)
 #------------ POWER PLANT WEIGHT ------------#
 
 W_engines = engine.engine_weight(T_dry_SL, N_eng)
-W_fuel_system = fuelsystem.W_fuelsystem (N_t, K_fsp, W_f)
-W_power_controls = powercontrols.total(lf, b, W_e, pneumatic = True)
+W_fuel_system = fuelsystem.W_fuelsystem (N_t, K_fsp, W_fuel)
+W_power_controls = powercontrols.total(lf, b, W_engines, pneumatic = True)
 
 
 
