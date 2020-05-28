@@ -99,14 +99,14 @@ OEW_plot_class2 = []
 
 
 
-while abs((OEW_class1_kg - OEWINPUT)*100/OEWINPUT)>= 0.5 and iterate < 5000:
+while abs((OEW_class1_kg - OEWINPUT)*100/OEWINPUT)>= 0.05 and iterate < 5000:
     class1 = CLASS1WEIGHTHYBRID(ratio,OEWINPUT)
     MTOW_kg = class1[0]
     S_metric = MTOW_kg*9.81 /wingloading
     b_metric = (S_metric * AR)**0.5
     T_TO_newton = MTOW_kg *9.81 *powerloading
     T_TO = to_pounds(T_TO_newton/9.81)
-    T_dry_SL = T_TO
+    T_dry_SL = 0.5* T_TO
     b = toft(b_metric)
     S = tosqft(S_metric)
     
@@ -171,6 +171,7 @@ while abs((OEW_class1_kg - OEWINPUT)*100/OEWINPUT)>= 0.5 and iterate < 5000:
     OEWINPUT = to_kg(OEW_class2)
     OEW_plot_class2.append(OEWINPUT)
 
+plt.close()
 plt.figure()
 plt.plot(np.arange(0, len(OEW_plot_class1)), OEW_plot_class1, label = 'class 1')
 plt.plot(np.arange(0, len(OEW_plot_class2)), OEW_plot_class2, label = 'class 2')
