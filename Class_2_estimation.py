@@ -48,6 +48,7 @@ t_over_c = input.t_over_c
 taper = input.taper	
 mach_h = input.mach_h
 rho = 1.225 * 0.0624279606 #estimate, in lbs/ft3
+rho_zero = 0.00237 #fucking americans, this is slug/ft3
 V_dive = input.V_dive #is already in KEAS
 lf = toft(input.lf)
 hf = toft(input.hf)
@@ -56,18 +57,18 @@ ln = toft(input.ln)
 
 
 # b = toft(input.b)
-t_r= toft(input.t_r)
+t_r= toft(input.t_r) #max thickness at root
 widthf = toft(input.widthf) #max fuselage width
 S_fgs = tosqft(input.S_fgs) #fuselage gross shell area
-lh = toft(input.lh)
+lh = toft(input.lh) #ft
 # T_TO = to_pounds(input.T_TO/9.81)
 
-Kgr = input.Kgr
-V_pax = input.V_pax / (0.3048**3)
-lpax = toft(input.lpax)
-Npax =input.Npax
-N_fdc =input.N_fdc
-N_cc =input.N_cc
+Kgr = input.Kgr # constant
+V_pax = input.V_pax / (0.3048**3) #ft3
+lpax = toft(input.lpax)  #ft
+Npax =input.Npax #
+N_fdc =input.N_fdc #
+N_cc =input.N_cc #
 P_c = input.P_c * 0.02089 #should be in psf
 Sff = tosqft(input.Sff)
 
@@ -124,7 +125,7 @@ while abs((OEW_class1_kg - OEWINPUT)*100/OEWINPUT)>= 0.05 and iterate < 5000:
 #--------- STRUCTURAL WEIGHT --------------#
 
     W_wing_gd = wing.gd_wing(MTOW, AR, half_sweep, n_ult, S, t_over_c, taper, mach_h)
-    W_fuselage_GD = fuselage.W_fuselage_gd (rho, V_dive, MTOW, lf, hf)
+    W_fuselage_GD = fuselage.W_fuselage_gd (rho_zero, V_dive, MTOW, lf, hf)
     W_nacelle_GD = nacelles.W_nacelle_torenbeek (T_TO)
     
     W_wing = wing.W_wing(W_zfw, b, half_sweep, n_ult, S, t_r)

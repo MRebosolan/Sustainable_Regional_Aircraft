@@ -7,9 +7,9 @@ Created on Thu May 28 09:48:30 2020
 
 #input parameters
 import numpy as np
-import Tail_weight_estimation as tail
 
-# MTOM = 36000 # estimate, [kg]
+
+# MTOM = 36000 # estimate, [kg]  these are commented out on purpose, as they will change due to class 1 and two converging
 # MTOW = MTOM * 9.81 #N
 AR = 8 # estimate, [-]
 half_sweep = np.cos(27 ) #estimate, [degrees]
@@ -24,10 +24,10 @@ mach_h = 0.5 #estimate, []
 V_dive = 300 #estimate, knots
 lf = 30 #estimate, lil shorter than CRJ as 5 seat rows are used
 hf = 2.5 #estimate
-A_inlet = 1.17 #m
+A_inlet = 1.17 #m2
 ln = 0.8129 #m 1/4 of CRJ engine length
 # b = (S * AR)**0.5 #wingspan [m]
-t_r= 1.2 #maximum thickness at root [m] #bullshit estimation
+t_r= 1.0 #maximum thickness at root [m] #bullshit estimation
 widthf = 4.24 #m max fuselage width
 S_fgs = widthf * np.pi * lf *0.9 #fuselage gross shell area
 lh = 15 #very random estimate
