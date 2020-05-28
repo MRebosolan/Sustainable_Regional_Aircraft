@@ -19,7 +19,8 @@ import Wing_weight_estimation as wing
 from class_1_estimation import CLASS1WEIGHTHYBRID
 import input
 
-
+import numpy as np
+import matplotlib.pyplot as plt
 def to_pounds(kg):
     return kg * 2.20462262
 
@@ -67,16 +68,16 @@ lpax = toft(input.lpax)
 Npax =input.Npax
 N_fdc =input.N_fdc
 N_cc =input.N_cc
-P_c = input.P_c #should be in psf
+P_c = input.P_c * 0.02089 #should be in psf
 Sff = tosqft(input.Sff)
 
 #tails:
-Sv = input.Sv
+Sv = tosqft(input.Sv)
 half_chord_sweep_hor = input.half_chord_sweep_hor
 half_chord_sweep_vert = input.half_chord_sweep_vert
-bv = input.bv
-Sh = input.Sh
-zh = input.zh
+bv = toft(input.bv)
+Sh = tosqft(input.Sh)
+zh = toft(input.zh)
 
 
 N_eng = input.N_eng
@@ -101,10 +102,10 @@ OEW_plot_class2 = []
 while abs((OEW_class1_kg - OEWINPUT)*100/OEWINPUT)>= 0.5 and iterate < 5000:
     class1 = CLASS1WEIGHTHYBRID(ratio,OEWINPUT)
     MTOW_kg = class1[0]
-    S_metric = MTOW_kg /wingloading
+    S_metric = MTOW_kg*9.81 /wingloading
     b_metric = (S_metric * AR)**0.5
-    T_TO_metric = MTOW_kg*powerloading
-    T_TO = to_pounds(T_TO_metric/9.81)
+    T_TO_newton = MTOW_kg *9.81 *powerloading
+    T_TO = to_pounds(T_TO_newton/9.81)
     T_dry_SL = T_TO
     b = toft(b_metric)
     S = tosqft(S_metric)
@@ -170,6 +171,10 @@ while abs((OEW_class1_kg - OEWINPUT)*100/OEWINPUT)>= 0.5 and iterate < 5000:
     OEWINPUT = to_kg(OEW_class2)
     OEW_plot_class2.append(OEWINPUT)
 
-
-plt.plot(np.arange(0, len(OEW_plot_class1)), OEW_plot_class1)
-plt.plot(np.arange(0, len(OEW_plot_class2)), OEW_plot_class2)
+plt.figure()
+plt.plot(np.arange(0, len(OEW_plot_class1)), OEW_plot_class1, label = 'class 1')
+plt.plot(np.arange(0, len(OEW_plot_class2)), OEW_plot_class2, label = 'class 2')
+plt.xlabel("iterations")
+plt.ylabel("OEW in kg")
+plt.legend()
+plt.show()

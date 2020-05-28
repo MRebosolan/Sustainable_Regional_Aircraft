@@ -1,5 +1,6 @@
 #input parameters
 import numpy as np
+import Tail_weight_estimation as tail
 
 # MTOM = 36000 # estimate, [kg]
 # MTOW = MTOM * 9.81 #N
@@ -36,6 +37,14 @@ N_eng = 2
 N_t = 2
 rho_hydrogen = 70 #g/l
 H_to_ker_ratio = 0
+Sh = 20.75
+half_chord_sweep_hor = np.radians(20) #deg
+half_chord_sweep_vert = np.radians(35) #deg
+
+Sv = 13.36
+bv = 7.57 #m good ol' CRJ700
+bh = 8.54 #estimation, m
+zh = bv * 0.95
 
 LD_c = 15
 LD_c2 = 17
