@@ -179,12 +179,15 @@ plt.ylim(-2,4)
 plt.axhline(y=0, color='k')
 plt.axvline(x=0, color='k')
 
+plt.xlabel('n-Load Factor [-]')
+plt.ylabel('V-Speed [kts]')
+
 # ---------------------------------------------------------------------------------------------
 
 plt.figure(1)
 
-plt.plot(constlist,nlimpos*np.ones(300),'--',color = 'r')
-plt.plot(constlist,-1*np.ones(300),'--', color = 'r')
+plt.plot(np.linspace(0,cross1[0],300),np.linspace(nlimpos,nlimpos,300),'--',color = 'r')
+plt.plot(np.linspace(0,V_C,300),np.linspace(-1,-1,300),'--',color = 'r')
 
 plt.plot(np.linspace(0,V_B,300),np.linspace(1,1+nlimgustBslope*V_B,300),'--',color = 'r')
 plt.plot(np.linspace(0,V_B,300),np.linspace(1,1-nlimgustBslope*V_B,300),'--',color = 'r')
@@ -214,6 +217,8 @@ plt.ylim(-2,4)
 plt.axhline(y=0, color='k')
 plt.axvline(x=0, color='k')
 
+plt.xlabel('n-Load Factor [-]')
+plt.ylabel('V-Speed [kts]')
 #------------------------------------------------------------------------------------
 
 plt.figure(2)
@@ -266,6 +271,9 @@ plt.ylim(-2,4)
 
 plt.axhline(y=0, color='k')
 plt.axvline(x=0, color='k')
+
+plt.xlabel('n-Load Factor [-]')
+plt.ylabel('V-Speed [kts]')
 
 #------------------------------------------------------------------------------------
 
@@ -341,6 +349,9 @@ plt.ylim(-2,4)
 
 plt.axhline(y=0, color='k')
 plt.axvline(x=0, color='k')
+
+plt.xlabel('n-Load Factor [-]')
+plt.ylabel('V-Speed [kts]')
 
 plt.show()
 
