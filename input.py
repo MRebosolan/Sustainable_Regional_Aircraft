@@ -85,7 +85,7 @@ Fuel_use_CRJ = 4740  # Fuel mass at design range
 Cruise_alt_max_CRJ = 12497  # Max operating altitude
 
 Cruise_alt = 10 # Max operating altitude in km
-GWP = GWP_alt[Cruise_alt]           # Specify the altitude in km
+
 
 # H2 NOx emission: Depends on engine characteristics
 A = 14                            # Correlation constant for emission index based on Jet-A fuel (advanced LDI tech as reference)
@@ -96,7 +96,7 @@ P3 = 0.7                            # fuel injector inlet pressure MPA
 T3 = 800                            # fuel injector inlet temperature 600 K approach, 700 K cruise, 800K take-off
 dPP = 5                             # dP/P fuel injector air flow pressure drop ratio
 #kg NOx/ kg fuel
-NOx_H2 = A * P3**0.594 * exp(T3/350) * fa**1.6876 * (100 * dPP)**-0.56 / 1000
+NOx_H2 = A * P3**0.594 * np.exp(T3/350) * fa**1.6876 * (100 * dPP)**-0.56 / 1000
 
 
 
