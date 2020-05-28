@@ -7,19 +7,23 @@ Created on Thu May 28 09:48:30 2020
 
 #input parameters
 import numpy as np
+
+g = 9.80665     #[m/s^2]
 from math import radians
 
 # MTOM = 36000 # estimate, [kg]  these are commented out on purpose, as they will change due to class 1 and two converging
-# MTOW = MTOM * 9.81 #N
+# MTOW = MTOM * g #N  !!!!!!!!!!!!!make sure this is in newtons!!!!!!!!!!!!!
+MLW = 25000 * g         #maximum landing weight [N], to be calculated
 AR = 8 # estimate, [-]
+
 half_sweep = np.cos(radians(27)) #estimate, [degrees]
+
 n_max = 3 #estimate
 n_ult = 1.5* n_max
-
 wingloading = 4375.84 #estimate, N/m^2
 powerloading = 0.44 #thrust over weight
-
 # S = MTOW /wingloading #m^2
+#Tto = powerloading * MTOW
 t_over_c = 0.1 #estimate, []
 taper = 0.4 #estimate, []
 mach_h = 0.5 #estimate, [] #max Mach at SL
@@ -82,6 +86,26 @@ W_payload=Npax*W_pax+W_cargo
 Design_range=2000#[km]
 hydrogen_cost=2.4 #US DOLLARS per KG
 
+
+#Flight performance
+rho0 = 1.225    #kg/m^3
+CD0 = 0.01277   #[-], to be refined as this comes from roskam statistics
+CD0_togd = 0.01277 + .015 + .02     #[-], to be refined as this comes from roskam statistics
+CD0_landGD = CD0 + .02 + .065       #[-], to be refined as this comes from roskam statistics
+e = 0.85        #[-], Oswald effiency factor, to be refined as this comes from roskam statistics
+CLmax_land = 2.25   #TBD
+CLmax_clean = 1.8   #TBD
+CLmax_to = 2.1      #TBD
+mu = 0.04           #runway friction coefficient at take-off, to be reconsidered
+mu_br = 0.3         #braking coefficient during landing, to be reconsidered
+h_sc = 50 * 0.3048  #screen height equal to 50 ft [m]
+gamma_cl = np.radians(7)    #climb angle right after rotation, to be refined [rad]
+gamma_ap = np.radians(3)    #approach angle (glide slope) [rad]
+Trev = 50000    #[N], maximum thrust reverse force applied during braking
+c_t = 0.0002    #[1/s] specific fuel consumption, to be refined
+H = 120E6       #Heating value of hydrogen, refine if we fly on kerosene and hydrogen simultenously, or 141.7E6 (higher value of hydrogen)
+rho_c = 0.4135  #[kg/m^3], cruise density (this is the one for 10 km cruise altitude)
+
 # parameters for Carbon Footprint
 Range_CRJ = 2593  # design range
 Pax_CRJ = 78  # Number of passengers
@@ -102,7 +126,27 @@ dPP = 5                             # dP/P fuel injector air flow pressure drop 
 #kg NOx/ kg fuel
 NOx_H2 = A * P3**0.594 * np.exp(T3/350) * fa**1.6876 * (100 * dPP)**-0.56 / 1000
 
+# GWP
+# Global Warming Potential (equivalent emission ratio to CO2 on 100 year scale (CO2-eq))
+# For CO2, H20, Nox
+# Altitudes 0 to 15 km
+GWP_alt = np.array([[1., 0., -7.1],
+                 [1., 0., -7.1],
+                 [1., 0., -7.1],
+                 [1., 0., -4.3],
+                 [1., 0., -1.5],
+                 [1., 0., 6.5],
+                 [1., 0., 14.5],
+                 [1., 0., 37.5],
+                 [1., 0., 60.5],
+                 [1., 0, 64.7],
+                 [1., 0.34, 57.7],
+                 [1., 0.43, 46.5],
+                 [1., 0.53, 25.6],
+                 [1., 0.62, 4.6],
+                 [1., 0.72, 0.6]])
 
+GWP = GWP_alt[Cruise_alt]           # Specify the altitude in km
 
 
 
