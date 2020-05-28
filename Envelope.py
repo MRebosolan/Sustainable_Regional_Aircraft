@@ -278,17 +278,19 @@ plt.plot(np.linspace(V_A,V_D,300),np.linspace(nlimpos,nlimpos,300),'--',color = 
 plt.plot(np.linspace(V_A,cross1[0],300),np.linspace(nlimpos,cross1[1],300),color = 'b')
 plt.plot(np.linspace(V_C,cross2[0],300),np.linspace(1+nlimgustCslope*V_C,cross2[1],300),color = 'b')
 plt.plot(np.linspace(cross2[0],V_D,300),np.linspace(cross2[1],nlimpos,300),color = 'b')
-
+plt.plot(np.linspace(cross5[0],V_D,100),np.linspace(cross5[1],0,100),'--',color='r')
+plt.plot(np.linspace(V_C,cross5[0],100),np.linspace(-1,cross5[1],100),color='b')
+plt.plot(np.linspace(cross5[0],V_D,300),np.linspace(cross5[1],1-nlimgustDslope*V_D,300),color = 'b')
+plt.plot(np.linspace(V_C,cross5[0],300),np.linspace(1-nlimgustCslope*V_C,cross5[1],300),'--',color = 'r')
 
 plt.plot(np.linspace(V_B,V_C,300),np.linspace(1-nlimgustBslope*V_B,1-nlimgustCslope*V_C,300),'--',color = 'r')
-plt.plot(np.linspace(V_C,V_D,300),np.linspace(1-nlimgustCslope*V_C,1-nlimgustDslope*V_D,300),color = 'b')
 plt.plot(np.linspace(0,V_B,300),np.linspace(1,1-nlimgustBslope*V_B,300),'--',color = 'r')
 plt.plot(V_D*np.ones(100),np.linspace(1+nlimgustDslope*V_D,1-nlimgustDslope*V_D,100),color = 'b')
 plt.plot(V_C*np.ones(100),np.linspace(nlimpos,0,100),'--',color = 'g')
 plt.plot(V_A*np.ones(100),np.linspace(nlimpos,0,100),'--',color = 'g')
 plt.plot(V_H*np.ones(100),np.linspace(0,-1,100),'--',color = 'g')
 plt.plot(V_D*np.ones(100),np.linspace(nlimpos,0,100),'b')
-plt.plot(np.linspace(V_C,V_D,100),np.arange(-1,0,1/100),'b')
+
 plt.plot(np.linspace(V_H,V_C,100),-1*np.ones(100),'b')
 plt.plot(x_new,y_new,'--',color='r')
 plt.plot(x_new2,y_new2,'b')
