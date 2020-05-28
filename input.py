@@ -12,7 +12,7 @@ import numpy as np
 # MTOM = 36000 # estimate, [kg]  these are commented out on purpose, as they will change due to class 1 and two converging
 # MTOW = MTOM * 9.81 #N
 AR = 8 # estimate, [-]
-half_sweep = np.cos(27 ) #estimate, [degrees]
+half_sweep = np.cos(27) #estimate, [degrees]
 n_max = 3 #estimate
 n_ult = 1.5* n_max
 wingloading = 4375.84 #estimate, N/m^2
