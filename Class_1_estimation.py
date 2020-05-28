@@ -218,8 +218,8 @@ tdiameterlist=[]
 import matplotlib.pyplot as plt
 
 for i in range(0,101):
-    outputc1h=CLASS1WEIGHTHYBRID(i/100,1)[0]
-    print(CLASS1WEIGHTHYBRID(i/100,1)[1])
+    outputc1h=CLASS1WEIGHTHYBRID(i/100,1)
+    print(CLASS1WEIGHTHYBRID(i/100,1))
     mtowlist.append(outputc1h[0])
     oewlist.append(outputc1h[1])
     kerosenelist.append(outputc1h[5])
