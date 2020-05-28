@@ -98,7 +98,27 @@ dPP = 5                             # dP/P fuel injector air flow pressure drop 
 #kg NOx/ kg fuel
 NOx_H2 = A * P3**0.594 * np.exp(T3/350) * fa**1.6876 * (100 * dPP)**-0.56 / 1000
 
+# GWP
+# Global Warming Potential (equivalent emission ratio to CO2 on 100 year scale (CO2-eq))
+# For CO2, H20, Nox
+# Altitudes 0 to 15 km
+GWP_alt = np.array([[1., 0., -7.1],
+                 [1., 0., -7.1],
+                 [1., 0., -7.1],
+                 [1., 0., -4.3],
+                 [1., 0., -1.5],
+                 [1., 0., 6.5],
+                 [1., 0., 14.5],
+                 [1., 0., 37.5],
+                 [1., 0., 60.5],
+                 [1., 0, 64.7],
+                 [1., 0.34, 57.7],
+                 [1., 0.43, 46.5],
+                 [1., 0.53, 25.6],
+                 [1., 0.62, 4.6],
+                 [1., 0.72, 0.6]])
 
+GWP = GWP_alt[Cruise_alt]           # Specify the altitude in km
 
 
 
