@@ -89,8 +89,8 @@ from CarbonFootprint import cf
 #
 #    INFO=[int(MTOW),int(OEW),int(FUEL),int(W_payload),int(MZFW),int(KEROSENE),int(HYDROGEN),int(HYDROGENVOLUME)]
 #    return(INFO)
-    
-    
+
+
 
 def CLASS1WEIGHTHYBRID(H_to_ker_ratio = input.H_to_ker_ratio,OEWINPUT = 1):
     W_hydrosys=H_to_ker_ratio*1000
@@ -104,7 +104,7 @@ def CLASS1WEIGHTHYBRID(H_to_ker_ratio = input.H_to_ker_ratio,OEWINPUT = 1):
     g=9.81
     HYDROGEN_DENSITY= input.rho_hydrogen
     CABIN_LENGTH= input.lpax
-    
+
     LD_c=input.LD_c
     LD_c2=input.LD_c2
     LD_loiter=input.LD_loiter
@@ -112,12 +112,12 @@ def CLASS1WEIGHTHYBRID(H_to_ker_ratio = input.H_to_ker_ratio,OEWINPUT = 1):
     V_c= input.V_c
     V_c2= input.V_c2
     V_loiter= input.V_loiter
-    
+
     R_c=Design_range-100 #km, correct for take off and landing covered distance
-    
+
     cj_ck=input.cj_ck
     cj_c = cj_ck * 0.349 * H_to_ker_ratio + cj_ck * (1 - H_to_ker_ratio)
-    
+
     cj_ck2=input.cj_ck2
     cj_c2 = cj_ck2 * 0.349 * H_to_ker_ratio + cj_ck2 * (1 - H_to_ker_ratio)
 
@@ -127,74 +127,74 @@ def CLASS1WEIGHTHYBRID(H_to_ker_ratio = input.H_to_ker_ratio,OEWINPUT = 1):
 
     np_c=0.82
     np_loiter=0.77
-    
-    t_loiter=input.t_loiter
+
+    t_loiter=1800#s
     R_loiter=t_loiter*V_loiter
-    
+
     R_c2=200
-    
-        
+
+
     trapped=0.001 #Trapped fuel as fraction of MTOW
-    
+
     ###FUEL FRACTIONS---ROSKAM---VERIFIED
     end1=0.99+(1-0.99)*H_to_ker_ratio*(1-0.349)
     Mff1=end1
-    
+
     end2=0.99+(1-0.99)*H_to_ker_ratio*(1-0.349)
     Mff2=Mff1*end2
-    
+
     end3=0.995+(1-0.995)*H_to_ker_ratio*(1-0.349)
     Mff3=Mff2*end3
-    
+
     end4=0.98+(1-0.98)*H_to_ker_ratio*(1-0.349)
     Mff4=Mff3*end4
-    
+
     end5=1/e**(R_c*1000*g*cj_c/LD_c/V_c)
     Mff5=Mff4*end5
-    
+
     end6=0.99+(1-0.99)*H_to_ker_ratio*(1-0.349)
     Mff6=Mff5*end6
-    
+
     end7=0.99+(1-0.99)*H_to_ker_ratio*(1-0.349)
     Mff7=Mff6*end7
-    
+
     end8=1/e**(R_c2*1000*g*cj_c2/LD_c2/V_c2)
     Mff8=Mff7*end8
-    
-    
+
+
     end9=1/e**(t_loiter*g*cj_loiter/LD_loiter)
     Mff9=Mff8*end9
-    
+
     end10=0.99+(1-0.99)*H_to_ker_ratio*(1-0.349)
     Mff10=Mff9*end10
-    
+
     end11=0.992+(1-0.992)*H_to_ker_ratio*(1-0.349)
     Mff11=Mff10*end11
-    
+
     FUELFRACMTOW=1-Mff11
     ###REGRESSION DATA OEW=a MTOW+b
     a_reg=0.5753
     b_reg=393.89+W_hydrosys
-    
+
     MTOW=(b_reg+W_payload)/(1-a_reg-FUELFRACMTOW)
-    
+
     if OEWINPUT!=1:
         MTOW=(OEWINPUT+W_payload)/(1-FUELFRACMTOW)
-        
+
     FUEL=FUELFRACMTOW*MTOW
     OEW=MTOW-W_payload-FUEL
     MZFW=MTOW-FUEL
     KEROSENE=(1-H_to_ker_ratio)*FUEL
     HYDROGEN=FUEL-KEROSENE
     HYDROGENVOLUME=1.072*HYDROGEN/HYDROGEN_DENSITY
-    
+
     ###TANK
     R=0
     result=0
     while result<HYDROGENVOLUME:
         R+=0.001
         result=4/3*3.14159*R**3+3.14159*CABIN_LENGTH*R**2
-        
+
     TANK_DIAMETER=R*2
     TANK_SURFACE_AREA = CABIN_LENGTH*3.14159*TANK_DIAMETER + 3.14159*TANK_DIAMETER**2
     TANK_MATERIAL_DENSITY = 2825 #MONOLITHIC METAL Aluminium alloy 2219 KG/M3
@@ -215,11 +215,11 @@ def CLASS1WEIGHTHYBRID(H_to_ker_ratio = input.H_to_ker_ratio,OEWINPUT = 1):
     MAX_ALLOWABLE_STRESS = 219000000  # Max allowable stress of the Aluminium alloy 2219 tank: 414 MPa
 
     TANK_THICKNESS = PRESSURE_GAS * R * FOS_TANK / (2 * MAX_ALLOWABLE_STRESS)
-    print(TANK_THICKNESS,PRESSURE_GAS,R)
+    # print(TANK_THICKNESS,PRESSURE_GAS,R)
     STRUCTURAL_TANK_MASS = TANK_SURFACE_AREA*TANK_MATERIAL_DENSITY*TANK_THICKNESS #tank mass exluding insulation + other systems required
 
     INFO=[MTOW,OEW,FUEL,W_payload,(MZFW),(KEROSENE),(HYDROGEN),HYDROGENVOLUME,TANK_DIAMETER,STRUCTURAL_TANK_MASS]
-    return INFO    
+    return INFO
 
 
 mtowlist=[]
@@ -235,6 +235,7 @@ energylist=[]
 cjclist=[]
 emissionslist=[]
 emissionsratiolist=[]
+
 
 import matplotlib.pyplot as plt
 
@@ -255,7 +256,7 @@ for i in range(0,101):
 
 
 plt.subplot(3,3,1)
-plt.plot(xlist,mtowlist,label='MTOW')  
+plt.plot(xlist,mtowlist,label='MTOW')
 plt.plot(xlist,oewlist,label='OEW')
 #plt.plot([0,100],[28992,28992],label='MTOW kerosene reserve frac')
 #plt.plot([0,100],[18273,18273],label='OEW kerosene reserve frac')
@@ -306,6 +307,7 @@ plt.plot(xlist,[i*input.hydrogen_cost for i in hydrogenlist],label='Hydrogen cos
 plt.plot(xlist,[i*0.6/0.81 for i in kerosenelist],label='kerosene cost')
 plt.plot(xlist,[sum(x) for x in zip([i*input.hydrogen_cost for i in hydrogenlist], [i*0.6/0.81 for i in kerosenelist])],label='total cost')
 plt.legend()
+
 plt.ylabel('US DOLLARS')
 plt.xlabel('%MASS OF HYDROGEN IN MIXTURE')
 
@@ -318,5 +320,5 @@ plt.subplot(3,3,9)
 plt.plot(xlist,emissionsratiolist,label='CF RATIO wrt CRJ700')
 plt.xlabel('%MASS OF HYDROGEN IN MIXTURE')
 plt.legend()
-plt.show() 
+plt.show()
 
