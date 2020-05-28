@@ -110,7 +110,6 @@ Range_CRJ = 2593  # design range
 Pax_CRJ = 78  # Number of passengers
 Fuel_use_CRJ = 4740  # Fuel mass at design range
 Cruise_alt_max_CRJ = 12497  # Max operating altitude
-
 Cruise_alt = 10  # Max operating altitude in km
 
 # H2 NOx emission: Depends on engine characteristics
@@ -143,5 +142,4 @@ GWP_alt = np.array([[1., 0., -7.1],
                     [1., 0.53, 25.6],
                     [1., 0.62, 4.6],
                     [1., 0.72, 0.6]])
-
 GWP = GWP_alt[Cruise_alt]  # Specify the altitude in km
