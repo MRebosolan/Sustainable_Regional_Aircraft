@@ -16,7 +16,7 @@ import power_controls_weight_estimation as powercontrols
 import Pressurization_system_weight_estimation as pressurization
 import Tail_weight_estimation as tail
 import Wing_weight_estimation as wing
-from class_1_estimation import CLASS1WEIGHTHYBRID
+from Class_1_estimation import CLASS1WEIGHTHYBRID
 import input
 
 import numpy as np
