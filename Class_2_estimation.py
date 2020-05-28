@@ -72,6 +72,7 @@ N_cc =input.N_cc #
 P_c = input.P_c * 0.02089 #should be in psf
 Sff = tosqft(input.Sff)
 
+K_fsp = input.K_fsp * 8.34540445
 #tails:
 Sv = tosqft(input.Sv)
 half_chord_sweep_hor = input.half_chord_sweep_hor
@@ -92,7 +93,6 @@ powerloading = input.powerloading
 ratio = input.H_to_ker_ratio
 
 #setting initial values to zero
-iterate = 0
 OEWINPUT = 1
 OEW_class1_kg = 2
 OEW_plot_class1 = []
@@ -100,7 +100,7 @@ OEW_plot_class2 = []
 
 
 
-while abs((OEW_class1_kg - OEWINPUT)*100/OEWINPUT)>= 0.05 and iterate < 5000:
+while abs((OEW_class1_kg - OEWINPUT)*100/OEWINPUT)>= 0.05:
     class1 = CLASS1WEIGHTHYBRID(ratio,OEWINPUT)
     MTOW_kg = class1[0]
     S_metric = MTOW_kg*9.81 /wingloading
@@ -115,7 +115,8 @@ while abs((OEW_class1_kg - OEWINPUT)*100/OEWINPUT)>= 0.05 and iterate < 5000:
     OEW_class1_kg = class1[1]
     OEW_plot_class1.append(OEW_class1_kg)
     M_zfw_kg = class1[4]
-    # M_fuel_kg = class1[2]
+    M_fuel_kg = class1[5]
+    W_fuel = to_pounds(M_fuel_kg)
     
     OEW_class1 = to_pounds(OEW_class1_kg)
     MTOW = to_pounds(MTOW_kg)
@@ -150,8 +151,8 @@ while abs((OEW_class1_kg - OEWINPUT)*100/OEWINPUT)>= 0.05 and iterate < 5000:
     #------------ POWER PLANT WEIGHT ------------#
     
     W_engines = engine.engine_weight(T_dry_SL, N_eng)
-    # W_fuel_system = fuelsystem.W_fuelsystem (N_t, K_fsp, W_fuel)
-    W_fuel_system = to_pounds(class1[-1])
+    W_fuel_system_kerosene = fuelsystem.W_fuelsystem (N_t, K_fsp, W_fuel)
+    W_fuel_system_hydrogen = to_pounds(class1[-1])
     W_power_controls = powercontrols.total(lf, b, W_engines, pneumatic = True)
     
     
@@ -161,13 +162,13 @@ while abs((OEW_class1_kg - OEWINPUT)*100/OEWINPUT)>= 0.05 and iterate < 5000:
     
     W_struct = W_wing + W_empennage + W_fuselage + W_nacelles + W_landing_gear
     
-    W_powerplant = W_engines + W_fuel_system + W_power_controls
+    W_powerplant = W_engines + W_fuel_system_kerosene + W_fuel_system_hydrogen + W_power_controls
     
     W_equipment = APU_weight + cargo_equipment_weight + furnishing_weight + instrumentation_weight + oxygen_system_weight + paint_weight + airconditioning_pressurization_weight + flight_control_weight + electrical_system_weight
     
     OEW_class2 = W_struct + W_powerplant + W_equipment
     
-    iterate +=1
+    
     
     OEWINPUT = to_kg(OEW_class2)
     OEW_plot_class2.append(OEWINPUT)
