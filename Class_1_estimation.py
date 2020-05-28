@@ -93,7 +93,7 @@ import input
     
 
 def CLASS1WEIGHTHYBRID(H_to_ker_ratio = input.H_to_ker_ratio,OEWINPUT = 1):
-    W_hydrosys=H_to_ker_ratio*1200
+    W_hydrosys=H_to_ker_ratio*2000
     e=2.71828182846
     n_pax= input.Npax
     W_pax= input.W_pax
@@ -203,19 +203,20 @@ def CLASS1WEIGHTHYBRID(H_to_ker_ratio = input.H_to_ker_ratio,OEWINPUT = 1):
 
     # TANK THICKNESS COMPUTATION
 
-    DENSITY_LH = 71  # Desnity liquid hydrogen 71 KG/M3
+    DENSITY_LH = input.rho_hydrogen  # Desnity liquid hydrogen 71 KG/M3
     R_GCH = 4157  # Gas constant of liquid hydrogen 4157 Nm/kg K
     T_CT = 13.15  # Temperature is around -260C(13.15K) for cryogenic tank
 
-    PRESSURE_GAS = DENSITY_LH * R_GCH * T_CT * 0.99704 / (
-                1 - DENSITY_LH * R_GCH * T_CT * (6.4149 * 10 ** (-9)))  # PRESSURE OF GAS
+    PRESSURE_GAS = 145000 # Mantained at 1.35*10^5 pa to minimize boil off
 
     # CYLINDRICAL TANK WITH HEMISPHERICAL ENDS CAPS
 
     FOS_TANK = 2  # Safety factor for the tank
-    MAX_ALLOWABLE_STRESS = 414  # Max allowable stress of the Aluminium alloy 2219 tank: 414 MPa
+    MAX_ALLOWABLE_STRESS = 219000000  # Max allowable stress of the Aluminium alloy 2219 tank: 414 MPa
 
     TANK_THICKNESS = PRESSURE_GAS * R * FOS_TANK / (2 * MAX_ALLOWABLE_STRESS)
+    print(TANK_THICKNESS,PRESSURE_GAS,R)
+    STRUCTURAL_TANK_MASS = TANK_SURFACE_AREA*TANK_MATERIAL_DENSITY*TANK_THICKNESS #tank mass exluding insulation + other systems required
 
     INFO=[MTOW,OEW,FUEL,W_payload,(MZFW),(KEROSENE),(HYDROGEN),HYDROGENVOLUME,TANK_DIAMETER,STRUCTURAL_TANK_MASS]
     return INFO    
@@ -230,12 +231,12 @@ tfuellist=[]
 tmasslist=[]
 hvollist=[]
 tdiameterlist=[]
-
+energylist=[]
+cjclist=[]
 import matplotlib.pyplot as plt
 
 for i in range(0,101):
     outputc1h=CLASS1WEIGHTHYBRID(i/100,1)
-    print(CLASS1WEIGHTHYBRID(i/100,1))
     mtowlist.append(outputc1h[0])
     oewlist.append(outputc1h[1])
     kerosenelist.append(outputc1h[5])
@@ -244,36 +245,37 @@ for i in range(0,101):
     hvollist.append(outputc1h[7])
     tdiameterlist.append(outputc1h[8])
     tmasslist.append(outputc1h[9])
+    energylist.append(kerosenelist[-1]*42.8+hydrogenlist[-1]*122.8)
     xlist.append(i)
 
-plt.subplot(2,3,1)
+plt.subplot(3,3,1)
 plt.plot(xlist,mtowlist,label='MTOW')  
 plt.plot(xlist,oewlist,label='OEW')
-plt.plot([0,100],[28992,28992],label='MTOW kerosene reserve frac')
-plt.plot([0,100],[18273,18273],label='OEW kerosene reserve frac')
+#plt.plot([0,100],[28992,28992],label='MTOW kerosene reserve frac')
+#plt.plot([0,100],[18273,18273],label='OEW kerosene reserve frac')
 
 plt.ylabel('WEIGHT [kg]')
 plt.xlabel('%MASS OF HYDROGEN IN MIXTURE')
 plt.legend()
 
-plt.subplot(2,3,2)
+plt.subplot(3,3,2)
 plt.plot(xlist,kerosenelist,label='kerosene mass')
 plt.plot(xlist,hydrogenlist,label='hydrogen mass')
 plt.plot(xlist,tfuellist,label='total fuel mass')
-plt.plot([0,100],[660,660],label='kerosene in kerosene reserve frac')
-plt.plot([0,100],[2084,2084],label='hydrogen in kerosene reserve frac')
-plt.plot([0,100],[2744,2744],label='total fuel in kerosene reserve frac')
+#plt.plot([0,100],[660,660],label='kerosene in kerosene reserve frac')
+#plt.plot([0,100],[2084,2084],label='hydrogen in kerosene reserve frac')
+#plt.plot([0,100],[2744,2744],label='total fuel in kerosene reserve frac')
 
 plt.ylabel('WEIGHT [kg]')
 plt.xlabel('%MASS OF HYDROGEN IN MIXTURE')
 plt.legend()
-plt.subplot(2,3,3)
+plt.subplot(3,3,3)
 plt.plot(xlist,hvollist,label='Hydrogen volume')
 plt.ylabel('Volume [CUBIC METERS]')
 plt.xlabel('%MASS OF HYDROGEN IN MIXTURE')
 plt.legend()
 
-plt.subplot(2,3,4)
+plt.subplot(3,3,4)
 plt.plot(xlist,tdiameterlist,label='Tank diameter')
 plt.ylabel('Meters')
 plt.xlabel('%MASS OF HYDROGEN IN MIXTURE')
@@ -281,6 +283,23 @@ plt.legend()
 plt.subplot(2,3,5)
 plt.plot(xlist,tmasslist,label='Tank mass')
 plt.ylabel('kgs')
+plt.xlabel('%MASS OF HYDROGEN IN MIXTURE')
+plt.legend()
+
+plt.subplot(3,3,6)
+plt.plot(xlist,energylist,label='total E carried')
+plt.plot(xlist, [i*122.8 for i in hydrogenlist],label='E hydrogen')
+plt.plot(xlist, [i*42.8 for i in kerosenelist],label='E kerosene')
+plt.ylabel('MJ')
+plt.xlabel('%MASS OF HYDROGEN IN MIXTURE')
+plt.legend()
+
+plt.subplot(3,3,7)
+plt.plot(xlist,[i*input.hydrogen_cost for i in hydrogenlist],label='Hydrogen cost')
+plt.plot(xlist,[i*0.6/0.81 for i in kerosenelist],label='kerosene cost')
+plt.plot(xlist,[sum(x) for x in zip([i*input.hydrogen_cost for i in hydrogenlist], [i*0.6/0.81 for i in kerosenelist])],label='total cost')
+
+plt.ylabel('US DOLLARS')
 plt.xlabel('%MASS OF HYDROGEN IN MIXTURE')
 plt.legend()
 plt.show() 
