@@ -102,10 +102,10 @@ OEW_plot_class2 = []
 while abs((OEW_class1_kg - OEWINPUT)*100/OEWINPUT)>= 0.5 and iterate < 5000:
     class1 = CLASS1WEIGHTHYBRID(ratio,OEWINPUT)
     MTOW_kg = class1[0]
-    S_metric = MTOW_kg /wingloading
+    S_metric = MTOW_kg*9.81 /wingloading
     b_metric = (S_metric * AR)**0.5
-    T_TO_metric = MTOW_kg*powerloading
-    T_TO = to_pounds(T_TO_metric/9.81)
+    T_TO_newton = MTOW_kg *9.81 *powerloading
+    T_TO = to_pounds(T_TO_newton/9.81)
     T_dry_SL = T_TO
     b = toft(b_metric)
     S = tosqft(S_metric)
@@ -160,7 +160,7 @@ while abs((OEW_class1_kg - OEWINPUT)*100/OEWINPUT)>= 0.5 and iterate < 5000:
     
     W_struct = W_wing + W_empennage + W_fuselage + W_nacelles + W_landing_gear
     
-    W_powerplant = W_engines + W_fuel_system + W_power_controls[0]
+    W_powerplant = W_engines + W_fuel_system + W_power_controls
     
     W_equipment = APU_weight + cargo_equipment_weight + furnishing_weight + instrumentation_weight + oxygen_system_weight + paint_weight + airconditioning_pressurization_weight + flight_control_weight + electrical_system_weight
     
