@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 # Parameters
 
 MTOW     = 36000     #kg
-G_WvoerS    = 91.391484 #psf
+G_WvoerS = 91.391484 #psf
 rho      = 0.00237   #slugs/ft^3
 S        = 871.88    #ft^2
 CLmax    = 1.8
@@ -124,22 +124,30 @@ constlist2= np.arange(V_A,V_D)
 
 # -------- Line Intersection Point--------------------
 
-def line_intersection(line1, line2):
-    xdiff = (line1[0][0] - line1[1][0], line2[0][0] - line2[1][0])
-    ydiff = (line1[0][1] - line1[1][1], line2[0][1] - line2[1][1])
-
-    def det(a, b):
-        return a[0] * b[1] - a[1] * b[0]
-
-    div = det(xdiff, ydiff)
-    if div == 0:
-       raise Exception('lines do not intersect')
-
-    d = (det(*line1), det(*line2))
-    x = det(d, xdiff) / div
-    y = det(d, ydiff) / div
+def line_intersect(Ax1, Ay1, Ax2, Ay2, Bx1, By1, Bx2, By2):
+    """ returns a (x, y) tuple or None if there is no intersection """
+    d = (By2 - By1) * (Ax2 - Ax1) - (Bx2 - Bx1) * (Ay2 - Ay1)
+    if d:
+        uA = ((Bx2 - Bx1) * (Ay1 - By1) - (By2 - By1) * (Ax1 - Bx1)) / d
+        uB = ((Ax2 - Ax1) * (Ay1 - By1) - (Ay2 - Ay1) * (Ax1 - Bx1)) / d
+    else:
+        return
+    if not(0 <= uA <= 1 and 0 <= uB <= 1):
+        return
+    x = Ax1 + uA * (Ax2 - Ax1)
+    y = Ay1 + uA * (Ay2 - Ay1)
+ 
     return x, y
 
+# --------  Intersection Points--------------------
+
+cross1 = line_intersect(V_A,nlimpos,V_D,nlimpos,V_B,1+nlimgustBslope*V_B,V_C,1+nlimgustCslope*V_C)
+cross2 = line_intersect(V_A,nlimpos,V_D,nlimpos,V_C,1+nlimgustCslope*V_C,V_D,1+nlimgustDslope*V_D)
+cross3 = line_intersect(V_D,0,V_D,nlimpos,V_C,1+nlimgustCslope*V_C,V_D,1+nlimgustDslope*V_D)
+cross4 = (V_D,0)
+cross5 = line_intersect(V_C,-1,V_D,0,V_C,1-nlimgustCslope*V_C,V_D,1-nlimgustDslope*V_D)
+cross6 = line_intersect(0,0,V_A,nlimpos,V_B,1+nlimgustBslope*V_B,V_C,1+nlimgustCslope*V_C)
+#cross7 = line_intersect(V_A,nlimpos,V_D,nlimpos,V_C,1+nlimgustCslope*V_C,V_D,1+nlimgustDslope*V_D)
 
 #----------------------------------------------------------------------------------------------
 
@@ -148,17 +156,6 @@ plt.figure(0)
 plt.plot(constlist,nlimpos*np.ones(300),'--',color = 'r')
 plt.plot(constlist,-1*np.ones(300),'--', color = 'r')
 
-#plt.plot(np.linspace(0,V_C,300),np.linspace(1,nlimpos,300),'--',color = 'g')
-#plt.plot(np.linspace(0,V_C,300),np.linspace(1,-1,300),'--',color = 'g')
-#plt.plot(np.linspace(0,V_D,400),np.linspace(1,nlimpos,400),'--',color = 'g')
-#plt.plot(np.linspace(0,V_D,400),np.linspace(1,0,400),'--',color = 'g')
-
-plt.plot(np.linspace(0,V_B,300),np.linspace(1,1+nlimgustBslope*V_B,300),'--',color = 'y')
-plt.plot(np.linspace(0,V_B,300),np.linspace(1,1-nlimgustBslope*V_B,300),'--',color = 'y')
-plt.plot(np.linspace(0,V_C,400),np.linspace(1,1+nlimgustCslope*V_C,400),'--',color = 'y')
-plt.plot(np.linspace(0,V_C,300),np.linspace(1,1-nlimgustCslope*V_C,300),'--',color = 'y')
-plt.plot(np.linspace(0,V_D,400),np.linspace(1,1+nlimgustDslope*V_D,400),'--',color = 'y')
-plt.plot(np.linspace(0,V_D,300),np.linspace(1,1-nlimgustDslope*V_D,300),'--',color = 'y')
 
 plt.plot(V_C*np.ones(100),np.linspace(nlimpos,0,100),'--',color = 'g')
 plt.plot(V_A*np.ones(100),np.linspace(nlimpos,0,100),'--',color = 'g')
@@ -206,22 +203,6 @@ plt.plot(V_D*np.ones(100),np.linspace(1+nlimgustDslope*V_D,1-nlimgustDslope*V_D,
 plt.plot(x_new3,y_new3,'b')
 
 
-#plt.plot(V_C*np.ones(100),np.linspace(nlimpos,0,100),'--',color = 'g')
-#plt.plot(V_A*np.ones(100),np.linspace(nlimpos,0,100),'--',color = 'g')
-#plt.plot(V_H*np.ones(100),np.linspace(0,-1,100),'--',color = 'g')
-#plt.plot(np.linspace(V_A,V_D,200),nlimpos*np.ones(200),'b')
-#plt.plot(V_D*np.ones(100),np.linspace(nlimpos,0,100),'b')
-#plt.plot(np.linspace(V_C,V_D,100),np.arange(-1,0,1/100),'b')
-#plt.plot(np.linspace(V_H,V_C,100),-1*np.ones(100),'b')
-#plt.plot(x_new,y_new,'b')
-#plt.plot(x_new2,y_new2,'b')
-#plt.text(V_A,nlimpos,'A')
-#plt.text(V_H,-1,'H')
-#plt.text(V_C,-1,'F')
-#plt.text(V_D,0,'E')
-#plt.text(V_D,nlimpos,'D')
-#plt.text(V_C,nlimpos,'C')
-
 plt.ylim(-2,4)
 
 
@@ -235,13 +216,12 @@ plt.figure(2)
 plt.plot(constlist,nlimpos*np.ones(300),'--',color = 'r')
 plt.plot(constlist,-1*np.ones(300),'--', color = 'r')
 
-plt.plot(np.linspace(0,V_B,300),np.linspace(1,1+nlimgustBslope*V_B,300),'--',color = 'r')
-plt.plot(np.linspace(0,V_B,300),np.linspace(1,1-nlimgustBslope*V_B,300),'--',color = 'r')
-plt.plot(np.linspace(0,V_C,400),np.linspace(1,1+nlimgustCslope*V_C,400),'--',color = 'r')
-plt.plot(np.linspace(0,V_C,300),np.linspace(1,1-nlimgustCslope*V_C,300),'--',color = 'r')
-plt.plot(np.linspace(0,V_D,400),np.linspace(1,1+nlimgustDslope*V_D,400),'--',color = 'r')
-plt.plot(np.linspace(0,V_D,300),np.linspace(1,1-nlimgustDslope*V_D,300),'--',color = 'r')
-
+plt.plot(np.linspace(0,V_B,300),np.linspace(1,1+nlimgustBslope*V_B,300),'--',color = 'y')
+plt.plot(np.linspace(0,V_B,300),np.linspace(1,1-nlimgustBslope*V_B,300),'--',color = 'y')
+plt.plot(np.linspace(0,V_C,400),np.linspace(1,1+nlimgustCslope*V_C,400),'--',color = 'y')
+plt.plot(np.linspace(0,V_C,300),np.linspace(1,1-nlimgustCslope*V_C,300),'--',color = 'y')
+plt.plot(np.linspace(0,V_D,400),np.linspace(1,1+nlimgustDslope*V_D,400),'--',color = 'y')
+plt.plot(np.linspace(0,V_D,300),np.linspace(1,1-nlimgustDslope*V_D,300),'--',color = 'y')
 
 plt.plot(np.linspace(V_B,V_C,300),np.linspace(1+nlimgustBslope*V_B,1+nlimgustCslope*V_C,300),color = 'b')
 plt.plot(np.linspace(V_C,V_D,300),np.linspace(1+nlimgustCslope*V_C,1+nlimgustDslope*V_D,300),color = 'b')
@@ -259,14 +239,69 @@ plt.plot(np.linspace(V_A,V_D,200),nlimpos*np.ones(200),'b')
 plt.plot(V_D*np.ones(100),np.linspace(nlimpos,0,100),'b')
 plt.plot(np.linspace(V_C,V_D,100),np.arange(-1,0,1/100),'b')
 plt.plot(np.linspace(V_H,V_C,100),-1*np.ones(100),'b')
-plt.plot(x_new,y_new,'b')
+plt.plot(x_new,y_new,color='b')
 plt.plot(x_new2,y_new2,'b')
-plt.text(V_A,nlimpos,'A')
-plt.text(V_H,-1,'H')
-plt.text(V_C,-1,'F')
-plt.text(V_D,0,'E')
-plt.text(V_D,nlimpos,'D')
-plt.text(V_C,nlimpos,'C')
+
+#plt.text(V_A,nlimpos,'A')
+#plt.text(V_H,-1,'H')
+#plt.text(V_C,-1,'F')
+#plt.text(V_D,0,'E')
+#plt.text(V_D,nlimpos,'D')
+#plt.text(V_C,nlimpos,'C')
+
+
+plt.ylim(-2,4)
+
+
+plt.axhline(y=0, color='k')
+plt.axvline(x=0, color='k')
+
+#------------------------------------------------------------------------------------
+
+plt.figure(3)
+
+plt.plot(constlist,nlimpos*np.ones(300),'--',color = 'r')
+plt.plot(constlist,-1*np.ones(300),'--', color = 'r')
+
+plt.plot(np.linspace(0,V_B,300),np.linspace(1,1+nlimgustBslope*V_B,300),'--',color = 'y')
+plt.plot(np.linspace(0,V_B,300),np.linspace(1,1-nlimgustBslope*V_B,300),'--',color = 'y')
+plt.plot(np.linspace(0,V_C,400),np.linspace(1,1+nlimgustCslope*V_C,400),'--',color = 'y')
+plt.plot(np.linspace(0,V_C,300),np.linspace(1,1-nlimgustCslope*V_C,300),'--',color = 'y')
+plt.plot(np.linspace(0,V_D,400),np.linspace(1,1+nlimgustDslope*V_D,400),'--',color = 'y')
+plt.plot(np.linspace(0,V_D,300),np.linspace(1,1-nlimgustDslope*V_D,300),'--',color = 'y')
+
+plt.plot(np.linspace(V_B,V_C,300),np.linspace(1+nlimgustBslope*V_B,1+nlimgustCslope*V_C,300),color = 'b')
+plt.plot(np.linspace(V_C,V_D,300),np.linspace(1+nlimgustCslope*V_C,1+nlimgustDslope*V_D,300),color = 'b')
+plt.plot(np.linspace(V_B,V_C,300),np.linspace(1-nlimgustBslope*V_B,1-nlimgustCslope*V_C,300),'--',color = 'r')
+plt.plot(np.linspace(V_C,V_D,300),np.linspace(1-nlimgustCslope*V_C,1-nlimgustDslope*V_D,300),color = 'b')
+plt.plot(np.linspace(0,V_B,300),np.linspace(1,1-nlimgustBslope*V_B,300),'--',color = 'r')
+plt.plot(V_D*np.ones(100),np.linspace(1+nlimgustDslope*V_D,1-nlimgustDslope*V_D,100),color = 'b')
+plt.plot(x_new3,y_new3,'b')
+
+
+plt.plot(V_C*np.ones(100),np.linspace(nlimpos,0,100),'--',color = 'g')
+plt.plot(V_A*np.ones(100),np.linspace(nlimpos,0,100),'--',color = 'g')
+plt.plot(V_H*np.ones(100),np.linspace(0,-1,100),'--',color = 'g')
+plt.plot(np.linspace(V_A,V_D,200),nlimpos*np.ones(200),'b')
+plt.plot(V_D*np.ones(100),np.linspace(nlimpos,0,100),'b')
+plt.plot(np.linspace(V_C,V_D,100),np.arange(-1,0,1/100),'b')
+plt.plot(np.linspace(V_H,V_C,100),-1*np.ones(100),'b')
+plt.plot(x_new,y_new,'--',color='r')
+plt.plot(x_new2,y_new2,'b')
+#plt.text(V_A,nlimpos,'A')
+#plt.text(V_H,-1,'H')
+#plt.text(V_C,-1,'F')
+#plt.text(V_D,0,'E')
+#plt.text(V_D,nlimpos,'D')
+#plt.text(V_C,nlimpos,'C')
+
+plt.scatter(cross1[0],cross1[1], color='black' )
+plt.scatter(cross2[0],cross2[1], color='black' )
+plt.scatter(cross3[0],cross3[1], color='black' )
+plt.scatter(cross4[0],cross4[1], color='black' )
+plt.scatter(cross5[0],cross5[1], color='black' )
+plt.scatter(cross6[0],cross6[1], color='black' )
+
 
 plt.ylim(-2,4)
 
@@ -277,6 +312,7 @@ plt.axvline(x=0, color='k')
 plt.show()
 
 
+######################################################################################################
 
 
 

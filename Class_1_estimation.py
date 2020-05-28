@@ -207,7 +207,7 @@ def CLASS1WEIGHTHYBRID(H_to_ker_ratio = input.H_to_ker_ratio,OEWINPUT = 1):
     R_GCH = 4157  # Gas constant of liquid hydrogen 4157 Nm/kg K
     T_CT = 13.15  # Temperature is around -260C(13.15K) for cryogenic tank
 
-    PRESSURE_GAS = 145000
+    PRESSURE_GAS = 145000 # Mantained at 1.35*10^5 pa to minimize boil off
 
     # CYLINDRICAL TANK WITH HEMISPHERICAL ENDS CAPS
 
