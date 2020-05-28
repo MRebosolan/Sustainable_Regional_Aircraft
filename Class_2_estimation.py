@@ -185,7 +185,7 @@ plt.show()
 
 df = pd.DataFrame({'data': ['MTOW','OEW'],
 'SRA': [MTOW, OEW_class2],
-'F28': [65000, 31219]})
+'F28': [9099900, 31219]})
 
 wng = [{'data': 'Wing group', 'SRA': W_wing, 'F28':7330},
        {'data': 'Empennage', 'SRA': W_empennage, 'F28':1632},
@@ -220,3 +220,9 @@ df['F28 fraction'] = df['F28']/df['F28'][0]
 # df['F28'] = to_kgs(df['F28'])
 print(df)
 latex = df.to_latex(index = False, caption = None)
+try:
+    file = open('C://Users//jornv//Google Drive//DSE upload//Class2dataframe.txt', 'w')
+    file.write(latex)
+    file.close()
+except:
+    print('you cannot update files, ask jorn if necessary')
