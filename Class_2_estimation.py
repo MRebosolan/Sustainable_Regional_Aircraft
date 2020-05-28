@@ -21,6 +21,7 @@ import input
 
 import numpy as np
 import matplotlib.pyplot as plt
+import pandas as pd
 def to_pounds(kg):
     return kg * 2.20462262
 
@@ -181,3 +182,11 @@ plt.xlabel("iterations")
 plt.ylabel("OEW in kg")
 plt.legend()
 plt.show()
+
+df = pd.DataFrame({'data': ['MTOW','OEW'],
+'SRA': [MTOW, OEW_class2],
+'F28': [123, 456]})
+
+x = [{'data': 'abc', 'SRA': 'zas', 'F28':'zeuven'}]
+
+df.append(x, ignore_index = True, sort = False)
