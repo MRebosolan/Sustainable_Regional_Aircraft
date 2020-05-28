@@ -197,6 +197,15 @@ wng = [{'data': 'Wing group', 'SRA': W_wing, 'F28':7330},
 df = df.append(wng, ignore_index = True, sort = False)
 
 
+power =[{'data': 'Engines', 'SRA': W_engines, 'F28':4495},
+       {'data': 'Exhaust', 'F28':127},
+       {'data': 'Kerosene system', 'SRA': W_fuel_system_kerosene, 'F28':545},
+       {'data': 'Hydrogen tanks', 'SRA': W_fuel_system_hydrogen},
+       {'data': 'Power controls', 'SRA': W_power_controls, 'F28':215},
+       {'data': 'Total propulsion', 'SRA': W_powerplant, 'F28':5382}]
+df = df.append(power, ignore_index = True, sort = False)
+
+
 df['fraction'] = df['SRA']/MTOW
 df['F28 fraction'] = df['F28']/df['F28'][0]
 # df['SRA'] = to_kgs(df['SRA'])
