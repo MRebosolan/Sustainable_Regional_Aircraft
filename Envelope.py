@@ -11,7 +11,7 @@ S        = 871.88    #ft^2
 CLmax    = 1.8
 CLmaxneg = -1.0
 kc       = 33        #Varies 36-29 as W/S varies from 20-100 psf
-nlimgust = 4.4       #usually 4.4 but check 
+nlim = 4.4       #usually 4.4 but check 
 Kg       = 0.781     #Gust alleviation factor
 UdeB     = 85        #Depends on altitude in ft (above 20k ft) [ROSKAM V pg 38]
 UdeC     = 65        #Depends on altitude in ft (above 20k ft) [ROSKAM V pg 38]
@@ -84,13 +84,10 @@ V_D=1.25*V_C
 def mug(G_W,S,rho,cbar,CLa):
     return 2*(G_WvoerS)/(rho*cbar*CLa)
 
-def Kg(mug):
-    return 0.88*mug/(5.3+mug)
 
-
-nlimgustB =  1 + (Kg*UdeB*CLa)/(498*(G_WvoerS))
-nlimgustC =  1 + (Kg*UdeC*CLa)/(498*(G_WvoerS))
-nlimgustD =  1 + (Kg*UdeD*CLa)/(498*(G_WvoerS))
+nlimgustBslope =  (Kg*UdeB*CLa)/(498*(G_WvoerS))
+nlimgustCslope =  (Kg*UdeC*CLa)/(498*(G_WvoerS))
+nlimgustDslope =  (Kg*UdeD*CLa)/(498*(G_WvoerS))
 
 ################################################################
 # Plotting
@@ -118,14 +115,23 @@ constlist2= np.arange(V_A,V_D)
 lits=np.arange(0,V_C)
 
 plt.plot(constlist,nlimpos*np.ones(300),'--',color = 'r')
-plt.plot(np.linspace(0,V_C,300),np.linspace(1,nlimpos,300),'--',color = 'g')
-plt.plot(np.linspace(0,V_C,300),np.linspace(1,-1,300),'--',color = 'g')
-plt.plot(np.linspace(0,V_D,400),np.linspace(1,nlimpos,400),'--',color = 'g')
-plt.plot(np.linspace(0,V_D,400),np.linspace(1,0,400),'--',color = 'g')
+plt.plot(constlist,-1*np.ones(300),'--', color = 'r')
+
+#plt.plot(np.linspace(0,V_C,300),np.linspace(1,nlimpos,300),'--',color = 'g')
+#plt.plot(np.linspace(0,V_C,300),np.linspace(1,-1,300),'--',color = 'g')
+#plt.plot(np.linspace(0,V_D,400),np.linspace(1,nlimpos,400),'--',color = 'g')
+#plt.plot(np.linspace(0,V_D,400),np.linspace(1,0,400),'--',color = 'g')
+
+plt.plot(np.linspace(0,V_B,300),np.linspace(1,1+nlimgustBslope*V_B,300),'--',color = 'y')
+plt.plot(np.linspace(0,V_B,300),np.linspace(1,1-nlimgustBslope*V_B,300),'--',color = 'y')
+plt.plot(np.linspace(0,V_C,400),np.linspace(1,1+nlimgustCslope*V_C,400),'--',color = 'y')
+plt.plot(np.linspace(0,V_C,300),np.linspace(1,1-nlimgustCslope*V_C,300),'--',color = 'y')
+plt.plot(np.linspace(0,V_D,400),np.linspace(1,1+nlimgustDslope*V_D,400),'--',color = 'y')
+plt.plot(np.linspace(0,V_D,300),np.linspace(1,1-nlimgustDslope*V_D,300),'--',color = 'y')
+
 plt.plot(V_C*np.ones(100),np.linspace(nlimpos,0,100),'--',color = 'g')
 plt.plot(V_A*np.ones(100),np.linspace(nlimpos,0,100),'--',color = 'g')
 plt.plot(V_H*np.ones(100),np.linspace(0,-1,100),'--',color = 'g')
-plt.plot(constlist,-1*np.ones(300),'--', color = 'r')
 plt.plot(np.linspace(V_A,V_D,200),nlimpos*np.ones(200),'b')
 plt.plot(V_D*np.ones(100),np.linspace(nlimpos,0,100),'b')
 plt.plot(np.linspace(V_C,V_D,100),np.arange(-1,0,1/100),'b')
@@ -139,15 +145,17 @@ plt.text(V_D,0,'E')
 plt.text(V_D,nlimpos,'D')
 plt.text(V_C,nlimpos,'C')
 
-plt.ylim(-3,5)
+plt.ylim(-2,4)
 
 
 plt.axhline(y=0, color='k')
 plt.axvline(x=0, color='k')
 
 
-
 plt.show()
+
+
+
 
 
 
