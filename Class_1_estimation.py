@@ -203,19 +203,20 @@ def CLASS1WEIGHTHYBRID(H_to_ker_ratio = input.H_to_ker_ratio,OEWINPUT = 1):
 
     # TANK THICKNESS COMPUTATION
 
-    DENSITY_LH = 71  # Desnity liquid hydrogen 71 KG/M3
+    DENSITY_LH = input.rho_hydrogen  # Desnity liquid hydrogen 71 KG/M3
     R_GCH = 4157  # Gas constant of liquid hydrogen 4157 Nm/kg K
     T_CT = 13.15  # Temperature is around -260C(13.15K) for cryogenic tank
 
-    PRESSURE_GAS = DENSITY_LH * R_GCH * T_CT * 0.99704 / (
-                1 - DENSITY_LH * R_GCH * T_CT * (6.4149 * 10 ** (-9)))  # PRESSURE OF GAS
+    PRESSURE_GAS = 145000 # Mantained at 1.35*10^5 pa to minimize boil off
 
     # CYLINDRICAL TANK WITH HEMISPHERICAL ENDS CAPS
 
     FOS_TANK = 2  # Safety factor for the tank
-    MAX_ALLOWABLE_STRESS = 414  # Max allowable stress of the Aluminium alloy 2219 tank: 414 MPa
+    MAX_ALLOWABLE_STRESS = 219000000  # Max allowable stress of the Aluminium alloy 2219 tank: 414 MPa
 
     TANK_THICKNESS = PRESSURE_GAS * R * FOS_TANK / (2 * MAX_ALLOWABLE_STRESS)
+    print(TANK_THICKNESS,PRESSURE_GAS,R)
+    STRUCTURAL_TANK_MASS = TANK_SURFACE_AREA*TANK_MATERIAL_DENSITY*TANK_THICKNESS #tank mass exluding insulation + other systems required
 
     INFO=[MTOW,OEW,FUEL,W_payload,(MZFW),(KEROSENE),(HYDROGEN),HYDROGENVOLUME,TANK_DIAMETER,STRUCTURAL_TANK_MASS]
     return INFO    
@@ -236,7 +237,6 @@ import matplotlib.pyplot as plt
 
 for i in range(0,101):
     outputc1h=CLASS1WEIGHTHYBRID(i/100,1)
-    print(CLASS1WEIGHTHYBRID(i/100,1))
     mtowlist.append(outputc1h[0])
     oewlist.append(outputc1h[1])
     kerosenelist.append(outputc1h[5])
