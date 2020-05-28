@@ -7,22 +7,26 @@ Created on Thu May 28 09:48:30 2020
 
 #input parameters
 import numpy as np
-
+from math import radians
 
 # MTOM = 36000 # estimate, [kg]  these are commented out on purpose, as they will change due to class 1 and two converging
 # MTOW = MTOM * 9.81 #N
 AR = 8 # estimate, [-]
-half_sweep = np.cos(27 ) #estimate, [degrees]
+half_sweep = np.cos(radians(27)) #estimate, [degrees]
 n_max = 3 #estimate
 n_ult = 1.5* n_max
+
 wingloading = 4375.84 #estimate, N/m^2
 powerloading = 0.44 #thrust over weight
+
 # S = MTOW /wingloading #m^2
 t_over_c = 0.1 #estimate, []
 taper = 0.4 #estimate, []
-mach_h = 0.5 #estimate, []
-V_dive = 300 #estimate, knots
-lf = 30 #estimate, lil shorter than CRJ as 5 seat rows are used
+mach_h = 0.5 #estimate, [] #max Mach at SL
+rho = 1.225 * 0.0624279606 #estimate, in lbs/ft3
+rho_zero = 0.00237 #fucking americans, this is slug/ft3
+V_dive = 300 #estimate, #KNOTS!!
+lf = 30 #m estimate, lil shorter than CRJ as 5 seat rows are used
 hf = 2.5 #estimate
 A_inlet = 1.17 #m2
 ln = 0.8129 #m 1/4 of CRJ engine length
