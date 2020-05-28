@@ -185,8 +185,19 @@ plt.show()
 
 df = pd.DataFrame({'data': ['MTOW','OEW'],
 'SRA': [MTOW, OEW_class2],
-'F28': [123, 456]})
+'F28': [65000, 31219]})
 
-x = [{'data': 'abc', 'SRA': 'zas', 'F28':'zeuven'}]
+wng = [{'data': 'Wing group', 'SRA': W_wing, 'F28':7330},
+       {'data': 'Empennage', 'SRA': W_empennage, 'F28':1632},
+       {'data': 'Fuselage', 'SRA': W_fuselage, 'F28':7043},
+       {'data': 'Nacelle', 'SRA': W_nacelles, 'F28':834},
+       {'data': 'Landing gear', 'SRA': W_landing_gear, 'F28':2759},
+       {'data': 'Total structural', 'SRA': W_struct, 'F28':19598}]
+df = df.append(wng, ignore_index = True, sort = False)
 
-df.append(x, ignore_index = True, sort = False)
+print(df.get_value(1,'F28'))
+df['fraction'] = df['SRA']/MTOW
+df['F28 fraction'] = df['SRA']/1
+# df['SRA'] = to_kgs(df['SRA'])
+# df['F28'] = to_kgs(df['F28'])
+print(df)
