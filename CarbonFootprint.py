@@ -1,7 +1,7 @@
 from numpy import *
 import matplotlib.pyplot as plt
 from input import *
-
+import Class_1_estimation as Cl1
 
 #Fuel_use = 3515.4  # Total fuel mass at design range
 #H2_ff = arange(0., 1.1, 0.1)  # Hydrogen fuel fraction
@@ -27,7 +27,7 @@ GWP_alt = array([[1., 0., -7.1],
                  [1., 0.62, 4.6],
                  [1., 0.72, 0.6]])
 
-
+GWP = GWP_alt[Cruise_alt]           # Specify the altitude in km
 
 # plt.plot(eq, EI_NOxx)
 # plt.show()
@@ -41,9 +41,9 @@ GWP_alt = array([[1., 0., -7.1],
 #     plt.plot(eq, ppmNOx[i, :])
 # plt.show()
 
-def cf(H2_ff, NOx_H2, GWP):
-    Fuel_use_H2 = H2_ff * Fuel_use  # Fuel mass H2 at design range
-    Fuel_use_ker = (1 - H2_ff) * Fuel_use  # Fuel mass Kerosene at design range
+def cf(Total_fuel, H2_fuelfrac, Ker_fuelfrac, NOx_H2, GWP):
+    Fuel_use_ker = Total_fuel*Ker_fuelfrac
+    Fuel_use_H2 = Total_fuel*H2_fuelfrac
 
     # kg particles/ kg JET-A1
     perkgJetA1 = [3.16, 1.24, 0.02311]  # CO2, H20, N0x
@@ -58,36 +58,36 @@ def cf(H2_ff, NOx_H2, GWP):
         CO2eq_paxkm = (perkgJetA1[i] * Fuel_use_CRJ * GWP[i]) / (Pax_CRJ * Range_CRJ)
         CF_CRJ += CO2eq_paxkm
 
-    print("CRJ=",CF_CRJ)
+    print("CRJ CF=",CF_CRJ)
     # Concept Total emissions (kg CO2-eq)
     for i in range(len(GWP)):
         CO2eq_paxkm_ker = (perkgJetA1[i] * Fuel_use_ker * GWP[i]) / (Npax * Design_range)
         CO2eq_paxkm_H2 = (perkgH2[i] * Fuel_use_H2 * GWP[i]) / (Npax * Design_range)
         CF_concept += CO2eq_paxkm_ker + CO2eq_paxkm_H2
-    print("Concept=", CF_concept)
+    print("Concept CF=", CF_concept)
 
     Ratio_CF = CF_concept / CF_CRJ  # Ratio of the Carbon Footprints, target = max 0.75
+    print("Ratio CF =", Ratio_CF)
+    return #CF_concept, Ratio_CF
 
-    return Ratio_CF
+# CF_list = []
+#
+# for i in range(len(H2_ff)):
+#    CF = cf(H2_ff[i], NOx_H2, GWP)
+#    CF_list.append(CF)
+#
+# # for i in range(1,4):
+# #    plt.plot(GWP[:, i], GWP[:, 0])
+#
+# plt.plot(H2_ff, CF_list)
+# plt.ylabel("CF Concept / CF CRJ")
+# plt.xlabel("Ratio H2/ Total fuel")
+# plt.ylim([0, 1])
+# plt.xlim([0, 1])
+# plt.grid()
+# plt.show()
 
-CF_list = []
-
-for i in range(len(H2_ff)):
-   CF = cf(H2_ff[i], NOx_H2, GWP)
-   CF_list.append(CF)
-
-# for i in range(1,4):
-#    plt.plot(GWP[:, i], GWP[:, 0])
-
-plt.plot(H2_ff, CF_list)
-plt.ylabel("CF Concept / CF CRJ")
-plt.xlabel("Ratio H2/ Total fuel")
-plt.ylim([0, 1])
-plt.xlim([0, 1])
-plt.grid()
-plt.show()
-
-
+print(cf(4000, 0.8, 0.2, NOx_H2, GWP) )
 
 
 
