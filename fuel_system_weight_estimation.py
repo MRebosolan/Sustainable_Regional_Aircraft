@@ -7,4 +7,3 @@ def W_fuelsystem (N_t, K_fsp, W_f):
     Wfs = 80 * (N_e + N_t -1) + 15*(N_t**0.5)*((W_f/K_fsp)**0.333)
     return Wfs
 
-#fuckdapolice
