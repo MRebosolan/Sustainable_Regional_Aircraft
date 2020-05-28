@@ -1,18 +1,11 @@
 from numpy import *
 import matplotlib.pyplot as plt
+from input import *
 
-# CRJ700 parameters
-Range_CRJ = 2593  # design range
-Pax_CRJ = 78  # Number of passengers
-Fuel_use_CRJ = 4740  # Fuel mass at design range
-Cruise_alt_max_CRJ = 12497  # Max operating altitude
 
-# Our parameters
-Range = 2000  # design range
-Pax = 75  # Number of passengers
-Fuel_use = 3515.4  # Total fuel mass at design range
-H2_ff = arange(0., 1.1, 0.1)  # Hydrogen fuel fraction
-Cruise_alt = 10  # Max operating altitude in km
+#Fuel_use = 3515.4  # Total fuel mass at design range
+#H2_ff = arange(0., 1.1, 0.1)  # Hydrogen fuel fraction
+
 
 # GWP
 # Global Warming Potential (equivalent emission ratio to CO2 on 100 year scale (CO2-eq))
@@ -34,19 +27,6 @@ GWP_alt = array([[1., 0., -7.1],
                  [1., 0.62, 4.6],
                  [1., 0.72, 0.6]])
 
-GWP = GWP_alt[Cruise_alt]           # Specify the altitude in km
-
-# H2 NOx emission: Depends on engine characteristics
-A = 14                            # Correlation constant for emission index based on Jet-A fuel (advanced LDI tech as reference)
-eq = 0.4                            # equivalence ratio (fuel/air // fuel/air stoichiometric)
-fa_st = 1./34.33                    # stoichiometric fuel/air ratio for H2
-fa = eq*fa_st                # actual fuel/air ratio
-P3 = 0.7                            # fuel injector inlet pressure MPA
-T3 = 800                            # fuel injector inlet temperature 600 K approach, 700 K cruise, 800K take-off
-dPP = 5                             # dP/P fuel injector air flow pressure drop ratio
-
-#kg NOx/ kg fuel
-NOx_H2 = A * P3**0.594 * exp(T3/350) * fa**1.6876 * (100 * dPP)**-0.56 / 1000
 
 
 # plt.plot(eq, EI_NOxx)
@@ -81,8 +61,8 @@ def cf(H2_ff, NOx_H2, GWP):
     print("CRJ=",CF_CRJ)
     # Concept Total emissions (kg CO2-eq)
     for i in range(len(GWP)):
-        CO2eq_paxkm_ker = (perkgJetA1[i] * Fuel_use_ker * GWP[i]) / (Pax * Range)
-        CO2eq_paxkm_H2 = (perkgH2[i] * Fuel_use_H2 * GWP[i]) / (Pax * Range)
+        CO2eq_paxkm_ker = (perkgJetA1[i] * Fuel_use_ker * GWP[i]) / (Npax * Design_range)
+        CO2eq_paxkm_H2 = (perkgH2[i] * Fuel_use_H2 * GWP[i]) / (Npax * Design_range)
         CF_concept += CO2eq_paxkm_ker + CO2eq_paxkm_H2
     print("Concept=", CF_concept)
 
