@@ -2,7 +2,6 @@ import APU_weight_estimation as apu
 import Cargo_handling_weight_estimation as cargo
 import electrical_system_weight_estimation as electrical
 import Engine_weight_estimation as engine
-# import Envelope as envelope
 import flight_controls_weight_estimation as flightcontrols
 import fuel_system_weight_estimation as fuelsystem
 import furnishing_weight_estimation as furnishing
