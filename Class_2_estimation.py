@@ -195,9 +195,9 @@ wng = [{'data': 'Wing group', 'SRA': W_wing, 'F28':7330},
        {'data': 'Total structural', 'SRA': W_struct, 'F28':19598}]
 df = df.append(wng, ignore_index = True, sort = False)
 
-print(df.get_value(1,'F28'))
+
 df['fraction'] = df['SRA']/MTOW
-df['F28 fraction'] = df['SRA']/1
+df['F28 fraction'] = df['F28']/df['F28'][0]
 # df['SRA'] = to_kgs(df['SRA'])
 # df['F28'] = to_kgs(df['F28'])
 print(df)
