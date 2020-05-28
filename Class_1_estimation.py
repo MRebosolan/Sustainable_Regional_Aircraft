@@ -128,7 +128,7 @@ def CLASS1WEIGHTHYBRID(H_to_ker_ratio = input.H_to_ker_ratio,OEWINPUT = 1):
     np_c=0.82
     np_loiter=0.77
     
-    t_loiter=1800#s
+    t_loiter=input.t_loiter
     R_loiter=t_loiter*V_loiter
     
     R_c2=200

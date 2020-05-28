@@ -74,7 +74,7 @@ cj_c2 = cj_ck2 * 0.349 * H_to_ker_ratio + cj_ck2 * (1 - H_to_ker_ratio)
 
 cj_kloiter = cj_ck*0.7
 cj_loiter = cj_kloiter * 0.349 * H_to_ker_ratio + cj_kloiter * (1 - H_to_ker_ratio)
-
+t_loiter=2700 #s, as in 45 minutes
 W_pax=93 #includes luggage kg
 W_cargo=1000 #kg
 n_crew= N_fdc+N_cc
