@@ -68,7 +68,7 @@ lpax = toft(input.lpax)
 Npax =input.Npax
 N_fdc =input.N_fdc
 N_cc =input.N_cc
-P_c = input.P_c #should be in psf
+P_c = input.P_c * 0.02089 #should be in psf
 Sff = tosqft(input.Sff)
 
 #tails:
