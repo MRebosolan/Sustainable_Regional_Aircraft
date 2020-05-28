@@ -1,7 +1,6 @@
 from numpy import *
 import matplotlib.pyplot as plt
 from input import *
-import Class_1_estimation as Cl1
 
 #Fuel_use = 3515.4  # Total fuel mass at design range
 #H2_ff = arange(0., 1.1, 0.1)  # Hydrogen fuel fraction
