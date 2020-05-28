@@ -215,7 +215,7 @@ def CLASS1WEIGHTHYBRID(H_to_ker_ratio = input.H_to_ker_ratio,OEWINPUT = 1):
     MAX_ALLOWABLE_STRESS = 219000000  # Max allowable stress of the Aluminium alloy 2219 tank: 414 MPa
 
     TANK_THICKNESS = PRESSURE_GAS * R * FOS_TANK / (2 * MAX_ALLOWABLE_STRESS)
-    print(TANK_THICKNESS,PRESSURE_GAS,R)
+    # print(TANK_THICKNESS,PRESSURE_GAS,R)
     STRUCTURAL_TANK_MASS = TANK_SURFACE_AREA*TANK_MATERIAL_DENSITY*TANK_THICKNESS #tank mass exluding insulation + other systems required
 
     INFO=[MTOW,OEW,FUEL,W_payload,(MZFW),(KEROSENE),(HYDROGEN),HYDROGENVOLUME,TANK_DIAMETER,STRUCTURAL_TANK_MASS]
@@ -300,7 +300,7 @@ plt.plot(xlist,[i*0.6/0.81 for i in kerosenelist],label='kerosene cost')
 plt.plot(xlist,[sum(x) for x in zip([i*input.hydrogen_cost for i in hydrogenlist], [i*0.6/0.81 for i in kerosenelist])],label='total cost')
 
 plt.subplot(3,3,8)
-plt.plot(xlist,[i*input.hydrogen_cost for i in fuellist],label='Hydrogen emissions')
+plt.plot(xlist,[i*input.hydrogen_cost for i in tfuellist],label='Hydrogen emissions')
 plt.plot(xlist,[i*0.6/0.81 for i in kerosenelist],label='kerosene emissions')
 plt.plot(xlist,[sum(x) for x in zip([i*input.hydrogen_cost for i in hydrogenlist], [i*0.6/0.81 for i in kerosenelist])],label='total emissions')
 plt.ylabel('US DOLLARS')
