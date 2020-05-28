@@ -7,7 +7,7 @@ Created on Thu May 28 09:48:30 2020
 
 #input parameters
 import numpy as np
-import Tail_weight_estimation as tail
+
 
 # MTOM = 36000 # estimate, [kg]  these are commented out on purpose, as they will change due to class 1 and two converging
 # MTOW = MTOM * 9.81 #N
