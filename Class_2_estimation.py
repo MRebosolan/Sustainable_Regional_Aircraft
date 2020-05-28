@@ -196,12 +196,12 @@ wng = [{'data': 'Wing group', 'SRA': W_wing, 'F28':7330},
 df = df.append(wng, ignore_index = True, sort = False)
 
 
-power =[{'data': 'Engines', 'SRA': W_wing, 'F28':7330},
-       {'data': 'Exhaust', 'SRA': W_empennage, 'F28':1632},
-       {'data': 'Fuel', 'SRA': W_fuselage, 'F28':7043},
-       {'data': 'Nacelle', 'SRA': W_nacelles, 'F28':834},
-       {'data': 'Landing gear', 'SRA': W_landing_gear, 'F28':2759},
-       {'data': 'Total structural', 'SRA': W_struct, 'F28':19598}]
+power =[{'data': 'Engines', 'SRA': W_engines, 'F28':4495},
+       {'data': 'Exhaust', 'F28':127},
+       {'data': 'Kerosene system', 'SRA': W_fuel_system_kerosene, 'F28':545},
+       {'data': 'Hydrogen tanks', 'SRA': W_fuel_system_hydrogen},
+       {'data': 'Power controls', 'SRA': W_power_controls, 'F28':215},
+       {'data': 'Total propulsion', 'SRA': W_powerplant, 'F28':5382}]
 df = df.append(power, ignore_index = True, sort = False)
 
 
