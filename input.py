@@ -35,11 +35,11 @@ P_c =74682.5 #Pa
 Sff = 7.6
 N_eng = 2
 N_t = 2
-rho_hydrogen = 71 #g/l
+rho_hydrogen = 70 #g/l
 H_to_ker_ratio = 0
 Sh = 20.75
-half_chord_sweep_hor = 20 #deg
-half_chord_sweep_vert = 35 #deg
+half_chord_sweep_hor = np.radians(20) #deg
+half_chord_sweep_vert = np.radians(35) #deg
 
 Sv = 13.36
 bv = 7.57 #m good ol' CRJ700
@@ -59,6 +59,7 @@ cj_c = cj_ck * 0.349 * H_to_ker_ratio + cj_ck * (1 - H_to_ker_ratio)
 
 cj_ck2 = cj_ck * 0.9
 cj_c2 = cj_ck2 * 0.349 * H_to_ker_ratio + cj_ck2 * (1 - H_to_ker_ratio)
+
 cj_kloiter = cj_ck*0.7
 cj_loiter = cj_kloiter * 0.349 * H_to_ker_ratio + cj_kloiter * (1 - H_to_ker_ratio)
 
