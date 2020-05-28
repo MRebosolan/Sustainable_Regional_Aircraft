@@ -11,9 +11,12 @@ S        = 871.88    #ft^2
 CLmax    = 1.8
 CLmaxneg = -1.0
 kc       = 33        #Varies 36-29 as W/S varies from 20-100 psf
-nlim     = 4.4       #usually 4.4 but check 
-Kg       = 0         #Gust alleviation factor
-Ude      = 0         #Depends on altitude in ft (above or below 20k)
+nlimgust = 4.4       #usually 4.4 but check 
+Kg       = 0.781     #Gust alleviation factor
+UdeB     = 85        #Depends on altitude in ft (above 20k ft) [ROSKAM V pg 38]
+UdeC     = 65        #Depends on altitude in ft (above 20k ft) [ROSKAM V pg 38]
+UdeD     = 35        #Depends on altitude in ft (above 20k ft) [ROSKAM V pg 38]
+CLa      = 5.44      #rad^-1
 mug      = 0 
 cbar     = 0
 
@@ -51,7 +54,7 @@ CNmaxneg=1.1*CLmaxneg
 # Determination of Stall Speed
 
 V_S=(np.sqrt(2*(G_WvoerS)/(rho*CNmax)))*0.592484
-#V_S=137#kts
+
 
 # Determination of Design Cruise Speed (V_C minimum)
 
@@ -64,8 +67,7 @@ V_C=np.sqrt(G_WvoerS)*kc
 #V_C=V_B+43#kts
 #V_C=186.91#kts
 
-
-V_H=150#kts
+V_H=156#kts
 
 # Determination of Design Manoeuvering Speed (V_A minimum)
 
@@ -85,8 +87,10 @@ def mug(G_W,S,rho,cbar,CLa):
 def Kg(mug):
     return 0.88*mug/(5.3+mug)
 
-def nlim(Kg,Ude,V,Cla,G_W,S):
-    return 1 + (Kg*Ude*V*CLa)/(498*(G_WvoerS))
+
+nlimgustB =  1 + (Kg*UdeB*CLa)/(498*(G_WvoerS))
+nlimgustC =  1 + (Kg*UdeC*CLa)/(498*(G_WvoerS))
+nlimgustD =  1 + (Kg*UdeD*CLa)/(498*(G_WvoerS))
 
 ################################################################
 # Plotting
