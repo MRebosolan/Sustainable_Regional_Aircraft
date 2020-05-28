@@ -17,7 +17,7 @@ Cruise_alt = 10000  # Max operating altitude
 # kg particles/ kg H2
 
 
-# fuel to air vs NOxppm
+# fuel to air vs NOx ppm
 phi_NOx_H2 = [[0.1, 1.5],
               [0.2, 4.],
               [0.3, 8.],
