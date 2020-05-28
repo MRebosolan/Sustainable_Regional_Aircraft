@@ -305,13 +305,9 @@ plt.legend()
 plt.subplot(3,3,7)
 plt.plot(xlist,[i*input.hydrogen_cost for i in hydrogenlist],label='Hydrogen cost')
 plt.plot(xlist,[i*0.6/0.81 for i in kerosenelist],label='kerosene cost')
-<<<<<<< HEAD
-plt.plot(xlist,[sum(x) for x in zip([i*input.hydrogen_cost for i in hydrogenlist], [i*0.6/0.81 fogr i in kerosenelist])],label='total cost')
-
-=======
 plt.plot(xlist,[sum(x) for x in zip([i*input.hydrogen_cost for i in hydrogenlist], [i*0.6/0.81 for i in kerosenelist])],label='total cost')
 plt.legend()
->>>>>>> origin/Class2
+
 plt.ylabel('US DOLLARS')
 plt.xlabel('%MASS OF HYDROGEN IN MIXTURE')
 
