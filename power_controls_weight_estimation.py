@@ -12,4 +12,4 @@ def starting(W_e, pneumatic = True):
         return 38.93*(W_e/1000)**0.918
     
 def total(lf, b, W_e, pneumatic = True):
-    return engine_controls(lf,b), starting(W_e, pneumatic)
+    return engine_controls(lf,b)+ starting(W_e, pneumatic)
