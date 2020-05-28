@@ -206,11 +206,11 @@ df = df.append(power, ignore_index = True, sort = False)
 
 equipment = [{'data': 'Electrical systems', 'SRA': electrical_system_weight, 'F28':1892},
              {'data': 'Instruments', 'SRA': instrumentation_weight, 'F28':302},
-             {'data': 'Flight controls', flight_control_weight, 'F28':1387+364},
+             {'data': 'Flight controls', 'SRA': flight_control_weight, 'F28':1387+364},
              {'data': 'APU', 'SRA': APU_weight, 'F28':346},
              {'data': 'Air conditioning', 'SRA': airconditioning_pressurization_weight + oxygen_system_weight, 'F28':1074},
              {'data': 'Furnishing', 'SRA': furnishing_weight, 'F28':4030},
-             {'data': 'Cargo handling', 'SRA': cargo_equipment_weight, 'F28':Nan},
+             {'data': 'Cargo handling', 'SRA': cargo_equipment_weight},
              {'data': 'Total fixed equipment', 'SRA': W_equipment, 'F28':9395}]
 df = df.append(equipment, ignore_index = True, sort = False)
 
