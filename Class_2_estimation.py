@@ -172,6 +172,9 @@ while abs((OEW_class1_kg - OEWINPUT)*100/OEWINPUT)>= 0.5 and iterate < 5000:
     OEW_plot_class2.append(OEWINPUT)
 
 plt.figure()
-plt.plot(np.arange(0, len(OEW_plot_class1)), OEW_plot_class1)
-plt.plot(np.arange(0, len(OEW_plot_class2)), OEW_plot_class2)
+plt.plot(np.arange(0, len(OEW_plot_class1)), OEW_plot_class1, label = 'class 1')
+plt.plot(np.arange(0, len(OEW_plot_class2)), OEW_plot_class2, label = 'class 2')
+plt.xlabel("iterations")
+plt.ylabel("OEW in kg")
+plt.legend()
 plt.show()
