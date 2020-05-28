@@ -204,6 +204,9 @@ power =[{'data': 'Engines', 'SRA': W_engines, 'F28':4495},
        {'data': 'Total propulsion', 'SRA': W_powerplant, 'F28':5382}]
 df = df.append(power, ignore_index = True, sort = False)
 
+[{'data': 'Instruments', 'SRA': instrumentation_weight, 'F28':302},
+ {'data': 'Flight controls', flight_control_weight, 'F28':1387+364},
+
 equipment = [{'data': 'Total fixed equipment', 'SRA': W_equipment, 'F28':9395}]
 df = df.append(equipment, ignore_index = True, sort = False)
 
@@ -212,3 +215,4 @@ df['F28 fraction'] = df['F28']/df['F28'][0]
 # df['SRA'] = to_kgs(df['SRA'])
 # df['F28'] = to_kgs(df['F28'])
 print(df)
+latex = df.to_latex(index = False, caption = None)
