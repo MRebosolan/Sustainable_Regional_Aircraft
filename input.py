@@ -81,3 +81,34 @@ n_crew= N_fdc+N_cc
 W_payload=Npax*W_pax+W_cargo
 Design_range=2000#[km]
 hydrogen_cost=2.4 #US DOLLARS per KG
+
+# parameters for Carbon Footprint
+Range_CRJ = 2593  # design range
+Pax_CRJ = 78  # Number of passengers
+Fuel_use_CRJ = 4740  # Fuel mass at design range
+Cruise_alt_max_CRJ = 12497  # Max operating altitude
+
+Cruise_alt = 10 # Max operating altitude in km
+
+
+# H2 NOx emission: Depends on engine characteristics
+A = 14                            # Correlation constant for emission index based on Jet-A fuel (advanced LDI tech as reference)
+eq = 0.4                            # equivalence ratio (fuel/air // fuel/air stoichiometric)
+fa_st = 1./34.33                    # stoichiometric fuel/air ratio for H2
+fa = eq*fa_st                       # actual fuel/air ratio
+P3 = 0.7                            # fuel injector inlet pressure MPA
+T3 = 800                            # fuel injector inlet temperature 600 K approach, 700 K cruise, 800K take-off
+dPP = 5                             # dP/P fuel injector air flow pressure drop ratio
+#kg NOx/ kg fuel
+NOx_H2 = A * P3**0.594 * np.exp(T3/350) * fa**1.6876 * (100 * dPP)**-0.56 / 1000
+
+
+
+
+
+
+
+
+
+
+
