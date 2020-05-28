@@ -116,12 +116,14 @@ def CLASS1WEIGHTHYBRID(H_to_ker_ratio = input.H_to_ker_ratio,OEWINPUT = 1):
     R_c=Design_range-100 #km, correct for take off and landing covered distance
     
     cj_ck=input.cj_ck
-    cj_c=input.cj_c
+    cj_c = cj_ck * 0.349 * H_to_ker_ratio + cj_ck * (1 - H_to_ker_ratio)
     
     cj_ck2=input.cj_ck2
-    cj_c2=input.cj_c2
+    cj_c2 = cj_ck2 * 0.349 * H_to_ker_ratio + cj_ck2 * (1 - H_to_ker_ratio)
+
     cj_kloiter=input.cj_kloiter
-    cj_loiter=input.cj_loiter
+    cj_loiter = cj_kloiter * 0.349 * H_to_ker_ratio + cj_kloiter * (1 - H_to_ker_ratio)
+
 
     np_c=0.82
     np_loiter=0.77
@@ -178,12 +180,13 @@ def CLASS1WEIGHTHYBRID(H_to_ker_ratio = input.H_to_ker_ratio,OEWINPUT = 1):
     
     if OEWINPUT!=1:
         MTOW=(OEWINPUT+W_payload)/(1-FUELFRACMTOW)
+        
     FUEL=FUELFRACMTOW*MTOW
     OEW=MTOW-W_payload-FUEL
     MZFW=MTOW-FUEL
     KEROSENE=(1-H_to_ker_ratio)*FUEL
     HYDROGEN=FUEL-KEROSENE
-    HYDROGENVOLUME=HYDROGEN/HYDROGEN_DENSITY
+    HYDROGENVOLUME=1.072*HYDROGEN/HYDROGEN_DENSITY
     
     ###TANK
     R=0
@@ -199,7 +202,7 @@ def CLASS1WEIGHTHYBRID(H_to_ker_ratio = input.H_to_ker_ratio,OEWINPUT = 1):
     STRUCTURAL_TANK_MASS = TANK_SURFACE_AREA*TANK_MATERIAL_DENSITY*TANK_THICKNESS*10**(-3) #tank mass exluding insulation + other systems required
     
     INFO=[MTOW,OEW,FUEL,W_payload,(MZFW),(KEROSENE),(HYDROGEN),HYDROGENVOLUME,TANK_DIAMETER,STRUCTURAL_TANK_MASS]
-    return(INFO)    
+    return(INFO,cj_c)    
 
 
 mtowlist=[]
@@ -215,7 +218,8 @@ tdiameterlist=[]
 import matplotlib.pyplot as plt
 
 for i in range(0,101):
-    outputc1h=CLASS1WEIGHTHYBRID(i/100)
+    outputc1h=CLASS1WEIGHTHYBRID(i/100,1)[0]
+    print(CLASS1WEIGHTHYBRID(i/100,1)[1])
     mtowlist.append(outputc1h[0])
     oewlist.append(outputc1h[1])
     kerosenelist.append(outputc1h[5])
