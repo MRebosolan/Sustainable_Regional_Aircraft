@@ -1,4 +1,3 @@
-
 import input
 
 ##Class I Weight estimation
@@ -202,9 +201,8 @@ def CLASS1WEIGHTHYBRID(H_to_ker_ratio = input.H_to_ker_ratio,OEWINPUT = 1):
     TANK_THICKNESS = 3 # thickness in mm
     STRUCTURAL_TANK_MASS = TANK_SURFACE_AREA*TANK_MATERIAL_DENSITY*TANK_THICKNESS*10**(-3) #tank mass exluding insulation + other systems required
     
-    ###TANK
     INFO=[MTOW,OEW,FUEL,W_payload,(MZFW),(KEROSENE),(HYDROGEN),HYDROGENVOLUME,TANK_DIAMETER,STRUCTURAL_TANK_MASS]
-    return(INFO)    
+    return INFO    
 
 
 mtowlist=[]
@@ -220,7 +218,8 @@ tdiameterlist=[]
 import matplotlib.pyplot as plt
 
 for i in range(0,101):
-    outputc1h=CLASS1WEIGHTHYBRID(i/100,1)
+    outputc1h=CLASS1WEIGHTHYBRID(i/100,1)[0]
+    print(CLASS1WEIGHTHYBRID(i/100,1)[1])
     mtowlist.append(outputc1h[0])
     oewlist.append(outputc1h[1])
     kerosenelist.append(outputc1h[5])
@@ -269,3 +268,4 @@ plt.ylabel('kgs')
 plt.xlabel('%MASS OF HYDROGEN IN MIXTURE')
 plt.legend()
 plt.show() 
+
