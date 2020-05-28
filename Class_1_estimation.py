@@ -1,5 +1,5 @@
 import input
-
+from CarbonFootprint import cf
 ##Class I Weight estimation
 #def CLASS1WEIGHT(hydro):
 #    W_hydrosys=1200
@@ -233,6 +233,9 @@ hvollist=[]
 tdiameterlist=[]
 energylist=[]
 cjclist=[]
+emissionslist=[]
+emissionsratiolist=[]
+
 import matplotlib.pyplot as plt
 
 for i in range(0,101):
@@ -246,7 +249,10 @@ for i in range(0,101):
     tdiameterlist.append(outputc1h[8])
     tmasslist.append(outputc1h[9])
     energylist.append(kerosenelist[-1]*42.8+hydrogenlist[-1]*122.8)
+    emissionslist.append(cf(tfuellist[-1], i/100, 1-i/100, input.NOx_H2, input.GWP)[0])
+    emissionsratiolist.append(cf(tfuellist[-1], i/100, 1-i/100, input.NOx_H2, input.GWP)[1])
     xlist.append(i)
+
 
 plt.subplot(3,3,1)
 plt.plot(xlist,mtowlist,label='MTOW')  
@@ -280,7 +286,8 @@ plt.plot(xlist,tdiameterlist,label='Tank diameter')
 plt.ylabel('Meters')
 plt.xlabel('%MASS OF HYDROGEN IN MIXTURE')
 plt.legend()
-plt.subplot(2,3,5)
+
+plt.subplot(3,3,5)
 plt.plot(xlist,tmasslist,label='Tank mass')
 plt.ylabel('kgs')
 plt.xlabel('%MASS OF HYDROGEN IN MIXTURE')
@@ -298,12 +305,17 @@ plt.subplot(3,3,7)
 plt.plot(xlist,[i*input.hydrogen_cost for i in hydrogenlist],label='Hydrogen cost')
 plt.plot(xlist,[i*0.6/0.81 for i in kerosenelist],label='kerosene cost')
 plt.plot(xlist,[sum(x) for x in zip([i*input.hydrogen_cost for i in hydrogenlist], [i*0.6/0.81 for i in kerosenelist])],label='total cost')
+plt.legend()
+plt.ylabel('US DOLLARS')
+plt.xlabel('%MASS OF HYDROGEN IN MIXTURE')
 
 plt.subplot(3,3,8)
-plt.plot(xlist,[i*input.hydrogen_cost for i in fuellist],label='Hydrogen emissions')
-plt.plot(xlist,[i*0.6/0.81 for i in kerosenelist],label='kerosene emissions')
-plt.plot(xlist,[sum(x) for x in zip([i*input.hydrogen_cost for i in hydrogenlist], [i*0.6/0.81 for i in kerosenelist])],label='total emissions')
-plt.ylabel('US DOLLARS')
+plt.plot(xlist,emissionslist,label='emissions')
+plt.xlabel('%MASS OF HYDROGEN IN MIXTURE')
+plt.legend()
+
+plt.subplot(3,3,9)
+plt.plot(xlist,emissionsratiolist,label='CF RATIO wrt CRJ700')
 plt.xlabel('%MASS OF HYDROGEN IN MIXTURE')
 plt.legend()
 plt.show() 
