@@ -7,23 +7,23 @@ Created on Thu May 28 09:48:30 2020
 
 #input parameters
 import numpy as np
+
+g = 9.80665     #[m/s^2]
 from math import radians
 
 # MTOM = 36000 # estimate, [kg]  these are commented out on purpose, as they will change due to class 1 and two converging
-# MTOW = MTOM * 9.81 #N
+# MTOW = MTOM * g #N  !!!!!!!!!!!!!make sure this is in newtons!!!!!!!!!!!!!
+MLW = 25000 * g         #maximum landing weight [N], to be calculated
 AR = 8 # estimate, [-]
-<<<<<<< HEAD
-half_sweep = np.cos(27) #estimate, [degrees]
-=======
+
 half_sweep = np.cos(radians(27)) #estimate, [degrees]
->>>>>>> origin/Class2
+
 n_max = 3 #estimate
 n_ult = 1.5* n_max
-
 wingloading = 4375.84 #estimate, N/m^2
 powerloading = 0.44 #thrust over weight
-
 # S = MTOW /wingloading #m^2
+#Tto = powerloading * MTOW
 t_over_c = 0.1 #estimate, []
 taper = 0.4 #estimate, []
 mach_h = 0.5 #estimate, [] #max Mach at SL
@@ -85,6 +85,26 @@ n_crew= N_fdc+N_cc
 W_payload=Npax*W_pax+W_cargo
 Design_range=2000#[km]
 hydrogen_cost=2.4 #US DOLLARS per KG
+
+
+#Flight performance
+rho0 = 1.225    #kg/m^3
+CD0 = 0.01277   #[-], to be refined as this comes from roskam statistics
+CD0_togd = 0.01277 + .015 + .02     #[-], to be refined as this comes from roskam statistics
+CD0_landGD = CD0 + .02 + .065       #[-], to be refined as this comes from roskam statistics
+e = 0.85        #[-], Oswald effiency factor, to be refined as this comes from roskam statistics
+CLmax_land = 2.25   #TBD
+CLmax_clean = 1.8   #TBD
+CLmax_to = 2.1      #TBD
+mu = 0.04           #runway friction coefficient at take-off, to be reconsidered
+mu_br = 0.3         #braking coefficient during landing, to be reconsidered
+h_sc = 50 * 0.3048  #screen height equal to 50 ft [m]
+gamma_cl = np.radians(7)    #climb angle right after rotation, to be refined [rad]
+gamma_ap = np.radians(3)    #approach angle (glide slope) [rad]
+Trev = 50000    #[N], maximum thrust reverse force applied during braking
+c_t = 0.0002    #[1/s] specific fuel consumption, to be refined
+H = 120E6       #Heating value of hydrogen, refine if we fly on kerosene and hydrogen simultenously, or 141.7E6 (higher value of hydrogen)
+rho_c = 0.4135  #[kg/m^3], cruise density (this is the one for 10 km cruise altitude)
 
 # parameters for Carbon Footprint
 Range_CRJ = 2593  # design range
