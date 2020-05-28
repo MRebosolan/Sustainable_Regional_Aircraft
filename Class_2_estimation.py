@@ -198,19 +198,19 @@ df = df.append(wng, ignore_index = True, sort = False)
 
 power =[{'data': 'Engines', 'SRA': W_engines, 'F28':4495},
        {'data': 'Exhaust', 'F28':127},
-       {'data': 'Kerosene system', 'SRA': W_fuel_system_kerosene, 'F28':545},
        {'data': 'Hydrogen tanks', 'SRA': W_fuel_system_hydrogen},
+       {'data': 'Kerosene system', 'SRA': W_fuel_system_kerosene, 'F28':545},
        {'data': 'Power controls', 'SRA': W_power_controls, 'F28':215},
        {'data': 'Total propulsion', 'SRA': W_powerplant, 'F28':5382}]
 df = df.append(power, ignore_index = True, sort = False)
 
 equipment = [{'data': 'Electrical systems', 'SRA': electrical_system_weight, 'F28':1892},
              {'data': 'Instruments', 'SRA': instrumentation_weight, 'F28':302},
-             {'data': 'Flight controls', flight_control_weight, 'F28':1387+364},
+             {'data': 'Flight controls', 'SRA': flight_control_weight, 'F28':1387+364},
              {'data': 'APU', 'SRA': APU_weight, 'F28':346},
              {'data': 'Air conditioning', 'SRA': airconditioning_pressurization_weight + oxygen_system_weight, 'F28':1074},
              {'data': 'Furnishing', 'SRA': furnishing_weight, 'F28':4030},
-             {'data': 'Cargo handling', 'SRA': cargo_equipment_weight, 'F28':Nan},
+             {'data': 'Cargo handling', 'SRA': cargo_equipment_weight, 'F28':'Nan'},
              {'data': 'Total fixed equipment', 'SRA': W_equipment, 'F28':9395}]
 df = df.append(equipment, ignore_index = True, sort = False)
 
