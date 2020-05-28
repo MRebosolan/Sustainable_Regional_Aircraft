@@ -299,6 +299,10 @@ plt.plot(xlist,[i*input.hydrogen_cost for i in hydrogenlist],label='Hydrogen cos
 plt.plot(xlist,[i*0.6/0.81 for i in kerosenelist],label='kerosene cost')
 plt.plot(xlist,[sum(x) for x in zip([i*input.hydrogen_cost for i in hydrogenlist], [i*0.6/0.81 for i in kerosenelist])],label='total cost')
 
+plt.subplot(3,3,8)
+plt.plot(xlist,[i*input.hydrogen_cost for i in fuellist],label='Hydrogen emissions')
+plt.plot(xlist,[i*0.6/0.81 for i in kerosenelist],label='kerosene emissions')
+plt.plot(xlist,[sum(x) for x in zip([i*input.hydrogen_cost for i in hydrogenlist], [i*0.6/0.81 for i in kerosenelist])],label='total emissions')
 plt.ylabel('US DOLLARS')
 plt.xlabel('%MASS OF HYDROGEN IN MIXTURE')
 plt.legend()
