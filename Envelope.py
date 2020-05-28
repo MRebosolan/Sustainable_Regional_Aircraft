@@ -4,17 +4,18 @@ import matplotlib.pyplot as plt
 ###########################################################
 # Parameters
 
-MTOW = 36000#kg
-V_S, V_C, V_D, V_B, V_A, V_H = 0, 0, 0, 0, 0, 0
-V = 0 #Quadratic variable
-G_W, rho, S, CLmax, CLa, CNmax = 91.391484, 0.00237, 871.88, 1.8, 0, 0 
-kc = 33
-nlimpos, nlimneg = 0, 0
-nlim = 4.4 #usually 4.4 but check 
-Kg = 0 #Gust alleviation factor
-Ude = 0 #depends on altitude in ft (above or below 20k)
-mug = 0 
-cbar = 0
+MTOW     = 36000     #kg
+G_WvoerS    = 91.391484 #psf
+rho      = 0.00237   #slugs/ft^3
+S        = 871.88    #ft^2
+CLmax    = 1.8
+CLmaxneg = -1.0
+kc       = 33        #Varies 36-29 as W/S varies from 20-100 psf
+nlim     = 4.4       #usually 4.4 but check 
+Kg       = 0         #Gust alleviation factor
+Ude      = 0         #Depends on altitude in ft (above or below 20k)
+mug      = 0 
+cbar     = 0
 
 ###########################################################
 #Conversions to Imperial 
@@ -28,14 +29,14 @@ S = 10.7639*S
 # Same as ramp weight but also considering taxiing fuel
 
 G_W=MTOW/0.99
-#S=MTOW*10.7639/(4375.84)
 
 # Determination of Design Limit Load Factor (nlim pos min)
 
-nlimpos=2.1+24000/(G_W+10000)
-#        if 2.1+24000/(G_W+10000)<(3.8*MTOW):
-#            if 2.1+24000/(G_W+10000)>2.5:
-#                return 
+if 2.1+24000/(G_W+10000)>2.5:
+    nlimpos=2.1+24000/(G_W+10000)
+else:
+    nlimpos = 2.5
+    
 #nlimpos<3.8 @W_TO
 #nlimpos>2.5 always
 #nlim=4.4
@@ -45,23 +46,26 @@ nlimneg=-0.4*nlim
 # Preiliminary Design Assumption
 
 CNmax=1.1*CLmax
+CNmaxneg=1.1*CLmaxneg
 
 # Determination of Stall Speed
 
-V_S=(np.sqrt(2*(91.391484)/(rho*CNmax)))*0.592484
+V_S=(np.sqrt(2*(G_WvoerS)/(rho*CNmax)))*0.592484
 #V_S=137#kts
 
 # Determination of Design Cruise Speed (V_C minimum)
 
 V_B=161.6#kts
+
 #V_B=196.33#kts
 
-V_C=np.sqrt(91.391484)*kc
-V_C=V_B+43#kts
+V_C=np.sqrt(G_WvoerS)*kc
+
+#V_C=V_B+43#kts
 #V_C=186.91#kts
 
 
-V_H=175#kts
+V_H=150#kts
 
 # Determination of Design Manoeuvering Speed (V_A minimum)
 
@@ -76,13 +80,13 @@ V_D=1.25*V_C
 #Construction of Gust Load Factor Lines
 
 def mug(G_W,S,rho,cbar,CLa):
-    return 2*(G_W/S)/(rho*cbar*CLa)
+    return 2*(G_WvoerS)/(rho*cbar*CLa)
 
 def Kg(mug):
     return 0.88*mug/(5.3+mug)
 
 def nlim(Kg,Ude,V,Cla,G_W,S):
-    return 1 + (Kg*Ude*V*CLa)/(498*(G_W/S))
+    return 1 + (Kg*Ude*V*CLa)/(498*(G_WvoerS))
 
 ################################################################
 # Plotting
@@ -110,17 +114,17 @@ constlist2= np.arange(V_A,V_D)
 lits=np.arange(0,V_C)
 
 plt.plot(constlist,nlimpos*np.ones(300),'--',color = 'r')
-plt.plot(np.arange(0,V_C),np.linspace(1,nlimpos,205),'--',color = 'g')
-plt.plot(np.arange(0,V_C),np.linspace(1,-1,205),'--',color = 'g')
-plt.plot(np.arange(0,V_D),np.linspace(1,nlimpos,256),'--',color = 'g')
-plt.plot(np.arange(0,V_D),np.linspace(1,-1,256),'--',color = 'g')
+plt.plot(np.linspace(0,V_C,300),np.linspace(1,nlimpos,300),'--',color = 'g')
+plt.plot(np.linspace(0,V_C,300),np.linspace(1,-1,300),'--',color = 'g')
+plt.plot(np.linspace(0,V_D,400),np.linspace(1,nlimpos,400),'--',color = 'g')
+plt.plot(np.linspace(0,V_D,400),np.linspace(1,0,400),'--',color = 'g')
 plt.plot(V_C*np.ones(100),np.linspace(nlimpos,0,100),'--',color = 'g')
 plt.plot(V_A*np.ones(100),np.linspace(nlimpos,0,100),'--',color = 'g')
 plt.plot(V_H*np.ones(100),np.linspace(0,-1,100),'--',color = 'g')
 plt.plot(constlist,-1*np.ones(300),'--', color = 'r')
-plt.plot(constlist2,nlimpos*np.ones(V_D-V_A),'b')
+plt.plot(np.linspace(V_A,V_D,200),nlimpos*np.ones(200),'b')
 plt.plot(V_D*np.ones(100),np.linspace(nlimpos,0,100),'b')
-plt.plot(np.arange(V_C,V_D),np.arange(-1,0,1/74),'b')
+plt.plot(np.linspace(V_C,V_D,100),np.arange(-1,0,1/100),'b')
 plt.plot(np.linspace(V_H,V_C,100),-1*np.ones(100),'b')
 plt.plot(x_new,y_new,'b')
 plt.plot(x_new2,y_new2,'b')
