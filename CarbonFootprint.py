@@ -104,7 +104,6 @@ plt.ylabel("CF Concept / CF CRJ")
 plt.xlabel("Ratio H2/ Total fuel")
 plt.ylim([0, 1])
 plt.xlim([0, 1])
-plt.legend()
 plt.grid()
 plt.show()
 
