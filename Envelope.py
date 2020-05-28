@@ -67,7 +67,7 @@ V_C=np.sqrt(G_WvoerS)*kc
 #V_C=V_B+43#kts
 #V_C=186.91#kts
 
-V_H=156#kts
+V_G=156#kts
 
 # Determination of Design Manoeuvering Speed (V_A minimum)
 
@@ -96,7 +96,7 @@ nlimgustDslope =  (Kg*UdeD*CLa)/(498*(G_WvoerS))
 
 quadlist1=[0,V_S,V_A]
 quadlist2=[0,1,nlimpos]
-quadlist3=[0,V_S,V_H]
+quadlist3=[0,V_S,V_G]
 quadlist4=[0,-0.6,-1]
 quadlist5=[0,V_S2,V_B]
 quadlist6=[0,1,1+nlimgustBslope*V_B]
@@ -156,25 +156,24 @@ plt.figure(0)
 plt.plot(constlist,nlimpos*np.ones(300),'--',color = 'r')
 plt.plot(constlist,-1*np.ones(300),'--', color = 'r')
 
-
 plt.plot(V_C*np.ones(100),np.linspace(nlimpos,0,100),'--',color = 'g')
 plt.plot(V_A*np.ones(100),np.linspace(nlimpos,0,100),'--',color = 'g')
-plt.plot(V_H*np.ones(100),np.linspace(0,-1,100),'--',color = 'g')
+plt.plot(V_G*np.ones(100),np.linspace(0,-1,100),'--',color = 'g')
 plt.plot(np.linspace(V_A,V_D,200),nlimpos*np.ones(200),'b')
 plt.plot(V_D*np.ones(100),np.linspace(nlimpos,0,100),'b')
 plt.plot(np.linspace(V_C,V_D,100),np.arange(-1,0,1/100),'b')
-plt.plot(np.linspace(V_H,V_C,100),-1*np.ones(100),'b')
+plt.plot(np.linspace(V_G,V_C,100),-1*np.ones(100),'b')
 plt.plot(x_new,y_new,'b')
 plt.plot(x_new2,y_new2,'b')
+
 plt.text(V_A,nlimpos,'A')
-plt.text(V_H,-1,'H')
+plt.text(V_G,-1,'G')
 plt.text(V_C,-1,'F')
 plt.text(V_D,0,'E')
 plt.text(V_D,nlimpos,'D')
 plt.text(V_C,nlimpos,'C')
 
 plt.ylim(-2,4)
-
 
 plt.axhline(y=0, color='k')
 plt.axvline(x=0, color='k')
@@ -202,9 +201,14 @@ plt.plot(np.linspace(0,V_B,300),np.linspace(1,1-nlimgustBslope*V_B,300),color = 
 plt.plot(V_D*np.ones(100),np.linspace(1+nlimgustDslope*V_D,1-nlimgustDslope*V_D,100),color = 'b')
 plt.plot(x_new3,y_new3,'b')
 
+plt.text(V_B,1+nlimgustBslope*V_B,"B'")
+plt.text(V_C,1+nlimgustCslope*V_C,"C'")
+plt.text(V_D,1+nlimgustDslope*V_D,"D'")
+plt.text(V_B,1-nlimgustBslope*V_B,"B''")
+plt.text(V_C,1-nlimgustCslope*V_C,"C''")
+plt.text(V_D,1-nlimgustDslope*V_D,"D''")
 
 plt.ylim(-2,4)
-
 
 plt.axhline(y=0, color='k')
 plt.axvline(x=0, color='k')
@@ -234,20 +238,26 @@ plt.plot(x_new3,y_new3,'b')
 
 plt.plot(V_C*np.ones(100),np.linspace(nlimpos,0,100),'--',color = 'g')
 plt.plot(V_A*np.ones(100),np.linspace(nlimpos,0,100),'--',color = 'g')
-plt.plot(V_H*np.ones(100),np.linspace(0,-1,100),'--',color = 'g')
+plt.plot(V_G*np.ones(100),np.linspace(0,-1,100),'--',color = 'g')
 plt.plot(np.linspace(V_A,V_D,200),nlimpos*np.ones(200),'b')
 plt.plot(V_D*np.ones(100),np.linspace(nlimpos,0,100),'b')
 plt.plot(np.linspace(V_C,V_D,100),np.arange(-1,0,1/100),'b')
-plt.plot(np.linspace(V_H,V_C,100),-1*np.ones(100),'b')
+plt.plot(np.linspace(V_G,V_C,100),-1*np.ones(100),'b')
 plt.plot(x_new,y_new,color='b')
 plt.plot(x_new2,y_new2,'b')
 
-#plt.text(V_A,nlimpos,'A')
-#plt.text(V_H,-1,'H')
-#plt.text(V_C,-1,'F')
-#plt.text(V_D,0,'E')
-#plt.text(V_D,nlimpos,'D')
-#plt.text(V_C,nlimpos,'C')
+plt.text(V_A,nlimpos,'A')
+plt.text(V_G,-1,'G')
+plt.text(V_C,-1,'F')
+plt.text(V_D,0,'E')
+plt.text(V_D,nlimpos,'D')
+plt.text(V_C,nlimpos,'C')
+plt.text(V_B,1+nlimgustBslope*V_B,"B'")
+plt.text(V_C,1+nlimgustCslope*V_C,"C'")
+plt.text(V_D,1+nlimgustDslope*V_D,"D'")
+plt.text(V_B,1-nlimgustBslope*V_B,"B''")
+plt.text(V_C,1-nlimgustCslope*V_C,"C''")
+plt.text(V_D,1-nlimgustDslope*V_D,"D''")
 
 
 plt.ylim(-2,4)
@@ -288,15 +298,15 @@ plt.plot(np.linspace(0,V_B,300),np.linspace(1,1-nlimgustBslope*V_B,300),'--',col
 plt.plot(V_D*np.ones(100),np.linspace(1+nlimgustDslope*V_D,1-nlimgustDslope*V_D,100),color = 'b')
 plt.plot(V_C*np.ones(100),np.linspace(nlimpos,0,100),'--',color = 'g')
 plt.plot(V_A*np.ones(100),np.linspace(nlimpos,0,100),'--',color = 'g')
-plt.plot(V_H*np.ones(100),np.linspace(0,-1,100),'--',color = 'g')
+plt.plot(V_G*np.ones(100),np.linspace(0,-1,100),'--',color = 'g')
 plt.plot(V_D*np.ones(100),np.linspace(nlimpos,0,100),'b')
 
-plt.plot(np.linspace(V_H,V_C,100),-1*np.ones(100),'b')
+plt.plot(np.linspace(V_G,V_C,100),-1*np.ones(100),'b')
 plt.plot(x_new,y_new,'--',color='r')
 plt.plot(x_new2,y_new2,'b')
 
 #plt.text(V_A,nlimpos,'A')
-#plt.text(V_H,-1,'H')
+#plt.text(V_G,-1,'H')
 #plt.text(V_C,-1,'F')
 #plt.text(V_D,0,'E')
 #plt.text(V_D,nlimpos,'D')

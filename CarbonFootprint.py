@@ -1,7 +1,6 @@
 from numpy import *
 import matplotlib.pyplot as plt
 from input import *
-import Class_1_estimation as Cl1
 
 #Fuel_use = 3515.4  # Total fuel mass at design range
 #H2_ff = arange(0., 1.1, 0.1)  # Hydrogen fuel fraction
@@ -68,7 +67,7 @@ def cf(Total_fuel, H2_fuelfrac, Ker_fuelfrac, NOx_H2, GWP):
 
     Ratio_CF = CF_concept / CF_CRJ  # Ratio of the Carbon Footprints, target = max 0.75
     print("Ratio CF =", Ratio_CF)
-    return #CF_concept, Ratio_CF
+    return CF_concept, Ratio_CF
 
 # CF_list = []
 #
