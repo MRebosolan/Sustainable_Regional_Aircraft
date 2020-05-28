@@ -1,18 +1,11 @@
 from numpy import *
 import matplotlib.pyplot as plt
+from input import *
+import Class_1_estimation as Cl1
 
-# CRJ700 parameters
-Range_CRJ = 2593  # design range
-Pax_CRJ = 78  # Number of passengers
-Fuel_use_CRJ = 4740  # Fuel mass at design range
-Cruise_alt_max_CRJ = 12497  # Max operating altitude
+#Fuel_use = 3515.4  # Total fuel mass at design range
+#H2_ff = arange(0., 1.1, 0.1)  # Hydrogen fuel fraction
 
-# Our parameters
-Range = 2000  # design range
-Pax = 75  # Number of passengers
-Fuel_use = 3515.4  # Total fuel mass at design range
-H2_ff = arange(0., 1.1, 0.1)  # Hydrogen fuel fraction
-Cruise_alt = 10  # Max operating altitude in km
 
 # GWP
 # Global Warming Potential (equivalent emission ratio to CO2 on 100 year scale (CO2-eq))
@@ -36,19 +29,6 @@ GWP_alt = array([[1., 0., -7.1],
 
 GWP = GWP_alt[Cruise_alt]           # Specify the altitude in km
 
-# H2 NOx emission: Depends on engine characteristics
-A = 14                            # Correlation constant for emission index based on Jet-A fuel (advanced LDI tech as reference)
-eq = 0.4                            # equivalence ratio (fuel/air // fuel/air stoichiometric)
-fa_st = 1./34.33                    # stoichiometric fuel/air ratio for H2
-fa = eq*fa_st                # actual fuel/air ratio
-P3 = 0.7                            # fuel injector inlet pressure MPA
-T3 = 800                            # fuel injector inlet temperature 600 K approach, 700 K cruise, 800K take-off
-dPP = 5                             # dP/P fuel injector air flow pressure drop ratio
-
-#kg NOx/ kg fuel
-NOx_H2 = A * P3**0.594 * exp(T3/350) * fa**1.6876 * (100 * dPP)**-0.56 / 1000
-
-
 # plt.plot(eq, EI_NOxx)
 # plt.show()
 
@@ -61,9 +41,9 @@ NOx_H2 = A * P3**0.594 * exp(T3/350) * fa**1.6876 * (100 * dPP)**-0.56 / 1000
 #     plt.plot(eq, ppmNOx[i, :])
 # plt.show()
 
-def cf(H2_ff, NOx_H2, GWP):
-    Fuel_use_H2 = H2_ff * Fuel_use  # Fuel mass H2 at design range
-    Fuel_use_ker = (1 - H2_ff) * Fuel_use  # Fuel mass Kerosene at design range
+def cf(Total_fuel, H2_fuelfrac, Ker_fuelfrac, NOx_H2, GWP):
+    Fuel_use_ker = Total_fuel*Ker_fuelfrac
+    Fuel_use_H2 = Total_fuel*H2_fuelfrac
 
     # kg particles/ kg JET-A1
     perkgJetA1 = [3.16, 1.24, 0.02311]  # CO2, H20, N0x
@@ -78,37 +58,36 @@ def cf(H2_ff, NOx_H2, GWP):
         CO2eq_paxkm = (perkgJetA1[i] * Fuel_use_CRJ * GWP[i]) / (Pax_CRJ * Range_CRJ)
         CF_CRJ += CO2eq_paxkm
 
-    print("CRJ=",CF_CRJ)
+    print("CRJ CF=",CF_CRJ)
     # Concept Total emissions (kg CO2-eq)
     for i in range(len(GWP)):
-        CO2eq_paxkm_ker = (perkgJetA1[i] * Fuel_use_ker * GWP[i]) / (Pax * Range)
-        CO2eq_paxkm_H2 = (perkgH2[i] * Fuel_use_H2 * GWP[i]) / (Pax * Range)
+        CO2eq_paxkm_ker = (perkgJetA1[i] * Fuel_use_ker * GWP[i]) / (Npax * Design_range)
+        CO2eq_paxkm_H2 = (perkgH2[i] * Fuel_use_H2 * GWP[i]) / (Npax * Design_range)
         CF_concept += CO2eq_paxkm_ker + CO2eq_paxkm_H2
-    print("Concept=", CF_concept)
+    print("Concept CF=", CF_concept)
 
     Ratio_CF = CF_concept / CF_CRJ  # Ratio of the Carbon Footprints, target = max 0.75
+    print("Ratio CF =", Ratio_CF)
+    return #CF_concept, Ratio_CF
 
-    return Ratio_CF
+# CF_list = []
+#
+# for i in range(len(H2_ff)):
+#    CF = cf(H2_ff[i], NOx_H2, GWP)
+#    CF_list.append(CF)
+#
+# # for i in range(1,4):
+# #    plt.plot(GWP[:, i], GWP[:, 0])
+#
+# plt.plot(H2_ff, CF_list)
+# plt.ylabel("CF Concept / CF CRJ")
+# plt.xlabel("Ratio H2/ Total fuel")
+# plt.ylim([0, 1])
+# plt.xlim([0, 1])
+# plt.grid()
+# plt.show()
 
-CF_list = []
-
-for i in range(len(H2_ff)):
-   CF = cf(H2_ff[i], NOx_H2, GWP)
-   CF_list.append(CF)
-
-# for i in range(1,4):
-#    plt.plot(GWP[:, i], GWP[:, 0])
-
-plt.plot(H2_ff, CF_list)
-plt.ylabel("CF Concept / CF CRJ")
-plt.xlabel("Ratio H2/ Total fuel")
-plt.ylim([0, 1])
-plt.xlim([0, 1])
-plt.legend()
-plt.grid()
-plt.show()
-
-
+print(cf(4000, 0.8, 0.2, NOx_H2, GWP) )
 
 
 
