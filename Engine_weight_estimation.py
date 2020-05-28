@@ -14,5 +14,5 @@ def engine_weight(dry_thrust_SL, num_engines):
     engine_weight= A * log(dry_thrust_SL) + B
     return engine_weight * num_engines
 
-print(A, B, engine_weight(1586, 1))
+
 
