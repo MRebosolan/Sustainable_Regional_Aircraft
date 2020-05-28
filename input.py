@@ -1,6 +1,6 @@
 #input parameters
 import numpy as np
-import Tail_weight_estimation as tail
+
 
 # MTOM = 36000 # estimate, [kg]
 # MTOW = MTOM * 9.81 #N
