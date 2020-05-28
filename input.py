@@ -80,6 +80,7 @@ W_payload=Npax*W_pax+W_cargo
 Design_range=2000#[km]
 hydrogen_cost=2.4 #US DOLLARS per KG
 
+
 #Flight performance
 rho0 = 1.225    #kg/m^3
 CD0 = 0.01277   #[-], to be refined as this comes from roskam statistics
@@ -98,6 +99,34 @@ Trev = 50000    #[N], maximum thrust reverse force applied during braking
 c_t = 0.0002    #[1/s] specific fuel consumption, to be refined
 H = 120E6       #Heating value of hydrogen, refine if we fly on kerosene and hydrogen simultenously, or 141.7E6 (higher value of hydrogen)
 rho_c = 0.4135  #[kg/m^3], cruise density (this is the one for 10 km cruise altitude)
+
+# parameters for Carbon Footprint
+Range_CRJ = 2593  # design range
+Pax_CRJ = 78  # Number of passengers
+Fuel_use_CRJ = 4740  # Fuel mass at design range
+Cruise_alt_max_CRJ = 12497  # Max operating altitude
+
+Cruise_alt = 10 # Max operating altitude in km
+
+
+# H2 NOx emission: Depends on engine characteristics
+A = 14                            # Correlation constant for emission index based on Jet-A fuel (advanced LDI tech as reference)
+eq = 0.4                            # equivalence ratio (fuel/air // fuel/air stoichiometric)
+fa_st = 1./34.33                    # stoichiometric fuel/air ratio for H2
+fa = eq*fa_st                       # actual fuel/air ratio
+P3 = 0.7                            # fuel injector inlet pressure MPA
+T3 = 800                            # fuel injector inlet temperature 600 K approach, 700 K cruise, 800K take-off
+dPP = 5                             # dP/P fuel injector air flow pressure drop ratio
+#kg NOx/ kg fuel
+NOx_H2 = A * P3**0.594 * np.exp(T3/350) * fa**1.6876 * (100 * dPP)**-0.56 / 1000
+
+
+
+
+
+
+
+
 
 
 
