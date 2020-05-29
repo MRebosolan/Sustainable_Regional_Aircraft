@@ -13,7 +13,8 @@ import Envelope
 g = 9.80665  # [m/s^2]
 from math import radians
 
-MTOM = 36000 # [kg]  #maximum takeoff mass
+MTOM = 32846.208787 # [kg]  #maximum takeoff mass calculated in class 2
+OEW = 22981.846450 #kg calculated in class 2
 MTOW = MTOM * g #N  !!!!!!!!!!!!!make sure this is in newtons!!!!!!!!!!!!!
 MLW = 25000 * g  # maximum landing weight [N], to be calculated
 AR = 8  # estimate, [-], Aspect ratio
@@ -96,7 +97,7 @@ W_payload = Npax * W_pax + W_cargo
 Design_range = 2000  # [km]
 hydrogen_cost = 2.4  # US DOLLARS per KG
 
-H_to_ker_ratio = 100
+H_to_ker_ratio = 1
 
 # Flight performance
 rho0 = 1.225  # kg/m^3

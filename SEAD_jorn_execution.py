@@ -6,6 +6,8 @@ responsible: Jorn
 import numpy as np
 import matplotlib.pyplot as plt
 from math import sqrt, pi, tan, atan
+import input
+import Class_2_estimation as cl2
 def original():
     lemac = 14.402
     MAC = 3.781
@@ -13,13 +15,13 @@ def original():
     tail_armh = 16.3
     
     
-    wing_area = 112.3 #m^2
-    span = 35.08
-    horizontal_area = 36.6
-    span_tail = 12.3
+    wing_area =  cl2.S#m^2
+    span = cl2.b
+    horizontal_area = input.Sh
+    span_tail = input.bh
      
-    diameter = 3.5
-    fuselage_lenght = 34.9 #m
+    diameter = input.hf
+    fuselage_lenght = input.lf #m
     
     
     
@@ -32,7 +34,7 @@ def original():
     beta = (1-(mach**2))**0.5
     beta_tail = (1-0.85*(mach**2))**0.5
     n = 0.95
-    stabilizer_sweep = np.radians(27)
+    stabilizer_sweep = input.half_chord_sweep_hor
     
     
     AR_tail = span_tail**2/horizontal_area
@@ -84,8 +86,11 @@ def original():
     
     
     rho = 1.225
-    mass = 52390 #kg, mlw
-    MTOW = 60781
+    OEW = cl2.OEWINPUT
+    payload = input.W_payload
+    MLW = cl2.M_zfw_kg
+    mass = MLW #kg, mlw
+    MTOW = cl2.MTOW_kg
     CL = 2*mass*9.81/(rho*(v_approach**2)*wing_area) #approach CL
     v_cruise = 230 #m/s
     rho_cruise = 0.348364
@@ -168,7 +173,8 @@ def original():
     vertical2 = 0.373 *100
     # plt.plot(stabilityxcg_cruise*100,ShS, color = 'grey', label = 'Neutral stability')
     # plt.plot(stabilityxcg_cruise*100 -5,ShS, color = 'b', label = 'Stability aft limit')
-    plt.subplot(1,2,2)
+    plt.close()
+    plt.subplot(1,1,1)
     plt.plot(stabilityxcg_cruise*100,ShS, color = 'grey', label = 'Neutral stability')
     plt.plot(stabilityxcg_cruise*100 -5,ShS, color = 'b', label = 'Stability aft limit')
     plt.plot(controlxcg*100,ShS, color = 'orange', label = 'Control fwd limit')
@@ -182,6 +188,9 @@ def original():
     # plt.legend(loc = 'lower left')
     plt.title('CS100')
     plt.show()
+    
+    
+    
 def new():
     lemac = 14.402
     MAC = 3.781
@@ -387,5 +396,5 @@ def new():
     # print (0.32514 *wing_area - horizontal_area)
 
     
-new()
+
 original()

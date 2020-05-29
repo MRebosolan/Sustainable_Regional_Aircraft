@@ -15,7 +15,7 @@ def tank_sizing(HYDROGENVOLUME, CABIN_LENGTH,N):
     while result<HYDROGENVOLUME:
         R+=0.001
         result=N*4/3*3.14159*R**3+3.14159*(CABIN_LENGTH-N*2*R)*R**2
-    print(R)
+    # print(R)
     TANK_DIAMETER=R*2
     TANK_SURFACE_AREA = (CABIN_LENGTH-N*2*R)/N*3.14159*TANK_DIAMETER + 3.14159*TANK_DIAMETER**2 #ONE TANK!!!
     TANK_MATERIAL_DENSITY = 2825 #MONOLITHIC METAL Aluminium alloy 2219 KG/M3
@@ -54,7 +54,7 @@ def tank_sizing(HYDROGENVOLUME, CABIN_LENGTH,N):
     EMIS_INSULATION = 0.9 # emissivity of foam
     THERMAL_CONDUCTIVITY_INSULATION = 0.0127  #VARRIES WITH TEMPERATURE
     T_LH2 = 10 #TEMPERATURE OF THE CRYOGENIC TANK
-    print(R)
+    # print(R)
     xilist=[]
     yilist=[]
     for L in range(1,100):
@@ -67,8 +67,10 @@ def tank_sizing(HYDROGENVOLUME, CABIN_LENGTH,N):
             
             R_AD= 9.81*(1/T_SURROUND)*(T_SURROUND-T_INITINSULATION)*TANK_DIAMETER**3/(GAS_DIFFUSIVITY*GAS_VISCOSITY) #1/T_SURROUND IN KELVIN
             N_UD = (0.6+0.387*R_AD**(1/6)/(1+(0.559/PR)**(9/16))**(8/27))**2
-            CC_TANKAIR = N_UD*K_G/TANK_DIAMETER #convection coefficient
-
+            try:
+                CC_TANKAIR = N_UD*K_G/TANK_DIAMETER #convection coefficient
+            except:
+                CC_TANKAIR = 0
             Q_CONVECTION = CC_TANKAIR*(T_SURROUND-T_INITINSULATION)
             Q_RADIATION = EMIS_INSULATION*BOLTZMANN_CONSTANT*(T_SURROUND**4-T_INITINSULATION**4)
             Q_IN = Q_CONVECTION + Q_RADIATION
@@ -79,11 +81,11 @@ def tank_sizing(HYDROGENVOLUME, CABIN_LENGTH,N):
                 running=False
         
         BOIL_OFF=THERMAL_CONDUCTIVITY_INSULATION*TANK_SURFACE_AREA/INSULATION_THICKNESS*(T_INITINSULATION-T_SURROUND)/446592
-        print(BOIL_OFF,BOIL_OFF*4*3600,INSULATION_THICKNESS,T_INITINSULATION,TANK_SURFACE_AREA)
+        # print(BOIL_OFF,BOIL_OFF*4*3600,INSULATION_THICKNESS,T_INITINSULATION,TANK_SURFACE_AREA)
         xilist.append(INSULATION_THICKNESS)
         yilist.append(BOIL_OFF*4*3600)
-    print(xilist)#Prints out insulation thicknesses and boil offs
-    print(yilist)#Prints out insulation thicknesses and boil offs
+    # print(xilist)#Prints out insulation thicknesses and boil offs
+    # print(yilist)#Prints out insulation thicknesses and boil offs
     
 
     
