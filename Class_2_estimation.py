@@ -36,7 +36,7 @@ inputs:
     number of fuel tanks
     wingloading
     powerloading
-    hydrogen to kerosine ratio
+    hydrogen to kerosene ratio
 
 OUTPUTS:
     - weights of all subsystems
