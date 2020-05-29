@@ -1,3 +1,11 @@
+"""
+input: zero fuel weight, wingspan, half chord sweep, ultimate load factor, wing area, thickness at root
+MTOW, aspect ratio, thickness over chord, taper ratio, design mach number at sea level
+output: two types of wing weight calculation
+responsible: Jorn
+
+"""
+
 #Wwing = 0.0051(Wdg + Nz)0.557 S0.649 w A0.5 (t/c)−0.4 root (1 + λ)0.1 ·(cosΛ)−1.0 S0.1 csw
 # With Wdg the design gross weight, Nz the maximum load factor, SW the wing surface,
 # A the aspect ratio (t/c)root the thickness ratio at the root, λ the taper ratio,

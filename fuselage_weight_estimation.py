@@ -1,3 +1,11 @@
+
+'''
+class 2 fuselage estimation
+input: rho zero, dive speed, MTOW, fuselage length, height of fuselage, length of quarter chord of wing root-tail root, fuselage wetted area, width of fuselage
+output: fuselage lweight for both torenbeek and gd
+responsible: Jorn
+
+'''
 # fuselage
 from math import *
 

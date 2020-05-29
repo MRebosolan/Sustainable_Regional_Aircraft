@@ -1,3 +1,10 @@
+
+'''
+used in class 2 for weight estimation
+inputs: horizontal area of both stabilizers, dive speed, half chord sweep of both stabilizers, span of vertical stabilizer, mounting height of horizontal stabilizer
+outputs: horizontal and vertical tail weight
+responsible: matteo
+'''
 from math import radians, cos
 #Torenbeek commercial transport airplanes weight estimation method
 
