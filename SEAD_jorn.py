@@ -1,3 +1,9 @@
+''' 
+file to be used for loading diagrams. Being worked out atm
+responsible: Jorn
+'''
+
+
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd

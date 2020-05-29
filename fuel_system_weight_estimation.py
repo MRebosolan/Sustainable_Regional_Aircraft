@@ -1,4 +1,10 @@
 #fuel system
+'''
+class 2
+input: number of tanks, specific fuel weight, fuel weight
+output: fuel system weight
+responsible: jorn
+'''
 
 def W_fuelsystem (N_t, K_fsp, W_f):
     N_e = 2 #number of engines

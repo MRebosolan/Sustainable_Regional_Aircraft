@@ -1,3 +1,8 @@
+'''
+input: MTOW, number of pilots, range, empty weight (i guess, not sure)
+output: three ways of instrumentation weight calcs
+responsible: jorn
+'''
 #instrumentation
 
 def instrumentation_torenbeek(MTOW):

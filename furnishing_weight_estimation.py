@@ -1,4 +1,10 @@
- #furnishing\
+'''
+file that is used in the class 2  for the furnishing weight. 
+inputs: number of pilots, n of cabin crew, n of pax, takeoff weight, cabin pressure
+outputs: furnishing weight
+responsible: Jorn
+'''
+#furnishing\
 #Verified by hand calculation
 
 def furnishing_gd(N_fdc, N_pax, N_cc, MTOW, P_c):
