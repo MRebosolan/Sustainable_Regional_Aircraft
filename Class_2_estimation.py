@@ -185,7 +185,7 @@ plt.show()
 
 df = pd.DataFrame({'data': ['MTOW','OEW'],
 'SRA': [MTOW, OEW_class2],
-'F28': [9099900, 31219]})
+'F28': [65000, 31219]})
 
 wng = [{'data': 'Wing group', 'SRA': W_wing, 'F28':7330},
        {'data': 'Empennage', 'SRA': W_empennage, 'F28':1632},
