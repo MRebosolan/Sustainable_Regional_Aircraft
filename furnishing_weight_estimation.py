@@ -1,4 +1,5 @@
 #furnishing\
+#Verified by hand calculation
 
 def furnishing_gd(N_fdc, N_pax, N_cc, MTOW, P_c):
     K_lav = 0.31 #short range, lavatory
@@ -12,3 +13,4 @@ def furnishing_gd(N_fdc, N_pax, N_cc, MTOW, P_c):
 
 # def furnishing_torenbeek(MTOW, W_F):
 #     return 0.211*((MTOW-W_F)**0.91)
+print(furnishing_gd(3, 75, 2, 36000*2.2, 10.831))
