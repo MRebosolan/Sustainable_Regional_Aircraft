@@ -221,8 +221,9 @@ df = df.append(equipment, ignore_index = True, sort = False)
 df['fraction'] = df['SRA']/MTOW
 df['F28 fraction'] = df['F28']/df['F28'][0]
 df['737 fraction'] = df['737-200']/df['737-200'][0]
-# df['SRA'] = to_kgs(df['SRA'])
-# df['F28'] = to_kgs(df['F28'])
+df['SRA'] = to_kg(df['SRA'])
+df['F28'] = to_kg(df['F28'])
+df['737-200'] = to_kg(df['737-200'])
 print(df)
 latex = df.to_latex(index = False, caption = None)
 try:
