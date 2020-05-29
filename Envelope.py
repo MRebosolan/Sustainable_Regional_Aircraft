@@ -1,6 +1,19 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+"""
+
+this code uses G_W 
+
+V_C
+V_D 
+V_S
+
+
+
+"""
+
+
 ###########################################################
 # Parameters
 
@@ -169,6 +182,7 @@ cross5 = line_intersect(V_C,-1,V_D,0,V_C,1-nlimgustCslope*V_C,V_D,1-nlimgustDslo
 cross6 = line_intersect(0,0,V_A,nlimpos,V_B,1+nlimgustBslope*V_B,V_C,1+nlimgustCslope*V_C)
 cross7 = (x_new3[35],y_new3[35])
 cross8 = (x_new2[41],y_new2[41])
+cross9 = (69.1,0.452)
 
 #----------------------------------------------------------------------------------------------
 
@@ -221,9 +235,11 @@ cross8 = (x_new2[41],y_new2[41])
 #plt.plot(np.linspace(V_C,V_D,300),np.linspace(1+nlimgustCslope*V_C,1+nlimgustDslope*V_D,300),color = 'b')
 #plt.plot(np.linspace(V_B,V_C,300),np.linspace(1-nlimgustBslope*V_B,1-nlimgustCslope*V_C,300),color = 'b')
 #plt.plot(np.linspace(V_C,V_D,300),np.linspace(1-nlimgustCslope*V_C,1-nlimgustDslope*V_D,300),color = 'b')
-#plt.plot(np.linspace(0,V_B,300),np.linspace(1,1-nlimgustBslope*V_B,300),color = 'b')
 #plt.plot(V_D*np.ones(100),np.linspace(1+nlimgustDslope*V_D,1-nlimgustDslope*V_D,100),color = 'b')
-#plt.plot(x_new3,y_new3,'b')
+#plt.plot(np.linspace(cross9[0],V_B,300),np.linspace(cross9[1],1-nlimgustBslope*V_B,300),color = 'b')
+#plt.plot(np.linspace(0,cross9[0],300),np.linspace(1,cross9[1],300),'--',color = 'r')
+#plt.plot(x_new3[:21],y_new3[:21],'--',color='r')
+#plt.plot(x_new3[21:-1],y_new3[21:-1],color='b')
 #
 #plt.text(V_B,1+nlimgustBslope*V_B,"B'")
 #plt.text(V_C,1+nlimgustCslope*V_C,"C'")
@@ -248,7 +264,7 @@ cross8 = (x_new2[41],y_new2[41])
 #plt.plot(constlist,-1*np.ones(300),'--', color = 'r')
 #
 #plt.plot(np.linspace(0,V_B,300),np.linspace(1,1+nlimgustBslope*V_B,300),'--',color = 'y')
-#plt.plot(np.linspace(0,V_B,300),np.linspace(1,1-nlimgustBslope*V_B,300),'--',color = 'y')
+#plt.plot(np.linspace(0,cross9[0],300),np.linspace(1,cross9[1],300),'--',color = 'y')
 #plt.plot(np.linspace(0,V_C,400),np.linspace(1,1+nlimgustCslope*V_C,400),'--',color = 'y')
 #plt.plot(np.linspace(0,V_C,300),np.linspace(1,1-nlimgustCslope*V_C,300),'--',color = 'y')
 #plt.plot(np.linspace(0,V_D,400),np.linspace(1,1+nlimgustDslope*V_D,400),'--',color = 'y')
@@ -258,9 +274,10 @@ cross8 = (x_new2[41],y_new2[41])
 #plt.plot(np.linspace(V_C,V_D,300),np.linspace(1+nlimgustCslope*V_C,1+nlimgustDslope*V_D,300),color = 'b')
 #plt.plot(np.linspace(V_B,V_C,300),np.linspace(1-nlimgustBslope*V_B,1-nlimgustCslope*V_C,300),color = 'b')
 #plt.plot(np.linspace(V_C,V_D,300),np.linspace(1-nlimgustCslope*V_C,1-nlimgustDslope*V_D,300),color = 'b')
-#plt.plot(np.linspace(0,V_B,300),np.linspace(1,1-nlimgustBslope*V_B,300),color = 'b')
+#plt.plot(np.linspace(cross9[0],V_B,300),np.linspace(cross9[1],1-nlimgustBslope*V_B,300),color = 'b')
 #plt.plot(V_D*np.ones(100),np.linspace(1+nlimgustDslope*V_D,1-nlimgustDslope*V_D,100),color = 'b')
-#plt.plot(x_new3,y_new3,'b')
+#plt.plot(x_new3[:21],y_new3[:21],'--',color='r')
+#plt.plot(x_new3[21:-1],y_new3[21:-1],color='b')
 #
 #
 #plt.plot(V_C*np.ones(100),np.linspace(nlimpos,0,100),'--',color = 'g')
