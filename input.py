@@ -7,6 +7,7 @@ Created on Thu May 28 09:48:30 2020
 
 # input parameters
 import numpy as np
+import Envelope
 
 g = 9.80665  # [m/s^2]
 from math import radians
@@ -28,7 +29,7 @@ taper = 0.4  # estimate, []
 mach_h = 0.5  # estimate, [] #max Mach at SL
 rho = 1.225 * 0.0624279606  # estimate, in lbs/ft3
 rho_zero = 0.00237  # fucking americans, this is slug/ft3
-V_dive = 300  # estimate, #KNOTS!!
+V_dive = Envelope.divespeed() # estimate, #KNOTS!!
 lf = 30  # m estimate, lil shorter than CRJ as 5 seat rows are used
 hf = 2.5  # estimate
 A_inlet = 1.17  # m2

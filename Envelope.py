@@ -91,7 +91,8 @@ V_A=np.sqrt(nlimpos)*V_S
 
 V_D=1.25*V_C
 #V_D=369#kts    
-
+def divespeed(Vcruise = V_C):
+    return 1.25*Vcruise
 #Construction of Gust Load Factor Lines
 
 def mug(G_W,S,rho,cbar,CLa):
