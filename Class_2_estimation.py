@@ -82,7 +82,8 @@ bv = toft(input.bv)
 Sh = tosqft(input.Sh)
 zh = toft(input.zh)
 
-
+N_fdc = input.N_fdc
+range = input.Design_range *0.539956803
 N_eng = input.N_eng
 N_t = input.N_t
 wingloading = input.wingloading #still metric
@@ -128,7 +129,6 @@ while abs((OEW_class1_kg - OEWINPUT)*100/OEWINPUT)>= 0.05:
 
     W_wing_gd = wing.gd_wing(MTOW, AR, half_sweep, n_ult, S, t_over_c, taper, mach_h)
     W_fuselage_GD = fuselage.W_fuselage_gd (rho_zero, V_dive, MTOW, lf, hf)
-    W_nacelle_GD = nacelles.W_nacelle_torenbeek (T_TO)
     
     W_wing = wing.W_wing(W_zfw, b, half_sweep, n_ult, S, t_r)
     W_empennage = tail.vert_tail_weight( Sv, V_dive, half_chord_sweep_vert, bv, Sh, zh)+ tail.hor_tail_weight(Sh, V_dive, half_chord_sweep_hor)
@@ -141,7 +141,7 @@ while abs((OEW_class1_kg - OEWINPUT)*100/OEWINPUT)>= 0.05:
     
     flight_control_weight = flightcontrols.flight_controls(MTOW)
     electrical_system_weight = electrical.electrical_torenbeek(V_pax)
-    instrumentation_weight = instrumentation.instrumentation_torenbeek(MTOW)
+    instrumentation_weight = (instrumentation.instrumentation_torenbeek(MTOW)+ instrumentation.instrumentation_2(OEW_class1, range)+ instrumentation.instrumentation_gd(MTOW,N_fdc))/3
     airconditioning_pressurization_weight = pressurization.pressure_system_weight(lpax)
     oxygen_system_weight = oxygen.oxygen_system_weight(Npax)
     APU_weight = apu.APU_weight_estimation(MTOW)
@@ -185,37 +185,40 @@ plt.show()
 
 df = pd.DataFrame({'data': ['MTOW','OEW'],
 'SRA': [MTOW, OEW_class2],
-'F28': [65000, 31219]})
+'F28': [65000, 31219], 
+'737-200':[115500,60210]})
 
-wng = [{'data': 'Wing group', 'SRA': W_wing, 'F28':7330},
-       {'data': 'Empennage', 'SRA': W_empennage, 'F28':1632},
-       {'data': 'Fuselage', 'SRA': W_fuselage, 'F28':7043},
-       {'data': 'Nacelle', 'SRA': W_nacelles, 'F28':834},
-       {'data': 'Landing gear', 'SRA': W_landing_gear, 'F28':2759},
-       {'data': 'Total structural', 'SRA': W_struct, 'F28':19598},]
+wng = [{'data': 'Wing group', 'SRA': W_wing, 'F28':7330, '737-200': 10613},
+       {'data': 'Empennage', 'SRA': W_empennage, 'F28':1632 , '737-200':2718},
+       {'data': 'Fuselage', 'SRA': W_fuselage, 'F28':7043, '737-200':12108},
+       {'data': 'Nacelle', 'SRA': W_nacelles, 'F28':834, '737-200':1392},
+       {'data': 'Landing gear', 'SRA': W_landing_gear, 'F28':2759, '737-200':4354},
+       {'data': 'Total structural', 'SRA': W_struct, 'F28':19598, '737-200':31185}]
 df = df.append(wng, ignore_index = True, sort = False)
 
 
-power =[{'data': 'Engines', 'SRA': W_engines, 'F28':4495},
-       {'data': 'Exhaust', 'F28':127},
-       {'data': 'Kerosene system', 'SRA': W_fuel_system_kerosene, 'F28':545},
+power =[{'data': 'Engines', 'SRA': W_engines, 'F28':4495, '737-200':6217},
+       {'data': 'Exhaust', 'F28':127, '737-200':1007},
+       {'data': 'Kerosene system', 'SRA': W_fuel_system_kerosene, 'F28':545, '737-200':575},
        {'data': 'Hydrogen tanks', 'SRA': W_fuel_system_hydrogen},
-       {'data': 'Power controls', 'SRA': W_power_controls, 'F28':215},
-       {'data': 'Total propulsion', 'SRA': W_powerplant, 'F28':5382}]
+       {'data': 'Power controls', 'SRA': W_power_controls, 'F28':215, '737-200':378},
+       {'data': 'Total propulsion', 'SRA': W_powerplant, 'F28':5382, '737-200':8177}]
 df = df.append(power, ignore_index = True, sort = False)
 
-equipment = [{'data': 'Electrical systems', 'SRA': electrical_system_weight, 'F28':1892},
-             {'data': 'Instruments', 'SRA': instrumentation_weight, 'F28':302},
-             {'data': 'Flight controls', 'SRA': flight_control_weight, 'F28':1387+364},
-             {'data': 'APU', 'SRA': APU_weight, 'F28':346},
-             {'data': 'Air conditioning', 'SRA': airconditioning_pressurization_weight + oxygen_system_weight, 'F28':1074},
-             {'data': 'Furnishing', 'SRA': furnishing_weight, 'F28':4030},
+equipment = [{'data': 'Electrical systems', 'SRA': electrical_system_weight, 'F28':1892, '737-200':1066+956},
+             {'data': 'Instruments', 'SRA': instrumentation_weight, 'F28':302, '737-200':625},
+             {'data': 'Flight controls', 'SRA': flight_control_weight, 'F28':1387+364, '737-200':2348+873},
+             {'data': 'APU', 'SRA': APU_weight, 'F28':346, '737-200':836},
+             {'data': 'Air conditioning', 'SRA': airconditioning_pressurization_weight + oxygen_system_weight, 'F28':1074, '737-200':1416},
+             {'data': 'Furnishing', 'SRA': furnishing_weight, 'F28':4030, '737-200':6643},
              {'data': 'Cargo handling', 'SRA': cargo_equipment_weight},
-             {'data': 'Total fixed equipment', 'SRA': W_equipment, 'F28':9395}]
+             {'data': 'Miscellanous', '737-200':124},
+             {'data': 'Total fixed equipment', 'SRA': W_equipment, 'F28':9395, '737-200':14887}]
 df = df.append(equipment, ignore_index = True, sort = False)
 
-df['fraction'] = df['SRA']/MTOW
-df['F28 fraction'] = df['F28']/df['F28'][0]
+df['fraction'] = df['SRA']/OEW_class2
+df['F28 fraction'] = df['F28']/df['F28'][1]
+df['737 fraction'] = df['737-200']/df['737-200'][1]
 # df['SRA'] = to_kgs(df['SRA'])
 # df['F28'] = to_kgs(df['F28'])
 print(df)
