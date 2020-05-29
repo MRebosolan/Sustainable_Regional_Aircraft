@@ -1,3 +1,9 @@
+'''
+input: fuselage length, wingspan, empty weight, if the starting mechanism is pneumatic
+output: power control sys weight for class 2
+responsible: jorn
+'''
+
 #power controls
 
 def engine_controls(lf, b):

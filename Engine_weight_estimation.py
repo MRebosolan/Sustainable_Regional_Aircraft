@@ -1,3 +1,11 @@
+"""
+class 2
+input: thrust, number of engines
+output: engine weight
+additionally regression is made
+responsible: matteo
+"""
+
 import numpy as np
 from math import log
 

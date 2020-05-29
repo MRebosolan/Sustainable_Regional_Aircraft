@@ -1,4 +1,10 @@
 #flight control
+'''
+input: MTOW, Rho zero, dive speed
+output: flight control weight for gd and torenbeek\
+responsible: Jorn
+
+'''
 
 
 def flight_controls(MTOW):
