@@ -1,14 +1,46 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+
 """
+Author: George 
 
-this code uses G_W 
+inputs 
 
-V_C
-V_D 
-V_S
+    - Class 1 weight estimation (OEW, MTOW, fuel weight, payload weight, zero fuel weight)
+    - Gross Weight (MTOW + Taxi fuel)
+    - CLmax (positive & negative)
+    - Altitude
+    - SL rho
+    - Wing Area
+    - Wing Loading
+    - chord length (c-bar) 
+    - kc parameter (typical value known for similar aircraft at 10km
+    - Kg (gust alleviation factor)
+    - Ude (Gust velocity for Cruise, and Dive condition)
+    - CL-alpha slope
+    - mean chord length
+    
+output
 
+    - Limit load factor (positive & negative)
+    - Cruise speed
+    - Dive speed
+    - Stall speed
+    - Maximum Gust intensity speed
+    - Normal force coefficient (positive & negative)
+    - Manoeuvre Flight Envelope Graph
+    - Gust Flight Envelope Graph
+    - Resulting Region of Operation Graph
+    
+Description
+
+    Creates the boundaries for flight 
+    conditions and determines important
+    output speeds and load factors 
+    as well as resulting graphs for 
+    operation region. Updates 
+    parametrically.
 
 
 """
