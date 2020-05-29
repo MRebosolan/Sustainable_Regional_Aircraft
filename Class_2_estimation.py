@@ -156,7 +156,7 @@ while abs((OEW_class1_kg - OEWINPUT)*100/OEWINPUT)>= 0.05:
     W_engines = engine.engine_weight(T_dry_SL, N_eng)                                        #Verified
     W_fuel_system_kerosene = fuelsystem.W_fuelsystem (N_t, K_fsp, W_fuel)
     W_fuel_system_hydrogen = to_pounds(class1[-1])
-    W_power_controls = powercontrols.total(lf, b, W_engines, pneumatic = True)
+    W_power_controls = powercontrols.total(lf, b, W_engines, pneumatic = False)
     
     
     
@@ -218,9 +218,9 @@ equipment = [{'data': 'Electrical systems', 'SRA': electrical_system_weight, 'F2
              {'data': 'Total fixed equipment', 'SRA': W_equipment, 'F28':9395, '737-200':14887}]
 df = df.append(equipment, ignore_index = True, sort = False)
 
-df['fraction'] = df['SRA']/OEW_class2
-df['F28 fraction'] = df['F28']/df['F28'][1]
-df['737 fraction'] = df['737-200']/df['737-200'][1]
+df['fraction'] = df['SRA']/MTOW
+df['F28 fraction'] = df['F28']/df['F28'][0]
+df['737 fraction'] = df['737-200']/df['737-200'][0]
 # df['SRA'] = to_kgs(df['SRA'])
 # df['F28'] = to_kgs(df['F28'])
 print(df)

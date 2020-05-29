@@ -18,7 +18,7 @@ MLW = 25000 * g  # maximum landing weight [N], to be calculated
 AR = 8  # estimate, [-]
 half_sweep = np.cos(radians(27))  # estimate, [degrees]
 
-n_max = 3  # estimate
+n_max = 2.5  # from envelope, update manually
 n_ult = 1.5 * n_max
 wingloading = 4375.84  # estimate, N/m^2
 powerloading = 0.44  # thrust over weight
@@ -29,7 +29,7 @@ taper = 0.4  # estimate, []
 mach_h = 0.5  # estimate, [] #max Mach at SL
 rho = 1.225 * 0.0624279606  # estimate, in lbs/ft3
 rho_zero = 0.00237  # fucking americans, this is slug/ft3
-V_dive = Envelope.divespeed() # estimate, #KNOTS!!
+V_dive = Envelope.divespeed() # from envelope #KNOTS!!
 lf = 30  # m estimate, lil shorter than CRJ as 5 seat rows are used
 hf = 2.5  # estimate
 A_inlet = 1.17  # m2
