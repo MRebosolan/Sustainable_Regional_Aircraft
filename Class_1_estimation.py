@@ -93,7 +93,7 @@ from CarbonFootprint import cf
 
 
 def CLASS1WEIGHTHYBRID(H_to_ker_ratio = input.H_to_ker_ratio,OEWINPUT = 1):
-    W_hydrosys=H_to_ker_ratio*1000
+    W_hydrosys=H_to_ker_ratio*3000
     e=2.71828182846
     n_pax= input.Npax
     W_pax= input.W_pax
@@ -128,7 +128,7 @@ def CLASS1WEIGHTHYBRID(H_to_ker_ratio = input.H_to_ker_ratio,OEWINPUT = 1):
     np_c=0.82
     np_loiter=0.77
 
-    t_loiter=1800#s
+    t_loiter=input.t_loiter#s
     R_loiter=t_loiter*V_loiter
 
     R_c2=200
@@ -180,43 +180,15 @@ def CLASS1WEIGHTHYBRID(H_to_ker_ratio = input.H_to_ker_ratio,OEWINPUT = 1):
 
     if OEWINPUT!=1:
         MTOW=(OEWINPUT+W_payload)/(1-FUELFRACMTOW)
-
+    
     FUEL=FUELFRACMTOW*MTOW
     OEW=MTOW-W_payload-FUEL
     MZFW=MTOW-FUEL
     KEROSENE=(1-H_to_ker_ratio)*FUEL
     HYDROGEN=FUEL-KEROSENE
-    HYDROGENVOLUME=1.1*1.072*HYDROGEN/HYDROGEN_DENSITY
+    HYDROGENVOLUME=1.1*1.072*HYDROGEN/HYDROGEN_DENSITY #NASA PAPER
+    
 
-    ###TANK
-    R=0
-    result=0
-    while result<HYDROGENVOLUME:
-        R+=0.001
-        result=4/3*3.14159*R**3+3.14159*CABIN_LENGTH*R**2
-
-    TANK_DIAMETER=R*2
-    TANK_SURFACE_AREA = CABIN_LENGTH*3.14159*TANK_DIAMETER + 3.14159*TANK_DIAMETER**2
-    TANK_MATERIAL_DENSITY = 2825 #MONOLITHIC METAL Aluminium alloy 2219 KG/M3
-    TANK_THICKNESS = 3 # thickness in mm
-    STRUCTURAL_TANK_MASS = TANK_SURFACE_AREA*TANK_MATERIAL_DENSITY*TANK_THICKNESS*10**(-3) #tank mass exluding insulation + other systems required
-
-    # TANK THICKNESS COMPUTATION
-
-    DENSITY_LH = input.rho_hydrogen  # Desnity liquid hydrogen 71 KG/M3
-    R_GCH = 4157  # Gas constant of liquid hydrogen 4157 Nm/kg K
-    T_CT = 13.15  # Temperature is around -260C(13.15K) for cryogenic tank
-
-    PRESSURE_GAS = 145000 # Mantained at 1.35*10^5 pa to minimize boil off
-
-    # CYLINDRICAL TANK WITH HEMISPHERICAL ENDS CAPS
-
-    FOS_TANK = 2  # Safety factor for the tank
-    MAX_ALLOWABLE_STRESS = 219000000  # Max allowable stress of the Aluminium alloy 2219 tank: 414 MPa
-
-    TANK_THICKNESS = PRESSURE_GAS * R * FOS_TANK / (2 * MAX_ALLOWABLE_STRESS)
-    # print(TANK_THICKNESS,PRESSURE_GAS,R)
-    STRUCTURAL_TANK_MASS = TANK_SURFACE_AREA*TANK_MATERIAL_DENSITY*TANK_THICKNESS #tank mass exluding insulation + other systems required
 
     INFO=[MTOW,OEW,FUEL,W_payload,(MZFW),(KEROSENE),(HYDROGEN),HYDROGENVOLUME,TANK_DIAMETER,STRUCTURAL_TANK_MASS]
     return INFO
