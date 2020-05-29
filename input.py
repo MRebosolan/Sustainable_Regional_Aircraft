@@ -18,7 +18,7 @@ MLW = 25000 * g  # maximum landing weight [N], to be calculated
 AR = 8  # estimate, [-]
 half_sweep = np.cos(radians(27))  # estimate, [degrees]
 
-n_max = 3  # estimate
+n_max = 2.5  # from envelope, update manually
 n_ult = 1.5 * n_max
 wingloading = 4375.84  # estimate, N/m^2
 powerloading = 0.44  # thrust over weight
@@ -29,7 +29,7 @@ taper = 0.4  # estimate, []
 mach_h = 0.5  # estimate, [] #max Mach at SL
 rho = 1.225 * 0.0624279606  # estimate, in lbs/ft3
 rho_zero = 0.00237  # fucking americans, this is slug/ft3
-V_dive = Envelope.divespeed() # estimate, #KNOTS!!
+
 lf = 30  # m estimate, lil shorter than CRJ as 5 seat rows are used
 hf = 2.5  # estimate
 A_inlet = 1.17  # m2
@@ -66,9 +66,16 @@ LD_c = 15
 LD_c2 = 17
 LD_loiter = 17
 
-V_c = 230.3
-V_c2 = 0.8 * V_c
-V_loiter = 0.6 * V_c
+V_C=Envelope.V_C      #KNOTS
+V_S=Envelope.V_S2     #KNOTS
+V_S=Envelope.V_S2     #KNOTS
+V_D=Envelope.V_D      #KNOTS
+V_A=Envelope.V_A      #KNOTS
+V_B=Envelope.V_B      #KNOTS
+nlim=Envelope.nlimpos
+
+V_C2 = 0.8 * V_C
+V_loiter = 0.6 * V_C
 
 cj_ck = 1.6 * 10 ** (-5)  # kerosene cj
 cj_c = cj_ck * 0.349 * H_to_ker_ratio + cj_ck * (1 - H_to_ker_ratio)
