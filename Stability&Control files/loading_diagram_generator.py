@@ -231,6 +231,7 @@ v_hv = 0
 
 # df = pd.DataFrame(cars, columns = ['Brand', 'Price'])
 
+#easter egg
 
 # ltx = df.to_latex(caption = 'caption', label = 'label', column_format= '|l|l|l|', multirow = True)
 # slash = "\\"
