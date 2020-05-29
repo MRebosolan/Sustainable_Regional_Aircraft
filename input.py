@@ -66,12 +66,14 @@ LD_c = 15
 LD_c2 = 17
 LD_loiter = 17
 
-V_C=Envelope.V_C      #KNOTS
-V_S=Envelope.V_S2     #KNOTS
-V_S=Envelope.V_S2     #KNOTS
-V_D=Envelope.V_D      #KNOTS
-V_A=Envelope.V_A      #KNOTS
-V_B=Envelope.V_B      #KNOTS
+
+V_C=Envelope.V_C #KNOTS
+V_S=Envelope.V_S #KNOTS
+V_S=Envelope.V_S2 #KNOTS
+V_dive=Envelope.V_D #KNOTS
+V_A=Envelope.V_A #KNOTS
+V_B=Envelope.V_B #KNOTS
+
 nlim=Envelope.nlimpos
 
 V_C2 = 0.8 * V_C

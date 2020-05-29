@@ -110,8 +110,8 @@ def CLASS1WEIGHTHYBRID(H_to_ker_ratio = input.H_to_ker_ratio,OEWINPUT = 1):
     LD_c2=input.LD_c2
     LD_loiter=input.LD_loiter
 
-    V_c= input.V_c
-    V_c2= input.V_c2
+    V_c= input.V_C
+    V_c2= input.V_C2
     V_loiter= input.V_loiter
 
     R_c=Design_range-100 #km, correct for take off and landing covered distance
