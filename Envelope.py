@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 
 
 """
-Author: George 
+Author:George 
 
 inputs 
 
@@ -245,8 +245,8 @@ cross9 = (69.1,0.452)
 #plt.axhline(y=0, color='k')
 #plt.axvline(x=0, color='k')
 #
-#plt.xlabel('n-Load Factor [-]')
-#plt.ylabel('V-Speed [kts]')
+#plt.ylabel('n-Load Factor [-]')
+#plt.xlabel('V-Speed [kts]')
 #
 ## ---------------------------------------------------------------------------------------------
 #
