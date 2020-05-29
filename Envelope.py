@@ -395,7 +395,7 @@ cross9 = (69.1,0.452)
 ##plt.text(V_D,0,'E')
 ##plt.text(V_D,nlimpos,'D')
 ##plt.text(V_C,nlimpos,'C')
-#
+
 #plt.scatter(cross1[0],cross1[1], color='black' )
 #plt.scatter(cross2[0],cross2[1], color='black' )
 #plt.scatter(cross3[0],cross3[1], color='black' )
