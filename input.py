@@ -29,7 +29,7 @@ taper = 0.4  # estimate, []
 mach_h = 0.5  # estimate, [] #max Mach at SL
 rho = 1.225 * 0.0624279606  # estimate, in lbs/ft3
 rho_zero = 0.00237  # fucking americans, this is slug/ft3
-V_dive = Envelope.divespeed() # from envelope #KNOTS!!
+
 lf = 30  # m estimate, lil shorter than CRJ as 5 seat rows are used
 hf = 2.5  # estimate
 A_inlet = 1.17  # m2
@@ -66,12 +66,12 @@ LD_c = 15
 LD_c2 = 17
 LD_loiter = 17
 
-V_C=Envelope.V_C
-V_S=Envelope.V_S
-V_S=Envelope.V_S2
-V_D=Envelope.V_D
-V_A=Envelope.V_A
-V_B=Envelope.V_B
+V_C=Envelope.V_C      #KNOTS
+V_S=Envelope.V_S2     #KNOTS
+V_S=Envelope.V_S2     #KNOTS
+V_D=Envelope.V_D      #KNOTS
+V_A=Envelope.V_A      #KNOTS
+V_B=Envelope.V_B      #KNOTS
 nlim=Envelope.nlimpos
 
 V_C2 = 0.8 * V_C
