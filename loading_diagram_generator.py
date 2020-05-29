@@ -8,44 +8,36 @@ import input
 
 MTOW = cl2.MTOW_kg
 OEW = cl2.OEWINPUT
-OEW_percent = 100. * OEW / MTOW
 
 Npax = input.Npax
 w_person = input.W_pax
 pax_cabin = Npax * w_person
 
 max_PL = input.W_payload
-# maxpl_fuel = max_PL
-
 cargo = input.W_cargo
-fwd_cargo_max = cargo / 3
-aft_cargo_max = cargo * 2 / 3
-
-cargo_percent = 100 * cargo / MTOW
-
+fwd_cargo_max = cargo * input.cargo_fwd_fraction
+aft_cargo_max = cargo * input.cargo_fwd_fraction
 PL = pax_cabin + cargo
 fuel_weight = MTOW - OEW - PL
-
 M_zfw = OEW + PL
 
 # wing, stabilizer, fuselage and engine parameters
 w_engine = cl2.df['SRA'][8]  # kg
 wing_area = cl2.S  # m^2
-span = input.b
-horizontal_area = input.bh
-vertical_area = input.bv
-diameter = input.widthf
+span = cl2.b
+
 fuselage_lenght = input.lf  # m
+
+
+#inputs, gear location
 cgmain = 0.6 * fuselage_lenght
 cgnose = 1
 
+
+#inputs
 # determining MAC's
 xlemac = 0.4 * fuselage_lenght  # m, datum is front of nose
 MAC = 3 * 10 / 21  # m, length of MAC
-xlemac_horizontal = 63.5 * 10 / 21
-MAC_horizontal = 5.3 * 10 / 21
-xlemac_vertical = 73 * 34.9 / 87.4
-MAC_vertical = 9.5 * 34.9 / 87.4
 
 
 def maccie(x):

@@ -100,6 +100,8 @@ t_loiter = 2700  # s, as in 45 minutes
 
 W_pax = 93  # total weight per passenger, includes luggage kg
 W_cargo = 1000  # kg #Extra cargo weight
+cargo_fwd_fraction = 1/3 #estimate, amount of cargo in fwd hold
+cargo_aft_fraction = 2/3 #estimate, amount of cargo in aft hold
 n_crew = N_fdc + N_cc
 W_payload = Npax * W_pax + W_cargo
 Design_range = 2000  # [km]
