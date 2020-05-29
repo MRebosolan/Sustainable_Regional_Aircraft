@@ -1,4 +1,4 @@
-#furnishing\
+ #furnishing\
 #Verified by hand calculation
 
 def furnishing_gd(N_fdc, N_pax, N_cc, MTOW, P_c):
