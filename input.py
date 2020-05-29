@@ -8,12 +8,13 @@ Created on Thu May 28 09:48:30 2020
 # input parameters
 import numpy as np
 import Envelope
+import Class_2_estimation as cl2
 
 g = 9.80665  # [m/s^2]
 from math import radians
 
-# MTOM = 36000 # estimate, [kg]  these are commented out on purpose, as they will change due to class 1 and two converging
-# MTOW = MTOM * g #N  !!!!!!!!!!!!!make sure this is in newtons!!!!!!!!!!!!!
+MTOM = 36000 # [kg]  
+MTOW = MTOM * g #N  !!!!!!!!!!!!!make sure this is in newtons!!!!!!!!!!!!!
 MLW = 25000 * g  # maximum landing weight [N], to be calculated
 AR = 8  # estimate, [-]
 half_sweep = np.cos(radians(27))  # estimate, [degrees]
@@ -22,19 +23,19 @@ n_max = 2.5  # from envelope, update manually
 n_ult = 1.5 * n_max
 wingloading = 4375.84  # estimate, N/m^2
 powerloading = 0.44  # thrust over weight
-# S = MTOW /wingloading #m^2
-# Tto = powerloading * MTOW
+S = MTOW /wingloading #m^2
+Tto = powerloading * MTOW
 t_over_c = 0.1  # estimate, []
 taper = 0.4  # estimate, []
 mach_h = 0.5  # estimate, [] #max Mach at SL
 rho = 1.225 * 0.0624279606  # estimate, in lbs/ft3
 rho_zero = 0.00237  # fucking americans, this is slug/ft3
 
-lf = 30  # m estimate, lil shorter than CRJ as 5 seat rows are used
-hf = 2.5  # estimate
+lf = 30  #lenght of fuselage m estimate, lil shorter than CRJ as 5 seat rows are used
+hf = 2.5  # height of fuselage estimate
 A_inlet = 1.17  # m2
 ln = 0.8129  # m 1/4 of CRJ engine length
-# b = (S * AR)**0.5 #wingspan [m]
+b = (S * AR)**0.5 #wingspan [m]
 t_r = 1.0  # maximum thickness at root [m] #bullshit estimation
 widthf = 4.24  # m max fuselage width
 S_fgs = widthf * np.pi * lf * 0.9  # fuselage gross shell area
@@ -97,7 +98,7 @@ hydrogen_cost = 2.4  # US DOLLARS per KG
 
 # Flight performance
 rho0 = 1.225  # kg/m^3
-CD0 = 0.01277  # [-], to be refined as this comes from roskam statistics
+CD0 = 0.01277  # [-], to be refined (roskam) DONE IN MIDTERM, TALK TO JORN
 CD0_togd = 0.01277 + .015 + .02  # [-], to be refined as this comes from roskam statistics
 CD0_landGD = CD0 + .02 + .065  # [-], to be refined as this comes from roskam statistics
 e = 0.85  # [-], Oswald effiency factor, to be refined as this comes from roskam statistics

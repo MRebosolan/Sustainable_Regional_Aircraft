@@ -37,6 +37,9 @@ def tom (ft):
 def tosqft(m2):
     return m2/(0.3048*0.3048)
 
+def tom2(sqft):
+    return sqft *0.3048*0.3048
+
 #------------- INPUT PARAMETERS ----------------#
 
 AR = input.AR
@@ -224,7 +227,18 @@ df['737 fraction'] = df['737-200']/df['737-200'][0]
 df['SRA'] = to_kg(df['SRA'])
 df['F28'] = to_kg(df['F28'])
 df['737-200'] = to_kg(df['737-200'])
+
+
+S = tom2(S)
+b = tom(b)
+
+
+aircraftpar = pd.DataFrame()
+wing = [{'data': 'Wing Area', 'SRA': S, 'F28':tom2(1), '737-200':tom2(1)},
+               ]
+aircraftpar = aircraftpar.append(wing, ignore_index = True, sort = False)
 print(df)
+print(aircraftpar)
 latex = df.to_latex(index = False, caption = None)
 try:
     file = open('C://Users//jornv//Google Drive//DSE upload//Class2dataframe.txt', 'w')
@@ -232,3 +246,5 @@ try:
     file.close()
 except:
     print('you cannot update files, ask jorn if necessary')
+    
+    
