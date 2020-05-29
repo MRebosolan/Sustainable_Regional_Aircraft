@@ -22,8 +22,21 @@ cbar     = 0
 
 ###########################################################
 #Conversions to Imperial 
-MTOW = 2.20462*MTOW 
-S = 10.7639*S
+
+def to_pounds(kg):
+    return kg * 2.20462262
+
+def to_kg (lbs):
+    return lbs/2.20462262
+
+def toft (m):
+    return m /0.3048
+
+def tom (ft):
+    return ft*0.3048
+
+def tosqft(m2):
+    return m2 / (0.3048*0.3048)
 
 ##########################################################
 #Calculations
@@ -217,8 +230,9 @@ plt.ylim(-2,4)
 plt.axhline(y=0, color='k')
 plt.axvline(x=0, color='k')
 
-plt.xlabel('n-Load Factor [-]')
-plt.ylabel('V-Speed [kts]')
+plt.ylabel('n-Load Factor [-]')
+plt.xlabel('V-Speed [kts]')
+
 #------------------------------------------------------------------------------------
 
 plt.figure(2)
@@ -272,8 +286,8 @@ plt.ylim(-2,4)
 plt.axhline(y=0, color='k')
 plt.axvline(x=0, color='k')
 
-plt.xlabel('n-Load Factor [-]')
-plt.ylabel('V-Speed [kts]')
+plt.ylabel('n-Load Factor [-]')
+plt.xlabel('V-Speed [kts]')
 
 #------------------------------------------------------------------------------------
 
@@ -350,8 +364,8 @@ plt.ylim(-2,4)
 plt.axhline(y=0, color='k')
 plt.axvline(x=0, color='k')
 
-plt.xlabel('n-Load Factor [-]')
-plt.ylabel('V-Speed [kts]')
+plt.ylabel('n-Load Factor [-]')
+plt.xlabel('V-Speed [kts]')
 
 plt.show()
 

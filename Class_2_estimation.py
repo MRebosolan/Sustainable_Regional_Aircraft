@@ -35,7 +35,7 @@ def tom (ft):
     return ft*0.3048
 
 def tosqft(m2):
-    return m2 / (0.3048*0.3048)
+    return m2/(0.3048*0.3048)
 
 #------------- INPUT PARAMETERS ----------------#
 
@@ -128,7 +128,7 @@ while abs((OEW_class1_kg - OEWINPUT)*100/OEWINPUT)>= 0.05:
 
     W_wing_gd = wing.gd_wing(MTOW, AR, half_sweep, n_ult, S, t_over_c, taper, mach_h)
     W_fuselage_GD = fuselage.W_fuselage_gd (rho_zero, V_dive, MTOW, lf, hf)
-    W_nacelle_GD = nacelles.W_nacelle_torenbeek (T_TO)
+    W_nacelle_GD = nacelles.W_nacelle_torenbeek(T_TO)
     
     W_wing = wing.W_wing(W_zfw, b, half_sweep, n_ult, S, t_r)
     W_empennage = tail.vert_tail_weight(Sv, V_dive, half_chord_sweep_vert, bv, Sh, zh) + tail.hor_tail_weight(Sh, V_dive, half_chord_sweep_hor)
