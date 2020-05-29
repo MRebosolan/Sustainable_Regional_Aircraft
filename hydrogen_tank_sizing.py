@@ -49,13 +49,10 @@ def tank_sizing(HYDROGENVOLUME, CABIN_LENGTH,N):
     PR = 0.71
 
     N_UD = (0.6+0.387*R_AD**(1/6)/(1+(0.559/PR)**(9/16))**(8/27))**2
-<<<<<<< HEAD
+
     K_G = 0.02426 #.02041 W / m K
     CC_TANKAIR = N_UD*K_G/TANK_DIAMETER
-=======
-    K_G = 0.025
-    # CC_TANKAIR = N_UD*K_G/TANK_DIAMETER
->>>>>>> 0713d5730ed104ef63b58194f1f1adabefbe6cf2
+
 
     Q_CONVECTION = CC_TANKAIR*(T_SURROUND-T_INITINSULATION)
 
