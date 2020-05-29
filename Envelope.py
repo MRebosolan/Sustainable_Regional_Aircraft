@@ -1,6 +1,19 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+"""
+
+this code uses G_W 
+
+V_C
+V_D 
+V_S
+
+
+
+"""
+
+
 ###########################################################
 # Parameters
 
