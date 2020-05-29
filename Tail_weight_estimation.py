@@ -7,7 +7,7 @@ def hor_tail_weight( Sh, VD, half_chord_sweep_hor, Kh = 1.1):
     #VD= dive speed in KEAS (Knots Equivalent Air Speed)
     #----------> USE IMPERIAL!!!!!!!! <-------------
 
-    hor_tail_weight= Kh * Sh * ((3.81*(Sh**0.2 * VD)) / (1000 * (cos(half_chord_sweep_hor))**0.5)-0.287)
+    hor_tail_weight= Kh * Sh * ((3.81*(Sh**0.2 * VD)) / (1000 * (cos(half_chord_sweep_hor)**0.5))-0.287)
     return hor_tail_weight
 
 def Kv_fin_mounted(Sh, zh, Sv, bv):
