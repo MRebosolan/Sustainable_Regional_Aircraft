@@ -1,5 +1,5 @@
 """
-Created by Jorn and Matteo
+Created with love by Jorn and Matteo
 
 inputs: 
     -Class 1 weight estimation (OEW, MTOW, fuel weight, payload weight, zero fuel weight)
@@ -36,7 +36,7 @@ inputs:
     number of fuel tanks
     wingloading
     powerloading
-    hydrogen to kerosine ratio
+    hydrogen to kerosene ratio
 
 OUTPUTS:
     - weights of all subsystems

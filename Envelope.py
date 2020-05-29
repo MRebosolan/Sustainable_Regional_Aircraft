@@ -103,7 +103,7 @@ else:
 
 nlimneg=-0.4*nlim
 
-# Preiliminary Design Assumption
+# Preliminary Design Assumption
 
 CNmax=1.1*CLmax
 CNmaxneg=1.1*CLmaxneg

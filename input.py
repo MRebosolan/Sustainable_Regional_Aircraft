@@ -64,14 +64,16 @@ bv = 7.57  # m good ol' CRJ700
 bh = 8.54  # estimation, m
 zh = bv * 0.95
 
+#Lift/drag ratios
 LD_c = 15
 LD_c2 = 17
 LD_loiter = 17
 
 
-V_C=Envelope.V_C #KNOTS
+#Flight envelope
+V_C=Envelope.V_C #KNOTS            #Velocities from flight envelope, ask George
 V_S=Envelope.V_S #KNOTS
-V_S=Envelope.V_S2 #KNOTS
+V_S2=Envelope.V_S2 #KNOTS
 V_dive=Envelope.V_D #KNOTS
 V_A=Envelope.V_A #KNOTS
 V_B=Envelope.V_B #KNOTS
@@ -81,7 +83,9 @@ nlim=Envelope.nlimpos
 V_C2 = 0.8 * V_C
 V_loiter = 0.6 * V_C
 
-cj_ck = 1.6 * 10 ** (-5)  # kerosene cj
+
+#Class 1 weight estimation
+cj_ck = 1.6 * 10 ** (-5)  # kerosene cj               #Parameters about class 1 weight estimation, ask Jari
 cj_c = cj_ck * 0.349 * H_to_ker_ratio + cj_ck * (1 - H_to_ker_ratio)
 
 cj_ck2 = cj_ck * 0.9
@@ -90,8 +94,12 @@ cj_c2 = cj_ck2 * 0.349 * H_to_ker_ratio + cj_ck2 * (1 - H_to_ker_ratio)
 cj_kloiter = cj_ck * 0.7
 cj_loiter = cj_kloiter * 0.349 * H_to_ker_ratio + cj_kloiter * (1 - H_to_ker_ratio)
 t_loiter = 2700  # s, as in 45 minutes
-W_pax = 93  # includes luggage kg
-W_cargo = 1000  # kg
+
+
+
+
+W_pax = 93  # total weight per passenger, includes luggage kg
+W_cargo = 1000  # kg #Extra cargo weight
 n_crew = N_fdc + N_cc
 W_payload = Npax * W_pax + W_cargo
 Design_range = 2000  # [km]
