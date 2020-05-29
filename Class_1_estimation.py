@@ -188,7 +188,7 @@ def CLASS1WEIGHTHYBRID(H_to_ker_ratio = input.H_to_ker_ratio,OEWINPUT = 1):
     KEROSENE=(1-H_to_ker_ratio)*FUEL
     HYDROGEN=FUEL-KEROSENE
     HYDROGENVOLUME=1.1*1.072*HYDROGEN/HYDROGEN_DENSITY #NASA PAPER
-    TANK_THICKNESS,STRUCTURAL_TANK_MASS, TOTAL_STRUCTURAL_TANK_MASS, TANK_DIAMETER=tank_sizing(HYDROGENVOLUME,CABIN_LENGTH,2)
+    TANK_THICKNESS,STRUCTURAL_TANK_MASS, TOTAL_STRUCTURAL_TANK_MASS, TANK_DIAMETER=tank_sizing(HYDROGENVOLUME+0.01,CABIN_LENGTH,1)
     
 
 
@@ -213,7 +213,7 @@ emissionsratiolist=[]
 
 import matplotlib.pyplot as plt
 
-for i in range(0,101):
+for i in range(99,101):
     outputc1h=CLASS1WEIGHTHYBRID(i/100,1)
     mtowlist.append(outputc1h[0])
     oewlist.append(outputc1h[1])
