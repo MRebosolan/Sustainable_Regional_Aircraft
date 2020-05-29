@@ -144,17 +144,16 @@ while abs((OEW_class1_kg - OEWINPUT)*100/OEWINPUT)>= 0.05:
     instrumentation_weight = (instrumentation.instrumentation_torenbeek(MTOW)+ instrumentation.instrumentation_2(OEW_class1, range)+ instrumentation.instrumentation_gd(MTOW,N_fdc))/3
     flight_control_weight = flightcontrols.flight_controls(MTOW)                            #Verified for LE devices + spoilers
     electrical_system_weight = electrical.electrical_torenbeek(V_pax)                       #Verified
-
-    airconditioning_pressurization_weight = pressurization.pressure_system_weight(lpax)
-    oxygen_system_weight = oxygen.oxygen_system_weight(Npax)
-    APU_weight = apu.APU_weight_estimation(MTOW)
-    furnishing_weight = furnishing.furnishing_gd(N_fdc, Npax, N_cc, MTOW, P_c)
-    cargo_equipment_weight = cargo.cargo_handling_weight(Sff)
-    paint_weight = paint.paint(MTOW)
+    airconditioning_pressurization_weight = pressurization.pressure_system_weight(lpax)     #Verified
+    oxygen_system_weight = oxygen.oxygen_system_weight(Npax)                                #Verified
+    APU_weight = apu.APU_weight_estimation(MTOW)                                            #Verified
+    furnishing_weight = furnishing.furnishing_gd(N_fdc, Npax, N_cc, MTOW, P_c)              #Verified
+    cargo_equipment_weight = cargo.cargo_handling_weight(Sff)                               #Verified
+    paint_weight = paint.paint(MTOW)                                                        #Verified
     
     #------------ POWER PLANT WEIGHT ------------#
     
-    W_engines = engine.engine_weight(T_dry_SL, N_eng)  #Verified
+    W_engines = engine.engine_weight(T_dry_SL, N_eng)                                        #Verified
     W_fuel_system_kerosene = fuelsystem.W_fuelsystem (N_t, K_fsp, W_fuel)
     W_fuel_system_hydrogen = to_pounds(class1[-1])
     W_power_controls = powercontrols.total(lf, b, W_engines, pneumatic = True)
@@ -188,7 +187,7 @@ plt.show()
 
 df = pd.DataFrame({'data': ['MTOW','OEW'],
 'SRA': [MTOW, OEW_class2],
-'F28': [65000, 31219], 
+'F28': [65000, 31219],
 '737-200':[115500,60210]})
 
 wng = [{'data': 'Wing group', 'SRA': W_wing, 'F28':7330, '737-200': 10613},
