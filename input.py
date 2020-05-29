@@ -66,9 +66,16 @@ LD_c = 15
 LD_c2 = 17
 LD_loiter = 17
 
-V_c = 230.3
-V_c2 = 0.8 * V_c
-V_loiter = 0.6 * V_c
+V_C=Envelope.V_C
+V_S=Envelope.V_S
+V_S=Envelope.V_S2
+V_D=Envelope.V_D
+V_A=Envelope.V_A
+V_B=Envelope.V_B
+nlim=Envelope.nlimpos
+
+V_C2 = 0.8 * V_C
+V_loiter = 0.6 * V_C
 
 cj_ck = 1.6 * 10 ** (-5)  # kerosene cj
 cj_c = cj_ck * 0.349 * H_to_ker_ratio + cj_ck * (1 - H_to_ker_ratio)
