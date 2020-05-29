@@ -55,8 +55,10 @@ def tank_sizing(HYDROGENVOLUME, CABIN_LENGTH,N):
     THERMAL_CONDUCTIVITY_INSULATION = 0.0127  #VARRIES WITH TEMPERATURE
     T_LH2 = 10 #TEMPERATURE OF THE CRYOGENIC TANK
     print(R)
+    xilist=[]
+    yilist=[]
     for L in range(1,100):
-        INSULATION_THICKNESS=L/100
+        INSULATION_THICKNESS=L/1000
         running=True
         T_SURROUND= 290#K
         T_INITINSULATION =0#K
@@ -77,7 +79,15 @@ def tank_sizing(HYDROGENVOLUME, CABIN_LENGTH,N):
                 running=False
         
         BOIL_OFF=THERMAL_CONDUCTIVITY_INSULATION*TANK_SURFACE_AREA/INSULATION_THICKNESS*(T_INITINSULATION-T_SURROUND)/446592
-        print(BOIL_OFF,BOIL_OFF*4*3600,L,T_INITINSULATION,TANK_SURFACE_AREA)
+        print(BOIL_OFF,BOIL_OFF*4*3600,INSULATION_THICKNESS,T_INITINSULATION,TANK_SURFACE_AREA)
+        xilist.append(INSULATION_THICKNESS)
+        yilist.append(BOIL_OFF*4*3600)
+    print(xilist)#Prints out insulation thicknesses and boil offs
+    print(yilist)#Prints out insulation thicknesses and boil offs
+    
+
+    
+        
         
             
             

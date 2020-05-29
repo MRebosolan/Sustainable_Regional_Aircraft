@@ -1,3 +1,8 @@
+''' 
+file to be used for scissor plots. Being worked out atm
+responsible: Jorn
+'''
+
 import numpy as np
 import matplotlib.pyplot as plt
 from math import sqrt, pi, tan, atan
