@@ -25,7 +25,6 @@ GWP_alt = array([[1., 0., -7.1],
                  [1., 0.53, 25.6],
                  [1., 0.62, 4.6],
                  [1., 0.72, 0.6]])
-
 GWP = GWP_alt[Cruise_alt]           # Specify the altitude in km
 
 # plt.plot(eq, EI_NOxx)
