@@ -6,7 +6,7 @@ from CarbonFootprint import cf
 from hydrogen_tank_sizing import tank_sizing
 
 def CLASS1WEIGHTHYBRID(H_to_ker_ratio = input.H_to_ker_ratio,OEWINPUT = 1):
-    W_hydrosys=H_to_ker_ratio*1000
+    W_hydrosys=H_to_ker_ratio*2000
     e=2.71828182846
     n_pax= input.Npax
     W_pax= input.W_pax
@@ -125,7 +125,7 @@ emissionsratiolist=[]
 
 import matplotlib.pyplot as plt
 
-for i in range(1,101):
+for i in range(99,101):
     outputc1h=CLASS1WEIGHTHYBRID(i/100,1)
     mtowlist.append(outputc1h[0])
     oewlist.append(outputc1h[1])

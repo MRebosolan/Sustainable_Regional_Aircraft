@@ -79,11 +79,9 @@ def tank_sizing(HYDROGENVOLUME, CABIN_LENGTH,N):
                 running=False
         
         BOIL_OFF=THERMAL_CONDUCTIVITY_INSULATION*TANK_SURFACE_AREA/INSULATION_THICKNESS*(T_INITINSULATION-T_SURROUND)/446592
-        print(BOIL_OFF,BOIL_OFF*4*3600,INSULATION_THICKNESS,T_INITINSULATION,TANK_SURFACE_AREA)
         xilist.append(INSULATION_THICKNESS)
         yilist.append(BOIL_OFF*4*3600)
-    print(xilist)#Prints out insulation thicknesses and boil offs
-    print(yilist)#Prints out insulation thicknesses and boil offs
+
     
 
     
