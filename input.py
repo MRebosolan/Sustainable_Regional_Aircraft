@@ -8,7 +8,7 @@ Created on Thu May 28 09:48:30 2020
 # input parameters
 import numpy as np
 import Envelope
-import Class_2_estimation as cl2
+# import Class_2_estimation as cl2
 
 g = 9.80665  # [m/s^2]
 from math import radians
@@ -95,6 +95,8 @@ n_crew = N_fdc + N_cc
 W_payload = Npax * W_pax + W_cargo
 Design_range = 2000  # [km]
 hydrogen_cost = 2.4  # US DOLLARS per KG
+
+H_to_ker_ratio = 100
 
 # Flight performance
 rho0 = 1.225  # kg/m^3

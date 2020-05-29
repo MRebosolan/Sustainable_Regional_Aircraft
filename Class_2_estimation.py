@@ -1,3 +1,59 @@
+"""
+Created by Jorn and Matteo
+
+inputs: 
+    -Class 1 weight estimation (OEW, MTOW, fuel weight, payload weight, zero fuel weight)
+    - any system weight that is calculated in more detail!
+    - Aspect Ratio
+    - half chord sweep
+    - ultimate load factor
+    - thickness over chord
+    - taper ratio
+    - design mach number at sea level
+    SL rho
+    Length of fuselage
+    height of fuselage
+    width of fuselage
+    max thickness at wing root
+    fuselage gross shell area
+    length between 1/4 mac of wing and tail
+    gear constant Kgr
+    passenger cabin volume
+    length of passenger cabin
+    number of pax
+    number of pilots
+    number of cabin crew
+    cabin pressure
+    freight floor area
+    specific fuel consumption
+    vertical tail area
+    vertical tail span
+    horizontal tail area
+    half chord sweep of both tails
+    height of placement of horizontal tail wrt vertical tail
+    range
+    number of engines
+    number of fuel tanks
+    wingloading
+    powerloading
+    hydrogen to kerosine ratio
+
+OUTPUTS:
+    - weights of all subsystems
+    - Improved OEW
+    - a nice graph of class 1 and 2 converging
+    - a table in latex with subsystem weights
+    - a new take-off thrust
+    - a new wing size
+    
+PURPOSE: 
+    - make a class 2 weight estimation, and let it converge with the class 1 weight estimation, while providing updated aircraft parameters
+"""
+
+
+
+
+
 import APU_weight_estimation as apu
 import Cargo_handling_weight_estimation as cargo
 import electrical_system_weight_estimation as electrical
@@ -85,7 +141,6 @@ bv = toft(input.bv)
 Sh = tosqft(input.Sh)
 zh = toft(input.zh)
 
-N_fdc = input.N_fdc
 range = input.Design_range *0.539956803
 N_eng = input.N_eng
 N_t = input.N_t
