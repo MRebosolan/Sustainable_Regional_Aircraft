@@ -13,19 +13,19 @@ import Envelope
 g = 9.80665  # [m/s^2]
 from math import radians
 
-MTOM = 36000 # [kg]  
+MTOM = 36000 # [kg]  #maximum takeoff mass
 MTOW = MTOM * g #N  !!!!!!!!!!!!!make sure this is in newtons!!!!!!!!!!!!!
 MLW = 25000 * g  # maximum landing weight [N], to be calculated
-AR = 8  # estimate, [-]
-half_sweep = np.cos(radians(27))  # estimate, [degrees]
+AR = 8  # estimate, [-], Aspect ratio
+half_sweep = np.cos(radians(27))  # estimate, [degrees], sweep at half chord for main wing
 
-n_max = 2.5  # from envelope, update manually
-n_ult = 1.5 * n_max
+n_max = 2.5  # from envelope, update manually, max loading factor
+n_ult = 1.5 * n_max #ultimate loading factor
 wingloading = 4375.84  # estimate, N/m^2
 powerloading = 0.44  # thrust over weight
-S = MTOW /wingloading #m^2
-Tto = powerloading * MTOW
-t_over_c = 0.1  # estimate, []
+S = MTOW /wingloading #m^2, wing area
+Tto = powerloading * MTOW #thrust at takeoff in newtons
+t_over_c = 0.1  # estimate, [] , maximum thickness over chord ratio for main wing
 taper = 0.4  # estimate, []
 mach_h = 0.5  # estimate, [] #max Mach at SL
 rho = 1.225 * 0.0624279606  # estimate, in lbs/ft3
@@ -33,30 +33,30 @@ rho_zero = 0.00237  # fucking americans, this is slug/ft3
 
 lf = 30  #lenght of fuselage m estimate, lil shorter than CRJ as 5 seat rows are used
 hf = 2.5  # height of fuselage estimate
-A_inlet = 1.17  # m2
-ln = 0.8129  # m 1/4 of CRJ engine length
+A_inlet = 1.17  # m2, engine inlet area
+ln = 0.8129  # m 1/4 of CRJ engine length, length of nacelle
 b = (S * AR)**0.5 #wingspan [m]
 t_r = 1.0  # maximum thickness at root [m] #bullshit estimation
 widthf = 4.24  # m max fuselage width
 S_fgs = widthf * np.pi * lf * 0.9  # fuselage gross shell area
-lh = 15  # very random estimate
+lh = 15  # very random estimate, distance between wing and tail aerodynamic centers
 
-Kgr = 1.08  # constant for the gear
-V_pax = 282.391  # m^3
-lpax = 20  # estimate, meters
-Npax = 75
+Kgr = 1.08  # constant for the gear, torenbeek parameter
+V_pax = 282.391  # m^3, cabin volume
+lpax = 20  # estimate, meters, cabin length
+Npax = 75 #number of passengers
 N_fdc = 2  # probably, pilots
 N_cc = 2  # probably, cabin crew
-P_c = 74682.5  # Pa
+P_c = 74682.5  # Pa, design cabin pressure
 Sff = 7.6  # freight floor area estimate
-N_eng = 2  # maybe put this to 0?
-N_t = 2  # two tanks rn
+N_eng = 2  # number of engines
+N_t = 2  # number of fuel tanks
 rho_hydrogen = 70  # g/l
-K_fsp = 0.820  # kg/l, jet A
-H_to_ker_ratio = 0  # fuck hydrogen atm yo
-Sh = 20.75  # m2 crj700 shizzle yo
-half_chord_sweep_hor = np.radians(20)  # deg
-half_chord_sweep_vert = np.radians(35)  # deg
+K_fsp = 0.820  # kg/l, jet A, jet fuel density
+H_to_ker_ratio = 0  # fuck hydrogen atm yo, hydrogen to kerosene ratio
+Sh = 20.75  # m2 crj700 shizzle yo, horizontal tail area
+half_chord_sweep_hor = np.radians(20)  # deg, sweep at half chord of horizontal tail
+half_chord_sweep_vert = np.radians(35)  # deg, sweep at half chord of vertical tail
 
 Sv = 13.36  # m2 crj700 shizzle yo
 bv = 7.57  # m good ol' CRJ700
