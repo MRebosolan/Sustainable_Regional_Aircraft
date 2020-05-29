@@ -15,7 +15,6 @@ from math import radians
 # MTOW = MTOM * g #N  !!!!!!!!!!!!!make sure this is in newtons!!!!!!!!!!!!!
 MLW = 25000 * g  # maximum landing weight [N], to be calculated
 AR = 8  # estimate, [-]
-
 half_sweep = np.cos(radians(27))  # estimate, [degrees]
 
 n_max = 3  # estimate
