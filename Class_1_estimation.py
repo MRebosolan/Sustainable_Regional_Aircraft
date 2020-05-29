@@ -213,7 +213,7 @@ emissionsratiolist=[]
 
 import matplotlib.pyplot as plt
 
-for i in range(99,101):
+for i in range(100,101):
     outputc1h=CLASS1WEIGHTHYBRID(i/100,1)
     mtowlist.append(outputc1h[0])
     oewlist.append(outputc1h[1])
