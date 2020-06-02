@@ -32,6 +32,16 @@ mach_h = 0.5  # estimate, [] #max Mach at SL
 rho = 1.225 * 0.0624279606  # estimate, in lbs/ft3
 rho_zero = 0.00237  # fucking americans, this is slug/ft3
 
+
+Cr = 5.5                                 #Wing root chord [m]
+Ct = 1.2                               #Wing tip chord [m]
+Dfus = 4                                #Fuselage diameter [m]
+
+
+Cla_aileron = 6.4                     #1/rad, sectional lift curve slope at wing section where aileron is located, determine by datcom method or airfoil simulation
+Cd0_aileron = 0.0039                     #zero drag coefficient [-] at wing section where aileron is located, determine by airfoil simulation
+
+
 lf = 30  #lenght of fuselage m estimate, lil shorter than CRJ as 5 seat rows are used
 hf = 2.5  # height of fuselage estimate
 A_inlet = 1.17  # m2, engine inlet area

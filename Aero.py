@@ -36,7 +36,7 @@ V_D = Envelope.V_D  # Dive Speed
 V_S = Envelope.V_S  # Stall Speed
 V_A = Envelope.V_A  # Max Gust Speed
 
-def wing_geometry(M_cruise, S, AR, MTOW):
+def wing_geometry(M_cruise, S, AR, MTOW, V_C):
 
     if M_cruise >= 0.7:
         sweep_c4 = np.arccos(0.75*(0.935/(0.03 + M_cruise)))
@@ -83,13 +83,19 @@ def wing_geometry(M_cruise, S, AR, MTOW):
     WS_cr_end = 0.9629656887889539 * MTOW / S
 
     CL_des = 1.1/q * (0.5*(WS_cr_start + WS_cr_end))
-    Cl_des = CL_des * np.cos(sweep_c4)
-    print("Cl design =", Cl_des)
+    Cl_des = CL_des / np.cos(sweep_c4)**2
+    print("Cl design =", CL_des, Cl_des)
+
+    T_alt = 288 * (1 - 0.0065*inp.Cruise_alt*1000/288)
+    visc_k = 9.2e-6
+
+    Re = V_C * 0.514444 * c_mac / visc_k
+    print(Re)
 
 
     return sweep_c4, taper, c_root, c_tip, c_mac, y_mac, t_c, dihedral, Cl_des
 
-wing_geometry(M_cruise, S, AR, MTOW)
+wing_geometry(M_cruise, S, AR, MTOW, V_C)
 
 def airfoilplot(datfile):
     f=open('datfile','r')
