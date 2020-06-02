@@ -23,7 +23,7 @@ Description
 """
 # ---------------------------- Import Parameters
 
-M_cruise = 0.7
+M_cruise = 0.8
 S = inp.S
 AR = inp.AR
 MTOW = inp.MTOW
@@ -61,11 +61,16 @@ sweep_c2 = np.arctan(np.tan(sweep_c4) - 4/AR * ((50-25)/100 * (1 - taper)/(1 + t
 t_c = min((np.cos(sweep_c2)**3 * (0.935 - (M_cruise + 0.03) * np.cos(sweep_c2)) - 0.115 * CL_cruise**1.5) \
       / (np.cos(sweep_c2)**2), 0.18)
 
+Dihedral = 3
+s = sweep_c4*180/np.pi
 
+while s > 0:
+    s -= 10
+    print(s)
+    Dihedral -= 1
+    print(Dihedral)
 
+#Dihedral -= 2*180/np.pi
 
-
-
-
-
+print(sweep_c4*180/np.pi, Dihedral)
 
