@@ -101,7 +101,7 @@ t_loiter = 2700  # s, as in 45 minutes
 W_pax = 93  # total weight per passenger, includes luggage kg
 W_cargo = 1000  # kg #Extra cargo weight
 cargo_fwd_fraction = 1/3 #estimate, amount of cargo in fwd hold
-cargo_aft_fraction = 2/3 #estimate, amount of cargo in aft hold
+cargo_aft_fraction = 2./3 #estimate, amount of cargo in aft hold
 n_crew = N_fdc + N_cc
 W_payload = Npax * W_pax + W_cargo
 Design_range = 2000  # [km]
@@ -166,3 +166,7 @@ GWP_alt = np.array([[1., 0., -7.1],
                     [1., 0.62, 4.6],
                     [1., 0.72, 0.6]])
 GWP = GWP_alt[Cruise_alt]  # Specify the altitude in km
+
+# Aerodynamics:
+MAC = 2 #m, preliminary estimate, length of mean aerodynamic chord
+
