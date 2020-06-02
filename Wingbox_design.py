@@ -22,8 +22,8 @@ lift_duniform = total_lift_half/wing_length
 lift_dtriangle = 2*total_lift_half/wing_length
 
 
-w_wingd = 3000 # wing weight distribution
-w_engine = 1300 # engine weight 1300kg
+w_wingd = 3000*9.81 # wing weight distribution
+w_engine = 1300*9.81 # engine weight 1300kg
 x_engine = 2*wing_length/3 # engine distance from tip
 
 #-------UNIFORM LIFT DISTRIBUTION CALCULATIONS------------------
@@ -39,7 +39,7 @@ for i in range(1,100):
         Moment = (lift_duniform*x**2 - w_wingd*x**2)/2
     else:
         Shear_Force = (lift_duniform - w_wingd)*x - w_engine
-        Moment = (lift_duniform*x**2 - w_wingd*x**2)/2 - (x-x_engine)*w_engine
+        Moment = (lift_duniform - w_wingd)*x**2/2 - (x-x_engine)*w_engine
     x_loc.append(x)
     y_shear_uniform.append(Shear_Force)
     y_moment_uniform.append(Moment)
@@ -108,6 +108,9 @@ def wing_root_reaction_forces (L_wing, x_lift, W_wing, x_weight, W_engine, x_eng
 
 
 #section 1-2 wingtip to engine
+
+if(y_shear_uniform == y_shear_triangle):
+    print('hello')
 
 plt.plot(x_loc, y_moment_uniform)
 plt.plot(x_loc, y_shear_uniform)
