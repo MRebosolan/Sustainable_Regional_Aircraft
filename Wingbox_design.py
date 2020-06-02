@@ -17,24 +17,40 @@ wing_length = 0.5*(b-widthf)
 
 lift_d = SMC*wingloading #not yet adapted to triangle
 w_wingd = 1000 # wing weight distribution
-w_engine = 10 # engine weight
-x_engine = 3 # engine distance from tip
+w_engine = 10000 # engine weight
+x_engine = 2*wing_length/3 # engine distance from tip
 
 x_loc = []
-y_shear = []
-y_moment = []
+y_shear_uniform = []
+y_moment_uniform = []
 
 for i in range(1,100):
-    x = b*(i/100)
+    x = wing_length*(i/100)
     if x<x_engine:
-        Shear_Force = lift_d*x**2/b - w_wingd*x
-        Moment = lift_d*x**3/(3*b) - w_wingd*x**2/2
+        Shear_Force = (lift_d - w_wingd)*x
+        Moment = (lift_d*x**2 - w_wingd*x**2)/2
     else:
-        Shear_Force = lift_d*x**2/b - w_wingd*x - w_engine
-        Moment = lift_d*x**3/(3*b) - w_wingd*x**2/2 - (x-x_engine)*w_engine
+        Shear_Force = (lift_d - w_wingd)*x - w_engine
+        Moment = (lift_d*x**2 - w_wingd*x**2)/2 - (x-x_engine)*w_engine
     x_loc.append(x)
-    y_shear.append(Shear_Force)
-    y_moment.append(Moment)
+    y_shear_uniform.append(Shear_Force)
+    y_moment_uniform.append(Moment)
+
+
+y_shear_triangle = []
+y_moment_triangle = []
+
+for i in range(1,100):
+    x = wing_length*(i/100)
+    if x<x_engine:
+        Shear_Force = lift_d*x**2/(2*wing_length) - w_wingd*x
+        Moment = lift_d*x**3/(6*wing_length) - w_wingd*x**2/2
+    else:
+        Shear_Force = lift_d*x**2/(2*wing_length) - w_wingd*x - w_engine
+        Moment = lift_d*x**3/(6*wing_length) - w_wingd*x**2/2 - (x-x_engine)*w_engine
+
+    y_shear_triangle.append(Shear_Force)
+    y_moment_triangle.append(Moment)
 
 
 #-------ELLIPTICAL LIFT DISTRIBUTION CALCULATIONS------------------
@@ -64,6 +80,7 @@ def trapezoidal_integration(x_array, y_array):
     return integral_value
 
 
+
 x_lift = 4.2499 #application point of lift force
 
 
@@ -75,6 +92,9 @@ def wing_root_reaction_forces (L_wing, x_lift, W_wing, x_weight, W_engine, x_eng
 
 #section 1-2 wingtip to engine
 
+plt.plot(x_loc, y_moment_uniform)
+plt.plot(x_loc, y_shear_uniform)
+plt.plot(x_loc, y_moment_triangle)
+plt.plot(x_loc, y_shear_triangle)
 
-
-
+plt.show()
