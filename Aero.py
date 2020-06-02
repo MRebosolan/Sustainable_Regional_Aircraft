@@ -78,6 +78,9 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C):
     plt.plot()
     plt.show()
 
+    AR_check = 17.7 * (2 - taper) * np.exp(- 0.043 * sweep_c4/np.pi*180)
+    print(AR_check)
+
     WS_cr_start = 0.9843800695598843 * MTOW / S
 
     WS_cr_end = 0.9629656887889539 * MTOW / S
@@ -91,6 +94,8 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C):
 
     Re = V_C * 0.514444 * c_mac / visc_k
     print(Re)
+    # With CL_max = 1.8 we could take airfoil NACA 63(3)-618 (supercritical with 0.18 t/c)
+
 
 
     return sweep_c4, taper, c_root, c_tip, c_mac, y_mac, t_c, dihedral, Cl_des
