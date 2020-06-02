@@ -1,3 +1,18 @@
+'''
+Calculates the Carbon Footprint in kg CO2-eq particles per passenger-kilometer
+
+inputs:
+- Total fuel mass
+- Fuel fractions of hydrogen and kerosene (from 0 - 1)
+- The NOx emission of hydrogen combustion for a number of engine parameters (calculated in the inputs)
+  in kg NOx per kg of burned Hydrogen
+- The Global Warming Potential of CO2, H20 and NOx at a certain altitude (specified in the inputs)
+
+outputs
+- The Carbon Footprint of the concept in kg CO2-eq particles per passenger-kilometer
+- The ratio: Carbon Footprint concept / Carbon Footprint CRJ700
+'''
+
 from numpy import *
 import matplotlib.pyplot as plt
 from input import *
