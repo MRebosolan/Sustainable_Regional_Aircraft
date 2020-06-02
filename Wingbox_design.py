@@ -58,9 +58,9 @@ for i in range(1,100):
 
 #-------ELLIPTICAL LIFT DISTRIBUTION CALCULATIONS------------------
 
-def elliptical_lift_d (x, a=10.0135, b=40957.2):
+def elliptical_lift_d (x, a=10.0135, b=20478.6):
     #obtained by fitting elliptical distribution to given wing loading, a=half wing span - half fuselage width
-    loading_at_x = sqrt((1-(x**2/a**2))*b**2)
+    loading_at_x = np.sqrt((1-(x**2/a**2))*b**2)
     return loading_at_x
 
 def generate_spanwise_locations(n, b=wing_length):
@@ -77,12 +77,19 @@ def generate_lift_data_points(x_array):
     return lift_array
 
 def generate_weight_data_points(x_array):
+    weight_array = []
+    for i in x_array:
+        weight_array.append(i*3000)
+    return weight_array
 
 def trapezoidal_integration(x_array, y_array):
     integral_value = 0
     for i in range (len(x_array)-1):
         integral_value += (x_array[i+1]-x_array[i])/2 * (y_array[i+1] + y_array[i])
     return integral_value
+
+x_array = generate_spanwise_locations(1000),
+weight_array = generate_lift_data_points(x_array)
 
 
 
@@ -103,3 +110,4 @@ plt.plot(x_loc, y_moment_triangle)
 plt.plot(x_loc, y_shear_triangle)
 
 plt.show()
+
