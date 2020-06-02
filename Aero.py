@@ -11,17 +11,17 @@ inputs
     Wing Loading
     Class I Weight Estimation Outputs
     Aerodynamic Requirements
-    
-outputs 
     Wing Area
+    
+outputs     
     Wing Sweep
+    CL cruise
     Empennage Area 
     Dihedral Angle
     Airfoil Geometry
     
 description 
     This script calculates the main aerodynamic values that determine the wing and tail configuration of the aircraft.
-
 """
 
 # ---------------------------- Import Parameters
@@ -70,20 +70,23 @@ def wing_geometry(M_cruise, S, AR, MTOW):
     dihedral -= 1
 
     sweep_cLE = np.arctan(np.tan(sweep_c4) - 4 / AR * ((0 - 25) / 100 * (1 - taper) / (1 + taper)))
-    sweep_cTE = np.arctan(np.tan(sweep_c4) - 4 / AR * ((100 - 25) / 100 * (1 - taper) / (1 + taper)))
 
     x_wing = [0, b/2, b/2, 0, 0]
     y_wing = [0, -b/2*np.tan(sweep_cLE), (-b/2*np.tan(sweep_cLE) - c_tip), - c_root, 0]
-
-
 
     plt.plot(x_wing, y_wing)
     plt.plot()
     plt.show()
 
-    return sweep_c4, taper, c_root, c_tip, c_mac, y_mac, t_c, dihedral
 
 
-print(wing_geometry(M_cruise, S, AR, MTOW))
 
 
+    CL_des = 1.1/q * (0.5*(WS_cr_start + WS_cr_end))
+    Cl_des = CL_des * np.cos(sweep_c4)
+    print("Cl design =", Cl_des)
+
+
+    return sweep_c4, taper, c_root, c_tip, c_mac, y_mac, t_c, dihedral, CL_cruise, q
+
+wing_geometry(M_cruise, S, AR, MTOW)
