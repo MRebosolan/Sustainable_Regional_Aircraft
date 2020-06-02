@@ -1,7 +1,7 @@
 import numpy as np
 import input as inp
 import matplotlib.pyplot as plt
-from Class_1_estimation import CLASS1WEIGHTHYBRID
+import Envelope
 
 """
 inputs
@@ -34,6 +34,11 @@ if M_cruise >= 0.7:
 else:
     sweep_c4 = np.arccos(1)
 
+V_C=Envelope.V_C #Cruise Speed
+V_D=Envelope.V_D #Dive Speed
+V_S=Envelope.V_S #Stall Speed
+V_A=Envelope.V_A #Max Gust Speed
+
 # --------------------------- Equations 
     
 taper = 0.2 * (2 - sweep_c4)
@@ -59,5 +64,9 @@ while s > 0:
     s -= 10
     Dihedral -= 1
 Dihedral -= 1
+
+# ----------------------------- Geometry plot
+
+
 
 
