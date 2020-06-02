@@ -9,5 +9,12 @@ taper = input.taper #input taper
 t_r = input.t_r # input t_r
 SMC = b/AR #standar mean chord
 
-Load_distribution_lift = SMC*winglaoding
-load_distribution_wingweight =
+lift_d = SMC*winglaoding #not yet adapted to triangle
+w_wingd = 1000 # wing weight distribution
+
+#section 1-2 wintip to engine
+
+
+
+
+#section 2-3 engine to wing root
