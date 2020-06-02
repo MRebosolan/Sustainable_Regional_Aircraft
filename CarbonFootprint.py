@@ -1,3 +1,18 @@
+'''
+Calculates the Carbon Footprint in kg CO2-eq particles per passenger-kilometer
+
+inputs:
+- Total fuel mass
+- Fuel fractions of hydrogen and kerosene (from 0 - 1)
+- The NOx emission of hydrogen combustion for a number of engine parameters (calculated in the inputs)
+  in kg NOx per kg of burned Hydrogen
+- The Global Warming Potential of CO2, H20 and NOx at a certain altitude (specified in the inputs)
+
+outputs
+- The Carbon Footprint of the concept in kg CO2-eq particles per passenger-kilometer
+- The ratio: Carbon Footprint concept / Carbon Footprint CRJ700
+'''
+
 from numpy import *
 import matplotlib.pyplot as plt
 from input import *
@@ -56,16 +71,16 @@ def cf(Total_fuel, H2_fuelfrac, Ker_fuelfrac, NOx_H2, GWP):
         CO2eq_paxkm = (perkgJetA1[i] * Fuel_use_CRJ * GWP[i]) / (Pax_CRJ * Range_CRJ)
         CF_CRJ += CO2eq_paxkm
 
-    print("CRJ CF=",CF_CRJ)
+    #print("CRJ CF=",CF_CRJ)
     # Concept Total emissions (kg CO2-eq)
     for i in range(len(GWP)):
         CO2eq_paxkm_ker = (perkgJetA1[i] * Fuel_use_ker * GWP[i]) / (Npax * Design_range)
         CO2eq_paxkm_H2 = (perkgH2[i] * Fuel_use_H2 * GWP[i]) / (Npax * Design_range)
         CF_concept += CO2eq_paxkm_ker + CO2eq_paxkm_H2
-    print("Concept CF=", CF_concept)
+    #print("Concept CF=", CF_concept)
 
     Ratio_CF = CF_concept / CF_CRJ  # Ratio of the Carbon Footprints, target = max 0.75
-    print("Ratio CF =", Ratio_CF)
+    #print("Ratio CF =", Ratio_CF)
     return CF_concept, Ratio_CF
 
 # CF_list = []
