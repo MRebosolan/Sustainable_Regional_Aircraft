@@ -21,6 +21,7 @@ Description
     This script calculates the main aerodynamic values that determine the wing and tail configuration of the aircraft.
 
 """
+# ---------------------------- Import Parameters
 
 M_cruise = 0.7
 S = inp.S
@@ -32,6 +33,8 @@ if M_cruise >= 0.7:
 else:
     sweep_c4 = np.arccos(1)
 
+# --------------------------- Equations 
+    
 taper = 0.2 * (2 - sweep_c4)
 
 b = np.sqrt(S*AR)
