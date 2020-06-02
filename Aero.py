@@ -66,11 +66,7 @@ s = sweep_c4*180/np.pi
 
 while s > 0:
     s -= 10
-    print(s)
     Dihedral -= 1
-    print(Dihedral)
+Dihedral -= 1
 
-#Dihedral -= 2*180/np.pi
-
-print(sweep_c4*180/np.pi, Dihedral)
 
