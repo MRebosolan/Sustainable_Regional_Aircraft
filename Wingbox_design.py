@@ -47,10 +47,13 @@ x_lift = 4.2499 #application point of lift force
 
 def wing_root_reaction_forces (L_wing, x_lift, W_wing, x_weight, W_engine, x_engine):
     R_y = W_wing + W_engine - L_wing  #upwards positive
-    M = x_lift*L_wing - x_weight*W_wing - x_engine*W_engine #counterclockwise positive
+    M = x_lift*L_wing - x_weight*W_wing - x_engine*W_engine #clockwise positive
     return (R_y, M)
 
 
 #section 1-2 wingtip to engine
+
+plt.plot(x_loc, y_moment)
+plt.show()
 
 
