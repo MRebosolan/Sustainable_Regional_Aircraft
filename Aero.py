@@ -98,4 +98,7 @@ def airfoilplot(datfile):
     xcoord=[]
     ycoord1=[]
     ycoord2=[]
+    for i in range(0,len(xy)):
+        xcoord.append(float(xy[i][0]))
+        ycoord1.append(float(xy[i][1]))
     return xcoord, ycoord1, ycoord2
