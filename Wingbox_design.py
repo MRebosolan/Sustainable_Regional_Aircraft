@@ -17,8 +17,8 @@ wing_length = 0.5*(b-widthf)
 
 lift_d = SMC*wingloading #not yet adapted to triangle
 w_wingd = 1000 # wing weight distribution
-w_engine = 10 # engine weight
-x_engine = 3 # engine distance from tip
+w_engine = 10000 # engine weight
+x_engine = 2*wing_length/3 # engine distance from tip
 
 x_loc = []
 y_shear_uniform = []
@@ -94,7 +94,7 @@ def wing_root_reaction_forces (L_wing, x_lift, W_wing, x_weight, W_engine, x_eng
 
 plt.plot(x_loc, y_moment_uniform)
 plt.plot(x_loc, y_shear_uniform)
-#plt.plot(x_loc, y_moment_triangle)
-#plt.plot(x_loc, y_shear_triangle)
+plt.plot(x_loc, y_moment_triangle)
+plt.plot(x_loc, y_shear_triangle)
 
 plt.show()
