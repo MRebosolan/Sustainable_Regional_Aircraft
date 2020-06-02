@@ -15,7 +15,13 @@ SMC = b/AR #standar mean chord
 widthf = input.widthf
 wing_length = 0.5*(b-widthf)
 
-lift_d = SMC*wingloading/2 #not yet adapted to triangle
+total_lift = wingloading/wing_length
+total_lift_half = total_lift/2
+
+lift_duniform = total_lift_half/wing_length
+lift_dtriangle = 2*total_lift_half/wing_length
+
+
 w_wingd = 3000 # wing weight distribution
 w_engine = 1300 # engine weight 1300kg
 x_engine = 2*wing_length/3 # engine distance from tip
@@ -29,11 +35,11 @@ y_moment_uniform = []
 for i in range(1,100):
     x = wing_length*(i/100)
     if x<x_engine:
-        Shear_Force = (lift_d - w_wingd)*x
-        Moment = (lift_d*x**2 - w_wingd*x**2)/2
+        Shear_Force = (lift_duniform - w_wingd)*x
+        Moment = (lift_duniform*x**2 - w_wingd*x**2)/2
     else:
-        Shear_Force = (lift_d - w_wingd)*x - w_engine
-        Moment = (lift_d*x**2 - w_wingd*x**2)/2 - (x-x_engine)*w_engine
+        Shear_Force = (lift_duniform - w_wingd)*x - w_engine
+        Moment = (lift_duniform*x**2 - w_wingd*x**2)/2 - (x-x_engine)*w_engine
     x_loc.append(x)
     y_shear_uniform.append(Shear_Force)
     y_moment_uniform.append(Moment)
@@ -46,11 +52,11 @@ y_moment_triangle = []
 for i in range(1,100):
     x = wing_length*(i/100)
     if x<x_engine:
-        Shear_Force = lift_d*x**2/(2*wing_length) - w_wingd*x
-        Moment = lift_d*x**3/(6*wing_length) - w_wingd*x**2/2
+        Shear_Force = lift_dtriangle*x**2/(2*wing_length) - w_wingd*x
+        Moment = lift_dtriangle*x**3/(6*wing_length) - w_wingd*x**2/2
     else:
-        Shear_Force = lift_d*x**2/(2*wing_length) - w_wingd*x - w_engine
-        Moment = lift_d*x**3/(6*wing_length) - w_wingd*x**2/2 - (x-x_engine)*w_engine
+        Shear_Force = lift_dtriangle*x**2/(2*wing_length) - w_wingd*x - w_engine
+        Moment = lift_dtriangle*x**3/(6*wing_length) - w_wingd*x**2/2 - (x-x_engine)*w_engine
 
     y_shear_triangle.append(Shear_Force)
     y_moment_triangle.append(Moment)
