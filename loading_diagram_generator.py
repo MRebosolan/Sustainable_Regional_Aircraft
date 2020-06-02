@@ -70,6 +70,16 @@ for i in range(int(rows - 1)):
     seatloc.append(row)
 
 
+
+
+############# PLOTTING BELOW -----------------------------
+
+
+
+
+
+
+
 # new cg calculation, returns new cg and new weight
 def loadingcg(w_old, cg_old, w_item, cg_item):
     x_cg_new = (w_old * cg_old + w_item * cg_item) / (w_old + w_item)

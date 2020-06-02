@@ -14,7 +14,9 @@ g = 9.80665  # [m/s^2]
 from math import radians
 
 MTOM = 32846.208787 # [kg]  #maximum takeoff mass calculated in class 2
+print('please use MTOM from class 2')
 OEW = 22981.846450 #kg calculated in class 2
+print('please use OEW from class 2')
 MTOW = MTOM * g #N  !!!!!!!!!!!!!make sure this is in newtons!!!!!!!!!!!!!
 MLW = 25000 * g  # maximum landing weight [N], to be calculated
 AR = 8  # estimate, [-], Aspect ratio
@@ -25,7 +27,9 @@ n_ult = 1.5 * n_max #ultimate loading factor
 wingloading = 4375.84  # estimate, N/m^2
 powerloading = 0.44  # thrust over weight
 S = MTOW /wingloading #m^2, wing area
+print('please use S from class 2')
 Tto = powerloading * MTOW #thrust at takeoff in newtons
+print('please use Tto from class 2')
 t_over_c = 0.1  # estimate, [] , maximum thickness over chord ratio for main wing
 taper = 0.4  # estimate, []
 mach_h = 0.5  # estimate, [] #max Mach at SL
@@ -47,9 +51,10 @@ hf = 2.5  # height of fuselage estimate
 A_inlet = 1.17  # m2, engine inlet area
 ln = 0.8129  # m 1/4 of CRJ engine length, length of nacelle
 b = (S * AR)**0.5 #wingspan [m]
+print('please use b from class 2')
 t_r = 1.0  # maximum thickness at root [m] #bullshit estimation
 widthf = 2.8  # m max fuselage width
-S_fgs = widthf * np.pi * lf * 0.9  # fuselage gross shell area
+S_fgs = widthf * np.pi * lf * 0.9  # fuselage gross shell area, APPROXIMATION
 lh = 15  # very random estimate, distance between wing and tail aerodynamic centers
 
 Kgr = 1.08  # constant for the gear, torenbeek parameter
