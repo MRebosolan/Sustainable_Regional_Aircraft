@@ -92,15 +92,9 @@ def wing_root_reaction_forces (L_wing, x_lift, W_wing, x_weight, W_engine, x_eng
 
 #section 1-2 wingtip to engine
 
-<<<<<<< HEAD
 plt.plot(x_loc, y_moment_uniform)
 plt.plot(x_loc, y_shear_uniform)
 #plt.plot(x_loc, y_moment_triangle)
 #plt.plot(x_loc, y_shear_triangle)
-=======
 
-
-
-plt.plot(x_loc, y_moment)
->>>>>>> 139e7af8bcef13e8d14997b40036fc9b233f7b99
 plt.show()
