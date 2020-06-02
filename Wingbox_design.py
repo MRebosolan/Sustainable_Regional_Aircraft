@@ -15,10 +15,18 @@ SMC = b/AR #standar mean chord
 widthf = input.widthf
 wing_length = 0.5*(b-widthf)
 
-lift_d = SMC*wingloading #not yet adapted to triangle
-w_wingd = 1000 # wing weight distribution
-w_engine = 10000 # engine weight
+total_lift = wingloading/wing_length
+total_lift_half = total_lift/2
+
+lift_duniform = total_lift_half/wing_length
+lift_dtriangle = 2*total_lift_half/wing_length
+
+
+w_wingd = 3000*9.81 # wing weight distribution
+w_engine = 1300*9.81 # engine weight 1300kg
 x_engine = 2*wing_length/3 # engine distance from tip
+
+#-------UNIFORM LIFT DISTRIBUTION CALCULATIONS------------------
 
 x_loc = []
 y_shear_uniform = []
@@ -27,15 +35,16 @@ y_moment_uniform = []
 for i in range(1,100):
     x = wing_length*(i/100)
     if x<x_engine:
-        Shear_Force = (lift_d - w_wingd)*x
-        Moment = (lift_d*x**2 - w_wingd*x**2)/2
+        Shear_Force = (lift_duniform - w_wingd)*x
+        Moment = (lift_duniform*x**2 - w_wingd*x**2)/2
     else:
-        Shear_Force = (lift_d - w_wingd)*x - w_engine
-        Moment = (lift_d*x**2 - w_wingd*x**2)/2 - (x-x_engine)*w_engine
+        Shear_Force = (lift_duniform - w_wingd)*x - w_engine
+        Moment = (lift_duniform - w_wingd)*x**2/2 - (x-x_engine)*w_engine
     x_loc.append(x)
     y_shear_uniform.append(Shear_Force)
     y_moment_uniform.append(Moment)
 
+#-------TRIANGULAR LIFT DISTRIBUTION CALCULATIONS------------------
 
 y_shear_triangle = []
 y_moment_triangle = []
@@ -43,11 +52,11 @@ y_moment_triangle = []
 for i in range(1,100):
     x = wing_length*(i/100)
     if x<x_engine:
-        Shear_Force = lift_d*x**2/(2*wing_length) - w_wingd*x
-        Moment = lift_d*x**3/(6*wing_length) - w_wingd*x**2/2
+        Shear_Force = lift_dtriangle*x**2/(2*wing_length) - w_wingd*x
+        Moment = lift_dtriangle*x**3/(6*wing_length) - w_wingd*x**2/2
     else:
-        Shear_Force = lift_d*x**2/(2*wing_length) - w_wingd*x - w_engine
-        Moment = lift_d*x**3/(6*wing_length) - w_wingd*x**2/2 - (x-x_engine)*w_engine
+        Shear_Force = lift_dtriangle*x**2/(2*wing_length) - w_wingd*x - w_engine
+        Moment = lift_dtriangle*x**3/(6*wing_length) - w_wingd*x**2/2 - (x-x_engine)*w_engine
 
     y_shear_triangle.append(Shear_Force)
     y_moment_triangle.append(Moment)
@@ -91,6 +100,9 @@ def wing_root_reaction_forces (L_wing, x_lift, W_wing, x_weight, W_engine, x_eng
 
 
 #section 1-2 wingtip to engine
+
+if(y_shear_uniform == y_shear_triangle):
+    print('hello')
 
 plt.plot(x_loc, y_moment_uniform)
 plt.plot(x_loc, y_shear_uniform)
