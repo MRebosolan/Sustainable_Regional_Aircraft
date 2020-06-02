@@ -1,7 +1,7 @@
 import numpy as np
 import input as inp
 import matplotlib.pyplot as plt
-from Class_1_estimation import CLASS1WEIGHTHYBRID
+import Envelope
 
 """
 inputs
@@ -10,14 +10,16 @@ inputs
     Equivalent Airspeed
     Wing Loading
     Class I Weight Estimation Outputs
-
+    Aerodynamic Requirements
+    
 outputs 
     Wing Area
     Wing Sweep
     Empennage Area 
     Dihedral Angle
+    Airfoil Geometry
     
-Description 
+description 
     This script calculates the main aerodynamic values that determine the wing and tail configuration of the aircraft.
 
 """
@@ -33,6 +35,11 @@ if M_cruise >= 0.7:
     sweep_c4 = np.arccos(0.75*(0.935/(0.03 + M_cruise)))
 else:
     sweep_c4 = np.arccos(1)
+
+V_C=Envelope.V_C #Cruise Speed
+V_D=Envelope.V_D #Dive Speed
+V_S=Envelope.V_S #Stall Speed
+V_A=Envelope.V_A #Max Gust Speed
 
 # --------------------------- Equations 
     
@@ -59,5 +66,9 @@ while s > 0:
     s -= 10
     Dihedral -= 1
 Dihedral -= 1
+
+
+
+
 
 
