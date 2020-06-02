@@ -27,7 +27,7 @@ AR = inp.AR
 
 if M_cruise >= 0.7:
     sweep_c4 = np.acos(0.935/(0.03 + M_cruise))
-else
+else:
     sweep_c4 = np.acos(1)
 
 taper = 0.2 * (2 - sweep_c4)
