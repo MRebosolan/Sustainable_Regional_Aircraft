@@ -284,8 +284,7 @@ df['F28'] = to_kg(df['F28'])
 df['737-200'] = to_kg(df['737-200'])
 
 
-S = tom2(S)
-b = tom(b)
+
 
 
 aircraftpar = pd.DataFrame()
@@ -303,3 +302,8 @@ except:
     print('you cannot update files, ask jorn if necessary')
     
     
+S = tom2(S)
+b = tom(b)
+MTOM = to_kg(MTOW)
+OEM = OEWINPUT
+Tto = T_TO_newton
