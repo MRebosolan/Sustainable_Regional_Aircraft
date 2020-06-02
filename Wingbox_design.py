@@ -15,10 +15,12 @@ SMC = b/AR #standar mean chord
 widthf = input.widthf
 wing_length = 0.5*(b-widthf)
 
-lift_d = SMC*wingloading #not yet adapted to triangle
-w_wingd = 1000 # wing weight distribution
-w_engine = 10000 # engine weight
+lift_d = SMC*wingloading/2 #not yet adapted to triangle
+w_wingd = 3000 # wing weight distribution
+w_engine = 1300 # engine weight 1300kg
 x_engine = 2*wing_length/3 # engine distance from tip
+
+#-------UNIFORM LIFT DISTRIBUTION CALCULATIONS------------------
 
 x_loc = []
 y_shear_uniform = []
@@ -36,6 +38,7 @@ for i in range(1,100):
     y_shear_uniform.append(Shear_Force)
     y_moment_uniform.append(Moment)
 
+#-------TRIANGULAR LIFT DISTRIBUTION CALCULATIONS------------------
 
 y_shear_triangle = []
 y_moment_triangle = []
