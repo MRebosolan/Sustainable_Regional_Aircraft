@@ -1,4 +1,5 @@
 import input
+import matplotlib.pyplot as plt
 
 winglaoding = input.wingloading #import wingloading
 
@@ -11,10 +12,23 @@ SMC = b/AR #standar mean chord
 
 lift_d = SMC*winglaoding #not yet adapted to triangle
 w_wingd = 1000 # wing weight distribution
+w_engine = 10 # engine weight
+x_engine = 3 # engine distance from tip
 
-#section 1-2 wintip to engine
+x_loc = []
+y_shear = []
+y_moment = []
+
+for i in range(1,100):
+    x = b*(i/100)
+    if x<x_engine:
+        Shear_Force = lift_d*x**2/b - w_wingd*x
+        Moment = lift_d*x**3/(3*b) - w_wingd*x**2/2
+    else:
+        Shear_Force = lift_d*x**2/b - w_wingd*x - w_engine
+        Moment = lift_d*x**3/(3*b) - w_wingd*x**2/2 - (x-x_engine)*w_engine
+    x_loc.append(x)
+    y_shear.append(Shear_Force)
+    y_moment.append(Moment)
 
 
-
-
-#section 2-3 engine to wing root
