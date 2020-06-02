@@ -24,6 +24,7 @@ Description
 M_cruise = 0.7
 S = inp.S
 AR = inp.AR
+MTOW = inp.MTOW
 
 if M_cruise >= 0.7:
     sweep_c4 = np.arccos(0.75*(0.935/(0.03 + M_cruise)))
@@ -42,7 +43,9 @@ y_mac = b/2 * 1/3 * (1 + 2*taper)/(1 + taper)
 p_cruise = 101325 * (1 - 0.0065*inp.Cruise_alt*1000/288)**(9.80665/(287*0.0065))
 q = 0.5 * 1.4 * p_cruise * M_cruise**2
 CL_cruise = MTOW/q*S
-
+sweep_c2 = np.arctan(np.tan(sweep_c4) - 4/AR * ((50-25)/100 * (1 - taper)/(1 + taper))) #* 180/np.pi
+t_c = (np.cos(sweep_c2)**3 * (0.935 - (M_cruise + 0.03) * np.cos(sweep_c2)) - 0.115 * CL_cruise**1.5) \
+      / (np.cos(sweep_c2)**2)
 
 
 
