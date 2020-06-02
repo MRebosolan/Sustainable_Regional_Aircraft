@@ -62,7 +62,7 @@ for i in range(1,100):
     y_moment_triangle.append(Moment)
 
 
-#-------ELLIPTICAL LIFT DISTRIBUTION CALCULATIONS------------------
+#-------ELLIPTICA/GENERAL LIFT DISTRIBUTION CALCULATIONS------------------
 
 def elliptical_lift_d (x, a=10.0135, b=20478.6):
     #obtained by fitting elliptical distribution to given wing loading, a=half wing span - half fuselage width
@@ -85,7 +85,7 @@ def generate_lift_data_points(x_array):
 def generate_weight_data_points(x_array):
     weight_array = []
     for i in x_array:
-        weight_array.append(i*3000)
+        weight_array.append((599.191 - 59.8383*i)*9.81)
     return weight_array
 
 def trapezoidal_integration(x_array, y_array):
@@ -96,9 +96,14 @@ def trapezoidal_integration(x_array, y_array):
 
 x_array = generate_spanwise_locations(1000)
 
-print(len(x_array))
 
 x_lift = 4.2499 #application point of lift force
+x_engine_root = wing_length/3
+x_weight = wing_length/3
+elliptical_lift_array = generate_lift_data_points(x_array)
+weight_array = generate_weight_data_points(x_array)
+L_wing = trapezoidal_integration(x_array, elliptical_lift_array)
+W_wing = trapezoidal_integration(x_array, weight_array)
 
 
 def wing_root_reaction_forces (L_wing, x_lift, W_wing, x_weight, W_engine, x_engine):
@@ -106,16 +111,39 @@ def wing_root_reaction_forces (L_wing, x_lift, W_wing, x_weight, W_engine, x_eng
     M = x_lift*L_wing - x_weight*W_wing - x_engine*W_engine #clockwise positive
     return (R_y, M)
 
+R_y, M = wing_root_reaction_forces(L_wing, x_lift, W_wing, x_weight, w_engine, x_engine_root)
 
-#section 1-2 wingtip to engine
+print(R_y, M)
+
+def internal_bending_moment(x, x_array=x_array, lift_array=elliptical_lift_array, w_engine=w_engine,\
+    weight_array=weight_array, x_engine = x_engine_root, R_y = R_y, M = M):
+    x = min(x_array, key=lambda y:abs(y-x))
+    x_index = np.where(x_array == x)[0][0]
+    x_array = x_array[:x_index]
+    lift_array = lift_array[:x_index]
+    weight_array = weight_array[:x_index]
+    x_lift = trapezoidal_integration(x_array, x_array*lift_array)/trapezoidal_integration(x_array, lift_array)
+    lift = trapezoidal_integration(x_array, lift_array)
+    x_weight = trapezoidal_integration(x_array, x_array*weight_array)/trapezoidal_integration(x_array, weight_array)
+    weight = trapezoidal_integration(x_array, weight_array)
+    if x > x_engine:
+        engine_distance = x - x_engine
+    else:
+        engine_distance = 0
+    moment_at_x = M + R_y*x + lift*(x-x_lift) - w_engine*engine_distance - weight*(x-x_weight)
+    return moment_at_x
+moment_array = []
+for i in x_array[2:]:
+    moment_array.append(internal_bending_moment(i))
+
+print(trapezoidal_integration(x_array, elliptical_lift_array))
+
+
+
 
 if(y_shear_uniform == y_shear_triangle):
     print('hello')
 
-plt.plot(x_loc, y_moment_uniform)
-plt.plot(x_loc, y_shear_uniform)
-plt.plot(x_loc, y_moment_triangle)
-plt.plot(x_loc, y_shear_triangle)
 
 plt.show()
 
