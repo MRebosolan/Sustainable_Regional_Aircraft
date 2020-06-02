@@ -65,7 +65,7 @@ while s > 0:
     Dihedral -= 1
 Dihedral -= 1
 
-# ----------------------------- Geometry plot
+
 
 
 
