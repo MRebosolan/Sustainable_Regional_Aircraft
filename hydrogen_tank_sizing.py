@@ -58,7 +58,7 @@ def tank_sizing(HYDROGENVOLUME, CABIN_LENGTH,N):
     xilist=[]
     yilist=[]
     for L in range(1,100):
-        INSULATION_THICKNESS=L/1000
+        INSULATION_THICKNESS=L/1000 #unit is meters, increment from 0,001 to 0,1 meters by a millimeter each time
         running=True
         T_SURROUND= 290#K
         T_INITINSULATION =0#K
@@ -76,11 +76,11 @@ def tank_sizing(HYDROGENVOLUME, CABIN_LENGTH,N):
             Q_IN = Q_CONVECTION + Q_RADIATION
 
             Q_CONDUCTION = THERMAL_CONDUCTIVITY_INSULATION*(T_INITINSULATION-T_LH2)/(INSULATION_THICKNESS)
-            T_INITINSULATION +=0.1
+            T_INITINSULATION +=0.1 #look for correct insulation temperature for each thickness
             if Q_CONDUCTION>Q_IN:
                 running=False
         
-        BOIL_OFF=THERMAL_CONDUCTIVITY_INSULATION*TANK_SURFACE_AREA/INSULATION_THICKNESS*(T_INITINSULATION-T_SURROUND)/446592
+        BOIL_OFF=THERMAL_CONDUCTIVITY_INSULATION*TANK_SURFACE_AREA/INSULATION_THICKNESS*(T_INITINSULATION-T_SURROUND)/446592 #BOIL OFF for thickness and insulation T.
         # print(BOIL_OFF,BOIL_OFF*4*3600,INSULATION_THICKNESS,T_INITINSULATION,TANK_SURFACE_AREA)
         xilist.append(INSULATION_THICKNESS)
         yilist.append(BOIL_OFF*4*3600)
