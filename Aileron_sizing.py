@@ -11,7 +11,7 @@ output: aileron geometry (spanwise position, roll rate achieved, rolldamping coe
 """
 import numpy as np
 import input
-import Class_2_estimation
+
 #Aileron sizing input parameters, not to be changed
 Preq = np.radians(45/1.45)              #required roll rate from Class II aircraft regulations
 Cr = input.Cr                                  #Wing root chord

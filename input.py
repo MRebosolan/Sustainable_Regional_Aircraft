@@ -38,8 +38,8 @@ Ct = 1.2                               #Wing tip chord [m]
 Dfus = 4                                #Fuselage diameter [m]
 
 
-Cla = 6.4                     #1/rad, sectional lift curve slope at wing section where aileron is located, determine by datcom method or airfoil simulation
-Cd0 = 0.0039                     #zero drag coefficient [-] at wing section where aileron is located, determine by airfoil simulation
+Cla_aileron = 6.4                     #1/rad, sectional lift curve slope at wing section where aileron is located, determine by datcom method or airfoil simulation
+Cd0_aileron = 0.0039                     #zero drag coefficient [-] at wing section where aileron is located, determine by airfoil simulation
 
 
 lf = 30  #lenght of fuselage m estimate, lil shorter than CRJ as 5 seat rows are used
