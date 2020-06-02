@@ -21,17 +21,38 @@ Description
 
 """
 
-M_cruise = 0.6
+M_cruise = 0.7
 S = inp.S
 AR = inp.AR
 
 if M_cruise >= 0.7:
-    sweep_c4 = np.acos(0.935/(0.03 + M_cruise))
+    sweep_c4 = np.arccos(0.75*(0.935/(0.03 + M_cruise)))
 else:
-    sweep_c4 = np.acos(1)
+    sweep_c4 = np.arccos(1)
 
 taper = 0.2 * (2 - sweep_c4)
 
 b = np.sqrt(S*AR)
 c_root = 2*S / ((1 + taper)*b)
 c_tip = taper * c_root
+
+c_mac = 2/3 * c_root * (1 + taper + taper**2)/(1 + taper)
+y_mac = b/2 * 1/3 * (1 + 2*taper)/(1 + taper)
+
+p_cruise = 101325 * (1 - 0.0065*inp.Cruise_alt*1000/288)**(9.80665/(287*0.0065))
+q = 0.5 * 1.4 * p_cruise * M_cruise**2
+CL_cruise = MTOW/q*S
+
+
+
+
+
+
+
+
+
+
+
+
+
+
