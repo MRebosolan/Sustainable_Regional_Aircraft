@@ -10,14 +10,16 @@ inputs
     Equivalent Airspeed
     Wing Loading
     Class I Weight Estimation Outputs
-
+    Aerodynamic Requirements
+    
 outputs 
     Wing Area
     Wing Sweep
     Empennage Area 
     Dihedral Angle
+    Airfoil Geometry
     
-Description 
+description 
     This script calculates the main aerodynamic values that determine the wing and tail configuration of the aircraft.
 
 """
