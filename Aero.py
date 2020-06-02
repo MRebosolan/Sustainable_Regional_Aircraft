@@ -1,6 +1,7 @@
 import numpy as np
 import input as inp
 import matplotlib.pyplot as plt
+from Class_1_estimation import CLASS1WEIGHTHYBRID
 
 """
 inputs
