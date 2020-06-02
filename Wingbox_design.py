@@ -47,9 +47,9 @@ def elliptical_lift_d (x, a=10.0135, b=40957.2):
 def generate_spanwise_locations(n, b=wing_length):
     x_array = [0]
     step = b/n
-    for i in range (n):
+    while x_array[-1] < b:
         x_array.append(x_array[-1]+step)
-    return np.array(x_array)
+    return np.array(x_array[:-1])
 
 def generate_lift_data_points(x_array):
     lift_array = []
@@ -62,7 +62,6 @@ def trapezoidal_integration(x_array, y_array):
     for i in range (len(x_array)-1):
         integral_value += (x_array[i+1]-x_array[i])/2 * (y_array[i+1] + y_array[i])
     return integral_value
-
 
 
 x_lift = 4.2499 #application point of lift force
@@ -79,5 +78,3 @@ def wing_root_reaction_forces (L_wing, x_lift, W_wing, x_weight, W_engine, x_eng
 
 
 
-plt.plot(x_loc, y_moment)
-plt.show()
