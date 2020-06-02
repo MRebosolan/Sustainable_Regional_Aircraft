@@ -71,16 +71,16 @@ def cf(Total_fuel, H2_fuelfrac, Ker_fuelfrac, NOx_H2, GWP):
         CO2eq_paxkm = (perkgJetA1[i] * Fuel_use_CRJ * GWP[i]) / (Pax_CRJ * Range_CRJ)
         CF_CRJ += CO2eq_paxkm
 
-    print("CRJ CF=",CF_CRJ)
+    #print("CRJ CF=",CF_CRJ)
     # Concept Total emissions (kg CO2-eq)
     for i in range(len(GWP)):
         CO2eq_paxkm_ker = (perkgJetA1[i] * Fuel_use_ker * GWP[i]) / (Npax * Design_range)
         CO2eq_paxkm_H2 = (perkgH2[i] * Fuel_use_H2 * GWP[i]) / (Npax * Design_range)
         CF_concept += CO2eq_paxkm_ker + CO2eq_paxkm_H2
-    print("Concept CF=", CF_concept)
+    #print("Concept CF=", CF_concept)
 
     Ratio_CF = CF_concept / CF_CRJ  # Ratio of the Carbon Footprints, target = max 0.75
-    print("Ratio CF =", Ratio_CF)
+    #print("Ratio CF =", Ratio_CF)
     return CF_concept, Ratio_CF
 
 # CF_list = []
