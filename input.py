@@ -32,13 +32,23 @@ mach_h = 0.5  # estimate, [] #max Mach at SL
 rho = 1.225 * 0.0624279606  # estimate, in lbs/ft3
 rho_zero = 0.00237  # fucking americans, this is slug/ft3
 
+
+Cr = 5.5                                 #Wing root chord [m]
+Ct = 1.2                               #Wing tip chord [m]
+Dfus = 4                                #Fuselage diameter [m]
+
+
+Cla_aileron = 6.4                     #1/rad, sectional lift curve slope at wing section where aileron is located, determine by datcom method or airfoil simulation
+Cd0_aileron = 0.0039                     #zero drag coefficient [-] at wing section where aileron is located, determine by airfoil simulation
+
+
 lf = 30  #lenght of fuselage m estimate, lil shorter than CRJ as 5 seat rows are used
 hf = 2.5  # height of fuselage estimate
 A_inlet = 1.17  # m2, engine inlet area
 ln = 0.8129  # m 1/4 of CRJ engine length, length of nacelle
 b = (S * AR)**0.5 #wingspan [m]
 t_r = 1.0  # maximum thickness at root [m] #bullshit estimation
-widthf = 4.24  # m max fuselage width
+widthf = 2.8  # m max fuselage width
 S_fgs = widthf * np.pi * lf * 0.9  # fuselage gross shell area
 lh = 15  # very random estimate, distance between wing and tail aerodynamic centers
 
@@ -101,7 +111,7 @@ t_loiter = 2700  # s, as in 45 minutes
 W_pax = 93  # total weight per passenger, includes luggage kg
 W_cargo = 1000  # kg #Extra cargo weight
 cargo_fwd_fraction = 1/3 #estimate, amount of cargo in fwd hold
-cargo_aft_fraction = 2/3 #estimate, amount of cargo in aft hold
+cargo_aft_fraction = 2./3 #estimate, amount of cargo in aft hold
 n_crew = N_fdc + N_cc
 W_payload = Npax * W_pax + W_cargo
 Design_range = 2000  # [km]
@@ -166,3 +176,7 @@ GWP_alt = np.array([[1., 0., -7.1],
                     [1., 0.62, 4.6],
                     [1., 0.72, 0.6]])
 GWP = GWP_alt[Cruise_alt]  # Specify the altitude in km
+
+# Aerodynamics:
+MAC = 2 #m, preliminary estimate, length of mean aerodynamic chord
+

@@ -57,7 +57,7 @@ def tank_sizing(HYDROGENVOLUME, CABIN_LENGTH,N):
     # print(R)
     xilist=[]
     yilist=[]
-    for L in range(1,100):
+    for L in range(1,2):
         INSULATION_THICKNESS=L/1000 #unit is meters, increment from 0,001 to 0,1 meters by a millimeter each time
         running=True
         T_SURROUND= 290#K

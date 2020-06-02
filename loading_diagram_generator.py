@@ -16,7 +16,7 @@ pax_cabin = Npax * w_person
 max_PL = input.W_payload
 cargo = input.W_cargo
 fwd_cargo_max = cargo * input.cargo_fwd_fraction
-aft_cargo_max = cargo * input.cargo_fwd_fraction
+aft_cargo_max = cargo * input.cargo_aft_fraction
 PL = pax_cabin + cargo
 fuel_weight = MTOW - OEW - PL
 M_zfw = OEW + PL
@@ -36,8 +36,8 @@ cgnose = 1
 
 #inputs
 # determining MAC's
-xlemac = 0.4 * fuselage_lenght  # m, datum is front of nose
-MAC = 3 * 10 / 21  # m, length of MAC
+xlemac = 0.38 * fuselage_lenght  # m, datum is front of nose
+MAC = input.MAC  # m, length of MAC
 
 
 def maccie(x):
@@ -46,8 +46,6 @@ def maccie(x):
 
 # cg OEW
 xcgoew = 0.4 * fuselage_lenght  # meter
-cgoew_mac = 24.95440889952892  # percent
-cgoew_fuselage = xcgoew * 100 / fuselage_lenght
 
 # cargo
 fwdcargo_begin = 0.1 * fuselage_lenght
@@ -62,10 +60,10 @@ aftcargo_cg = (aftcargo_begin + aftcargo_end) / 2
 cgfuel = 0.5*fuselage_lenght
 
 # passenger cg
-seat_start = 4.8 + 0.8 + 0.81 - 1
+seat_start = 5
 seatloc = [seat_start]
 row = seat_start
-pitch = 29  # inch
+pitch = 30  # inch
 rows = Npax / 5
 for i in range(int(rows - 1)):
     row = row + pitch * 0.0254  # convert to meters
