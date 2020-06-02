@@ -95,3 +95,4 @@ def airfoilplot(datfile):
     ycoord1=[]
     ycoord2=[]
     return xcoord, ycoord1, ycoord2
+
