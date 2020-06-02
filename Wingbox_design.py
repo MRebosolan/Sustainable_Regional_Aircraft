@@ -55,5 +55,3 @@ def wing_root_reaction_forces (L_wing, x_lift, W_wing, x_weight, W_engine, x_eng
 
 plt.plot(x_loc, y_moment)
 plt.show()
-
-
