@@ -73,6 +73,8 @@ def generate_lift_data_points(x_array):
         lift_array.append(elliptical_lift_d(i))
     return lift_array
 
+def generate_weight_data_points(x_array):
+
 def trapezoidal_integration(x_array, y_array):
     integral_value = 0
     for i in range (len(x_array)-1):
