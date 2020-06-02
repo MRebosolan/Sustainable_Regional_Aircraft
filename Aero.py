@@ -98,13 +98,24 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C):
 wing_geometry(M_cruise, S, AR, MTOW, V_C)
 
 def airfoilplot(datfile):
-    f=open('datfile','r')
+    f=open('airfoil1.txt','r')
     lines=f.readlines()
-    xy=lines.split('/n')
-    xcoord=[]
-    ycoord1=[]
-    ycoord2=[]
-    for i in range(0,len(xy)):
-        xcoord.append(float(xy[i][0]))
-        ycoord1.append(float(xy[i][1]))
-    return xcoord, ycoord1, ycoord2
+    result=[]
+    for x in lines:
+        result.append(x.split(' ')[1])
+    f.close()
+    return result
+#    f=open('datfile','r')
+#    lines=f.readlines()
+#    xy=lines.split('/n')
+#    xcoord=[]
+#    ycoord1=[]
+#    ycoord2=[]
+#    for i in range(0,len(xy)):
+#        xcoord.append(float(xy[i][0]))
+#        ycoord1.append(float(xy[i][1]))
+#    return xcoord, ycoord1, ycoord2
+
+
+
+
