@@ -21,6 +21,7 @@ Description
     This script calculates the main aerodynamic values that determine the wing and tail configuration of the aircraft.
 
 """
+
 # ---------------------------- Import Parameters
 
 M_cruise = 0.8
