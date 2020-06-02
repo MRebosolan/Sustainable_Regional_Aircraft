@@ -78,15 +78,24 @@ def wing_geometry(M_cruise, S, AR, MTOW):
     plt.plot()
     plt.show()
 
+    WS_cr_start = 0.9843800695598843 * MTOW / S
 
-
-
+    WS_cr_end = 0.9629656887889539 * MTOW / S
 
     CL_des = 1.1/q * (0.5*(WS_cr_start + WS_cr_end))
     Cl_des = CL_des * np.cos(sweep_c4)
     print("Cl design =", Cl_des)
 
 
-    return sweep_c4, taper, c_root, c_tip, c_mac, y_mac, t_c, dihedral, CL_cruise, q
+    return sweep_c4, taper, c_root, c_tip, c_mac, y_mac, t_c, dihedral, Cl_des
 
 wing_geometry(M_cruise, S, AR, MTOW)
+
+def airfoilplot(datfile):
+    f=open('datfile','r')
+    lines=f.readlines()
+    xy=lines.split('/n')
+    xcoord=[]
+    ycoord1=[]
+    ycoord2=[]
+    return xcoord, ycoord1, ycoord2

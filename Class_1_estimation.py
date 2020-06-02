@@ -117,14 +117,14 @@ def CLASS1WEIGHTHYBRID(H_to_ker_ratio = input.H_to_ker_ratio,OEWINPUT = 1):
     R_c=Design_range-100 #km, correct for take off and landing covered distance
 
     cj_ck=input.cj_ck
-    cj_c = cj_ck * 0.349 * H_to_ker_ratio + cj_ck * (1 - H_to_ker_ratio)
+    cj_c=(H_to_ker_ratio-1)*0.349*cj_ck/((H_to_ker_ratio-1)*0.349-H_to_ker_ratio)+0.349*(cj_ck-(H_to_ker_ratio-1)*0.349*cj_ck/((H_to_ker_ratio-1)*0.349-H_to_ker_ratio))
+    
 
     cj_ck2=input.cj_ck2
-    cj_c2 = cj_ck2 * 0.349 * H_to_ker_ratio + cj_ck2 * (1 - H_to_ker_ratio)
-
+    cj_c2=(H_to_ker_ratio-1)*0.349*cj_ck2/((H_to_ker_ratio-1)*0.349-H_to_ker_ratio)+0.349*(cj_ck2-(H_to_ker_ratio-1)*0.349*cj_ck2/((H_to_ker_ratio-1)*0.349-H_to_ker_ratio))
+    
     cj_kloiter=input.cj_kloiter
-    cj_loiter = cj_kloiter * 0.349 * H_to_ker_ratio + cj_kloiter * (1 - H_to_ker_ratio)
-
+    cj_loiter=(H_to_ker_ratio-1)*0.349*cj_kloiter/((H_to_ker_ratio-1)*0.349-H_to_ker_ratio)+0.349*(cj_kloiter-(H_to_ker_ratio-1)*0.349*cj_kloiter/((H_to_ker_ratio-1)*0.349-H_to_ker_ratio))
 
     np_c=0.82
     np_loiter=0.77
@@ -213,7 +213,7 @@ emissionsratiolist=[]
 
 import matplotlib.pyplot as plt
 
-for i in range(100,101):
+for i in range(0,101):
     outputc1h=CLASS1WEIGHTHYBRID(i/100,1)
     mtowlist.append(outputc1h[0])
     oewlist.append(outputc1h[1])
