@@ -111,9 +111,6 @@ def wing_root_reaction_forces (L_wing, x_lift, W_wing, x_weight, W_engine, x_eng
     M = x_lift*L_wing - x_weight*W_wing - x_engine*W_engine #clockwise positive
     return (R_y, M)
 
-R_y, M = wing_root_reaction_forces(L_wing, x_lift, W_wing, x_weight, w_engine, x_engine_root)
-
-print(R_y, M)
 
 def internal_bending_moment(x, x_array=x_array, lift_array=elliptical_lift_array, w_engine=w_engine,\
     weight_array=weight_array, x_engine = x_engine_root, R_y = R_y, M = M):
@@ -141,9 +138,35 @@ print(trapezoidal_integration(x_array, elliptical_lift_array))
 
 
 
-if(y_shear_uniform == y_shear_triangle):
-    print('hello')
+plt.plot(x_loc, y_moment_uniform)
+plt.plot(x_loc, y_shear_uniform)
+plt.plot(x_loc, y_moment_triangle)
+plt.plot(x_loc, y_shear_triangle)
+
+
+
+
+
+#-------BENDING STRESS CALCULATIONS------------------
+base_wb = 0.05 # wingbox base
+height_wb = 0.05 # wingbox height
+thickness_wb = [0.5,1,1.5] # create array of thickness
+material_wb = [100,200,300] # insert all material types
+y = 0.05  #y in meters
+# moment of inertia of a rectangle
+bending_moment = 890 # link to functions above feeding an input
+
+for i in thickness_wb:
+    area_wb = 2*i*(base_wb+height_wb) #area of wingbox
+    volume_wb = area_wb * wing_length  # assume that the wingbox covers the majority of the wing length
+    for j in material_wb:
+        mass_wb = volume_wb*j
+
+for i in thickness_wb:
+    moi_rectangle_x = i*base_wb*height_wb**2/3
+    moi_rectangle_y = i*base_wb**2*height_wb/3
+    hoop_x = - bending_moment*(height_wb/2)/moi_rectangle_x
+    hoop_y = - bending_moment*(base_wb/2)/moi_rectangle_y
 
 
 plt.show()
-
