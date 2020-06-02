@@ -26,49 +26,64 @@ description
 
 # ---------------------------- Import Parameters
 
-M_cruise = 0.8
+M_cruise = 0.75
 S = inp.S
 AR = inp.AR
 MTOW = inp.MTOW
 
-if M_cruise >= 0.7:
-    sweep_c4 = np.arccos(0.75*(0.935/(0.03 + M_cruise)))
-else:
-    sweep_c4 = np.arccos(1)
+V_C = Envelope.V_C  # Cruise Speed
+V_D = Envelope.V_D  # Dive Speed
+V_S = Envelope.V_S  # Stall Speed
+V_A = Envelope.V_A  # Max Gust Speed
 
-V_C=Envelope.V_C #Cruise Speed
-V_D=Envelope.V_D #Dive Speed
-V_S=Envelope.V_S #Stall Speed
-V_A=Envelope.V_A #Max Gust Speed
+def wing_geometry(M_cruise, S, AR, MTOW):
 
-# --------------------------- Equations 
-    
-taper = 0.2 * (2 - sweep_c4)
+    if M_cruise >= 0.7:
+        sweep_c4 = np.arccos(0.75*(0.935/(0.03 + M_cruise)))
+    else:
+        sweep_c4 = np.arccos(1)
 
-b = np.sqrt(S*AR)
-c_root = 2*S / ((1 + taper)*b)
-c_tip = taper * c_root
+    # --------------------------- Equations
 
-c_mac = 2/3 * c_root * (1 + taper + taper**2)/(1 + taper)
-y_mac = b/2 * 1/3 * (1 + 2*taper)/(1 + taper)
+    taper = 0.2 * (2 - sweep_c4)
 
-p_cruise = 101325 * (1 - 0.0065*inp.Cruise_alt*1000/288)**(9.80665/(287*0.0065))
-q = 0.5 * 1.4 * p_cruise * M_cruise**2
-CL_cruise = MTOW/(q*S)
-sweep_c2 = np.arctan(np.tan(sweep_c4) - 4/AR * ((50-25)/100 * (1 - taper)/(1 + taper))) #* 180/np.pi
-t_c = min((np.cos(sweep_c2)**3 * (0.935 - (M_cruise + 0.03) * np.cos(sweep_c2)) - 0.115 * CL_cruise**1.5) \
-      / (np.cos(sweep_c2)**2), 0.18)
+    b = np.sqrt(S*AR)
+    c_root = 2*S / ((1 + taper)*b)
+    c_tip = taper * c_root
 
-Dihedral = 3
-s = sweep_c4*180/np.pi
+    c_mac = 2/3 * c_root * (1 + taper + taper**2)/(1 + taper)
+    y_mac = b/2 * 1/3 * (1 + 2*taper)/(1 + taper)
 
-while s > 0:
-    s -= 10
-    Dihedral -= 1
-Dihedral -= 1
+    p_cruise = 101325 * (1 - 0.0065*inp.Cruise_alt*1000/288)**(9.80665/(287*0.0065))
+    q = 0.5 * 1.4 * p_cruise * M_cruise**2
+    CL_cruise = MTOW/(q*S)
+    sweep_c2 = np.arctan(np.tan(sweep_c4) - 4/AR * ((50-25)/100 * (1 - taper)/(1 + taper))) #* 180/np.pi
+    t_c = min((np.cos(sweep_c2)**3 * (0.935 - (M_cruise + 0.03) * np.cos(sweep_c2)) - 0.115 * CL_cruise**1.5) \
+          / (np.cos(sweep_c2)**2), 0.18)
+
+    dihedral = 3
+    s = sweep_c4*180/np.pi
+
+    while s > 0:
+        s -= 10
+        dihedral -= 1
+    dihedral -= 1
+
+    sweep_cLE = np.arctan(np.tan(sweep_c4) - 4 / AR * ((0 - 25) / 100 * (1 - taper) / (1 + taper)))
+    sweep_cTE = np.arctan(np.tan(sweep_c4) - 4 / AR * ((100 - 25) / 100 * (1 - taper) / (1 + taper)))
+
+    x_wing = [0, b/2, b/2, 0, 0]
+    y_wing = [0, -b/2*np.tan(sweep_cLE), (-b/2*np.tan(sweep_cLE) - c_tip), - c_root, 0]
 
 
 
+    plt.plot(x_wing, y_wing)
+    plt.plot()
+    plt.show()
 
+    return sweep_c4, taper, c_root, c_tip, c_mac, y_mac, t_c, dihedral
+
+
+print(wing_geometry(M_cruise, S, AR, MTOW))
 
 
