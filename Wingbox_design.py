@@ -94,10 +94,9 @@ def trapezoidal_integration(x_array, y_array):
         integral_value += (x_array[i+1]-x_array[i])/2 * (y_array[i+1] + y_array[i])
     return integral_value
 
-x_array = generate_spanwise_locations(1000),
-weight_array = generate_lift_data_points(x_array)
+x_array = generate_spanwise_locations(1000)
 
-
+print(len(x_array))
 
 x_lift = 4.2499 #application point of lift force
 
