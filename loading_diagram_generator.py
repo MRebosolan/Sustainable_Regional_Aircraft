@@ -47,7 +47,7 @@ def maccie(x):
 # cg OEW
 xcgoew = 0.4 * fuselage_lenght  # meter
 
-# cargo
+# cargo cg
 fwdcargo_begin = 0.1 * fuselage_lenght
 fwdcargo_end = fwdcargo_begin + 3
 aftcargo_begin = 0.6 * fuselage_lenght
