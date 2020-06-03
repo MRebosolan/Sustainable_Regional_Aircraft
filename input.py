@@ -114,6 +114,9 @@ t_loiter = 2700  # s, as in 45 minutes
 
 
 W_pax = 93  # total weight per passenger, includes luggage kg
+x_first_pax = 7.5   #x-location measured from the nose [m] where first passenger row is located
+seat_pitch = 30     #Seat pitch [inch]!!!!!!!!!!!!!!!!
+n_rows = 15         #Number of passenger rows [-] (=n_pax/n_seatsabreast)
 W_cargo = 1000  # kg #Extra cargo weight
 cargo_fwd_fraction = 1/3 #estimate, amount of cargo in fwd hold
 cargo_aft_fraction = 2./3 #estimate, amount of cargo in aft hold
