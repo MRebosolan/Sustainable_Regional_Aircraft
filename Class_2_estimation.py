@@ -107,8 +107,8 @@ n_ult = 1.5* n_max
 t_over_c = input.t_over_c
 taper = input.taper	
 mach_h = input.mach_h
-rho = input.rho
-rho_zero = input.rho_zero
+rho = input.rho *0.0624279606
+rho_zero = input.rho /515.378818
 V_dive = input.V_dive #is already in KEAS
 lf = toft(input.lf)
 hf = toft(input.hf)
@@ -147,7 +147,7 @@ N_t = input.N_t
 wingloading = input.wingloading #still metric
 powerloading = input.powerloading
 
-
+W_payload = to_pounds(input.W_payload)
 
 
 ratio = input.H_to_ker_ratio
@@ -160,7 +160,7 @@ OEW_plot_class2 = []
 
 
 
-while abs((OEW_class1_kg - OEWINPUT)*100/OEWINPUT)>= 0.05:
+while abs((OEW_class1_kg - OEWINPUT)*100/OEWINPUT)>= 0.01:
     class1 = CLASS1WEIGHTHYBRID(ratio,OEWINPUT)
     MTOW_kg = class1[0]
     S_metric = MTOW_kg*9.81 /wingloading
@@ -212,7 +212,7 @@ while abs((OEW_class1_kg - OEWINPUT)*100/OEWINPUT)>= 0.05:
     #------------ POWER PLANT WEIGHT ------------#
     
     W_engines = engine.engine_weight(T_dry_SL, N_eng)                                       #Verified
-    W_fuel_system_kerosene = fuelsystem.W_fuelsystem (N_t, K_fsp, W_fuel)
+    W_fuel_system_kerosene = 0
     W_fuel_system_hydrogen = to_pounds(class1[-1])
     W_power_controls = powercontrols.total(lf, b, W_engines, pneumatic = False)
     
@@ -248,6 +248,11 @@ df = pd.DataFrame({'data': ['MTOW','OEW'],
 'F28': [65000, 31219],
 '737-200':[115500,60210]})
 
+zfw_fuel=[{'data': 'Zero fuel weight', 'SRA': W_zfw, 'F28':31219+14380, '737-200': 60210+32790},
+         {'data': 'Max fuel weight', 'SRA': W_fuel, 'F28':17331, '737-200': 34781},
+         {'data': 'Max payload', 'SRA': W_payload, 'F28':14380, '737-200': 34790}]
+df = df.append(zfw_fuel, ignore_index = True, sort = False)
+
 wng = [{'data': 'Wing group', 'SRA': W_wing, 'F28':7330, '737-200': 10613},
        {'data': 'Empennage', 'SRA': W_empennage, 'F28':1632 , '737-200':2718},
        {'data': 'Fuselage', 'SRA': W_fuselage, 'F28':7043, '737-200':12108},
@@ -282,24 +287,36 @@ df['737 fraction'] = df['737-200']/df['737-200'][0]
 df['SRA'] = to_kg(df['SRA'])
 df['F28'] = to_kg(df['F28'])
 df['737-200'] = to_kg(df['737-200'])
+df = df.set_index('data')
 
-
-S = tom2(S)
-b = tom(b)
+x = df.loc['MTOW','SRA']
 
 
 aircraftpar = pd.DataFrame()
 wing = [{'data': 'Wing Area', 'SRA': S, 'F28':tom2(1), '737-200':tom2(1)},
                ]
 aircraftpar = aircraftpar.append(wing, ignore_index = True, sort = False)
-print(df)
-print(aircraftpar)
-latex = df.to_latex(index = False, caption = None)
+
+
+latex = df.to_latex(index = False)#, caption = "System weight breakdown... not yet final caption")
+print("Uncomment the caption for the final version")
+
+# print(df)
+# print(aircraftpar)
+
+
 try:
     file = open('C://Users//jornv//Google Drive//DSE upload//Class2dataframe.txt', 'w')
     file.write(latex)
     file.close()
 except:
-    print('you cannot update files, ask jorn if necessary')
+    print()
+    #print('you cannot update files, ask jorn if necessary')
     
     
+    
+S = tom2(S)
+b = tom(b)
+MTOM = to_kg(MTOW)
+OEM = OEWINPUT
+Tto = T_TO_newton

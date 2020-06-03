@@ -96,9 +96,16 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C):
     print(Re)
     # With CL_max = 1.8 we could take airfoil NACA 63(3)-618 (supercritical with 0.18 t/c)
 
+    # CLmax take-off: 2.1 , Clmax landing: 2.25
+    # target for take-off: Delta CLmax = 0.3
+    # target for landing: Delta CLmax = 0.45
+
+
+
     return sweep_c4, taper, c_root, c_tip, c_mac, y_mac, t_c, dihedral, Cl_des
 
 wing_geometry(M_cruise, S, AR, MTOW, V_C)
+
 
 def airfoilplot(datfile):
     f=open('datfile','r')
@@ -111,4 +118,27 @@ def airfoilplot(datfile):
         xcoord.append(float(xy[i][0]))
         ycoord1.append(float(xy[i][1]))
     return xcoord, ycoord1, ycoord2
+
+#def airfoilplot('airfoil1.txt'):
+f=open('airfoil1.txt','r')
+lines=f.readlines()
+result=[]
+for x in lines:
+    result.append(x.split('\n'))
+f.close()
+#    return result
+
+#    f=open('datfile','r')
+#    lines=f.readlines()
+#    xy=lines.split('/n')
+#    xcoord=[]
+#    ycoord1=[]
+#    ycoord2=[]
+#    for i in range(0,len(xy)):
+#        xcoord.append(float(xy[i][0]))
+#        ycoord1.append(float(xy[i][1]))
+#    return xcoord, ycoord1, ycoord2
+
+
+
 

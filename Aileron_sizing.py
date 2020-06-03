@@ -11,14 +11,15 @@ output: aileron geometry (spanwise position, roll rate achieved, rolldamping coe
 """
 import numpy as np
 import input
+import Class_2_estimation as Cl2
 
 #Aileron sizing input parameters, not to be changed
 Preq = np.radians(45/1.45)              #required roll rate from Class II aircraft regulations
 Cr = input.Cr                                  #Wing root chord
 Ct = input.Ct                               #Wing tip chord
 Dfus = input.Dfus                                #Fuselage diameter
-S = input.S                                 #Wing area
-b = input.b                                  #Wing span
+S = Cl2.S                                 #Wing area
+b = Cl2.b                                  #Wing span
 Cla = input.Cla_aileron                     #1/rad, sectional lift curve slope at wing section where aileron is located, determine by datcom method or airfoil simulation
 Cd0 = input.Cd0_aileron                             #zero drag coefficient at wing section where aileron is located, determine by airfoil simulation
 
@@ -58,6 +59,6 @@ if P < 0 or P < Preq:
     print("The aileron geometry parameters DO NOT meet the roll rate requirement")
 
 else:
-    print("The roll rate requirement is met with a difference of", P-Preq, "[deg/s]")
+    print("The roll rate requirement is met with a difference of", P-np.degrees(Preq), "[deg/s]")
 
 
