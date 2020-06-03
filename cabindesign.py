@@ -48,9 +48,8 @@ tankchoice=3
 if tankchoice==1:
 
     #FIRST OPTION ---- completely aft
-    tanksectionlength=V_tank/3.14159/R_tank_fus**2
-    print(tanksectionlength)
-    
+    tank_sizing_fuselage(V_tank,R_tank_fus,2)
+        
     
 elif tankchoice==2:
     #SECOND OPTION  ---- also in tail
