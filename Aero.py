@@ -54,6 +54,12 @@ def line_intersect(Ax1, Ay1, Ax2, Ay2, Bx1, By1, Bx2, By2):
 
     return x, y
 
+# --------------------------------- Chord length at a spanwise point x
+
+def chord_length(c_root, c_tip, x, b):
+    l_chord = -2 * ((c_root - c_tip)/b) * x + c_root
+    return l_chord
+
 # --------------------------------- Wing Geometry
 
 def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf):
@@ -124,29 +130,40 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf):
     dCLmax_to   = 0.3
 
     dClmax_land = 1.3
-    hinge_c     = 80 #percent
+    hinge_c     = 60 #percent
     sweep_hinge = np.arctan(np.tan(sweep_c4) - 4/AR * ((hinge_c-25)/100 * (1 - taper)/(1 + taper)))
 
     SwfS = dCLmax_land/ (0.9 * dClmax_land * np.cos(sweep_hinge))
 
-    x1 = widthf/2
+    Df = widthf/2
 
     a = -2 * (c_root - c_tip)/b
+    ch = 1 - (hinge_c/100)
 
-    D = (2 * (a * x1 + c_root))**2 + 4 * a * SwfS * S
+    D = (-4 * a * Df + 2 * c_root)**2 + 4 * 2 * a * (-2 * SwfS * S/ ch)
 
-    x2 = max((-2 * (a * x1 + c_root) + np.sqrt(D))/(2*a),  (-2 * (a * x1 + c_root) - np.sqrt(D))/(2*a))
-    print(x2)
+    print("D = ", D)
+
+    x2 = max((-(-4 * a * Df + 2 * c_root) + np.sqrt(D))/ (-4 * a), (-(-4 * a * Df + 2 * c_root) - np.sqrt(D)) / (-4 * a))
+    print("x2 = ", (x2 + Df))
 
     wing = [sweep_c4, taper, c_root, c_tip, c_mac, y_mac, t_c, dihedral,
             Cl_des, dCLmax_land, dCLmax_to]
     
     cross1 = line_intersect(x_fus[0],y_fus[0],x_fus[1],y_fus[1],x_wing[0],y_wing[0],x_wing[1],y_wing[1])
 
-    return wing, geom,cross1
+    x_hld = [Df, Df, x2 + Df, x2 + Df]
+    y_hld = [(-Df*np.tan(sweep_cLE) - chord_length(c_root, c_tip, Df, b)),
+             (-Df * np.tan(sweep_cLE) - (hinge_c/100) * chord_length(c_root, c_tip, Df, b)),
+             (-(Df + x2) * np.tan(sweep_cLE) - (hinge_c/100) * chord_length(c_root, c_tip, (Df + x2), b)),
+             (-(Df + x2) * np.tan(sweep_cLE) - chord_length(c_root, c_tip, (Df + x2), b))]
+
+    hld = [x_hld, y_hld]
+
+    return wing, geom,cross1, hld
 
 
-wing, geom, cross1 = wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf)
+wing, geom, cross1, hld = wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf)
 
 
 #----------------------------- .txt File Airfoil Coordinates
@@ -175,7 +192,7 @@ print(ycoord2)
 #----------------------------- Plotting
 
 plt.figure(0)
-plt.plot(geom[0], geom[1], geom[2], geom[3])
+plt.plot(geom[0], geom[1], geom[2], geom[3], hld[0], hld[1])
 plt.text(cross1[0],cross1[1],'Fuselage Wall Line')
 plt.grid(True,which="major",color="#999999")
 plt.grid(True,which="minor",color="#DDDDDD",ls="--")

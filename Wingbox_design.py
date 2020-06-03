@@ -194,8 +194,8 @@ plt.plot(x_array[2:], moment_array)
 plt.plot(x_array[2:], shear_array)
 plt.plot(x_array[2:], moment_array2)
 plt.plot(x_array[2:], shear_array2)
-
-
+plt.xlabel("spanwise coordinate")
+plt.ylabel("loads in N/moments in N/m")
 
 
 #-------BENDING STRESS CALCULATIONS------------------
