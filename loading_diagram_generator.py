@@ -27,6 +27,8 @@ lh = input.lh                   #distance between wing and horizontal tail aerod
 lv = input.lv                   #distance between wing and vertical tail aerodynamic centers
 x_ac = input.x_ac               #x location of wing aerodynamic center measured from the nose of the aircraft
 x_apu = input.x_apu             #cg location of the apu measured from the nose of the aircraft [m]
+x_engine = input.x_eninge       #cg location of engines, measured from the nose of the aircraft [m]
+x_nacelle = input.x_nacelle     #cg location of engine nacelles, measured from the nose of the aircraft [m]
 Cr = input.Cr                   #wing root chord length [m]
 Ct = input.Ct                   #wing tip chord length [m]
 b = cl2.b                       #wing span [m]
@@ -55,11 +57,12 @@ w_apu = cl2.df['SRA']['APU']    #kg
 w_tank = 500
 x_tank = 20
 print("change w_tank and x_tank to variables used in other files once decided on a fuel tank configuration")
+w_lg_main = cl2.df['SRA']['Main LG']    #kg
+w_lg_front = cl2.df['SRA']['Nose LG']    #kg
 
 x_engine = 15       #x_location of c.g. of engines measured from the nose [m]
 x_nacelle = 15      #x_location of c.g. of engine nacelles measured from the nose [m]
 x_empennage = x_ac + (lh + lv) / 2 #Assume cg of empennage is in the middle of the aerodynamic center of horizontal and vertical tail, measured from the nose
-x_wing = x_ac       #Assume cg of wing is in the aerodynamic center 
 x_lg_front = 3     #cg location of front landing gear [m], measured from the nose, assumed to be 3 m (used for calculating cg at oew, not to be changed per se)
 x_lg_main = x_start_Cr + 2 * Cr / 3      #cg location of main landing gear [m], assumed 2/3 root chord length further than start of root chord (used for calculating cg at oew, not to be changed per se)
 print("In calculation of cg @ OEW, take into account the exact tank placement and cg location once agreed on a specific configuration")
@@ -87,20 +90,21 @@ x_cg_wing_nose, x_cg_wing_mac = wing_cg(sweep, b, Cr, Ct, MAC, x_lemac_Cr, x_lem
 
 #vary x_start_Cr
 
+
+
+def cg_OEW_wrt_lemac(x_engine, w_engine, x_nacelle, w_nacelle, x_empennage, w_empennage, x_apu, w_apu, x_tank, w_tank, x_cg_wing_nose, w_wing, x_lg_front, w_lg_front, x_lg_main, w_lg_main, OEW, x_lemac, MAC):
+    cg_oew_wrt_nose = (x_engine * w_engine + x_nacelle * w_nacelle + x_empennage * w_empennage + x_apu * w_apu + x_tank * w_tank + x_cg_wing_nose * w_wing + x_lg_front * w_lg_front + x_lg_main * w_lg_main) / OEW
+    cg_oew_wrt_lemac = (cg_oew_wrt_nose - x_lemac) / MAC
+    return cg_oew_wrt_lemac
+
+cg_oew_wrt_lemac =  cg_OEW_wrt_lemac(x_engine, w_engine, x_nacelle, w_nacelle, x_empennage, w_empennage, x_apu, w_apu, x_tank, w_tank, x_cg_wing_nose, w_wing, x_lg_front, w_lg_front, x_lg_main, w_lg_main, OEW, x_lemac, MAC)  
+print(cg_oew_wrt_lemac)   
+    
+
 # new cg calculation, returns new cg and new weight
 def loadingcg(w_old, cg_old, w_item, cg_item):
     x_cg_new = (w_old * cg_old + w_item * cg_item) / (w_old + w_item)
     return x_cg_new, w_old + w_item
-
-
-def cg_OEW_wrt_lemac(x_engine, w_engine, x_nacelle, w_nacelle, x_empennage, w_empennage, x_apu, w_apu, x_tank, w_tank, x_cg_wing):
-    
-    return
-   
-    
-    
-    
-    
 #max_PL = input.W_payload
 #PL = pax_cabin + cargo
 #fuel_weight = MTOW - OEW - PL
