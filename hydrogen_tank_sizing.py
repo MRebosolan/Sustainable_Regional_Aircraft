@@ -103,11 +103,9 @@ def tank_sizing(HYDROGENVOLUME,LENGTH,N):
         counter+=1
     INSULATION_MASS=INSULATION_THICKNESS*TANK_SURFACE_AREA*N*INSULATION_DENSITY
     
-    print(INSULATION_MASS)
-    plt.plot(xilist,yilist)
-    plt.show()
     
-
+    STRUCTURAL_TANK_MASS+=INSULATION_MASS
+    TOTAL_STRUCTURAL_TANK_MASS =N*STRUCTURAL_TANK_MASS    
     
         
         
@@ -209,17 +207,8 @@ def tank_sizing_fuselage(HYDROGENVOLUME, R,N):
         
         counter+=1
     INSULATION_MASS=INSULATION_THICKNESS*TANK_SURFACE_AREA*N*INSULATION_DENSITY
-    
-    print(INSULATION_MASS)
-    print(LENGTH)
-    plt.plot(xilist,yilist)
-    plt.show()
-    
-
-    
+    STRUCTURAL_TANK_MASS+=INSULATION_MASS
+    TOTAL_STRUCTURAL_TANK_MASS =N*STRUCTURAL_TANK_MASS    
         
-        
-            
-            
 
     return(TANK_THICKNESS,STRUCTURAL_TANK_MASS, TOTAL_STRUCTURAL_TANK_MASS, TANK_DIAMETER) #INSULATION IS NOT YET INCORPORATED!!!
