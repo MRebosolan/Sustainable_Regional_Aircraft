@@ -12,6 +12,7 @@ import Envelope
 
 g = 9.80665  # [m/s^2]
 from math import radians
+H_to_ker_ratio = 1
 
 MTOM = 32846.208787 # [kg]  #maximum takeoff mass calculated in class 2
 print('please use MTOM from class 2')
@@ -72,7 +73,6 @@ N_eng = 2  # number of engines
 N_t = 2  # number of fuel tanks
 rho_hydrogen = 70  # g/l
 K_fsp = 0.820  # kg/l, jet A, jet fuel density
-H_to_ker_ratio = 0  # fuck hydrogen atm yo, hydrogen to kerosene ratio
 Sh = 20.75  # m2 crj700 shizzle yo, horizontal tail area
 half_chord_sweep_hor = np.radians(20)  # deg, sweep at half chord of horizontal tail
 half_chord_sweep_vert = np.radians(35)  # deg, sweep at half chord of vertical tail
@@ -128,7 +128,6 @@ W_payload = Npax * W_pax + W_cargo
 Design_range = 2000  # [km]
 hydrogen_cost = 2.4  # US DOLLARS per KG
 
-H_to_ker_ratio = 1
 
 # Flight performance
 rho0 = rho  # kg/m^3
