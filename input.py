@@ -12,6 +12,14 @@ import Envelope
 
 g = 9.80665  # [m/s^2]
 from math import radians
+def atmosphere_calculator(h):
+    T_grad = -0.0065
+    T = 288.15 + T_grad * h
+    P = 101325 * (T / 288.15) ** (-9.81 / (T_grad * 287))
+    rho = P / (T * 287)
+    a = (1.4 * 287 * T) ** 0.5
+    return (T, P, rho, a)
+
 
 MTOM = 32846.208787 # [kg]  #maximum takeoff mass calculated in class 2
 print('please use MTOM from class 2')
@@ -40,8 +48,11 @@ rho = 1.225   # estimate, in kg/m3
 
 Cr = 5.5                                 #Wing root chord [m]
 Ct = 1.2                               #Wing tip chord [m]
+
 taper = Ct / Cr                         #wing taper ratio [-]
-Dfus = 4                                #Fuselage diameter [m]
+
+Dfus = 2.6, "if you encounter an error here, make your program dependent on a different variable"       #Fuselage diameter [m]
+
 
 
 Cla_aileron = 6.4                     #1/rad, sectional lift curve slope at wing section where aileron is located, determine by datcom method or airfoil simulation
@@ -101,6 +112,8 @@ V_dive=Envelope.V_D #KNOTS  dive speed
 V_A=Envelope.V_A #KNOTS  maximum gust intensity speed
 V_B=Envelope.V_B #KNOTS   flaps deflected gust speed
 
+
+
 nlim=Envelope.nlimpos
 
 V_C2 = 0.8 * V_C
@@ -152,17 +165,26 @@ gamma_ap = np.radians(3)  # approach angle (glide slope) [rad]
 Trev = 50000  # [N], maximum thrust reverse force applied during braking
 c_t = 0.0002  # [1/s] specific fuel consumption, to be refined
 H = 120E6  # Heating value of hydrogen, refine if we fly on kerosene and hydrogen simultenously, or 141.7E6 (higher value of hydrogen)
-rho_c = 0.4135  # [kg/m^3], cruise density (this is the one for 10 km cruise altitude)
+# rho_c = 0.4135  # [kg/m^3], cruise density (this is the one for 10 km cruise altitude)
 v_approach = 66 # m/s, RICK FIX THIS
 mach_app = v_approach/340.3 # RICK FIX THIS
 
+
+Cruise_alt = 10  # Max operating altitude in km
+
+T, P, rho_c, a = atmosphere_calculator(Cruise_alt*1000)
+
+
+V_C_TAS = V_C * 0.514444444 / ((rho_c/rho)**0.5) #m/s cruise speed, according to flight envelope, 
+V_C_estimate = 230 #m/s, design parameter
+mach_cruise = V_C_estimate/a
 
 # parameters for Carbon Footprint
 Range_CRJ = 2593  # design range
 Pax_CRJ = 78  # Number of passengers
 Fuel_use_CRJ = 4740  # Fuel mass at design range
 Cruise_alt_max_CRJ = 12497  # Max operating altitude
-Cruise_alt = 10  # Max operating altitude in km
+
 
 # H2 NOx emission: Depends on engine characteristics
 A = 14  # Correlation constant for emission index based on Jet-A fuel (advanced LDI tech as reference)
@@ -207,5 +229,7 @@ x_LEMAC_nose = x_start_Cr + x_lemac_rootchord
 
 cl0 = 0.153333 #preliminary estimate 
 cm0 = -0.018 #preliminary estimate
-tail_speedratio = 0.85**0.5
+
+
+tail_speedratio = 1**0.5 # sead, T tail
 
