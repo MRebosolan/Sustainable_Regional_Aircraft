@@ -100,8 +100,6 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C):
     # target for take-off: Delta CLmax = 0.3
     # target for landing: Delta CLmax = 0.45
 
-
-
     return sweep_c4, taper, c_root, c_tip, c_mac, y_mac, t_c, dihedral, Cl_des
 
 wing_geometry(M_cruise, S, AR, MTOW, V_C)
