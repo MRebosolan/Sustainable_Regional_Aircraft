@@ -282,9 +282,9 @@ df['737 fraction'] = df['737-200']/df['737-200'][0]
 df['SRA'] = to_kg(df['SRA'])
 df['F28'] = to_kg(df['F28'])
 df['737-200'] = to_kg(df['737-200'])
+df = df.set_index('data')
 
-
-
+x =df.loc['MTOW','SRA']
 
 
 aircraftpar = pd.DataFrame()
@@ -299,7 +299,9 @@ try:
     file.write(latex)
     file.close()
 except:
-    # print('you cannot update files, ask jorn if necessary')
+    print()
+    #print('you cannot update files, ask jorn if necessary')
+    
     
     
 S = tom2(S)
