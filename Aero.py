@@ -77,10 +77,7 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf):
     x_fus = [widthf/2, widthf/2]
     y_fus = [0, -6]
 
-    plt.figure(0)
-    plt.plot(x_wing, y_wing)
-    plt.plot()
-    plt.show()
+    geom = [x_wing, y_wing, x_fus, y_fus]
 
     AR_check = 17.7 * (2 - taper) * np.exp(- 0.043 * sweep_c4/np.pi*180)
     print(AR_check)
@@ -122,19 +119,13 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf):
     x2 = max((-2 * (a * x1 + c_root) + np.sqrt(D))/(2*a),  (-2 * (a * x1 + c_root) - np.sqrt(D))/(2*a))
     print(x2)
 
-    plt.plot(x_wing, y_wing, x_fus, y_fus)
-    plt.plot()
-    plt.show()
+    wing = [sweep_c4, taper, c_root, c_tip, c_mac, y_mac, t_c, dihedral,
+            Cl_des, dCLmax_land, dCLmax_to]
+
+    return wing, geom
 
 
-    return sweep_c4, taper, c_root, c_tip, c_mac, y_mac, t_c, dihedral, Cl_des, dCLmax_land, dCLmax_to, SwfS
-
-[sweep_c4, taper, c_root, c_tip, c_mac, y_mac, t_c, dihedral, Cl_des, dCLmax_land, dCLmax_to] \
-    = wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf)
-
-
-hld(dCLmax_land, dCLmax_to, sweep_c4, taper)
-
+wing, geom = wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf)
 
 f=open('airfoil2.txt','r')
 lines=f.readlines()
@@ -156,6 +147,11 @@ print(lines)
 print(xcoord1)
 print(ycoord1)
 print(ycoord2)
+
+plt.figure(0)
+plt.plot(geom[0], geom[1], geom[2], geom[3])
+plt.plot()
+plt.show()
 
 plt.figure(1)
 plt.grid(True,which="major",color="#999999")
