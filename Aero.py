@@ -96,8 +96,6 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C):
     print(Re)
     # With CL_max = 1.8 we could take airfoil NACA 63(3)-618 (supercritical with 0.18 t/c)
 
-
-
     return sweep_c4, taper, c_root, c_tip, c_mac, y_mac, t_c, dihedral, Cl_des
 
 wing_geometry(M_cruise, S, AR, MTOW, V_C)
@@ -113,3 +111,4 @@ def airfoilplot(datfile):
         xcoord.append(float(xy[i][0]))
         ycoord1.append(float(xy[i][1]))
     return xcoord, ycoord1, ycoord2
+
