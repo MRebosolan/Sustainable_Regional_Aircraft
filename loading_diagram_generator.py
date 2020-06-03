@@ -16,11 +16,18 @@ l_f = input.lf                  #Fuselage length [m]
 cargo = input.W_cargo           #Total cargo weight [kg]
 fuel_weight = cl2.M_fuel_kg     #Total fuel weight taken onboard, including reserves [kg]
 MAC = input.MAC                 #Length of MAC [m]
+y_MAC = input.y_MAC             #spanwise location of mean aerodynamic chord, measured from the centerline of the aircraft[m]
 seat_start = input.x_first_pax  #x-location measured from the nose where first passenger row is located
 pitch = input.seat_pitch        #seat pitch [inch]
 rows = input.n_rows             #number of passegner rows [-]
-
-
+lh = input.lh                   #distance between wing and horizontal tail aerodynamic centers
+lv = input.lv                   #distance between wing and vertical tail aerodynamic centers
+x_ac = input.x_ac               #x location of wing aerodynamic center measured from the nose of the aircraft
+x_apu = input.x_apu             #cg location of the apu measured from the nose of the aircraft [m]
+Cr = input.Cr                   #wing root chord length [m]
+Ct = input.Ct                   #wing tip chord length [m]
+b = cl2.b                       #wing span [m]
+sweep = input.LE_sweep          #Leading edge wing sweep (If we use forward sweep, please let Rick know)
 
 
 #Small calculations with raw inputs
@@ -42,13 +49,35 @@ w_nacelle = cl2.df['SRA']['Nacelle']  # kg
 w_empennage = cl2.df['SRA']['Empennage']    #kg
 w_wing = cl2.df['SRA']['Wing group'] #kg 
 w_apu = cl2.df['SRA']['APU']    #kg
+w_tank = 500
+x_tank = 20
+print("change w_tank and x_tank to variables used in other files once decided on a fuel tank configuration")
 
 x_engine = 15       #x_location of c.g. of engines measured from the nose [m]
 x_nacelle = 15      #x_location of c.g. of engine nacelles measured from the nose [m]
-x_empennage = 
+x_empennage = x_ac + (lh + lv) / 2 #Assume cg of empennage is in the middle of the aerodynamic center of horizontal and vertical tail, measured from the nose
+x_wing = x_ac       #Assume cg of wing is in the aerodynamic center 
+
 print("In calculation of cg @ OEW, take into account the exact tank placement and cg location once agreed on a specific configuration")
 
- 
+
+def wing_cg_wrt_start_Cr(sweep, b, Cr, Ct, MAC, y_MAC):
+    c = b / (2 * np.cos(sweep))
+    a = np.sqrt(c**2 - (b / 2)**2)
+    x_1 = 2 * a / 3
+    A1 = 0.5 * b / 2 * a
+    A2 = b / 2 * (Cr - a)
+    x_2 = a + (Cr - a) / 2
+    A3 = 0.5 * b / 2 * (Ct - (Cr - a))
+    x_3 = a +  Ct / 3
+
+#vary x_start_Cr
+def cg@OEW():
+   
+    
+    
+    
+    
 #max_PL = input.W_payload
 #PL = pax_cabin + cargo
 #fuel_weight = MTOW - OEW - PL
