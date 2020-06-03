@@ -14,9 +14,9 @@ taper = input.taper #input taper
 t_r = input.t_r # input t_r
 SMC = b/AR #standar mean chord
 widthf = input.widthf
-wing_length = 0.5*(b-widthf)
+wing_length = 0.5*(b)
 wing_weight = 3000*9.81
-
+T_to = input.Tto
 
 total_lift = wingloading/wing_length
 total_lift_half = total_lift/2
@@ -73,15 +73,15 @@ def generate_spanwise_locations(n, b=wing_length):
     x_array = np.linspace(0, b, n, endpoint=False)
     return x_array[1:]
 
-def general_lift_d (x, a=10.03427, b=18148.6):
+def general_lift_d (x, a=11.43427, b=15926.5):
     #Insert formula for lift distribution here
     #current obtained by fitting elliptical distribution to given wing loading, a=half wing span - half fuselage width
     loading_at_x = np.sqrt((1-(x**2/a**2))*b**2)
     return loading_at_x
 
-def general_weight_d (x, slope=599.191*9.81, intercept=-59.8383*9.81):
+def general_weight_d (x, slope=-450.248, intercept=5148.26):
     #Insert weight distribution. Current is linear for wing weight of 300*9.81
-    weight_at_x = slope + intercept*x
+    weight_at_x = intercept + slope*x
     return weight_at_x
 
 def generate_lift_data_points(x_array):
@@ -114,17 +114,19 @@ L_wing = trapezoidal_integration(x_array, lift_array)
 W_wing = trapezoidal_integration(x_array, weight_array)
 
 
-def wing_root_reaction_forces (L_wing, x_lift, W_wing, x_weight, W_engine, x_engine):
+def wing_root_reaction_forces (L_wing, x_lift, W_wing, x_weight, W_engine, x_engine, T_to):
     #Drag reaction forces not included yet
     R_y = W_wing + W_engine - L_wing  #upwards positive
-    M = x_lift*L_wing - x_weight*W_wing - x_engine*W_engine #clockwise positive
-    return (R_y, M)
+    M_x = x_lift*L_wing - x_weight*W_wing - x_engine*W_engine #left hand positive
+    R_x = T_to #aft-ward positive
+    M_z = T_to * x_engine #left hand positive
+    return (R_y, M_x, R_x, M_z)
 
-R_y, M = wing_root_reaction_forces(L_wing, x_lift, wing_weight, x_weight, w_engine, x_engine_root)
+R_y, M_x, R_x, M_z = wing_root_reaction_forces(L_wing, x_lift, wing_weight, x_weight, w_engine, x_engine_root, T_to)
 
 
-def internal_bending_moment(x, x_array=x_array, lift_array=lift_array, w_engine=w_engine,\
-    weight_array=weight_array, x_engine = x_engine_root, R_y = R_y, M = M):
+def internal_x_bending_moment(x, x_array=x_array, lift_array=lift_array, w_engine=w_engine,\
+    weight_array=weight_array, x_engine = x_engine_root, R_y = R_y, M = M_x):
     #counterclockwise positive
 
     x = min(x_array, key=lambda y:abs(y-x))
@@ -142,6 +144,15 @@ def internal_bending_moment(x, x_array=x_array, lift_array=lift_array, w_engine=
         engine_distance = 0
     moment_at_x = M + R_y*x + lift*(x-x_lift) - w_engine*engine_distance - weight*(x-x_weight)
     return moment_at_x
+
+def internal_z_bending_moment(x, R_x=R_x, T_to=T_to, x_engine=x_engine_root, M_z=M_z):
+    if x>x_engine:
+        d=x-x_engine
+    else:
+        d=0
+    moment_at_x = M_z -R_x*x + T_to*d
+    return moment_at_x
+
 
 def internal_vertical_shear_force(x, x_array=x_array, lift_array=lift_array, w_engine=w_engine,\
     weight_array=weight_array, x_engine = x_engine_root, R_y = R_y):
@@ -161,14 +172,29 @@ def internal_vertical_shear_force(x, x_array=x_array, lift_array=lift_array, w_e
     shear_at_x = R_y + lift - weight - w_engine * n
     return shear_at_x
 
+def internal_longitudinal_shear_force(x, R_x=R_x, T_to=T_to, x_engine=x_engine_root):
+    #forward positive
+    if x>x_engine:
+        return 0
+    else:
+        return R_x
+
 moment_array = []
 shear_array = []
+moment_array2=[]
+shear_array2=[]
+
 for i in x_array[2:]:
-    moment_array.append(internal_bending_moment(i))
+    moment_array.append(internal_x_bending_moment(i))
     shear_array.append(internal_vertical_shear_force(i))
+    moment_array2.append(internal_z_bending_moment(i))
+    shear_array2.append(internal_longitudinal_shear_force(i))
 
 plt.plot(x_array[2:], moment_array)
 plt.plot(x_array[2:], shear_array)
+plt.plot(x_array[2:], moment_array2)
+plt.plot(x_array[2:], shear_array2)
+
 
 
 

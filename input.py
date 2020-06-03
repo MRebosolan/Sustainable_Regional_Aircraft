@@ -168,6 +168,8 @@ H = 120E6  # Heating value of hydrogen, refine if we fly on kerosene and hydroge
 # rho_c = 0.4135  # [kg/m^3], cruise density (this is the one for 10 km cruise altitude)
 v_approach = 66 # m/s, RICK FIX THIS
 mach_app = v_approach/340.3 # RICK FIX THIS
+V_to = 1.05 * ((MTOW/S)*(2/1.225)*(1/CLmax_to))**0.5 #takeoff speed
+
 
 
 Cruise_alt = 10  # Max operating altitude in km
