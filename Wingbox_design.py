@@ -14,9 +14,9 @@ taper = input.taper #input taper
 t_r = input.t_r # input t_r
 SMC = b/AR #standar mean chord
 widthf = input.widthf
-wing_length = 0.5*(b-widthf)
+wing_length = 0.5*(b)
 wing_weight = 3000*9.81
-
+T_to = input.Tto
 
 total_lift = wingloading/wing_length
 total_lift_half = total_lift/2
@@ -56,11 +56,11 @@ y_moment_triangle = []
 for i in range(1,100):
     x = wing_length*(i/100)
     if x<x_engine:
-        Shear_Force = lift_dtriangle*x**2/(2*wing_length) - w_wingd*x
-        Moment = lift_dtriangle*x**3/(6*wing_length) - w_wingd*x**2/2
+        Shear_Force = lift_dtriangle*x**2/(b) - w_wingd*x
+        Moment = lift_dtriangle*x**3/(3*b) - w_wingd*x**2/2
     else:
-        Shear_Force = lift_dtriangle*x**2/(2*wing_length) - w_wingd*x - w_engine
-        Moment = lift_dtriangle*x**3/(6*wing_length) - w_wingd*x**2/2 - (x-x_engine)*w_engine
+        Shear_Force = lift_dtriangle*x**2/(b) - w_wingd*x - w_engine
+        Moment = lift_dtriangle*x**3/(3*b) - w_wingd*x**2/2 - (x-x_engine)*w_engine
 
     y_shear_triangle.append(Shear_Force)
     y_moment_triangle.append(Moment)
@@ -73,15 +73,15 @@ def generate_spanwise_locations(n, b=wing_length):
     x_array = np.linspace(0, b, n, endpoint=False)
     return x_array[1:]
 
-def general_lift_d (x, a=10.03427, b=18148.6):
+def general_lift_d (x, a=11.43427, b=15926.5):
     #Insert formula for lift distribution here
     #current obtained by fitting elliptical distribution to given wing loading, a=half wing span - half fuselage width
     loading_at_x = np.sqrt((1-(x**2/a**2))*b**2)
     return loading_at_x
 
-def general_weight_d (x, slope=599.191*9.81, intercept=-59.8383*9.81):
+def general_weight_d (x, slope=-450.248, intercept=5148.26):
     #Insert weight distribution. Current is linear for wing weight of 300*9.81
-    weight_at_x = slope + intercept*x
+    weight_at_x = intercept + slope*x
     return weight_at_x
 
 def generate_lift_data_points(x_array):
@@ -114,17 +114,19 @@ L_wing = trapezoidal_integration(x_array, lift_array)
 W_wing = trapezoidal_integration(x_array, weight_array)
 
 
-def wing_root_reaction_forces (L_wing, x_lift, W_wing, x_weight, W_engine, x_engine):
+def wing_root_reaction_forces (L_wing, x_lift, W_wing, x_weight, W_engine, x_engine, T_to):
     #Drag reaction forces not included yet
     R_y = W_wing + W_engine - L_wing  #upwards positive
-    M = x_lift*L_wing - x_weight*W_wing - x_engine*W_engine #clockwise positive
-    return (R_y, M)
+    M_x = x_lift*L_wing - x_weight*W_wing - x_engine*W_engine #left hand positive
+    R_x = T_to #aft-ward positive
+    M_z = T_to * x_engine #left hand positive
+    return (R_y, M_x, R_x, M_z)
 
-R_y, M = wing_root_reaction_forces(L_wing, x_lift, wing_weight, x_weight, w_engine, x_engine_root)
+R_y, M_x, R_x, M_z = wing_root_reaction_forces(L_wing, x_lift, wing_weight, x_weight, w_engine, x_engine_root, T_to)
 
 
-def internal_bending_moment(x, x_array=x_array, lift_array=lift_array, w_engine=w_engine,\
-    weight_array=weight_array, x_engine = x_engine_root, R_y = R_y, M = M):
+def internal_x_bending_moment(x, x_array=x_array, lift_array=lift_array, w_engine=w_engine,\
+    weight_array=weight_array, x_engine = x_engine_root, R_y = R_y, M = M_x):
     #counterclockwise positive
 
     x = min(x_array, key=lambda y:abs(y-x))
@@ -142,6 +144,15 @@ def internal_bending_moment(x, x_array=x_array, lift_array=lift_array, w_engine=
         engine_distance = 0
     moment_at_x = M + R_y*x + lift*(x-x_lift) - w_engine*engine_distance - weight*(x-x_weight)
     return moment_at_x
+
+def internal_z_bending_moment(x, R_x=R_x, T_to=T_to, x_engine=x_engine_root, M_z=M_z):
+    if x>x_engine:
+        d=x-x_engine
+    else:
+        d=0
+    moment_at_x = M_z -R_x*x + T_to*d
+    return moment_at_x
+
 
 def internal_vertical_shear_force(x, x_array=x_array, lift_array=lift_array, w_engine=w_engine,\
     weight_array=weight_array, x_engine = x_engine_root, R_y = R_y):
@@ -161,14 +172,29 @@ def internal_vertical_shear_force(x, x_array=x_array, lift_array=lift_array, w_e
     shear_at_x = R_y + lift - weight - w_engine * n
     return shear_at_x
 
+def internal_longitudinal_shear_force(x, R_x=R_x, T_to=T_to, x_engine=x_engine_root):
+    #forward positive
+    if x>x_engine:
+        return 0
+    else:
+        return R_x
+
 moment_array = []
 shear_array = []
+moment_array2=[]
+shear_array2=[]
+
 for i in x_array[2:]:
-    moment_array.append(internal_bending_moment(i))
+    moment_array.append(internal_x_bending_moment(i))
     shear_array.append(internal_vertical_shear_force(i))
+    moment_array2.append(internal_z_bending_moment(i))
+    shear_array2.append(internal_longitudinal_shear_force(i))
 
 plt.plot(x_array[2:], moment_array)
 plt.plot(x_array[2:], shear_array)
+plt.plot(x_array[2:], moment_array2)
+plt.plot(x_array[2:], shear_array2)
+
 
 
 
@@ -181,17 +207,29 @@ y = 0.05  #y in meters
 # moment of inertia of a rectangle
 bending_moment = 890 # link to functions above feeding an input
 
-for i in thickness_wb:
-    area_wb = 2*i*(base_wb+height_wb) #area of wingbox
-    volume_wb = area_wb * wing_length  # assume that the wingbox covers the majority of the wing length
+def thickness_wingbox(min_thickness_mm,max_thickness_mm):
+    thickness_wb = []
+    for i in range (min_thickness_mm,max_thickness_mm+1):
+        thickness_wb.append(i/1000)
+    return thickness_wb
+
+thickness_wb = thickness_wingbox(1,10)
+
+def mass_wingbox(base_wb,height_wb,b=b,thickness_wb=thickness_wb, material_wb=material_wb):
+    mass_wb =[]
     for j in material_wb:
-        mass_wb = volume_wb*j
-
-for i in thickness_wb:
-    moi_rectangle_x = i*base_wb*height_wb**2/3
-    moi_rectangle_y = i*base_wb**2*height_wb/3
-    hoop_x = - bending_moment*(height_wb/2)/moi_rectangle_x
-    hoop_y = - bending_moment*(base_wb/2)/moi_rectangle_y
+        for i in thickness_wb:
+            area_wb = 2*i*(base_wb+height_wb) #area of wingbox
+            volume_wb = area_wb * b/2  # assume that the wingbox covers the majority of the wing length
+            mass_wb = volume_wb * j
+    return mass_wb
 
 
-plt.show()
+
+    # moi_rectangle_x = i*base_wb*height_wb**2/3
+    # moi_rectangle_y = i*base_wb**2*height_wb/3
+    # hoop_x = - bending_moment*(height_wb/2)/moi_rectangle_x
+    # hoop_y = - bending_moment*(base_wb/2)/moi_rectangle_y
+
+#
+# plt.show()

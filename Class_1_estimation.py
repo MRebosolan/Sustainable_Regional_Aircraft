@@ -94,7 +94,7 @@ from hydrogen_tank_sizing import tank_sizing
 
 
 def CLASS1WEIGHTHYBRID(H_to_ker_ratio = input.H_to_ker_ratio,OEWINPUT = 1):
-    W_hydrosys=H_to_ker_ratio*3000
+    W_hydrosys=H_to_ker_ratio*1500
     e=2.71828182846
     n_pax= input.Npax
     W_pax= input.W_pax
