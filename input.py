@@ -21,6 +21,7 @@ MTOW = MTOM * g #N  !!!!!!!!!!!!!make sure this is in newtons!!!!!!!!!!!!!
 MLW = 25000 * g  # maximum landing weight [N], to be calculated
 AR = 8  # estimate, [-], Aspect ratio
 half_sweep = np.cos(radians(27))  # estimate, [degrees], sweep at half chord for main wing
+LE_sweep = np.radians(25)         #Leading egde wing sweepTBD, assumed backward let Rick know if it turns out to be forward sweep, calculate with Adsee formula 
 
 n_max = 2.5  # from envelope, update manually, max loading factor
 n_ult = 1.5 * n_max #ultimate loading factor
@@ -31,7 +32,7 @@ print('please use S from class 2')
 Tto = powerloading * MTOW #thrust at takeoff in newtons
 print('please use Tto from class 2')
 t_over_c = 0.1  # estimate, [] , maximum thickness over chord ratio for main wing
-taper = 0.4  # estimate, []
+
 mach_h = 0.5  # estimate, [] #max Mach at SL
 rho = 1.225 * 0.0624279606  # estimate, in lbs/ft3
 rho_zero = 0.00237  # fucking americans, this is slug/ft3
@@ -39,6 +40,7 @@ rho_zero = 0.00237  # fucking americans, this is slug/ft3
 
 Cr = 5.5                                 #Wing root chord [m]
 Ct = 1.2                               #Wing tip chord [m]
+taper = Ct / Cr                         #wing taper ratio [-]
 Dfus = 4                                #Fuselage diameter [m]
 
 
@@ -57,6 +59,9 @@ widthf = 2.8  # m max fuselage width
 S_fgs = widthf * np.pi * lf * 0.9  # fuselage gross shell area, APPROXIMATION
 lh = 15  # very random estimate, distance between wing and horizontal tail aerodynamic centers
 lv = 16 #very random estimate, distance between wing and vertical tail aerodynamic centers
+x_ac = 12           #x location of wing aerodynamic center measured from the nose of the aircraft, TBD
+x_apu = 20            #cg location of the apu measured from the nose of the aircraft [m], TBD
+
 
 Kgr = 1.08  # constant for the gear, torenbeek parameter
 V_pax = 282.391  # m^3, cabin volume
@@ -187,5 +192,7 @@ GWP_alt = np.array([[1., 0., -7.1],
 GWP = GWP_alt[Cruise_alt]  # Specify the altitude in km
 
 # Aerodynamics:
-MAC = 2 #m, preliminary estimate, length of mean aerodynamic chord
-
+x_start_Cr = 12                 #x location where root chord starts, measured from the nose of the aircraft [m]
+MAC =  2 / 3 * Cr * ((1 + taper + taper**2) / (1 + taper)) #length of mean aerodynamic chord, formula taken from Adsee II
+y_MAC = b / 6 * ((1 + 2 * taper) / (1 + taper))             #spanwise location of mean aerodynamic chord
+x_lemac = y_MAC * np.tan(LE_sweep)                          #x position of mac at leading edge [m], measured from the start of the root choord!!!!
