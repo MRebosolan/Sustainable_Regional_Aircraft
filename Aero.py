@@ -97,10 +97,15 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C):
     # With CL_max = 1.8 we could take airfoil NACA 63(3)-618 (supercritical with 0.18 t/c)
 
     # CLmax take-off: 2.1 , Clmax landing: 2.25
-    # target for take-off: Delta CLmax = 0.3
-    # target for landing: Delta CLmax = 0.45
+    #     # target for take-off: Delta CLmax = 0.3
+    #     # target for landing: Delta CLmax = 0.45
 
-    return sweep_c4, taper, c_root, c_tip, c_mac, y_mac, t_c, dihedral, Cl_des
+    dCLmax_land = 0.45
+    dCLmax_to   = 0.3
+
+    print(dCLmax_land)
+
+    return sweep_c4, taper, c_root, c_tip, c_mac, y_mac, t_c, dihedral, Cl_des, dCLmax_land, dCLmax_to
 
 wing_geometry(M_cruise, S, AR, MTOW, V_C)
 
