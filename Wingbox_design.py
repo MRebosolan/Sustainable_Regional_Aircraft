@@ -56,11 +56,11 @@ y_moment_triangle = []
 for i in range(1,100):
     x = wing_length*(i/100)
     if x<x_engine:
-        Shear_Force = lift_dtriangle*x**2/(2*wing_length) - w_wingd*x
-        Moment = lift_dtriangle*x**3/(6*wing_length) - w_wingd*x**2/2
+        Shear_Force = lift_dtriangle*x**2/(b) - w_wingd*x
+        Moment = lift_dtriangle*x**3/(3*b) - w_wingd*x**2/2
     else:
-        Shear_Force = lift_dtriangle*x**2/(2*wing_length) - w_wingd*x - w_engine
-        Moment = lift_dtriangle*x**3/(6*wing_length) - w_wingd*x**2/2 - (x-x_engine)*w_engine
+        Shear_Force = lift_dtriangle*x**2/(b) - w_wingd*x - w_engine
+        Moment = lift_dtriangle*x**3/(3*b) - w_wingd*x**2/2 - (x-x_engine)*w_engine
 
     y_shear_triangle.append(Shear_Force)
     y_moment_triangle.append(Moment)
@@ -207,17 +207,29 @@ y = 0.05  #y in meters
 # moment of inertia of a rectangle
 bending_moment = 890 # link to functions above feeding an input
 
-for i in thickness_wb:
-    area_wb = 2*i*(base_wb+height_wb) #area of wingbox
-    volume_wb = area_wb * wing_length  # assume that the wingbox covers the majority of the wing length
+def thickness_wingbox(min_thickness_mm,max_thickness_mm):
+    thickness_wb = []
+    for i in range (min_thickness_mm,max_thickness_mm+1):
+        thickness_wb.append(i/1000)
+    return thickness_wb
+
+thickness_wb = thickness_wingbox(1,10)
+
+def mass_wingbox(base_wb,height_wb,b=b,thickness_wb=thickness_wb, material_wb=material_wb):
+    mass_wb =[]
     for j in material_wb:
-        mass_wb = volume_wb*j
-
-for i in thickness_wb:
-    moi_rectangle_x = i*base_wb*height_wb**2/3
-    moi_rectangle_y = i*base_wb**2*height_wb/3
-    hoop_x = - bending_moment*(height_wb/2)/moi_rectangle_x
-    hoop_y = - bending_moment*(base_wb/2)/moi_rectangle_y
+        for i in thickness_wb:
+            area_wb = 2*i*(base_wb+height_wb) #area of wingbox
+            volume_wb = area_wb * b/2  # assume that the wingbox covers the majority of the wing length
+            mass_wb = volume_wb * j
+    return mass_wb
 
 
-plt.show()
+
+    # moi_rectangle_x = i*base_wb*height_wb**2/3
+    # moi_rectangle_y = i*base_wb**2*height_wb/3
+    # hoop_x = - bending_moment*(height_wb/2)/moi_rectangle_x
+    # hoop_y = - bending_moment*(base_wb/2)/moi_rectangle_y
+
+#
+# plt.show()
