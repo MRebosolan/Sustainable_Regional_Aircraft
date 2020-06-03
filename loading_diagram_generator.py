@@ -33,6 +33,8 @@ Cr = input.Cr                   #wing root chord length [m]
 Ct = input.Ct                   #wing tip chord length [m]
 b = cl2.b                       #wing span [m]
 sweep = input.LE_sweep          #Leading edge wing sweep (If we use forward sweep, please let Rick know)
+x_cargo_fwd = input.x_cg_fwd_cargo #front cargo cg measured from nose [m]
+x_cargo_aft = input.x_cg_aft_cargo #aft cargo cg measured from nose [m]
 
 
 #Small calculations with raw inputs
@@ -57,6 +59,7 @@ w_apu = cl2.df['SRA']['APU']    #kg
 w_tank = 500
 x_tank = 20
 print("change w_tank and x_tank to variables used in other files once decided on a fuel tank configuration")
+x_fuel = x_tank                 #fuel cg measured from nose, assumed same as tank cg as most likely the tank will be symmetrical
 w_lg_main = cl2.df['SRA']['Main LG']    #kg
 w_lg_front = cl2.df['SRA']['Nose LG']    #kg
 
@@ -105,6 +108,9 @@ print(cg_oew_wrt_lemac)
 def loadingcg(w_old, cg_old, w_item, cg_item):
     x_cg_new = (w_old * cg_old + w_item * cg_item) / (w_old + w_item)
     return x_cg_new, w_old + w_item
+
+
+
 #max_PL = input.W_payload
 #PL = pax_cabin + cargo
 #fuel_weight = MTOW - OEW - PL
@@ -133,17 +139,9 @@ def maccie(x):
     return 100 * (x - xlemac) / MAC
 
 
-# cg OEW
-xcgoew = 0.4 * l_f  # meter
 
-# cargo cg
-fwdcargo_begin = 0.1 * l_f
-fwdcargo_end = fwdcargo_begin + 3
-aftcargo_begin = 0.6 * l_f
-aftcargo_end = aftcargo_begin + 4
 
-fwdcargo_cg = (fwdcargo_begin + fwdcargo_end) / 2
-aftcargo_cg = (aftcargo_begin + aftcargo_end) / 2
+
 
 # fuel cg
 cgfuel = 0.5*l_f
