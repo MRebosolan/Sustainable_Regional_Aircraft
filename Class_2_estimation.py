@@ -175,7 +175,7 @@ while abs((OEW_class1_kg - OEWINPUT)*100/OEWINPUT)>= 0.01:
     OEW_class1_kg = class1[1]
     OEW_plot_class1.append(OEW_class1_kg)
     M_zfw_kg = class1[4]
-    M_fuel_kg = class1[5]
+    M_fuel_kg = class1[5]+class1[6]
     W_fuel = to_pounds(M_fuel_kg)
     
     OEW_class1 = to_pounds(OEW_class1_kg)
@@ -304,7 +304,7 @@ aircraftpar = aircraftpar.append(wing, ignore_index = True, sort = False)
 latex = df.to_latex(index = False)#, caption = "System weight breakdown... not yet final caption")
 print("Uncomment the caption for the final version")
 
-# print(df)
+print(df)
 # print(aircraftpar)
 
 

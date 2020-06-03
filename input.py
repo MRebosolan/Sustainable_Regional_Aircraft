@@ -74,7 +74,8 @@ lh = 15  # very random estimate, distance between wing and tail aerodynamic cent
 lv = 16 #very random estimate, distance between wing and vertical tail aerodynamic centers
 x_ac = 12           #x location of wing aerodynamic center measured from the nose of the aircraft, TBD
 x_apu = 20            #cg location of the apu measured from the nose of the aircraft [m], TBD
-
+x_engine = 13       #cg location of engines, measured from the nose of the aircraft [m], TBD
+x_nacelle = 13     #cg location of engine nacelles, measured from the nose of the aircraft [m], TBD
 
 Kgr = 1.08  # constant for the gear, torenbeek parameter
 V_pax = 282.391  # m^3, cabin volume
@@ -141,6 +142,8 @@ n_rows = 15         #Number of passenger rows [-] (=n_pax/n_seatsabreast)
 W_cargo = 1000  # kg #Extra cargo weight
 cargo_fwd_fraction = 1/3 #estimate, amount of cargo in fwd hold
 cargo_aft_fraction = 2./3 #estimate, amount of cargo in aft hold
+x_cg_fwd_cargo = 8          #cg of forward cargo compartment, measured from the aircraft nose [m]
+x_cg_aft_cargo = 22          #cg of aft cargo compartment, measured from the aircraft nose [m]
 n_crew = N_fdc + N_cc
 W_payload = Npax * W_pax + W_cargo
 Design_range = 2000  # [km]
@@ -168,6 +171,8 @@ H = 120E6  # Heating value of hydrogen, refine if we fly on kerosene and hydroge
 # rho_c = 0.4135  # [kg/m^3], cruise density (this is the one for 10 km cruise altitude)
 v_approach = 66 # m/s, RICK FIX THIS
 mach_app = v_approach/340.3 # RICK FIX THIS
+V_to = 1.05 * ((MTOW/S)*(2/1.225)*(1/CLmax_to))**0.5 #takeoff speed
+
 
 
 Cruise_alt = 10  # Max operating altitude in km
