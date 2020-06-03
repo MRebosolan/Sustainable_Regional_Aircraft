@@ -34,8 +34,8 @@ print('please use Tto from class 2')
 t_over_c = 0.1  # estimate, [] , maximum thickness over chord ratio for main wing
 
 mach_h = 0.5  # estimate, [] #max Mach at SL
-rho = 1.225 * 0.0624279606  # estimate, in lbs/ft3
-rho_zero = 0.00237  # fucking americans, this is slug/ft3
+rho = 1.225   # estimate, in kg/m3
+# rho_zero = rho  # kg/m3
 
 
 Cr = 5.5                                 #Wing root chord [m]
@@ -56,8 +56,10 @@ b = (S * AR)**0.5 #wingspan [m]
 print('please use b from class 2')
 t_r = 1.0  # maximum thickness at root [m] #bullshit estimation
 widthf = 2.8  # m max fuselage width
-S_fgs = widthf * np.pi * lf * 0.9  # fuselage gross shell area, APPROXIMATION
-lh = 15  # very random estimate, distance between wing and horizontal tail aerodynamic centers
+A_fuselage = np.pi*widthf*hf
+ellipse_fuselage = 2*np.pi * (((widthf/2)**2 + (hf/2)**2)/2)**0.5
+S_fgs = ellipse_fuselage * lf * 0.9  # fuselage gross shell area, APPROXIMATION
+lh = 15  # very random estimate, distance between wing and tail aerodynamic centers
 lv = 16 #very random estimate, distance between wing and vertical tail aerodynamic centers
 x_ac = 12           #x location of wing aerodynamic center measured from the nose of the aircraft, TBD
 x_apu = 20            #cg location of the apu measured from the nose of the aircraft [m], TBD
@@ -92,12 +94,12 @@ LD_loiter = 17
 
 
 #Flight envelope
-V_C=Envelope.V_C #KNOTS            #Velocities from flight envelope, ask George
-V_S=Envelope.V_S #KNOTS
-V_S2=Envelope.V_S2 #KNOTS
-V_dive=Envelope.V_D #KNOTS
-V_A=Envelope.V_A #KNOTS
-V_B=Envelope.V_B #KNOTS
+V_C=Envelope.V_C #KNOTS   cruise speed         #Velocities from flight envelope, ask George
+V_S=Envelope.V_S #KNOTS stall speed
+V_S2=Envelope.V_S2 #KNOTS  stall speed for negative cl max
+V_dive=Envelope.V_D #KNOTS  dive speed
+V_A=Envelope.V_A #KNOTS  maximum gust intensity speed
+V_B=Envelope.V_B #KNOTS   flaps deflected gust speed
 
 nlim=Envelope.nlimpos
 
@@ -134,7 +136,7 @@ hydrogen_cost = 2.4  # US DOLLARS per KG
 H_to_ker_ratio = 1
 
 # Flight performance
-rho0 = 1.225  # kg/m^3
+rho0 = rho  # kg/m^3
 CD0 = 0.01277  # [-], to be refined (roskam) DONE IN MIDTERM, TALK TO JORN
 CD0_togd = 0.01277 + .015 + .02  # [-], to be refined as this comes from roskam statistics
 CD0_landGD = CD0 + .02 + .065  # [-], to be refined as this comes from roskam statistics
@@ -151,6 +153,9 @@ Trev = 50000  # [N], maximum thrust reverse force applied during braking
 c_t = 0.0002  # [1/s] specific fuel consumption, to be refined
 H = 120E6  # Heating value of hydrogen, refine if we fly on kerosene and hydrogen simultenously, or 141.7E6 (higher value of hydrogen)
 rho_c = 0.4135  # [kg/m^3], cruise density (this is the one for 10 km cruise altitude)
+v_approach = 66 # m/s, RICK FIX THIS
+mach_app = v_approach/340.3 # RICK FIX THIS
+
 
 # parameters for Carbon Footprint
 Range_CRJ = 2593  # design range
@@ -195,4 +200,12 @@ GWP = GWP_alt[Cruise_alt]  # Specify the altitude in km
 x_start_Cr = 12                 #x location where root chord starts, measured from the nose of the aircraft [m]
 MAC =  2 / 3 * Cr * ((1 + taper + taper**2) / (1 + taper)) #length of mean aerodynamic chord, formula taken from Adsee II
 y_MAC = b / 6 * ((1 + 2 * taper) / (1 + taper))             #spanwise location of mean aerodynamic chord
-x_lemac = y_MAC * np.tan(LE_sweep)                          #x position of mac at leading edge [m], measured from the start of the root choord!!!!
+x_lemac_rootchord = y_MAC * np.tan(LE_sweep)                          #x position of mac at leading edge [m], measured from the start of the root choord!!!!
+x_LEMAC_nose = x_start_Cr + x_lemac_rootchord
+
+# Aerodynamics for scissor plot:
+
+cl0 = 0.153333 #preliminary estimate 
+cm0 = -0.018 #preliminary estimate
+tail_speedratio = 0.85**0.5
+
