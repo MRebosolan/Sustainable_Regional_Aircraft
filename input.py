@@ -58,6 +58,7 @@ A_fuselage = np.pi*widthf*hf
 ellipse_fuselage = 2*np.pi * (((widthf/2)**2 + (hf/2)**2)/2)**0.5
 S_fgs = ellipse_fuselage * lf * 0.9  # fuselage gross shell area, APPROXIMATION
 lh = 15  # very random estimate, distance between wing and tail aerodynamic centers
+lv = 16 #very random estimate, distance between wing and vertical tail aerodynamic centers
 
 Kgr = 1.08  # constant for the gear, torenbeek parameter
 V_pax = 282.391  # m^3, cabin volume
@@ -116,6 +117,9 @@ t_loiter = 2700  # s, as in 45 minutes
 
 
 W_pax = 93  # total weight per passenger, includes luggage kg
+x_first_pax = 7.5   #x-location measured from the nose [m] where first passenger row is located
+seat_pitch = 30     #Seat pitch [inch]!!!!!!!!!!!!!!!!
+n_rows = 15         #Number of passenger rows [-] (=n_pax/n_seatsabreast)
 W_cargo = 1000  # kg #Extra cargo weight
 cargo_fwd_fraction = 1/3 #estimate, amount of cargo in fwd hold
 cargo_aft_fraction = 2./3 #estimate, amount of cargo in aft hold
