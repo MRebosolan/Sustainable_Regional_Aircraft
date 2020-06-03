@@ -130,7 +130,7 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf):
     dCLmax_to   = 0.3
 
     dClmax_land = 1.3
-    hinge_c     = 60 #percent
+    hinge_c     = 70 #percent
     sweep_hinge = np.arctan(np.tan(sweep_c4) - 4/AR * ((hinge_c-25)/100 * (1 - taper)/(1 + taper)))
 
     SwfS = dCLmax_land/ (0.9 * dClmax_land * np.cos(sweep_hinge))
@@ -144,7 +144,7 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf):
 
     print("D = ", D)
 
-    x2 = max((-(-4 * a * Df + 2 * c_root) + np.sqrt(D))/ (-4 * a), (-(-4 * a * Df + 2 * c_root) - np.sqrt(D)) / (-4 * a))
+    x2 = max((-(-4 * a * Df + 2 * c_root) + np.sqrt(D))/ (-4 * a), (-(-4 * a * Df + 2 * c_root) - np.sqrt(D)) / (-4 * a))/2
     print("x2 = ", (x2 + Df))
 
     wing = [sweep_c4, taper, c_root, c_tip, c_mac, y_mac, t_c, dihedral,
