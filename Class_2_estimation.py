@@ -147,7 +147,7 @@ N_t = input.N_t
 wingloading = input.wingloading #still metric
 powerloading = input.powerloading
 
-
+W_payload = to_pounds(input.W_payload)
 
 
 ratio = input.H_to_ker_ratio
@@ -248,9 +248,9 @@ df = pd.DataFrame({'data': ['MTOW','OEW'],
 'F28': [65000, 31219],
 '737-200':[115500,60210]})
 
-zfw_fuel=[{'data': 'Zero fuel weight', 'SRA': W_zfw},
-         {'data': 'Fuel weight', 'SRA': W_fuel}
-         ]
+zfw_fuel=[{'data': 'Zero fuel weight', 'SRA': W_zfw, 'F28':31219+14380, '737-200': 60210+32790},
+         {'data': 'Max fuel weight', 'SRA': W_fuel, 'F28':17331, '737-200': 34781},
+         {'data': 'Max payload', 'SRA': W_payload, 'F28':14380, '737-200': 34790}]
 df = df.append(zfw_fuel, ignore_index = True, sort = False)
 
 wng = [{'data': 'Wing group', 'SRA': W_wing, 'F28':7330, '737-200': 10613},
