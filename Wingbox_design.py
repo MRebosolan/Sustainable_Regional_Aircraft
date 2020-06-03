@@ -2,21 +2,25 @@ import input
 import matplotlib.pyplot as plt
 import numpy as np
 from math import *
+import Class_2_estimation as cl2
 
 
 wingloading = input.wingloading #import wingloading
 
-b = input.b #import wingspan
-S = input.S #import wing area
-AR = input.AR #aspect ratio
+b = cl2.b #import wingspan
+S = cl2.S #import wing area
+AR = b**2 / S #aspect ratio
 taper = input.taper #input taper
 t_r = input.t_r # input t_r
 SMC = b/AR #standar mean chord
 widthf = input.widthf
 wing_length = 0.5*(b-widthf)
 
+
+
 total_lift = wingloading/wing_length
 total_lift_half = total_lift/2
+
 
 lift_duniform = total_lift_half/wing_length
 lift_dtriangle = 2*total_lift_half/wing_length
@@ -64,17 +68,14 @@ for i in range(1,100):
 
 #-------ELLIPTICA/GENERAL LIFT DISTRIBUTION CALCULATIONS------------------
 
-def elliptical_lift_d (x, a=10.73353, b=19104.8):
+def elliptical_lift_d (x, a=10.03427, b=18148.6):
     #obtained by fitting elliptical distribution to given wing loading, a=half wing span - half fuselage width
     loading_at_x = np.sqrt((1-(x**2/a**2))*b**2)
     return loading_at_x
 
 def generate_spanwise_locations(n, b=wing_length):
-    x_array = [0]
-    step = b/n
-    while x_array[-1] < b:
-        x_array.append(x_array[-1]+step)
-    return np.array(x_array[:-1])
+    x_array = np.linspace(0, b, n, endpoint=False)
+    return x_array[1:]
 
 
 def generate_lift_data_points(x_array):
@@ -91,17 +92,19 @@ def generate_weight_data_points(x_array):
 
 def trapezoidal_integration(x_array, y_array):
     integral_value = 0
-    for i in range (len(x_array)-1):
+    for i in range(len(x_array)-1):
         integral_value += (x_array[i+1]-x_array[i])/2 * (y_array[i+1] + y_array[i])
     return integral_value
 
 x_array = generate_spanwise_locations(1000)
 
 
-x_lift = 4.2499 #application point of lift force
+
 x_engine_root = wing_length/3
 x_weight = wing_length/3
 elliptical_lift_array = generate_lift_data_points(x_array)
+x_lift = trapezoidal_integration(x_array, x_array*elliptical_lift_array)/trapezoidal_integration\
+    (x_array, elliptical_lift_array)
 weight_array = generate_weight_data_points(x_array)
 L_wing = trapezoidal_integration(x_array, elliptical_lift_array)
 W_wing = trapezoidal_integration(x_array, weight_array)
@@ -117,6 +120,8 @@ R_y, M = wing_root_reaction_forces(L_wing, x_lift, 3000*9.81, x_weight, w_engine
 
 def internal_bending_moment(x, x_array=x_array, lift_array=elliptical_lift_array, w_engine=w_engine,\
     weight_array=weight_array, x_engine = x_engine_root, R_y = R_y, M = M):
+    #counterclockwise positive
+
     x = min(x_array, key=lambda y:abs(y-x))
     x_index = np.where(x_array == x)[0][0]
     x_array = x_array[:x_index]
@@ -132,11 +137,38 @@ def internal_bending_moment(x, x_array=x_array, lift_array=elliptical_lift_array
         engine_distance = 0
     moment_at_x = M + R_y*x + lift*(x-x_lift) - w_engine*engine_distance - weight*(x-x_weight)
     return moment_at_x
+
+def internal_vertical_shear_force(x, x_array=x_array, lift_array=elliptical_lift_array, w_engine=w_engine,\
+    weight_array=weight_array, x_engine = x_engine_root, R_y = R_y):
+    #downward positive
+
+    x = min(x_array, key=lambda y: abs(y - x))
+    x_index = np.where(x_array == x)[0][0]
+    x_array = x_array[:x_index]
+    lift_array = lift_array[:x_index]
+    weight_array = weight_array[:x_index]
+    lift = trapezoidal_integration(x_array, lift_array)
+    weight = trapezoidal_integration(x_array, weight_array)
+    if x > x_engine:
+        n=1
+    else:
+        n=0
+    shear_at_x = R_y + lift - weight - w_engine * n
+    return shear_at_x
+
+print(R_y, M)
+
 moment_array = []
+shear_array = []
 for i in x_array[2:]:
     moment_array.append(internal_bending_moment(i))
+    shear_array.append(internal_vertical_shear_force(i))
 
 plt.plot(x_array[2:], moment_array)
+plt.plot(x_array[2:], shear_array)
+print(shear_array)
+
+
 
 
 
