@@ -131,13 +131,12 @@ print(xcoord1)
 print(ycoord1)
 print(ycoord2)
 
-
 plt.figure(1)
-plt.grid(color='b', linestyle='-', linewidth=1)
-plt.plot(xcoord1,ycoord1)
-plt.plot(xcoord2,ycoord2)
+plt.grid(b=bool, color='b', linestyle='-', linewidth=1)
+plt.plot(xcoord1,ycoord1,color='r')
+plt.plot(xcoord2,ycoord2,color='r')
 plt.xlim(0,1)
-plt.ylim(-0.5,0.5)
+plt.ylim(-0.4,0.4)
 
 plt.show()
 
