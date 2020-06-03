@@ -64,7 +64,7 @@ for i in range(1,100):
 
 #-------ELLIPTICA/GENERAL LIFT DISTRIBUTION CALCULATIONS------------------
 
-def elliptical_lift_d (x, a=10.0135, b=20478.6):
+def elliptical_lift_d (x, a=10.73353, b=19104.8):
     #obtained by fitting elliptical distribution to given wing loading, a=half wing span - half fuselage width
     loading_at_x = np.sqrt((1-(x**2/a**2))*b**2)
     return loading_at_x
@@ -75,6 +75,7 @@ def generate_spanwise_locations(n, b=wing_length):
     while x_array[-1] < b:
         x_array.append(x_array[-1]+step)
     return np.array(x_array[:-1])
+
 
 def generate_lift_data_points(x_array):
     lift_array = []
@@ -111,6 +112,8 @@ def wing_root_reaction_forces (L_wing, x_lift, W_wing, x_weight, W_engine, x_eng
     M = x_lift*L_wing - x_weight*W_wing - x_engine*W_engine #clockwise positive
     return (R_y, M)
 
+R_y, M = wing_root_reaction_forces(L_wing, x_lift, 3000*9.81, x_weight, w_engine, x_engine_root)
+
 
 def internal_bending_moment(x, x_array=x_array, lift_array=elliptical_lift_array, w_engine=w_engine,\
     weight_array=weight_array, x_engine = x_engine_root, R_y = R_y, M = M):
@@ -133,16 +136,7 @@ moment_array = []
 for i in x_array[2:]:
     moment_array.append(internal_bending_moment(i))
 
-print(trapezoidal_integration(x_array, elliptical_lift_array))
-
-
-
-
-plt.plot(x_loc, y_moment_uniform)
-plt.plot(x_loc, y_shear_uniform)
-plt.plot(x_loc, y_moment_triangle)
-plt.plot(x_loc, y_shear_triangle)
-
+plt.plot(x_array[2:], moment_array)
 
 
 

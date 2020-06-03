@@ -1,4 +1,5 @@
 import input
+import Class_2_estimation as Cl2
 import numpy as np
 import matplotlib.pyplot as plt
 """
@@ -81,13 +82,13 @@ H = input.H                           # Heating value of the fuel (Hydrogen) #[J
 rho_c = input.rho_c                       #Density at 10km cruise altitude
 rho_0 = input.rho0
 g = input.g
-S = input.S
-T_to = input.Tto 
+S = Cl2.S
+T_to = Cl2.Tto 
 Vcr = input.V_C
 A = input.AR
 CD0 = input.CD0
 e = input.e
-MTOW = input.MTOW
+MTOW = Cl2.MTOW
 CLmax = input.CLmax_land              #Clmax at landing to determine stall speed
 CL_to = (input.CLmax_to)/1.1**2 
 CD0_togd =  input.CD0_togd            #same as for loading diagrams (taken from adsee)
