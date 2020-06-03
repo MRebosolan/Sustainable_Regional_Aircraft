@@ -221,7 +221,7 @@ def mass_wingbox(base_wb,height_wb,b=b,thickness_wb=thickness_wb, material_wb=ma
         for i in thickness_wb:
             area_wb = 2*i*(base_wb+height_wb) #area of wingbox
             volume_wb = area_wb * b/2  # assume that the wingbox covers the majority of the wing length
-            mass_wb = volume_wb * j
+            mass = volume_wb * j
     return mass_wb
 
 
