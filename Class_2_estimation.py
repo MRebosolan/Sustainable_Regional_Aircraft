@@ -193,8 +193,9 @@ while abs((OEW_class1_kg - OEWINPUT)*100/OEWINPUT)>= 0.01:
     W_empennage = tail.vert_tail_weight(Sv, V_dive, half_chord_sweep_vert, bv, Sh, zh) + tail.hor_tail_weight(Sh, V_dive, half_chord_sweep_hor)
     W_fuselage = fuselage.W_fuselage_torenbeek(V_dive, lh, widthf, hf, S_fgs)
     W_nacelles = nacelles.W_nacelle_torenbeek(T_TO)
-    W_landing_gear = LG.LG_weight(Kgr, MTOW)
-    
+    W_landing_gear_nose = LG.LG_weight(Kgr, MTOW)[1]
+    W_landing_gear_main= LG.LG_weight(Kgr, MTOW)[0]
+    W_landing_gear = W_landing_gear_nose + W_landing_gear_main
     
     #--------- EQUIPMENT WEIGHT ------------#
     
@@ -258,6 +259,8 @@ wng = [{'data': 'Wing group', 'SRA': W_wing, 'F28':7330, '737-200': 10613},
        {'data': 'Fuselage', 'SRA': W_fuselage, 'F28':7043, '737-200':12108},
        {'data': 'Nacelle', 'SRA': W_nacelles, 'F28':834, '737-200':1392},
        {'data': 'Landing gear', 'SRA': W_landing_gear, 'F28':2759, '737-200':4354},
+       {'data': 'Main LG', 'SRA': W_landing_gear_main},
+       {'data': 'Nose LG', 'SRA': W_landing_gear_nose},
        {'data': 'Total structural', 'SRA': W_struct, 'F28':19598, '737-200':31185}]
 df = df.append(wng, ignore_index = True, sort = False)
 
