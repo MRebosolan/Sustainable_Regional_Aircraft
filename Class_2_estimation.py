@@ -160,7 +160,7 @@ OEW_plot_class2 = []
 
 
 
-while abs((OEW_class1_kg - OEWINPUT)*100/OEWINPUT)>= 0.05:
+while abs((OEW_class1_kg - OEWINPUT)*100/OEWINPUT)>= 0.01:
     class1 = CLASS1WEIGHTHYBRID(ratio,OEWINPUT)
     MTOW_kg = class1[0]
     S_metric = MTOW_kg*9.81 /wingloading
@@ -247,6 +247,11 @@ df = pd.DataFrame({'data': ['MTOW','OEW'],
 'SRA': [MTOW, OEW_class2],
 'F28': [65000, 31219],
 '737-200':[115500,60210]})
+
+zfw_fuel=[{'data': 'Zero fuel weight', 'SRA': W_zfw},
+         {'data': 'Fuel weight', 'SRA': W_fuel}
+         ]
+df = df.append(zfw_fuel, ignore_index = True, sort = False)
 
 wng = [{'data': 'Wing group', 'SRA': W_wing, 'F28':7330, '737-200': 10613},
        {'data': 'Empennage', 'SRA': W_empennage, 'F28':1632 , '737-200':2718},
