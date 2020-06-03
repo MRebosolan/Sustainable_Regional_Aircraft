@@ -55,7 +55,8 @@ print('please use b from class 2')
 t_r = 1.0  # maximum thickness at root [m] #bullshit estimation
 widthf = 2.8  # m max fuselage width
 S_fgs = widthf * np.pi * lf * 0.9  # fuselage gross shell area, APPROXIMATION
-lh = 15  # very random estimate, distance between wing and tail aerodynamic centers
+lh = 15  # very random estimate, distance between wing and horizontal tail aerodynamic centers
+lv = 16 #very random estimate, distance between wing and vertical tail aerodynamic centers
 
 Kgr = 1.08  # constant for the gear, torenbeek parameter
 V_pax = 282.391  # m^3, cabin volume

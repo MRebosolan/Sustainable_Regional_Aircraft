@@ -28,17 +28,27 @@ pax_cabin = Npax * w_person
 fwd_cargo_max = cargo * input.cargo_fwd_fraction
 aft_cargo_max = cargo * input.cargo_aft_fraction
 
-seatloc = [seat_start]
-row = seat_start
-for i in range(int(rows - 1)):
-    row = row + pitch * 0.0254  # convert to meters
+seatloc = []
+for j in range(14):
+    row = seat_start + j * pitch * 0.0254  # convert to meters
     seatloc.append(row)
 
 
+
+
 #Calculate x_cg & OEW
-w_engine = cl2.df['SRA'][8]  # kg  
-w_nacelle = cl2.df['SRA'][5]  # kg  
-    
+w_engine = cl2.df['SRA']['Engines']  # kg
+w_nacelle = cl2.df['SRA']['Nacelle']  # kg  
+w_empennage = cl2.df['SRA']['Empennage']    #kg
+w_wing = cl2.df['SRA']['Wing group'] #kg 
+w_apu = cl2.df['SRA']['APU']    #kg
+
+x_engine = 15       #x_location of c.g. of engines measured from the nose [m]
+x_nacelle = 15      #x_location of c.g. of engine nacelles measured from the nose [m]
+x_empennage = 
+print("In calculation of cg @ OEW, take into account the exact tank placement and cg location once agreed on a specific configuration")
+
+ 
 #max_PL = input.W_payload
 #PL = pax_cabin + cargo
 #fuel_weight = MTOW - OEW - PL
