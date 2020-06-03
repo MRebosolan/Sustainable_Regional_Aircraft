@@ -146,7 +146,7 @@ def line_intersect(Ax1, Ay1, Ax2, Ay2, Bx1, By1, Bx2, By2):
 
     return x, y
 
-
+cross1 = line_intersect(x_fus[0],yfus[0],xfus[1],y_fus[1],0.0,0.0)
 
 #----------------------------- .txt File Airfoil Coordinates
 
