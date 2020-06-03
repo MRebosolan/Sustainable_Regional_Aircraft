@@ -74,7 +74,8 @@ lh = 15  # very random estimate, distance between wing and tail aerodynamic cent
 lv = 16 #very random estimate, distance between wing and vertical tail aerodynamic centers
 x_ac = 12           #x location of wing aerodynamic center measured from the nose of the aircraft, TBD
 x_apu = 20            #cg location of the apu measured from the nose of the aircraft [m], TBD
-
+x_engine = 13       #cg location of engines, measured from the nose of the aircraft [m], TBD
+x_nacelle = 13     #cg location of engine nacelles, measured from the nose of the aircraft [m], TBD
 
 Kgr = 1.08  # constant for the gear, torenbeek parameter
 V_pax = 282.391  # m^3, cabin volume
@@ -168,6 +169,8 @@ H = 120E6  # Heating value of hydrogen, refine if we fly on kerosene and hydroge
 # rho_c = 0.4135  # [kg/m^3], cruise density (this is the one for 10 km cruise altitude)
 v_approach = 66 # m/s, RICK FIX THIS
 mach_app = v_approach/340.3 # RICK FIX THIS
+V_to = 1.05 * ((MTOW/S)*(2/1.225)*(1/CLmax_to))**0.5 #takeoff speed
+
 
 
 Cruise_alt = 10  # Max operating altitude in km
@@ -219,7 +222,9 @@ GWP_alt = np.array([[1., 0., -7.1],
 GWP = GWP_alt[Cruise_alt]  # Specify the altitude in km
 
 # Aerodynamics:
-x_start_Cr = 12                 #x location where root chord starts, measured from the nose of the aircraft [m]
+x_start_Cr = 12                 #x location where root chord starts, measured from the nose of the aircraft [m], TBD
+
+
 MAC =  2 / 3 * Cr * ((1 + taper + taper**2) / (1 + taper)) #length of mean aerodynamic chord, formula taken from Adsee II
 y_MAC = b / 6 * ((1 + 2 * taper) / (1 + taper))             #spanwise location of mean aerodynamic chord
 x_lemac_rootchord = y_MAC * np.tan(LE_sweep)                          #x position of mac at leading edge [m], measured from the start of the root choord!!!!
