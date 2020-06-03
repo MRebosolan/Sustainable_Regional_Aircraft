@@ -30,13 +30,14 @@ M_cruise = 0.75
 S = inp.S
 AR = inp.AR
 MTOW = inp.MTOW
+widthf = inp.widthf
 
 V_C = Envelope.V_C  # Cruise Speed
 V_D = Envelope.V_D  # Dive Speed
 V_S = Envelope.V_S  # Stall Speed
 V_A = Envelope.V_A  # Max Gust Speed
 
-def wing_geometry(M_cruise, S, AR, MTOW, V_C):
+def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf):
 
     if M_cruise >= 0.7:
         sweep_c4 = np.arccos(0.75*(0.935/(0.03 + M_cruise)))
@@ -73,6 +74,8 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C):
 
     x_wing = [0, b/2, b/2, 0, 0]
     y_wing = [0, -b/2*np.tan(sweep_cLE), (-b/2*np.tan(sweep_cLE) - c_tip), - c_root, 0]
+    x_fus = [widthf/2, widthf/2]
+    y_fus = [0, -6]
 
     plt.figure(0)
     plt.plot(x_wing, y_wing)
@@ -104,10 +107,33 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C):
     dCLmax_land = 0.45
     dCLmax_to   = 0.3
 
-    return sweep_c4, taper, c_root, c_tip, c_mac, y_mac, t_c, dihedral, Cl_des, dCLmax_land, dCLmax_to
+    dClmax_land = 1.3
+    hinge_c     = 80 #percent
+    sweep_hinge = np.arctan(np.tan(sweep_c4) - 4/AR * ((hinge_c-25)/100 * (1 - taper)/(1 + taper)))
 
-wing_geometry(M_cruise, S, AR, MTOW, V_C)
+    SwfS = dCLmax_land/ (0.9 * dClmax_land * np.cos(sweep_hinge))
 
+    x1 = widthf/2
+
+    a = -2 * (c_root - c_tip)/b
+
+    D = (2 * (a * x1 + c_root))**2 + 4 * a * SwfS * S
+
+    x2 = max((-2 * (a * x1 + c_root) + np.sqrt(D))/(2*a),  (-2 * (a * x1 + c_root) - np.sqrt(D))/(2*a))
+    print(x2)
+
+    plt.plot(x_wing, y_wing, x_fus, y_fus)
+    plt.plot()
+    plt.show()
+
+
+    return sweep_c4, taper, c_root, c_tip, c_mac, y_mac, t_c, dihedral, Cl_des, dCLmax_land, dCLmax_to, SwfS
+
+[sweep_c4, taper, c_root, c_tip, c_mac, y_mac, t_c, dihedral, Cl_des, dCLmax_land, dCLmax_to] \
+    = wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf)
+
+
+hld(dCLmax_land, dCLmax_to, sweep_c4, taper)
 
 
 f=open('airfoil2.txt','r')
@@ -122,9 +148,9 @@ for i in lines[:26]:
 for i in lines[26:]:
     xcoord2.append(float(i.split('     ')[0]))
     ycoord2.append(float(i.split('     ')[1].strip('\n')))
-   
+
 xcoord2.insert(0,0.0)
-ycoord2.insert(0,0.0)    
+ycoord2.insert(0,0.0)
 
 print(lines)
 print(xcoord1)
