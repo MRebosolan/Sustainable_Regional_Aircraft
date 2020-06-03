@@ -44,13 +44,13 @@ inner_diameter=3.286
 V_tank=30 #CLASS I
 R_tank_fus=1.5
 
-tankchoice=3
+tankchoice=4
 if tankchoice==1:
 
     #FIRST OPTION ---- completely aft
-    tanksectionlength=V_tank/3.14159/R_tank_fus**2
-    print(tanksectionlength)
-    
+    thickness,mass, totalmass, diameter,length=tank_sizing_fuselage(V_tank,R_tank_fus,2)
+    print('mass: ',totalmass,'diameter: ',diameter,'length: ',length)
+        
     
 elif tankchoice==2:
     #SECOND OPTION  ---- also in tail
@@ -58,27 +58,36 @@ elif tankchoice==2:
     V_tank_tail=V_tank*fractionintail
     V_tank_fus=V_tank-V_tank_tail
     R_tank_tail=1
-    tanksectionlength=V_tank_fus/3.14159/R_tank_fus**2
-    tanksectionlengthtail=V_tank_tail/3.14159/R_tank_tail**2
-    print(tanksectionlengh,tanksectionlengthtail)
+    
+    tankthicknessfus,structmasstankfus,totstructmasstankfus,tankdiameterfus,lengthfus=tank_sizing_fuselage(V_tank_fus,R_tank_fus,1)
+    tankthicknesstail,structmasstanktail,totstructmasstanktail,tankdiametertail,lengthtail=tank_sizing_fuselage(V_tank_tail,R_tank_tail,1)
+    print('FUSELAGE ','mass: ',totstructmasstankfus,'diameter: ',tankdiameterfus,'length: ',lengthfus)
+    print('TAIL ','mass: ',totstructmasstanktail,'diameter: ',tankdiametertail,'length: ',lengthtail)
+    
+    
+    
+    
     
     
     
 elif tankchoice==3:
     #THIRD OPTION --- on top
-    R_tank_top=tank_sizing(V_tank,totalcabinlength,2)[-1]
-    print(R_tank_top)
+    tankthickness,masstank,totalmass,DIAMETER_tank_top,length=tank_sizing(V_tank,totalcabinlength,2)
+    print('mass: ',totalmass,'diameter: ',DIAMETER_tank_top,'length: ',length)
 
 else:
     #FOURTH OPTION --- combination
     fractioninfus=0.5
     V_tank_fus=fractioninfus*V_tank
     V_tank_top=V_tank-V_tank_fus
-    R_tank_top=tank_sizing(V_tank_top,totalcabinlength,1)[-1]
+    
+    tankthickness,masstank,totalmass,DIAMETER_tank_top,length=tank_sizing(V_tank_top,totalcabinlength,2)
+    print('mass: ',totalmass,'diameter: ',DIAMETER_tank_top,'length: ',length)
+    
     R_tank_fus=1.5
-    tanksectionlength=V_tank_fus/3.14159/R_tank_fus**2
+    TANK_THICKNESS,STRUCTURAL_TANK_MASS, TOTAL_STRUCTURAL_TANK_MASS, TANK_DIAMETER,LENGTH=tank_sizing_fuselage(V_tank_fus,R_tank_fus,2)
+    print(TOTAL_STRUCTURAL_TANK_MASS,TANK_DIAMETER,LENGTH)    
 
-    print(R_tank_top,tanksectionlength)
     
     
 
