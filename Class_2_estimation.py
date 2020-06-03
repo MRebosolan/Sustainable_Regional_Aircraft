@@ -291,15 +291,15 @@ aircraftpar = pd.DataFrame()
 wing = [{'data': 'Wing Area', 'SRA': S, 'F28':tom2(1), '737-200':tom2(1)},
                ]
 aircraftpar = aircraftpar.append(wing, ignore_index = True, sort = False)
-print(df)
-print(aircraftpar)
+# print(df)
+# print(aircraftpar)
 latex = df.to_latex(index = False, caption = "System weight breakdown... not yet final caption")
 try:
     file = open('C://Users//jornv//Google Drive//DSE upload//Class2dataframe.txt', 'w')
     file.write(latex)
     file.close()
 except:
-    print('you cannot update files, ask jorn if necessary')
+    # print('you cannot update files, ask jorn if necessary')
     
     
 S = tom2(S)
