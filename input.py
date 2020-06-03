@@ -142,6 +142,8 @@ n_rows = 15         #Number of passenger rows [-] (=n_pax/n_seatsabreast)
 W_cargo = 1000  # kg #Extra cargo weight
 cargo_fwd_fraction = 1/3 #estimate, amount of cargo in fwd hold
 cargo_aft_fraction = 2./3 #estimate, amount of cargo in aft hold
+x_cg_fwd_cargo = 8          #cg of forward cargo compartment, measured from the aircraft nose [m]
+x_cg_aft_cargo = 22          #cg of aft cargo compartment, measured from the aircraft nose [m]
 n_crew = N_fdc + N_cc
 W_payload = Npax * W_pax + W_cargo
 Design_range = 2000  # [km]
