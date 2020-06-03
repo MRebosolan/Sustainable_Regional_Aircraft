@@ -180,6 +180,7 @@ plt.text(cross1[0],cross1[1],'Fuselage Wall Line')
 plt.grid(True,which="major",color="#999999")
 plt.grid(True,which="minor",color="#DDDDDD",ls="--")
 plt.minorticks_on()
+plt.ylim(-10.0,2.0)
 
 plt.figure(1)
 plt.grid(True,which="major",color="#999999")
@@ -191,7 +192,6 @@ plt.xlim(0,1)
 plt.ylim(-0.3,0.3)
 plt.text(0.0,0.0,'LE')
 plt.text(1.0,0.0,'TE')
-
 
 plt.show()
 
