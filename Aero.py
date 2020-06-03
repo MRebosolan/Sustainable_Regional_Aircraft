@@ -81,7 +81,8 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf):
     plt.plot(x_wing, y_wing)
     plt.plot()
     plt.show()
-
+    
+    
     AR_check = 17.7 * (2 - taper) * np.exp(- 0.043 * sweep_c4/np.pi*180)
     print(AR_check)
 
@@ -135,6 +136,26 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf):
 
 hld(dCLmax_land, dCLmax_to, sweep_c4, taper)
 
+# -------- Line Intersection Point--------------------
+
+def line_intersect(Ax1, Ay1, Ax2, Ay2, Bx1, By1, Bx2, By2):
+    """ returns a (x, y) tuple or None if there is no intersection """
+    d = (By2 - By1) * (Ax2 - Ax1) - (Bx2 - Bx1) * (Ay2 - Ay1)
+    if d:
+        uA = ((Bx2 - Bx1) * (Ay1 - By1) - (By2 - By1) * (Ax1 - Bx1)) / d
+        uB = ((Ax2 - Ax1) * (Ay1 - By1) - (Ay2 - Ay1) * (Ax1 - Bx1)) / d
+    else:
+        return
+    if not(0 <= uA <= 1 and 0 <= uB <= 1):
+        return
+    x = Ax1 + uA * (Ax2 - Ax1)
+    y = Ay1 + uA * (Ay2 - Ay1)
+ 
+    return x, y
+
+
+
+#----------------------------- .txt File Airfoil Coordinates
 
 f=open('airfoil2.txt','r')
 lines=f.readlines()
@@ -156,6 +177,9 @@ print(lines)
 print(xcoord1)
 print(ycoord1)
 print(ycoord2)
+
+
+#----------------------------- Plotting
 
 plt.figure(1)
 plt.grid(True,which="major",color="#999999")
