@@ -15,7 +15,7 @@ t_r = input.t_r # input t_r
 SMC = b/AR #standar mean chord
 widthf = input.widthf
 wing_length = 0.5*(b-widthf)
-
+wing_weight = 3000*9.81
 
 
 total_lift = wingloading/wing_length
@@ -106,11 +106,11 @@ x_array = generate_spanwise_locations(1000)
 
 x_engine_root = wing_length/3
 x_weight = wing_length/3
-elliptical_lift_array = generate_lift_data_points(x_array)
-x_lift = trapezoidal_integration(x_array, x_array*elliptical_lift_array)/trapezoidal_integration\
-    (x_array, elliptical_lift_array)
+lift_array = generate_lift_data_points(x_array)
+x_lift = trapezoidal_integration(x_array, x_array*lift_array)/trapezoidal_integration\
+    (x_array, lift_array)
 weight_array = generate_weight_data_points(x_array)
-L_wing = trapezoidal_integration(x_array, elliptical_lift_array)
+L_wing = trapezoidal_integration(x_array, lift_array)
 W_wing = trapezoidal_integration(x_array, weight_array)
 
 
@@ -120,10 +120,10 @@ def wing_root_reaction_forces (L_wing, x_lift, W_wing, x_weight, W_engine, x_eng
     M = x_lift*L_wing - x_weight*W_wing - x_engine*W_engine #clockwise positive
     return (R_y, M)
 
-R_y, M = wing_root_reaction_forces(L_wing, x_lift, 3000*9.81, x_weight, w_engine, x_engine_root)
+R_y, M = wing_root_reaction_forces(L_wing, x_lift, wing_weight, x_weight, w_engine, x_engine_root)
 
 
-def internal_bending_moment(x, x_array=x_array, lift_array=elliptical_lift_array, w_engine=w_engine,\
+def internal_bending_moment(x, x_array=x_array, lift_array=lift_array, w_engine=w_engine,\
     weight_array=weight_array, x_engine = x_engine_root, R_y = R_y, M = M):
     #counterclockwise positive
 
@@ -143,7 +143,7 @@ def internal_bending_moment(x, x_array=x_array, lift_array=elliptical_lift_array
     moment_at_x = M + R_y*x + lift*(x-x_lift) - w_engine*engine_distance - weight*(x-x_weight)
     return moment_at_x
 
-def internal_vertical_shear_force(x, x_array=x_array, lift_array=elliptical_lift_array, w_engine=w_engine,\
+def internal_vertical_shear_force(x, x_array=x_array, lift_array=lift_array, w_engine=w_engine,\
     weight_array=weight_array, x_engine = x_engine_root, R_y = R_y):
     #downward positive
 

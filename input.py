@@ -219,7 +219,9 @@ GWP_alt = np.array([[1., 0., -7.1],
 GWP = GWP_alt[Cruise_alt]  # Specify the altitude in km
 
 # Aerodynamics:
-x_start_Cr = 12                 #x location where root chord starts, measured from the nose of the aircraft [m]
+x_start_Cr = 12                 #x location where root chord starts, measured from the nose of the aircraft [m], TBD
+
+
 MAC =  2 / 3 * Cr * ((1 + taper + taper**2) / (1 + taper)) #length of mean aerodynamic chord, formula taken from Adsee II
 y_MAC = b / 6 * ((1 + 2 * taper) / (1 + taper))             #spanwise location of mean aerodynamic chord
 x_lemac_rootchord = y_MAC * np.tan(LE_sweep)                          #x position of mac at leading edge [m], measured from the start of the root choord!!!!
