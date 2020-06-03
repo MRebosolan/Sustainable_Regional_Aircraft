@@ -132,42 +132,18 @@ print(ycoord1)
 print(ycoord2)
 
 plt.figure(1)
-plt.grid(b=bool, color='b', linestyle='-', linewidth=1)
+plt.grid(True,which="major",color="#999999")
+plt.grid(True,which="minor",color="#DDDDDD",ls="--")
+plt.minorticks_on()
 plt.plot(xcoord1,ycoord1,color='r')
 plt.plot(xcoord2,ycoord2,color='r')
 plt.xlim(0,1)
-plt.ylim(-0.4,0.4)
+plt.ylim(-0.3,0.3)
+plt.text(0.0,0.0,'LE')
+plt.text(1.0,0.0,'TE')
 
 plt.show()
 
-#    xy=lines.split('/n')
-#    xcoord=[]
-#    ycoord1=[]
-#    ycoord2=[]
-#    for i in range(0,len(xy)):
-#        xcoord.append(float(xy[i][0]))
-#        ycoord1.append(float(xy[i][1]))
-#    return xcoord, ycoord1, ycoord2
-#
-##def airfoilplot('airfoil1.txt'):
-#f=open('airfoil1.txt','r')
-#lines=f.readlines()
-#result=[]
-#for x in lines:
-#    result.append(x.split('\n'))
-#f.close()
-#    return result
-
-#    f=open('datfile','r')
-#    lines=f.readlines()
-#    xy=lines.split('/n')
-#    xcoord=[]
-#    ycoord1=[]
-#    ycoord2=[]
-#    for i in range(0,len(xy)):
-#        xcoord.append(float(xy[i][0]))
-#        ycoord1.append(float(xy[i][1]))
-#    return xcoord, ycoord1, ycoord2
 
 
 
