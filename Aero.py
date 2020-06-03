@@ -108,9 +108,25 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C):
 wing_geometry(M_cruise, S, AR, MTOW, V_C)
 
 
-def airfoilplot('airfoil2'):
-    f=open('airfoil2','r')
-    lines=f.readlines(f.split('/n '))
+
+f=open('airfoil2.txt','r')
+lines=f.readlines()
+xcoord1=[]
+xcoord2=[]
+ycoord1=[]
+ycoord2=[]
+for i in lines[:26]:
+    xcoord1.append(float(i.split('     ')[0]))
+    ycoord1.append(float(i.split('     ')[1].strip('\n')))
+for i in lines[26:]:
+    xcoord2.append(float(i.split('     ')[0]))
+    ycoord2.append(float(i.split('     ')[1].strip('\n')))
+    
+print(lines)
+print(xcoord1)
+print(ycoord1)
+print(ycoord2)
+
 #    xy=lines.split('/n')
 #    xcoord=[]
 #    ycoord1=[]
