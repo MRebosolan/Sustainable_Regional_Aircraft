@@ -74,6 +74,7 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C):
     x_wing = [0, b/2, b/2, 0, 0]
     y_wing = [0, -b/2*np.tan(sweep_cLE), (-b/2*np.tan(sweep_cLE) - c_tip), - c_root, 0]
 
+    plt.figure(0)
     plt.plot(x_wing, y_wing)
     plt.plot()
     plt.show()
@@ -121,11 +122,24 @@ for i in lines[:26]:
 for i in lines[26:]:
     xcoord2.append(float(i.split('     ')[0]))
     ycoord2.append(float(i.split('     ')[1].strip('\n')))
-    
+   
+xcoord2.insert(0,0.0)
+ycoord2.insert(0,0.0)    
+
 print(lines)
 print(xcoord1)
 print(ycoord1)
 print(ycoord2)
+
+
+plt.figure(1)
+plt.grid(color='b', linestyle='-', linewidth=1)
+plt.plot(xcoord1,ycoord1)
+plt.plot(xcoord2,ycoord2)
+plt.xlim(0,1)
+plt.ylim(-0.5,0.5)
+
+plt.show()
 
 #    xy=lines.split('/n')
 #    xcoord=[]
