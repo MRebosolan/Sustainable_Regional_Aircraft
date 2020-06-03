@@ -96,12 +96,12 @@ x_cg_wing_nose, x_cg_wing_mac = wing_cg(sweep, b, Cr, Ct, MAC, x_lemac_Cr, x_lem
 
 
 def cg_OEW_wrt_lemac(x_engine, w_engine, x_nacelle, w_nacelle, x_empennage, w_empennage, x_apu, w_apu, x_tank, w_tank, x_cg_wing_nose, w_wing, x_lg_front, w_lg_front, x_lg_main, w_lg_main, OEW, x_lemac, MAC):
-    cg_oew_wrt_nose = (x_engine * w_engine + x_nacelle * w_nacelle + x_empennage * w_empennage + x_apu * w_apu + x_tank * w_tank + x_cg_wing_nose * w_wing + x_lg_front * w_lg_front + x_lg_main * w_lg_main) / OEW
-    cg_oew_wrt_lemac = (cg_oew_wrt_nose - x_lemac) / MAC
-    return cg_oew_wrt_lemac
+    cg_oew_nose = (x_engine * w_engine + x_nacelle * w_nacelle + x_empennage * w_empennage + x_apu * w_apu + x_tank * w_tank + x_cg_wing_nose * w_wing + x_lg_front * w_lg_front + x_lg_main * w_lg_main) / OEW
+    cg_oew_wrt_lemac = (cg_oew_nose - x_lemac) / MAC
+    return cg_oew_wrt_lemac, cg_oew_nose
 
-cg_oew_wrt_lemac =  cg_OEW_wrt_lemac(x_engine, w_engine, x_nacelle, w_nacelle, x_empennage, w_empennage, x_apu, w_apu, x_tank, w_tank, x_cg_wing_nose, w_wing, x_lg_front, w_lg_front, x_lg_main, w_lg_main, OEW, x_lemac, MAC)  
-print('C.G. @ OEW = ', cg_oew_wrt_lemac)   
+cg_oew_wrt_lemac, cg_oew_nose =  cg_OEW_wrt_lemac(x_engine, w_engine, x_nacelle, w_nacelle, x_empennage, w_empennage, x_apu, w_apu, x_tank, w_tank, x_cg_wing_nose, w_wing, x_lg_front, w_lg_front, x_lg_main, w_lg_main, OEW, x_lemac, MAC)  
+print('C.G. @ OEW = ', cg_oew_wrt_lemac, 'MAC')   
     
 
 # new cg calculation, returns new cg and new weight
@@ -138,14 +138,14 @@ def passenger_loading(current_weight, current_cg, multiplication=1, seatloc=seat
 def loading():
     plt.close()
     plt.figure()
-    onlyfwdcargo = loadingcg(OEW, cg_oew_wrt_lemac, fwd_cargo_max, x_cargo_fwd)
+    onlyfwdcargo = loadingcg(OEW, cg_oew_nose, fwd_cargo_max, x_cargo_fwd)
     bothcargo = loadingcg(onlyfwdcargo[1], onlyfwdcargo[0], aft_cargo_max, x_cargo_aft)
-    cargo1 = plt.plot(100 * (np.array([cg_oew_wrt_lemac, onlyfwdcargo[0], bothcargo[0]]) - x_lemac) / MAC,
+    cargo1 = plt.plot(100 * (np.array([cg_oew_nose, onlyfwdcargo[0], bothcargo[0]]) - x_lemac) / MAC,
                       [OEW, onlyfwdcargo[1], bothcargo[1]], label='Cargo', marker='x', color='brown')
 
-    onlyaftcargo = loadingcg(OEW, cg_oew_wrt_lemac, aft_cargo_max, x_cargo_aft)
+    onlyaftcargo = loadingcg(OEW, cg_oew_nose, aft_cargo_max, x_cargo_aft)
     bothcargo2 = loadingcg(onlyaftcargo[1], onlyaftcargo[0], fwd_cargo_max, x_cargo_fwd)
-    cargo2 = plt.plot(100 * (np.array([cg_oew_wrt_lemac, onlyaftcargo[0], bothcargo2[0]]) - x_lemac) / MAC,
+    cargo2 = plt.plot(100 * (np.array([cg_oew_nose, onlyaftcargo[0], bothcargo2[0]]) - x_lemac) / MAC,
                       [OEW, onlyaftcargo[1], bothcargo2[1]], marker='x', color='cyan')
 
     window = passenger_loading(bothcargo[1], bothcargo[0], multiplication=2)
