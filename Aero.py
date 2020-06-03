@@ -37,6 +37,25 @@ V_D = Envelope.V_D  # Dive Speed
 V_S = Envelope.V_S  # Stall Speed
 V_A = Envelope.V_A  # Max Gust Speed
 
+# ---------------------------- Line Intersection Point
+
+def line_intersect(Ax1, Ay1, Ax2, Ay2, Bx1, By1, Bx2, By2):
+    """ returns a (x, y) tuple or None if there is no intersection """
+    d = (By2 - By1) * (Ax2 - Ax1) - (Bx2 - Bx1) * (Ay2 - Ay1)
+    if d:
+        uA = ((Bx2 - Bx1) * (Ay1 - By1) - (By2 - By1) * (Ax1 - Bx1)) / d
+        uB = ((Ax2 - Ax1) * (Ay1 - By1) - (Ay2 - Ay1) * (Ax1 - Bx1)) / d
+    else:
+        return
+    if not(0 <= uA <= 1 and 0 <= uB <= 1):
+        return
+    x = Ax1 + uA * (Ax2 - Ax1)
+    y = Ay1 + uA * (Ay2 - Ay1)
+
+    return x, y
+
+# --------------------------------- Wing Geometry
+
 def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf):
 
     if M_cruise >= 0.7:
@@ -121,32 +140,14 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf):
 
     wing = [sweep_c4, taper, c_root, c_tip, c_mac, y_mac, t_c, dihedral,
             Cl_des, dCLmax_land, dCLmax_to]
+    
+    cross1 = line_intersect(x_fus[0],y_fus[0],x_fus[1],y_fus[1],x_wing[0],y_wing[0],x_wing[1],y_wing[1])
 
-    return wing, geom
+    return wing, geom,cross1
 
 
-wing, geom = wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf)
+wing, geom, cross1 = wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf)
 
-hld(dCLmax_land, dCLmax_to, sweep_c4, taper)
-
-# -------- Line Intersection Point--------------------
-
-def line_intersect(Ax1, Ay1, Ax2, Ay2, Bx1, By1, Bx2, By2):
-    """ returns a (x, y) tuple or None if there is no intersection """
-    d = (By2 - By1) * (Ax2 - Ax1) - (Bx2 - Bx1) * (Ay2 - Ay1)
-    if d:
-        uA = ((Bx2 - Bx1) * (Ay1 - By1) - (By2 - By1) * (Ax1 - Bx1)) / d
-        uB = ((Ax2 - Ax1) * (Ay1 - By1) - (Ay2 - Ay1) * (Ax1 - Bx1)) / d
-    else:
-        return
-    if not(0 <= uA <= 1 and 0 <= uB <= 1):
-        return
-    x = Ax1 + uA * (Ax2 - Ax1)
-    y = Ay1 + uA * (Ay2 - Ay1)
-
-    return x, y
-
-cross1 = line_intersect(x_fus[0],yfus[0],xfus[1],y_fus[1],0.0,0.0)
 
 #----------------------------- .txt File Airfoil Coordinates
 
@@ -171,13 +172,14 @@ print(xcoord1)
 print(ycoord1)
 print(ycoord2)
 
+#----------------------------- Plotting
+
 plt.figure(0)
 plt.plot(geom[0], geom[1], geom[2], geom[3])
-plt.plot()
-plt.show()
-
-
-#----------------------------- Plotting
+plt.text(cross1[0],cross1[1],'Fuselage Wall Line')
+plt.grid(True,which="major",color="#999999")
+plt.grid(True,which="minor",color="#DDDDDD",ls="--")
+plt.minorticks_on()
 
 plt.figure(1)
 plt.grid(True,which="major",color="#999999")
@@ -189,6 +191,7 @@ plt.xlim(0,1)
 plt.ylim(-0.3,0.3)
 plt.text(0.0,0.0,'LE')
 plt.text(1.0,0.0,'TE')
+
 
 plt.show()
 
