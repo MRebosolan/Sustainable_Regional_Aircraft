@@ -33,12 +33,12 @@ rho = 1.225 * 0.0624279606  # estimate, in lbs/ft3
 rho_zero = 0.00237  # fucking americans, this is slug/ft3
 
 lf = 30  #lenght of fuselage m estimate, lil shorter than CRJ as 5 seat rows are used
-hf = 2.5  # height of fuselage estimate
+hf = 4  # height of fuselage estimate
 A_inlet = 1.17  # m2, engine inlet area
 ln = 0.8129  # m 1/4 of CRJ engine length, length of nacelle
 b = (S * AR)**0.5 #wingspan [m]
 t_r = 1.0  # maximum thickness at root [m] #bullshit estimation
-widthf = 4.24  # m max fuselage width
+widthf = 3.1  # m max fuselage width
 S_fgs = widthf * np.pi * lf * 0.9  # fuselage gross shell area
 lh = 15  # very random estimate, distance between wing and tail aerodynamic centers
 
