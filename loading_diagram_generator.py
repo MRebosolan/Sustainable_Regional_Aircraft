@@ -6,38 +6,71 @@ import pandas as pd
 import Class_2_estimation as cl2
 import input
 
-MTOW = cl2.MTOW_kg
-OEW = cl2.OEWINPUT
 
-Npax = input.Npax
-w_person = input.W_pax
+#Raw inputs
+MTOW = cl2.MTOM                 #kg
+OEW = cl2.OEM                   #kg
+Npax = input.Npax               #Number of passengers [-]
+w_person = input.W_pax          #Weight of each passenger + luggage [kg]
+l_f = input.lf                  #Fuselage length [m]
+cargo = input.W_cargo           #Total cargo weight [kg]
+fuel_weight = cl2.M_fuel_kg     #Total fuel weight taken onboard, including reserves [kg]
+MAC = input.MAC                 #Length of MAC [m]
+seat_start = input.x_first_pax  #x-location measured from the nose where first passenger row is located
+pitch = input.seat_pitch        #seat pitch [inch]
+rows = input.n_rows             #number of passegner rows [-]
+
+
+
+
+#Small calculations with raw inputs
 pax_cabin = Npax * w_person
-
-max_PL = input.W_payload
-cargo = input.W_cargo
 fwd_cargo_max = cargo * input.cargo_fwd_fraction
-aft_cargo_max = cargo * input.cargo_fwd_fraction
-PL = pax_cabin + cargo
-fuel_weight = MTOW - OEW - PL
-M_zfw = OEW + PL
+aft_cargo_max = cargo * input.cargo_aft_fraction
+
+seatloc = []
+for j in range(14):
+    row = seat_start + j * pitch * 0.0254  # convert to meters
+    seatloc.append(row)
+
+
+
+
+#Calculate x_cg & OEW
+w_engine = cl2.df['SRA']['Engines']  # kg
+w_nacelle = cl2.df['SRA']['Nacelle']  # kg  
+w_empennage = cl2.df['SRA']['Empennage']    #kg
+w_wing = cl2.df['SRA']['Wing group'] #kg 
+w_apu = cl2.df['SRA']['APU']    #kg
+
+x_engine = 15       #x_location of c.g. of engines measured from the nose [m]
+x_nacelle = 15      #x_location of c.g. of engine nacelles measured from the nose [m]
+x_empennage = 
+print("In calculation of cg @ OEW, take into account the exact tank placement and cg location once agreed on a specific configuration")
+
+ 
+#max_PL = input.W_payload
+#PL = pax_cabin + cargo
+#fuel_weight = MTOW - OEW - PL
+#M_zfw = OEW + PL
 
 # wing, stabilizer, fuselage and engine parameters
-w_engine = cl2.df['SRA'][8]  # kg
+
 wing_area = cl2.S  # m^2
 span = cl2.b
 
-fuselage_lenght = input.lf  # m
+  # m
 
 
 #inputs, gear location
-cgmain = 0.6 * fuselage_lenght
+cgmain = 0.6 * l_f
 cgnose = 1
 
 
 #inputs
 # determining MAC's
-xlemac = 0.4 * fuselage_lenght  # m, datum is front of nose
-MAC = 3 * 10 / 21  # m, length of MAC
+xlemac = 0.38 * l_f  # m, datum is front of nose
+
 
 
 def maccie(x):
@@ -45,31 +78,31 @@ def maccie(x):
 
 
 # cg OEW
-xcgoew = 0.4 * fuselage_lenght  # meter
-cgoew_mac = 24.95440889952892  # percent
-cgoew_fuselage = xcgoew * 100 / fuselage_lenght
+xcgoew = 0.4 * l_f  # meter
 
-# cargo
-fwdcargo_begin = 0.1 * fuselage_lenght
+# cargo cg
+fwdcargo_begin = 0.1 * l_f
 fwdcargo_end = fwdcargo_begin + 3
-aftcargo_begin = 0.6 * fuselage_lenght
+aftcargo_begin = 0.6 * l_f
 aftcargo_end = aftcargo_begin + 4
 
 fwdcargo_cg = (fwdcargo_begin + fwdcargo_end) / 2
 aftcargo_cg = (aftcargo_begin + aftcargo_end) / 2
 
 # fuel cg
-cgfuel = 0.5*fuselage_lenght
+cgfuel = 0.5*l_f
 
-# passenger cg
-seat_start = 4.8 + 0.8 + 0.81 - 1
-seatloc = [seat_start]
-row = seat_start
-pitch = 29  # inch
-rows = Npax / 5
-for i in range(int(rows - 1)):
-    row = row + pitch * 0.0254  # convert to meters
-    seatloc.append(row)
+
+
+
+
+
+############# PLOTTING BELOW -----------------------------
+
+
+
+
+
 
 
 # new cg calculation, returns new cg and new weight

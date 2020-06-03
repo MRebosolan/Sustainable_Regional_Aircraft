@@ -14,7 +14,9 @@ g = 9.80665  # [m/s^2]
 from math import radians
 
 MTOM = 32846.208787 # [kg]  #maximum takeoff mass calculated in class 2
+print('please use MTOM from class 2')
 OEW = 22981.846450 #kg calculated in class 2
+print('please use OEW from class 2')
 MTOW = MTOM * g #N  !!!!!!!!!!!!!make sure this is in newtons!!!!!!!!!!!!!
 MLW = 25000 * g  # maximum landing weight [N], to be calculated
 AR = 8  # estimate, [-], Aspect ratio
@@ -25,22 +27,38 @@ n_ult = 1.5 * n_max #ultimate loading factor
 wingloading = 4375.84  # estimate, N/m^2
 powerloading = 0.44  # thrust over weight
 S = MTOW /wingloading #m^2, wing area
+print('please use S from class 2')
 Tto = powerloading * MTOW #thrust at takeoff in newtons
+print('please use Tto from class 2')
 t_over_c = 0.1  # estimate, [] , maximum thickness over chord ratio for main wing
 taper = 0.4  # estimate, []
 mach_h = 0.5  # estimate, [] #max Mach at SL
-rho = 1.225 * 0.0624279606  # estimate, in lbs/ft3
-rho_zero = 0.00237  # fucking americans, this is slug/ft3
+rho = 1.225   # estimate, in kg/m3
+# rho_zero = rho  # kg/m3
+
+
+Cr = 5.5                                 #Wing root chord [m]
+Ct = 1.2                               #Wing tip chord [m]
+Dfus = 4                                #Fuselage diameter [m]
+
+
+Cla_aileron = 6.4                     #1/rad, sectional lift curve slope at wing section where aileron is located, determine by datcom method or airfoil simulation
+Cd0_aileron = 0.0039                     #zero drag coefficient [-] at wing section where aileron is located, determine by airfoil simulation
+
 
 lf = 30  #lenght of fuselage m estimate, lil shorter than CRJ as 5 seat rows are used
 hf = 2.5  # height of fuselage estimate
 A_inlet = 1.17  # m2, engine inlet area
 ln = 0.8129  # m 1/4 of CRJ engine length, length of nacelle
 b = (S * AR)**0.5 #wingspan [m]
+print('please use b from class 2')
 t_r = 1.0  # maximum thickness at root [m] #bullshit estimation
-widthf = 4.24  # m max fuselage width
-S_fgs = widthf * np.pi * lf * 0.9  # fuselage gross shell area
+widthf = 2.8  # m max fuselage width
+A_fuselage = np.pi*widthf*hf
+ellipse_fuselage = 2*np.pi * (((widthf/2)**2 + (hf/2)**2)/2)**0.5
+S_fgs = ellipse_fuselage * lf * 0.9  # fuselage gross shell area, APPROXIMATION
 lh = 15  # very random estimate, distance between wing and tail aerodynamic centers
+lv = 16 #very random estimate, distance between wing and vertical tail aerodynamic centers
 
 Kgr = 1.08  # constant for the gear, torenbeek parameter
 V_pax = 282.391  # m^3, cabin volume
@@ -71,12 +89,12 @@ LD_loiter = 17
 
 
 #Flight envelope
-V_C=Envelope.V_C #KNOTS            #Velocities from flight envelope, ask George
-V_S=Envelope.V_S #KNOTS
-V_S2=Envelope.V_S2 #KNOTS
-V_dive=Envelope.V_D #KNOTS
-V_A=Envelope.V_A #KNOTS
-V_B=Envelope.V_B #KNOTS
+V_C=Envelope.V_C #KNOTS   cruise speed         #Velocities from flight envelope, ask George
+V_S=Envelope.V_S #KNOTS stall speed
+V_S2=Envelope.V_S2 #KNOTS  stall speed for negative cl max
+V_dive=Envelope.V_D #KNOTS  dive speed
+V_A=Envelope.V_A #KNOTS  maximum gust intensity speed
+V_B=Envelope.V_B #KNOTS   flaps deflected gust speed
 
 nlim=Envelope.nlimpos
 
@@ -99,9 +117,12 @@ t_loiter = 2700  # s, as in 45 minutes
 
 
 W_pax = 93  # total weight per passenger, includes luggage kg
+x_first_pax = 7.5   #x-location measured from the nose [m] where first passenger row is located
+seat_pitch = 30     #Seat pitch [inch]!!!!!!!!!!!!!!!!
+n_rows = 15         #Number of passenger rows [-] (=n_pax/n_seatsabreast)
 W_cargo = 1000  # kg #Extra cargo weight
 cargo_fwd_fraction = 1/3 #estimate, amount of cargo in fwd hold
-cargo_aft_fraction = 2/3 #estimate, amount of cargo in aft hold
+cargo_aft_fraction = 2./3 #estimate, amount of cargo in aft hold
 n_crew = N_fdc + N_cc
 W_payload = Npax * W_pax + W_cargo
 Design_range = 2000  # [km]
@@ -110,7 +131,7 @@ hydrogen_cost = 2.4  # US DOLLARS per KG
 H_to_ker_ratio = 1
 
 # Flight performance
-rho0 = 1.225  # kg/m^3
+rho0 = rho  # kg/m^3
 CD0 = 0.01277  # [-], to be refined (roskam) DONE IN MIDTERM, TALK TO JORN
 CD0_togd = 0.01277 + .015 + .02  # [-], to be refined as this comes from roskam statistics
 CD0_landGD = CD0 + .02 + .065  # [-], to be refined as this comes from roskam statistics
@@ -127,6 +148,9 @@ Trev = 50000  # [N], maximum thrust reverse force applied during braking
 c_t = 0.0002  # [1/s] specific fuel consumption, to be refined
 H = 120E6  # Heating value of hydrogen, refine if we fly on kerosene and hydrogen simultenously, or 141.7E6 (higher value of hydrogen)
 rho_c = 0.4135  # [kg/m^3], cruise density (this is the one for 10 km cruise altitude)
+v_approach = 66 # m/s, RICK FIX THIS
+mach_app = v_approach/340.3 # RICK FIX THIS
+
 
 # parameters for Carbon Footprint
 Range_CRJ = 2593  # design range
@@ -166,3 +190,10 @@ GWP_alt = np.array([[1., 0., -7.1],
                     [1., 0.62, 4.6],
                     [1., 0.72, 0.6]])
 GWP = GWP_alt[Cruise_alt]  # Specify the altitude in km
+
+# Aerodynamics for scissor plot:
+MAC = 2 #m, preliminary estimate, length of mean aerodynamic chord
+LEMAC = 13 #m, preliminary estimate, location of leading edge of MAC
+cl0 = 0.153333 #preliminary estimate 
+cm0 = -0.018 #preliminary estimate
+tail_speedratio = 0.85**0.5
