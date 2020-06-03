@@ -59,6 +59,6 @@ if P < 0 or P < Preq:
     print("The aileron geometry parameters DO NOT meet the roll rate requirement")
 
 else:
-    print("The roll rate requirement is met with a difference of", P-Preq, "[deg/s]")
+    print("The roll rate requirement is met with a difference of", P-np.degrees(Preq), "[deg/s]")
 
 
