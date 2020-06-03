@@ -35,7 +35,7 @@ b = cl2.b                       #wing span [m]
 sweep = input.LE_sweep          #Leading edge wing sweep (If we use forward sweep, please let Rick know)
 x_cargo_fwd = input.x_cg_fwd_cargo #front cargo cg measured from nose [m]
 x_cargo_aft = input.x_cg_aft_cargo #aft cargo cg measured from nose [m]
-
+pax_abreast = input.pax_abreast
 
 #Small calculations with raw inputs
 pax_cabin = Npax * w_person
@@ -43,7 +43,8 @@ fwd_cargo_max = cargo * input.cargo_fwd_fraction
 aft_cargo_max = cargo * input.cargo_aft_fraction
 
 seatloc = []
-for j in range(14):
+rows = Npax/pax_abreast
+for j in range(int(rows)):
     row = seat_start + j * pitch * 0.0254  # convert to meters
     seatloc.append(row)
 
@@ -152,7 +153,7 @@ def loading():
     window_back = passenger_loading(bothcargo[1], bothcargo[0], multiplication=2, seatloc=seatloc[::-1])
     window1 = plt.plot(100 * (np.array(window[0]) - x_lemac) / MAC, window[1], label='Window seats', marker='.',
                        color='blue')
-    window2 = plt.plot(100 * (np.array(window_back[0]) - x_lemac) / MAC, window_back[1], marker='.', color='orange')
+    plt.plot(100 * (np.array(window_back[0]) - x_lemac) / MAC, window_back[1], marker='.', color='orange')
 
     middle = passenger_loading(window[1][-1], window[0][-1], multiplication=2)
     middle_back = passenger_loading(window[1][-1], window[0][-1], multiplication=2, seatloc=seatloc[::-1])
@@ -167,7 +168,7 @@ def loading():
     fully_loaded = loadingcg(aisle[1][-1], aisle[0][1], fuel_weight, x_fuel)
     plt.plot(100 * (np.array([aisle[0][-1], fully_loaded[0]]) - x_lemac) / MAC, [MZF, fully_loaded[1]], marker='^',
              color='magenta', label='Fuel')
-
+    
     plt.legend()
     plt.grid()
     plt.ylabel('mass [kg]')

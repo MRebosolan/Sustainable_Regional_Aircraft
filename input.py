@@ -81,6 +81,7 @@ Kgr = 1.08  # constant for the gear, torenbeek parameter
 V_pax = 282.391  # m^3, cabin volume
 lpax = 20  # estimate, meters, cabin length
 Npax = 75 #number of passengers
+pax_abreast = 3+2
 N_fdc = 2  # probably, pilots
 N_cc = 2  # probably, cabin crew
 P_c = 74682.5  # Pa, design cabin pressure

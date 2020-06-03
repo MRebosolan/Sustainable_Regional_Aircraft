@@ -1,2 +1,2 @@
 .idea/misc.xml
-.__pycache__
+*.pyc
