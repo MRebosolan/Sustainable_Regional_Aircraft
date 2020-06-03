@@ -66,28 +66,34 @@ for i in range(1,100):
     y_moment_triangle.append(Moment)
 
 
-#-------ELLIPTICA/GENERAL LIFT DISTRIBUTION CALCULATIONS------------------
+#-------ELLIPTICAL/GENERAL LIFT DISTRIBUTION CALCULATIONS------------------
 
-def elliptical_lift_d (x, a=10.03427, b=18148.6):
-    #obtained by fitting elliptical distribution to given wing loading, a=half wing span - half fuselage width
-    loading_at_x = np.sqrt((1-(x**2/a**2))*b**2)
-    return loading_at_x
 
 def generate_spanwise_locations(n, b=wing_length):
     x_array = np.linspace(0, b, n, endpoint=False)
     return x_array[1:]
 
+def general_lift_d (x, a=10.03427, b=18148.6):
+    #Insert formula for lift distribution here
+    #current obtained by fitting elliptical distribution to given wing loading, a=half wing span - half fuselage width
+    loading_at_x = np.sqrt((1-(x**2/a**2))*b**2)
+    return loading_at_x
+
+def general_weight_d (x, slope=599.191*9.81, intercept=-59.8383*9.81):
+    #Insert weight distribution. Current is linear for wing weight of 300*9.81
+    weight_at_x = slope + intercept*x
+    return weight_at_x
 
 def generate_lift_data_points(x_array):
     lift_array = []
     for i in x_array:
-        lift_array.append(elliptical_lift_d(i))
+        lift_array.append(general_lift_d(i))
     return lift_array
 
 def generate_weight_data_points(x_array):
     weight_array = []
     for i in x_array:
-        weight_array.append((599.191 - 59.8383*i)*9.81)
+        weight_array.append(general_weight_d(i))
     return weight_array
 
 def trapezoidal_integration(x_array, y_array):
@@ -97,8 +103,6 @@ def trapezoidal_integration(x_array, y_array):
     return integral_value
 
 x_array = generate_spanwise_locations(1000)
-
-
 
 x_engine_root = wing_length/3
 x_weight = wing_length/3
@@ -111,6 +115,7 @@ W_wing = trapezoidal_integration(x_array, weight_array)
 
 
 def wing_root_reaction_forces (L_wing, x_lift, W_wing, x_weight, W_engine, x_engine):
+    #Drag reaction forces not included yet
     R_y = W_wing + W_engine - L_wing  #upwards positive
     M = x_lift*L_wing - x_weight*W_wing - x_engine*W_engine #clockwise positive
     return (R_y, M)
@@ -156,8 +161,6 @@ def internal_vertical_shear_force(x, x_array=x_array, lift_array=elliptical_lift
     shear_at_x = R_y + lift - weight - w_engine * n
     return shear_at_x
 
-print(R_y, M)
-
 moment_array = []
 shear_array = []
 for i in x_array[2:]:
@@ -166,10 +169,6 @@ for i in x_array[2:]:
 
 plt.plot(x_array[2:], moment_array)
 plt.plot(x_array[2:], shear_array)
-print(shear_array)
-
-
-
 
 
 
