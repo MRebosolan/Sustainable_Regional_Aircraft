@@ -54,11 +54,10 @@ clalpha_datcom =  2*np.pi*AR/(2+((4+ ((AR*beta/n)**2)*(1+ (np.tan(sweep)**2)/bet
 clalpha_tail =  2*np.pi*AR_tail/(2+((4+ ((AR_tail*beta_tail/n)**2)*(1+ (np.tan(stabilizer_sweep)**2)/beta_tail**2))**0.5))
 clalpha_tail_degrees = np.radians(clalpha_tail)
 
-clalpha_acless = clalpha_datcom*(1+2.15*(diameter/span))*(wing_area-area_fuselage)/wing_area + (np.pi*diameter**2)/(2*wing_area)
 
 clalpha_acless_wing = clalpha_datcom*(1+2.15*(diameter/span))*(wing_area-area_fuselage)/wing_area
 clalpha_acless_fuselage = (np.pi*diameter**2)/(2*wing_area)# not sure bout this
-
+clalpha_acless = clalpha_acless_wing+clalpha_acless_fuselage
 
 r = 2*tail_armh/span
 K_ea = (0.1124+0.1265*sweep+0.1766*sweep**2)/(r**2) + 0.1024/r +2

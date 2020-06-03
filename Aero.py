@@ -78,6 +78,9 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C):
     plt.plot()
     plt.show()
 
+    AR_check = 17.7 * (2 - taper) * np.exp(- 0.043 * sweep_c4/np.pi*180)
+    print(AR_check)
+
     WS_cr_start = 0.9843800695598843 * MTOW / S
 
     WS_cr_end = 0.9629656887889539 * MTOW / S
@@ -91,19 +94,55 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C):
 
     Re = V_C * 0.514444 * c_mac / visc_k
     print(Re)
+    # With CL_max = 1.8 we could take airfoil NACA 63(3)-618 (supercritical with 0.18 t/c)
 
+    # CLmax take-off: 2.1 , Clmax landing: 2.25
+    #     # target for take-off: Delta CLmax = 0.3
+    #     # target for landing: Delta CLmax = 0.45
 
-    return sweep_c4, taper, c_root, c_tip, c_mac, y_mac, t_c, dihedral, Cl_des
+    dCLmax_land = 0.45
+    dCLmax_to   = 0.3
+
+    return sweep_c4, taper, c_root, c_tip, c_mac, y_mac, t_c, dihedral, Cl_des, dCLmax_land, dCLmax_to
 
 wing_geometry(M_cruise, S, AR, MTOW, V_C)
 
-#def airfoilplot('airfoil1.txt'):
-f=open('airfoil1.txt','r')
+
+
+f=open('airfoil2.txt','r')
 lines=f.readlines()
-result=[]
-for x in lines:
-    result.append(x.split('\n'))
-f.close()
+xcoord1=[]
+xcoord2=[]
+ycoord1=[]
+ycoord2=[]
+for i in lines[:26]:
+    xcoord1.append(float(i.split('     ')[0]))
+    ycoord1.append(float(i.split('     ')[1].strip('\n')))
+for i in lines[26:]:
+    xcoord2.append(float(i.split('     ')[0]))
+    ycoord2.append(float(i.split('     ')[1].strip('\n')))
+    
+print(lines)
+print(xcoord1)
+print(ycoord1)
+print(ycoord2)
+
+#    xy=lines.split('/n')
+#    xcoord=[]
+#    ycoord1=[]
+#    ycoord2=[]
+#    for i in range(0,len(xy)):
+#        xcoord.append(float(xy[i][0]))
+#        ycoord1.append(float(xy[i][1]))
+#    return xcoord, ycoord1, ycoord2
+#
+##def airfoilplot('airfoil1.txt'):
+#f=open('airfoil1.txt','r')
+#lines=f.readlines()
+#result=[]
+#for x in lines:
+#    result.append(x.split('\n'))
+#f.close()
 #    return result
 
 #    f=open('datfile','r')

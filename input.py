@@ -12,7 +12,14 @@ import Envelope
 
 g = 9.80665  # [m/s^2]
 from math import radians
-H_to_ker_ratio = 1
+def atmosphere_calculator(h):
+    T_grad = -0.0065
+    T = 288.15 + T_grad * h
+    P = 101325 * (T / 288.15) ** (-9.81 / (T_grad * 287))
+    rho = P / (T * 287)
+    a = (1.4 * 287 * T) ** 0.5
+    return (T, P, rho, a)
+
 
 MTOM = 32846.208787 # [kg]  #maximum takeoff mass calculated in class 2
 print('please use MTOM from class 2')
@@ -22,6 +29,7 @@ MTOW = MTOM * g #N  !!!!!!!!!!!!!make sure this is in newtons!!!!!!!!!!!!!
 MLW = 25000 * g  # maximum landing weight [N], to be calculated
 AR = 8  # estimate, [-], Aspect ratio
 half_sweep = np.cos(radians(27))  # estimate, [degrees], sweep at half chord for main wing
+LE_sweep = np.radians(25)         #Leading egde wing sweepTBD, assumed backward let Rick know if it turns out to be forward sweep, calculate with Adsee formula 
 
 n_max = 2.5  # from envelope, update manually, max loading factor
 n_ult = 1.5 * n_max #ultimate loading factor
@@ -32,7 +40,7 @@ print('please use S from class 2')
 Tto = powerloading * MTOW #thrust at takeoff in newtons
 print('please use Tto from class 2')
 t_over_c = 0.1  # estimate, [] , maximum thickness over chord ratio for main wing
-taper = 0.4  # estimate, []
+
 mach_h = 0.5  # estimate, [] #max Mach at SL
 rho = 1.225   # estimate, in kg/m3
 # rho_zero = rho  # kg/m3
@@ -40,7 +48,11 @@ rho = 1.225   # estimate, in kg/m3
 
 Cr = 5.5                                 #Wing root chord [m]
 Ct = 1.2                               #Wing tip chord [m]
-Dfus = 4                                #Fuselage diameter [m]
+
+taper = Ct / Cr                         #wing taper ratio [-]
+
+Dfus = 2.6, "if you encounter an error here, make your program dependent on a different variable"       #Fuselage diameter [m]
+
 
 
 Cla_aileron = 6.4                     #1/rad, sectional lift curve slope at wing section where aileron is located, determine by datcom method or airfoil simulation
@@ -60,6 +72,9 @@ ellipse_fuselage = 2*np.pi * (((widthf/2)**2 + (hf/2)**2)/2)**0.5
 S_fgs = ellipse_fuselage * lf * 0.9  # fuselage gross shell area, APPROXIMATION
 lh = 15  # very random estimate, distance between wing and tail aerodynamic centers
 lv = 16 #very random estimate, distance between wing and vertical tail aerodynamic centers
+x_ac = 12           #x location of wing aerodynamic center measured from the nose of the aircraft, TBD
+x_apu = 20            #cg location of the apu measured from the nose of the aircraft [m], TBD
+
 
 Kgr = 1.08  # constant for the gear, torenbeek parameter
 V_pax = 282.391  # m^3, cabin volume
@@ -73,6 +88,7 @@ N_eng = 2  # number of engines
 N_t = 2  # number of fuel tanks
 rho_hydrogen = 70  # g/l
 K_fsp = 0.820  # kg/l, jet A, jet fuel density
+H_to_ker_ratio = 0  # fuck hydrogen atm yo, hydrogen to kerosene ratio
 Sh = 20.75  # m2 crj700 shizzle yo, horizontal tail area
 half_chord_sweep_hor = np.radians(20)  # deg, sweep at half chord of horizontal tail
 half_chord_sweep_vert = np.radians(35)  # deg, sweep at half chord of vertical tail
@@ -95,6 +111,8 @@ V_S2=Envelope.V_S2 #KNOTS  stall speed for negative cl max
 V_dive=Envelope.V_D #KNOTS  dive speed
 V_A=Envelope.V_A #KNOTS  maximum gust intensity speed
 V_B=Envelope.V_B #KNOTS   flaps deflected gust speed
+
+
 
 nlim=Envelope.nlimpos
 
@@ -128,6 +146,7 @@ W_payload = Npax * W_pax + W_cargo
 Design_range = 2000  # [km]
 hydrogen_cost = 2.4  # US DOLLARS per KG
 
+H_to_ker_ratio = 1
 
 # Flight performance
 rho0 = rho  # kg/m^3
@@ -146,17 +165,26 @@ gamma_ap = np.radians(3)  # approach angle (glide slope) [rad]
 Trev = 50000  # [N], maximum thrust reverse force applied during braking
 c_t = 0.0002  # [1/s] specific fuel consumption, to be refined
 H = 120E6  # Heating value of hydrogen, refine if we fly on kerosene and hydrogen simultenously, or 141.7E6 (higher value of hydrogen)
-rho_c = 0.4135  # [kg/m^3], cruise density (this is the one for 10 km cruise altitude)
+# rho_c = 0.4135  # [kg/m^3], cruise density (this is the one for 10 km cruise altitude)
 v_approach = 66 # m/s, RICK FIX THIS
 mach_app = v_approach/340.3 # RICK FIX THIS
 
+
+Cruise_alt = 10  # Max operating altitude in km
+
+T, P, rho_c, a = atmosphere_calculator(Cruise_alt*1000)
+
+
+V_C_TAS = V_C * 0.514444444 / ((rho_c/rho)**0.5) #m/s cruise speed, according to flight envelope, 
+V_C_estimate = 230 #m/s, design parameter
+mach_cruise = V_C_estimate/a
 
 # parameters for Carbon Footprint
 Range_CRJ = 2593  # design range
 Pax_CRJ = 78  # Number of passengers
 Fuel_use_CRJ = 4740  # Fuel mass at design range
 Cruise_alt_max_CRJ = 12497  # Max operating altitude
-Cruise_alt = 10  # Max operating altitude in km
+
 
 # H2 NOx emission: Depends on engine characteristics
 A = 14  # Correlation constant for emission index based on Jet-A fuel (advanced LDI tech as reference)
@@ -190,9 +218,20 @@ GWP_alt = np.array([[1., 0., -7.1],
                     [1., 0.72, 0.6]])
 GWP = GWP_alt[Cruise_alt]  # Specify the altitude in km
 
+# Aerodynamics:
+x_start_Cr = 12                 #x location where root chord starts, measured from the nose of the aircraft [m], TBD
+
+
+MAC =  2 / 3 * Cr * ((1 + taper + taper**2) / (1 + taper)) #length of mean aerodynamic chord, formula taken from Adsee II
+y_MAC = b / 6 * ((1 + 2 * taper) / (1 + taper))             #spanwise location of mean aerodynamic chord
+x_lemac_rootchord = y_MAC * np.tan(LE_sweep)                          #x position of mac at leading edge [m], measured from the start of the root choord!!!!
+x_LEMAC_nose = x_start_Cr + x_lemac_rootchord
+
 # Aerodynamics for scissor plot:
-MAC = 2 #m, preliminary estimate, length of mean aerodynamic chord
-LEMAC = 13 #m, preliminary estimate, location of leading edge of MAC
+
 cl0 = 0.153333 #preliminary estimate 
 cm0 = -0.018 #preliminary estimate
-tail_speedratio = 0.85**0.5
+
+
+tail_speedratio = 1**0.5 # sead, T tail
+
