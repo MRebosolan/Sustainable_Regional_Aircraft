@@ -75,7 +75,7 @@ downwash = (K_ea/K_0)*((part_a)+part_b*part_c)*clalpha_datcom/(np.pi*AR)
 
 
 beta_low = (1-mach_app**2)**0.5
-beta_low_tail = (1- 0.85*mach_app**2)**0.5
+beta_low_tail = (1- speedratio*mach_app**2)**0.5
 
 clalpha_datcom_lowspeed =  2*np.pi*AR/(2+((4+ ((AR*beta_low)**2)*(1+ (np.tan(sweep)**2)/beta_low**2))**0.5))
 clalpha_acless_lowspeed = clalpha_datcom_lowspeed*(1+2.15*(widthf/span))*(wing_area-area_fuselage)/wing_area + (np.pi*widthf**2)/(2*wing_area)
