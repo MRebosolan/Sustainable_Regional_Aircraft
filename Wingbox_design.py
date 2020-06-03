@@ -56,11 +56,11 @@ y_moment_triangle = []
 for i in range(1,100):
     x = wing_length*(i/100)
     if x<x_engine:
-        Shear_Force = lift_dtriangle*x**2/(2*wing_length) - w_wingd*x
-        Moment = lift_dtriangle*x**3/(6*wing_length) - w_wingd*x**2/2
+        Shear_Force = lift_dtriangle*x**2/(b) - w_wingd*x
+        Moment = lift_dtriangle*x**3/(3*b) - w_wingd*x**2/2
     else:
-        Shear_Force = lift_dtriangle*x**2/(2*wing_length) - w_wingd*x - w_engine
-        Moment = lift_dtriangle*x**3/(6*wing_length) - w_wingd*x**2/2 - (x-x_engine)*w_engine
+        Shear_Force = lift_dtriangle*x**2/(b) - w_wingd*x - w_engine
+        Moment = lift_dtriangle*x**3/(3*b) - w_wingd*x**2/2 - (x-x_engine)*w_engine
 
     y_shear_triangle.append(Shear_Force)
     y_moment_triangle.append(Moment)
