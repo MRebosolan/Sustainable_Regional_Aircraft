@@ -108,7 +108,7 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C):
 wing_geometry(M_cruise, S, AR, MTOW, V_C)
 
 
-def airfoilplot(datfile):
+def airfoilplot('airfoil2'):
     f=open('airfoil2','r')
     lines=f.readlines(f.split('/n '))
 #    xy=lines.split('/n')
