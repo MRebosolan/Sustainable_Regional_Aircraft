@@ -293,7 +293,7 @@ wing = [{'data': 'Wing Area', 'SRA': S, 'F28':tom2(1), '737-200':tom2(1)},
 aircraftpar = aircraftpar.append(wing, ignore_index = True, sort = False)
 print(df)
 print(aircraftpar)
-latex = df.to_latex(index = False)#, caption = None)
+latex = df.to_latex(index = False, caption = "System weight breakdown... not yet final caption")
 try:
     file = open('C://Users//jornv//Google Drive//DSE upload//Class2dataframe.txt', 'w')
     file.write(latex)
