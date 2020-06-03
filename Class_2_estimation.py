@@ -107,8 +107,8 @@ n_ult = 1.5* n_max
 t_over_c = input.t_over_c
 taper = input.taper	
 mach_h = input.mach_h
-rho = input.rho
-rho_zero = input.rho_zero
+rho = input.rho *0.0624279606
+rho_zero = input.rho /515.378818
 V_dive = input.V_dive #is already in KEAS
 lf = toft(input.lf)
 hf = toft(input.hf)
@@ -212,7 +212,7 @@ while abs((OEW_class1_kg - OEWINPUT)*100/OEWINPUT)>= 0.01:
     #------------ POWER PLANT WEIGHT ------------#
     
     W_engines = engine.engine_weight(T_dry_SL, N_eng)                                       #Verified
-    W_fuel_system_kerosene = fuelsystem.W_fuelsystem (N_t, K_fsp, W_fuel)
+    W_fuel_system_kerosene = 0
     W_fuel_system_hydrogen = to_pounds(class1[-1])
     W_power_controls = powercontrols.total(lf, b, W_engines, pneumatic = False)
     
@@ -289,7 +289,7 @@ df['F28'] = to_kg(df['F28'])
 df['737-200'] = to_kg(df['737-200'])
 df = df.set_index('data')
 
-x =df.loc['MTOW','SRA']
+x = df.loc['MTOW','SRA']
 
 
 aircraftpar = pd.DataFrame()
