@@ -204,27 +204,22 @@ ShS = np.arange(0.0,0.605,0.005)
 stabilityxcg_cruise = xac_cruise + ShS*(clalpha_tail/clalpha_acless)*(1-downwash)*speedratio*tail_armh/MAC
 controlxcg = xac - cm_ac/CL + ShS*(C_lh_max/CL)*(tail_armh/MAC)*speedratio
 
-plt.close()
-vertical1 = 0.184 *100
-vertical2 = 0.373 *100
-# plt.plot(stabilityxcg_cruise*100,ShS, color = 'grey', label = 'Neutral stability')
-# plt.plot(stabilityxcg_cruise*100 -5,ShS, color = 'b', label = 'Stability aft limit')
-plt.close()
-plt.subplot(1,1,1)
-plt.plot(stabilityxcg_cruise*100,ShS, color = 'grey', label = 'Neutral stability')
-plt.plot(stabilityxcg_cruise*100 -5,ShS, color = 'b', label = 'Stability aft limit')
-plt.plot(controlxcg*100,ShS, color = 'orange', label = 'Control fwd limit')
-# plt.axvline(vertical1, color = 'r', label = 'Front CG limit')
-# plt.axvline(vertical2, color = 'magenta', label = 'Aft CG limit')
-# plt.axhline(0.33, color = 'black',label = 'Surface ratio')
-plt.plot([vertical1,vertical2], [0.33,0.33], color = 'r', marker = '|')
-plt.grid()
-plt.xlabel("Xcg/MAC [%]")
-plt.ylabel("Sh/S [-]")
-# plt.legend(loc = 'lower left')
-plt.title('CS100')
-plt.show()
+
+def scissorplot(stabilityxcg_cruise,controlxcg, ShS, frontcg, aftcg, Sh_over_S  ):
+    plt.figure()
+    plt.close()
+    plt.plot(stabilityxcg_cruise*100,ShS, color = 'grey', label = 'Neutral stability')
+    plt.plot(stabilityxcg_cruise*100 -5,ShS, color = 'b', label = 'Stability aft limit')
+    plt.plot(controlxcg*100,ShS, color = 'orange', label = 'Control fwd limit')
+    plt.plot([frontcg,aftcg], [Sh_over_S, Sh_over_S], color = 'r', marker = '|')
+    plt.grid()
+    plt.xlabel("Xcg/MAC [%]")
+    plt.ylabel("Sh/S [-]")
+    plt.legend(loc = 'lower left')
+    plt.title('CS100')
+    plt.show()
     
+scissorplot(stabilityxcg_cruise,controlxcg, Shs, frontcg, aftcg, Sh_over_S  )
 
 Moment_ac = 0.5* rho_cruise *v_cruise**2 * cm_ac * MAC
 
