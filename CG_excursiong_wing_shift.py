@@ -65,8 +65,8 @@ w_nacelle = cl2.df['SRA']['Nacelle']  # kg
 w_empennage = cl2.df['SRA']['Empennage']    #kg
 w_wing = cl2.df['SRA']['Wing group'] #kg 
 w_apu = cl2.df['SRA']['APU']    #kg
-w_tank = 500
-x_tank = 20
+w_tank = 500.
+x_tank = 20.
 print("change w_tank and x_tank to variables used in other files once decided on a fuel tank configuration")
 x_fuel = x_tank                 #fuel cg measured from nose, assumed same as tank cg as most likely the tank will be symmetrical
 w_lg_main = cl2.df['SRA']['Main LG']    #kg
@@ -84,6 +84,7 @@ def cg_excursion_wing_shift():
     cg_aft_excursion_lst = []
     for i in range(len(x_start_Cr)):
         x_cg_wing_nose = wing_cg(sweep, b, Cr, Ct, MAC, x_lemac_Cr, x_lemac[i])[0]
+        print(x_lemac[i], x_empennage[i])
         cg_oew_nose = cg_OEW_wrt_lemac(x_engine[i], w_engine, x_nacelle[i], w_nacelle, x_empennage[i], w_empennage, x_apu, w_apu, x_tank, w_tank, x_cg_wing_nose, w_wing, x_lg_front, w_lg_front, x_lg_main, w_lg_main, OEW, x_lemac[i], MAC)[1]
         onlyfwdcargo = loadingcg(OEW, cg_oew_nose, fwd_cargo_max, x_cargo_fwd)
         onlyaftcargo = loadingcg(OEW, cg_oew_nose, aft_cargo_max, x_cargo_aft)
