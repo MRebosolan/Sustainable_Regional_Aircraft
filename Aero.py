@@ -3,6 +3,7 @@ import input as inp
 import matplotlib.pyplot as plt
 import Envelope
 
+
 """
 inputs
     CLmax
@@ -64,6 +65,7 @@ def chord_length(c_root, c_tip, x, b):
 
 def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf):
 
+    # Wing sweep, also consider M_crit?
     if M_cruise >= 0.7:
         sweep_c4 = np.arccos(0.75*(0.935/(0.03 + M_cruise)))
     else:
@@ -85,7 +87,9 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf):
     CL_cruise = MTOW/(q*S)
     sweep_c2 = np.arctan(np.tan(sweep_c4) - 4/AR * ((50-25)/100 * (1 - taper)/(1 + taper))) #* 180/np.pi
     t_c = min((np.cos(sweep_c2)**3 * (0.935 - (M_cruise + 0.03) * np.cos(sweep_c2)) - 0.115 * CL_cruise**1.5) \
-          / (np.cos(sweep_c2)**2), 0.18)
+          / (np.cos(sweep_c2)**2), 0.18) #Upper limit for wing thickness
+
+    print("t/c = ", t_c)
 
     dihedral = 3
     s = sweep_c4*180/np.pi
@@ -131,9 +135,9 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf):
     dCLmax_to   = 0.3
 
     dClmax_land = 0.9
-    hinge_c     = 80 #percent
+    hinge_c     = 90 #percent
     sweep_hinge = np.arctan(np.tan(sweep_c4) - 4/AR * ((hinge_c-25)/100 * (1 - taper)/(1 + taper)))
-
+    print(sweep_hinge)
     SwfS = dCLmax_land/ (0.9 * dClmax_land * np.cos(sweep_hinge))
 
     Df = widthf/2 * 1
@@ -150,6 +154,12 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf):
 
     Sw_check = ((-2 * a * Df + c_root) + (-2 * a * (Df + x2) + c_root)) * x2 / 2 / S   #verified
     print(SwfS, Sw_check)
+
+    d_alpha_0 = -5 * np.pi / 180
+
+    d_alpha = d_alpha_0 * SwfS * np.cos(sweep_hinge)
+
+
 
     wing = [sweep_c4, taper, c_root, c_tip, c_mac, y_mac, t_c, dihedral,
             Cl_des, dCLmax_land, dCLmax_to]
