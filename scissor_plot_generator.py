@@ -10,7 +10,7 @@ from math import sqrt, pi, tan, atan
 import input
 import Class_2_estimation as cl2
 from Xacregression_scissor import Xacregression, Xacregression_app
-
+import Aero
 
 MAC = input.MAC
 lemac = input.x_LEMAC_nose
@@ -146,7 +146,7 @@ xac_cruise = xac_w+xac_f1+xac_f2+xac_n
 
 
 ####################### CONTROL
-CL0_flapped = cl0+0.9*DClmax*(Swf/S)*0.975
+
 
 mu1 = 0.18
 mu2 = 1.1
@@ -157,13 +157,27 @@ print('Read off acutal values from SEAD lecture 5 slides 18-20 once wing is desi
 DClmax = cprime_c*1.3 # Based on adsee 2
 print('Change to *1.6 if double slotted flaps are used, see slide 35 ADSEE II')
 
+Cr = input.Cr
+Ct = input.Ct
+
+def chord_along_span(Cr, Ct, b, y):
+    c = Cr - (Cr - Ct) / (b / 2) * y
+    return c
+
+outboard_flap = Aero.x2
+def Swf(widthf, outboard_flap):
+    swf = 2 * (outboard_flap - widthf) * (chord_along_span(widthf) - chord_along_span(outboard_flap)) / 2
+    return swf
+print(Swf(widthf, outboard_flap))
+
+CL0_flapped = cl0+0.9*DClmax*(Swf/S)*0.975
 
 cm_wing = cm0 *(AR *np.cos(sweep)**2)/(AR + 2*np.cos(sweep))
 cm_fus = -1.8 * (1 - 2.5*widthf/fuselage_lenght)*(A_fuselage*fuselage_lenght*CL0_flapped/(4*S*MAC*clalpha_acless_lowspeed))
 DCm025 = mu2*(-mu1*DClmax*cprime_c-(CL+DClmax*(1-Swf/S))*0.125*cprime_c*(cprime_c-1)) + 0.7*AR*mu3*DClmax*tan(sweep) / (1+2/AR)
 
 
-
+    
 
 # Based on SEAD lecture 5
 
