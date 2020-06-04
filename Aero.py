@@ -2,7 +2,7 @@ import numpy as np
 import input as inp
 import matplotlib.pyplot as plt
 import Envelope
-import Aileron_sizing
+#import Aileron_sizing
 
 
 """
@@ -39,8 +39,8 @@ V_D = Envelope.V_D  # Dive Speed
 V_S = Envelope.V_S  # Stall Speed
 V_A = Envelope.V_A  # Max Gust Speed
 
-b1=Aileron_sizing.b1
-b2=Aileron_sizing.b2
+b1=8
+b2=11.2
 
 # ---------------------------- Line Intersection Point
 
