@@ -12,6 +12,8 @@ def tank_sizing(HYDROGENVOLUME,LENGTH,N):
     #N is number of tanks
     R=0
     result=0
+    hsc=R/2 #spherical cap height
+    asc=R #spherical cap radius
     while result<=HYDROGENVOLUME:
         R+=0.001
         hsc=R/2 #spherical cap height
@@ -64,7 +66,7 @@ def tank_sizing(HYDROGENVOLUME,LENGTH,N):
     xilist=[]
     yilist=[]
     
-    IWISHTOLOOP=True #SET THIS VALUE TO TRUE IF YOU WANT TO DETERMINE THICKNESS ACCURATELY, OTHERWISE THREE CM IS USED WHICH SHOULD BE SUFFICENT
+    IWISHTOLOOP=False #SET THIS VALUE TO TRUE IF YOU WANT TO DETERMINE THICKNESS ACCURATELY, OTHERWISE THREE CM IS USED WHICH SHOULD BE SUFFICENT
     
     if IWISHTOLOOP:
         for L in range(1,100):
