@@ -105,7 +105,7 @@ CL_cruise = 2*MTOW*9.81/(rho_cruise*(v_cruise**2)*wing_area) #approach CL
 b = span
 S = wing_area
 mac = MAC
-A = AR
+AR = AR
 ct = 1.69
 cr = 6.8
 taper = cr/ct
@@ -118,7 +118,7 @@ bn = 2.48
 ln = 3.53
 
 beta = sqrt(1-mach*mach)
-beta_A = A*beta
+beta_A = AR*beta
 # Look in SEAD lecture 4 slide 33 to get xac_w from these parameters
 xac_w = 0.345 # for Mach = 0.78 (cruise)
 xac_w2 = 0.39 # for Vappr = 66.36 (approach/landing)
@@ -148,7 +148,7 @@ cprime_c = 1.15 # Estimation
 DClmax = cprime_c*1.3 # Based on adsee 2
 # deltaf = 40*pi/180 # deflection angle in radians
 Swf = 79.1 # Geometric estimation
-DCm025 = mu2*(-mu1*DClmax*cprime_c-(CL+DClmax*(1-Swf/S))*0.125*cprime_c*(cprime_c-1)) + 0.7*A*mu3*DClmax*tan(sweep) / (1+2/A)
+DCm025 = mu2*(-mu1*DClmax*cprime_c-(CL+DClmax*(1-Swf/S))*0.125*cprime_c*(cprime_c-1)) + 0.7*AR*mu3*DClmax*tan(sweep) / (1+2/AR)
 print(DCm025)
 
 CL0_flapped = cl0+0.9*DClmax*(Swf/S)*0.975
