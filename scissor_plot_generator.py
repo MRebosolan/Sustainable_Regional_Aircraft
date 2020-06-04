@@ -67,7 +67,7 @@ clalpha_acless = clalpha_acless_wing+clalpha_acless_fuselage
 rho = input.rho
 OEW = cl2.OEWINPUT
 payload = input.W_payload
-MLW = cl2.M_zfw_kg
+MLW = cl2.M_zfw_kg ### STILL SIZE MLW
 mass = MLW #kg, mlw
 MTOW = cl2.MTOW_kg
 CL = 2*mass*9.81/(rho*(v_approach**2)*S) #approach CL
@@ -211,7 +211,7 @@ stabilityxcg_cruise = xac_cruise + ShS*(clalpha_tail/clalpha_acless)*(1-downwash
 stabilityxcg = xac + ShS*(clalpha_tail_lowspeed/clalpha_acless_lowspeed)*(1-downwash_lowspeed)*speedratio*tail_armh/MAC
 controlxcg = xac - cm_ac/CL + ShS*(C_lh_max/CL)*(tail_armh/MAC)*speedratio
 
-
+plt.close()
 vertical1 = 0.184 *100
 vertical2 = 0.373 *100
 # plt.plot(stabilityxcg_cruise*100,ShS, color = 'grey', label = 'Neutral stability')
