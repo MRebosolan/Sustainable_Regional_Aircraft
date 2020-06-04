@@ -88,7 +88,6 @@ def cabin_design(fractioninfus,fractionintail,HYDROGENVOLUME):
 
 
 
-t_cyl,m_cyl, tm_cyl, d_cyl,l_cyl,t_tail,m_tail, tm_tail, d_tail,l_tail,t_top,m_top,tm_top,d_top,l_top,totalcabinlength,V_tank_cyl, V_tank_tail, V_tank_top,tm_tanksystem,CGtank,CGfuel,CGcomb=cabin_design(0.5,0,30)
 
 
     
