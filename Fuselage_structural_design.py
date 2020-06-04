@@ -6,6 +6,9 @@ r = input.widthf/2
 
 t_options = np.linspace(0, 0.30, 1000)[1:]
 
+#LOADS ACTING ON FUSELAGE: pressure vessel stresses, fuselage's own weight (assumed uniformly distributed
+#wing weight, empennage weight, landing gear reaction forces.
+
 
 def pressure_vessel_stresses(t, P=P_c, r=r):
     hoop_stress = (P*r)/t
