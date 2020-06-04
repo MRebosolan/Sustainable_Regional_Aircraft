@@ -233,7 +233,7 @@ wing, geom, cross1, hld, ail = wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf)
 #print(ycoord1)
 #print(ycoord2)
 #print(camline)
-
+#
 #----------------------------- Plotting
 
 plt.figure(0)
