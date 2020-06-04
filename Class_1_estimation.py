@@ -3,7 +3,7 @@ from CarbonFootprint import cf
 from cabindesign import cabin_design
 
 def CLASS1WEIGHTHYBRID(H_to_ker_ratio = input.H_to_ker_ratio,OEWINPUT = 1):
-    W_hydrosys=H_to_ker_ratio*1500
+    W_hydrosys=H_to_ker_ratio*1500 #initial guess for hydro system weight
     e=2.71828182846
     n_pax= input.Npax
     W_pax= input.W_pax
