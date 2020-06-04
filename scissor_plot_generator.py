@@ -146,26 +146,43 @@ xac_cruise = xac_w+xac_f1+xac_f2+xac_n
 
 
 ####################### CONTROL
-
-# Based on SEAD lecture 5
-mu1 = 0.2
-mu2 = 0.95
-mu3 = 0.044
-cprime_c = 1.15 # Estimation
-DClmax = cprime_c*1.3 # Based on adsee 2
-# deltaf = 40*pi/180 # deflection angle in radians
-Swf = 79.1 # Geometric estimation
-DCm025 = mu2*(-mu1*DClmax*cprime_c-(CL+DClmax*(1-Swf/S))*0.125*cprime_c*(cprime_c-1)) + 0.7*AR*mu3*DClmax*tan(sweep) / (1+2/AR)
-print(DCm025)
-
 CL0_flapped = cl0+0.9*DClmax*(Swf/S)*0.975
-cm_flaps = DCm025 -CL*(0.25 - xac/MAC)
-cm_nac = 0
+
+mu1 = 0.18
+mu2 = 1.1
+mu3 = 0.04
+cprime_c = 1.2 
+print('Read off acutal values from SEAD lecture 5 slides 18-20 once wing is designed')
+
+DClmax = cprime_c*1.3 # Based on adsee 2
+print('Change to *1.6 if double slotted flaps are used, see slide 35 ADSEE II')
+
+
 cm_wing = cm0 *(AR *np.cos(sweep)**2)/(AR + 2*np.cos(sweep))
 cm_fus = -1.8 * (1 - 2.5*widthf/fuselage_lenght)*(A_fuselage*fuselage_lenght*CL0_flapped/(4*S*MAC*clalpha_acless_lowspeed))
-cm_fus_cruise =-1.8 * (1 - 2.5*widthf/fuselage_lenght)*(A_fuselage*fuselage_lenght*cl0/(4*S*MAC*clalpha_acless))
+DCm025 = mu2*(-mu1*DClmax*cprime_c-(CL+DClmax*(1-Swf/S))*0.125*cprime_c*(cprime_c-1)) + 0.7*AR*mu3*DClmax*tan(sweep) / (1+2/AR)
+
+
+
+
+# Based on SEAD lecture 5
+
+
+# deltaf = 40*pi/180 # deflection angle in radians
+Swf = 79.1 # Geometric estimation
+
+print(DCm025)
+
+
+
+
+cm_flaps = DCm025 -CL*(0.25 - xac/MAC)
+cm_nac = 0
+
+
+
 cm_ac = cm_wing + cm_flaps + cm_fus + cm_nac
-cm_ac_cruise = cm_wing+cm_fus_cruise
+
 
 
 
