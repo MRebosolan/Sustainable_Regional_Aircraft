@@ -135,7 +135,8 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf):
     dCLmax_to   = 0.3
 
     dClmax_land = 0.9
-    hinge_c     = 90 #percent
+    hinge_c     = 75 #percent
+    aileron_C   = 75 #percent
     sweep_hinge = np.arctan(np.tan(sweep_c4) - 4/AR * ((hinge_c-25)/100 * (1 - taper)/(1 + taper)))
     print(sweep_hinge)
     SwfS = dCLmax_land/ (0.9 * dClmax_land * np.cos(sweep_hinge))
