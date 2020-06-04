@@ -3,8 +3,11 @@ import numpy as np
 
 P_c = input.P_c
 r = input.widthf/2
-
+z_vl = input.bv/2 #point of action of vertical tail lift, estimated at half vert.tail height
 t_options = np.linspace(0, 0.30, 1000)[1:]
+
+#LOADS ACTING ON FUSELAGE: pressure vessel stresses, fuselage's own weight (assumed uniformly distributed
+#wing weight, empennage weight, landing gear reaction forces.
 
 
 
@@ -20,6 +23,13 @@ for t in t_options:
     hoop, long = pressure_vessel_stresses(t)
     hoop_stresses.append(hoop)
     longitudinal_stresses.append(long)
+
+
+def shear_flow_due_to_empennage(rudder_load, enclosed_area, z_vl=z_vl):
+    #rudder load positive towards right wing
+    torque = -rudder_load*z_vl #right hand positive
+    shear_flow = torque/(2*enclosed_area) #right hand positive
+    return shear_flow
 
 # location of the systems from nose
 x_mg = 15 #main gear from nose in m
