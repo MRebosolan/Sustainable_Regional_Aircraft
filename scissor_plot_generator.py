@@ -168,13 +168,13 @@ outboard_flap = Aero.x2
 def Swf(widthf, outboard_flap):
     swf = 2 * (outboard_flap - widthf) * (chord_along_span(widthf) - chord_along_span(outboard_flap)) / 2
     return swf
-print(Swf(widthf, outboard_flap))
+print(Swf(widthf, outboard_flap)) #test
 
 CL0_flapped = cl0+0.9*DClmax*(Swf/S)*0.975
 
 cm_wing = cm0 *(AR *np.cos(sweep)**2)/(AR + 2*np.cos(sweep))
 cm_fus = -1.8 * (1 - 2.5*widthf/fuselage_lenght)*(A_fuselage*fuselage_lenght*CL0_flapped/(4*S*MAC*clalpha_acless_lowspeed))
-DCm025 = mu2*(-mu1*DClmax*cprime_c-(CL+DClmax*(1-Swf/S))*0.125*cprime_c*(cprime_c-1)) + 0.7*AR*mu3*DClmax*tan(sweep) / (1+2/AR)
+DCm025 = mu2*(-mu1*DClmax*cprime_c-(CL+DClmax*(1-Swf/S))*0.125*cprime_c*(cprime_c-1)) + 0.7*AR*mu3*DClmax*tan(sweep) / (1+2/AR) - CL * (0.25 - xac / MAC)
 
 
     
@@ -232,3 +232,9 @@ e_tail = input.e_tail #Oswald efficiency factor
 k = 1 / (np.pi*AR_tail *e_tail)
 
 Dtrim = 0.5* rho_cruise *v_cruise**2 *speedratio * horizontal_area * CL_h * k
+
+
+
+
+
+#todo: check capability of horizontal tail for providing negative lift to sufficiently rotate the aircraft at take-off
