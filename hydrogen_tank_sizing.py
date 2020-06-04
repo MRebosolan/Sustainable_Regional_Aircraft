@@ -14,24 +14,15 @@ def tank_sizing(HYDROGENVOLUME,LENGTH,N):
     result=0
     while result<=HYDROGENVOLUME:
         R+=0.001
-<<<<<<< HEAD
-        hsc=R #spherical cap height
+        hsc=R/2 #spherical cap height
         asc=R #spherical cap radius
         result=3.14159*(LENGTH-2*hsc*N)*R**2+N*2*3.14159*hsc/6*(3*asc**2+hsc**2) #NOW INCLUDES SPHERICAL CAPS INSTEAD OF HEMISPHERICAL CAPS!
     # print(R)
     TANK_DIAMETER=R*2
-    hsc=R #spherical cap height
-    asc=R #spherical cap radius
+
     TANK_SURFACE_AREA = (LENGTH-N*2*hsc)/N*3.14159*TANK_DIAMETER + 4*3.14159*R*hsc #ONE TANK!!!
-=======
-        hsc=R/2 #spherical cap height
-        asc=R #spherical cap radius
-        result=3.14159*(LENGTH-2*hsc*N)*R**2+N*2*3.14159*hsc/6*(3*asc**2+hsc**2) #NOW INCLUDES SPHERICAL CAPS INSTEAD OF HEMISPHERICAL CAPS!
-    print(R)
-    TANK_DIAMETER=R*2
-    hsc=R #spherical cap height
-    asc=R #spherical cap radius
-    TANK_SURFACE_AREA = (LENGTH-N*2*hsc)/N*3.14159*TANK_DIAMETER + 4*3.14159*R*hsc #ONE TANK!!!
+
+
     TANK_MATERIAL_DENSITY = 2825 #MONOLITHIC METAL Aluminium alloy 2219 KG/M3
 
     # TANK THICKNESS COMPUTATION
@@ -146,7 +137,6 @@ def tank_sizing_fuselage(HYDROGENVOLUME, R,N):
     # print(R)
     TANK_DIAMETER=R*2
     TANK_SURFACE_AREA =(LENGTH-N*2*hsc)/N*3.14159*TANK_DIAMETER + 4*3.14159*R*hsc#ONE TANK!!!
->>>>>>> 90088981bcf15a41058c792902db0a3ecc85d8e9
     TANK_MATERIAL_DENSITY = 2825 #MONOLITHIC METAL Aluminium alloy 2219 KG/M3
 
     # TANK THICKNESS COMPUTATION
@@ -218,51 +208,24 @@ def tank_sizing_fuselage(HYDROGENVOLUME, R,N):
     #print(yilist)#Prints out insulation thicknesses and boil offs
     counter=0
     for boiloff in yilist:
-<<<<<<< HEAD
         
         if boiloff<0.005*HYDROGENVOLUME*DENSITY_LH:
-<<<<<<< HEAD
             print(boiloff)
             INSULATION_THICKNESS=xilist[counter]
             print(INSULATION_THICKNESS)
-=======
             print('boiloff ',boiloff)
             INSULATION_THICKNESS=xilist[counter]
             print('insulation thickness ',INSULATION_THICKNESS)
->>>>>>> b29fe89e17984d855544738417507b62b9e5c078
             break
         
         counter+=1
-    INSULATION_MASS=INSULATION_THICKNESS*TANK_SURFACE_AREA*N*INSULATION_DENSITY
-    
-    
-    STRUCTURAL_TANK_MASS+=INSULATION_MASS
-    TOTAL_STRUCTURAL_TANK_MASS =N*STRUCTURAL_TANK_MASS    
-    TANK_DIAMETER+=2*INSULATION_THICKNESS
-    
-=======
->>>>>>> 90088981bcf15a41058c792902db0a3ecc85d8e9
-        
-        if boiloff<0.005*HYDROGENVOLUME*DENSITY_LH:
-            print('boiloff ',boiloff)
-            INSULATION_THICKNESS=xilist[counter]
-            print('insulation thickness', INSULATION_THICKNESS)
-            break
-        
-        counter+=1
-    print(HYDROGENVOLUME)
-    INSULATION_MASS=INSULATION_THICKNESS*TANK_SURFACE_AREA*N*INSULATION_DENSITY
+
+        INSULATION_MASS=INSULATION_THICKNESS*TANK_SURFACE_AREA*N*INSULATION_DENSITY
     STRUCTURAL_TANK_MASS+=INSULATION_MASS
     TOTAL_STRUCTURAL_TANK_MASS =N*STRUCTURAL_TANK_MASS 
     TANK_DIAMETER+=2*INSULATION_THICKNESS
         
-
-<<<<<<< HEAD
-<<<<<<< HEAD
-    return(TANK_THICKNESS,STRUCTURAL_TANK_MASS, TOTAL_STRUCTURAL_TANK_MASS, TANK_DIAMETER)
-=======
     return(TANK_THICKNESS,round(STRUCTURAL_TANK_MASS,2),round(TOTAL_STRUCTURAL_TANK_MASS,1), round(TANK_DIAMETER,3),round(LENGTH,3))
->>>>>>> b29fe89e17984d855544738417507b62b9e5c078
     
     
 def tank_sizing_fuselage(HYDROGENVOLUME, R,N):
@@ -350,15 +313,12 @@ def tank_sizing_fuselage(HYDROGENVOLUME, R,N):
     for boiloff in yilist:
         
         if boiloff<0.005*HYDROGENVOLUME*DENSITY_LH:
-<<<<<<< HEAD
             print(boiloff)
             INSULATION_THICKNESS=xilist[counter]
             print(INSULATION_THICKNESS)
-=======
             print('boiloff ',boiloff)
             INSULATION_THICKNESS=xilist[counter]
             print('insulation thickness', INSULATION_THICKNESS)
->>>>>>> b29fe89e17984d855544738417507b62b9e5c078
             break
         
         counter+=1
@@ -368,11 +328,4 @@ def tank_sizing_fuselage(HYDROGENVOLUME, R,N):
     TANK_DIAMETER+=2*INSULATION_THICKNESS
         
 
-<<<<<<< HEAD
-    return(TANK_THICKNESS,STRUCTURAL_TANK_MASS, TOTAL_STRUCTURAL_TANK_MASS, TANK_DIAMETER)
-=======
     return(TANK_THICKNESS,round(STRUCTURAL_TANK_MASS,2),round(TOTAL_STRUCTURAL_TANK_MASS,1), round(TANK_DIAMETER,3),round(LENGTH,3))
->>>>>>> b29fe89e17984d855544738417507b62b9e5c078
-=======
-    return(TANK_THICKNESS,round(STRUCTURAL_TANK_MASS,2),round(TOTAL_STRUCTURAL_TANK_MASS,1), round(TANK_DIAMETER,3),round(LENGTH,3))
->>>>>>> 90088981bcf15a41058c792902db0a3ecc85d8e9
