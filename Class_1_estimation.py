@@ -1,6 +1,7 @@
 import input 
 from CarbonFootprint import cf
 from hydrogen_tank_sizing import tank_sizing
+from cabindesign import cabin_design
 ##Class I Weight estimation
 #def CLASS1WEIGHT(hydro):
 #    W_hydrosys=1200
@@ -188,11 +189,14 @@ def CLASS1WEIGHTHYBRID(H_to_ker_ratio = input.H_to_ker_ratio,OEWINPUT = 1):
     KEROSENE=(1-H_to_ker_ratio)*FUEL
     HYDROGEN=FUEL-KEROSENE
     HYDROGENVOLUME=1.1*1.072*HYDROGEN/HYDROGEN_DENSITY #NASA PAPER
-    TANK_THICKNESS,STRUCTURAL_TANK_MASS, TOTAL_STRUCTURAL_TANK_MASS, TANK_DIAMETER,TANK_LENGTH=tank_sizing(HYDROGENVOLUME+0.01,CABIN_LENGTH,1)
     
+    t_cyl,m_cyl, tm_cyl, d_cyl,l_cyl,t_tail,m_tail, tm_tail, d_tail,l_tail,t_top,m_top,tm_top,\
+    d_top,l_top,totalcabinlength,V_tank_cyl, V_tank_tail, V_tank_top,tm_tanksystem,CGtank,CGfuelfull,CGcomb=cabin_design(0,0,HYDROGENVOLUME)
+    
+        
 
 
-    INFO=[MTOW,OEW,FUEL,W_payload,(MZFW),(KEROSENE),(HYDROGEN),HYDROGENVOLUME,TANK_DIAMETER,TOTAL_STRUCTURAL_TANK_MASS]
+    INFO=[MTOW,OEW,FUEL,W_payload,(MZFW),(KEROSENE),(HYDROGEN),HYDROGENVOLUME,d_top,tm_tanksystem]
     return INFO
 
 
