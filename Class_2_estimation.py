@@ -321,5 +321,6 @@ except:
 S = tom2(S)
 b = tom(b)
 MTOM = to_kg(MTOW)
+MTOW = 9.81*MTOM
 OEM = OEWINPUT
 Tto = T_TO_newton

@@ -28,8 +28,9 @@ print('please use OEW from class 2')
 MTOW = MTOM * g #N  !!!!!!!!!!!!!make sure this is in newtons!!!!!!!!!!!!!
 MLW = 25000 * g  # maximum landing weight [N], to be calculated
 AR = 8  # estimate, [-], Aspect ratio
-half_sweep = np.cos(radians(27))  # estimate, [degrees], sweep at half chord for main wing
+half_sweep = radians(27) # estimate, [degrees], sweep at half chord for main wing
 LE_sweep = np.radians(25)         #Leading egde wing sweepTBD, assumed backward let Rick know if it turns out to be forward sweep, calculate with Adsee formula 
+quarter_sweep = np.radians(26)
 
 n_max = 2.5  # from envelope, update manually, max loading factor
 n_ult = 1.5 * n_max #ultimate loading factor
@@ -51,7 +52,7 @@ Ct = 1.2                               #Wing tip chord [m]
 
 taper = Ct / Cr                         #wing taper ratio [-]
 
-Dfus = 2.6, "if you encounter an error here, make your program dependent on a different variable"       #Fuselage diameter [m]
+Dfus = 2.6, "if you encounter an error here, make your program dependent on a different variable, ask Jorn"       #Fuselage diameter [m]
 
 
 
@@ -67,7 +68,7 @@ b = (S * AR)**0.5 #wingspan [m]
 print('please use b from class 2')
 t_r = 1.0  # maximum thickness at root [m] #bullshit estimation
 widthf = 2.8  # m max fuselage width
-A_fuselage = np.pi*widthf*hf
+A_fuselage = np.pi*widthf*0.5*hf*0.5
 ellipse_fuselage = 2*np.pi * (((widthf/2)**2 + (hf/2)**2)/2)**0.5
 S_fgs = ellipse_fuselage * lf * 0.9  # fuselage gross shell area, APPROXIMATION
 lh = 15  # very random estimate, distance between wing and tail aerodynamic centers
@@ -237,9 +238,10 @@ x_LEMAC_nose = x_start_Cr + x_lemac_rootchord
 
 cl0 = 0.153333 #preliminary estimate 
 cm0 = -0.018 #preliminary estimate
-
-
 tail_speedratio = 1**0.5 # sead, T tail
+zero_lift_angle = np.radians(4) #degrees, PRELIMINARY estimate
+z_position_wing = 0.3 #m, PRELIMINARY, still requires thought, for downwash calc
+z_position_horizontal = zh + hf #where tail is positioned, for downwash calc
 
 # Landing gear sizing
 theta = 15 #Clearance angle
