@@ -246,6 +246,8 @@ tail_speedratio = 1**0.5 # sead, T tail
 zero_lift_angle = np.radians(4) #degrees, PRELIMINARY estimate
 z_position_wing = 0.3 #m, PRELIMINARY, still requires thought, for downwash calc
 z_position_horizontal = zh + hf #where tail is positioned, for downwash calc
+x_engine_start = x_LEMAC_nose - 1.5 #m, where engine casing begins, measured from nose
+
 
 # Landing gear sizing
 theta = 15 #Clearance angle

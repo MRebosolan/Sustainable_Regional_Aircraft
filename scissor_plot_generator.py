@@ -114,7 +114,7 @@ l_fn = 11.5
 CLalpha_Ah = clalpha_acless
 kn = -4         # Nacelles are mounted before wing LE
 bn = input.bn
-ln = # distance between front of 
+ln = input.x_LEMAC_nose + 0.25*MAC - input.x_engine_start# distance between front of engine to quarter chord mac
 
 
 beta = sqrt(1-mach*mach)
