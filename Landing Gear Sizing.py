@@ -30,13 +30,13 @@ Remark(s):
 g = input.g
 MTOW = g*Cl2.MTOM
 theta = (np.pi/180)*input.theta     #tip-back angle ~15 degrees
-z_cg  =  input.z_cg
-x_cg  = input.x_cg
-x_cg_fwrd = input.x_cg_fwrd
-x_cg_aft = input.x_cg_aft
+z_cg  =  input.z_c                  #z location of the cg
+x_cg  = input.x_cg                  #x location of the cg
+x_cg_fwrd = input.x_cg_fwrd         #x location of most forward cg
+x_cg_aft = input.x_cg_aft           #x-location of most aft cg
 
 #Determining the minimum required surface area
-S = input.S
+S = Cl2.S
 rho_0 = input.rho0
 
 CLmax = input.CLmax_land 
@@ -122,5 +122,5 @@ def req_htail_area(x_main_lg,Cl_htail=Cl_htail,x_ac_htail=x_ac_htail,x_cg = x_cg
     return htail_area
 htail_area = req_htail_area(x_main_lg)
 
-print ('Lateral distance of the landing gear:',np.round(min(y_lg_list),3))
+print ('The minimum lateral distance of the landing gear:',np.round(min(y_lg_list),3))
 print ('Required htail area:', np.round(htail_area,3))
