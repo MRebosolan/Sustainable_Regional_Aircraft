@@ -10,7 +10,8 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
-import hydrogen_tank_sizing
+from hydrogen_tank_sizing import tank_sizing
+from hydrogen_tank_sizing import tank_sizing_fuselage
 
 def cabin_design(fractioninfus,fractionintail,HYDROGENVOLUME):
     #PASSENGER SECTION
@@ -55,7 +56,7 @@ def cabin_design(fractioninfus,fractionintail,HYDROGENVOLUME):
     
         
     
-    
+    rho_hydrogen=70
         
     V_tank_cyl=(fractioninfus-fractionintail*fractioninfus)*V_tank
     V_tank_tail=fractionintail*fractioninfus*V_tank
@@ -79,22 +80,19 @@ def cabin_design(fractioninfus,fractionintail,HYDROGENVOLUME):
     if V_tank_top==0:
         t_top,m_top, tm_top, d_top,l_top=0,0,0,0,0
     print('TOP TANK: ','| mass: ',tm_top,'| diameter: ',d_top,'| length: ',l_top)
+    tm_tanksystem=tm_cyl+tm_tail+tm_top
+    CGtank=((tm_cyl)*(totalcabinlength+l_cyl/2)+(tm_top)*(totalcabinlength/2+l_cyl/2)+(tm_tail)*(totalcabinlength+l_cyl+l_tail/2))/tm_tanksystem
+    CGfuelfull=((V_tank_cyl*rho_hydrogen)*(totalcabinlength+l_cyl/2)+(V_tank_top*rho_hydrogen)*(totalcabinlength/2+l_cyl/2)+(V_tank_tail*rho_hydrogen)*(totalcabinlength+l_cyl+l_tail/2))/(V_tank_cyl+V_tank_tail+V_tank_top)/rho_hydrogen
+    CGcomb=(CGtank*tm_tanksystem+CGfuelfull*(V_tank_cyl+V_tank_tail+V_tank_top)*rho_hydrogen)/(tm_tanksystem+(V_tank_cyl+V_tank_tail+V_tank_top)*rho_hydrogen)
+    return(t_cyl,m_cyl, tm_cyl, d_cyl,l_cyl,t_tail,m_tail, tm_tail, d_tail,l_tail,t_top,m_top,tm_top,d_top,l_top,totalcabinlength,V_tank_cyl, V_tank_tail, V_tank_top,tm_tanksystem,CGtank,CGfuelfull,CGcomb)
 
-    return(t_cyl,m_cyl, tm_cyl, d_cyl,l_cyl,t_tail,m_tail, tm_tail, d_tail,l_tail,t_top,m_top,tm_top,d_top,l_top,totalcabinlength,V_tank_cyl, V_tank_tail, V_tank_top)
 
 
 
 
 
+t_cyl,m_cyl, tm_cyl, d_cyl,l_cyl,t_tail,m_tail, tm_tail, d_tail,l_tail,t_top,m_top,tm_top,d_top,l_top,totalcabinlength,V_tank_cyl, V_tank_tail, V_tank_top,tm_tanksystem,CGtank,CGfuel,CGcomb=cabin_design(0.5,0,30)
 
-t_cyl,m_cyl, tm_cyl, d_cyl,l_cyl,t_tail,m_tail, tm_tail, d_tail,l_tail,t_top,m_top,tm_top,d_top,l_top,totalcabinlength,V_tank_cyl, V_tank_tail, V_tank_top=cabin_design(0.5,0,30)
-
-rho_hydrogen=70
-
-tm_tanksystem=tm_cyl+tm_tail+tm_top
-CGtank=((tm_cyl)*(totalcabinlength+l_cyl/2)+(tm_top)*(totalcabinlength/2+l_cyl/2)+(tm_tail)*(totalcabinlength+l_cyl+l_tail/2))/tm_tanksystem
-CGfuelfull=((V_tank_cyl*rho_hydrogen)*(totalcabinlength+l_cyl/2)+(V_tank_top*rho_hydrogen)*(totalcabinlength/2+l_cyl/2)+(V_tank_tail*rho_hydrogen)*(totalcabinlength+l_cyl+l_tail/2))/(V_tank_cyl+V_tank_tail+V_tank_top)/rho_hydrogen
-CGcomb=(CGtank*tm_tanksystem+CGfuelfull*(V_tank_cyl+V_tank_tail+V_tank_top)*rho_hydrogen)/(tm_tanksystem+(V_tank_cyl+V_tank_tail+V_tank_top)*rho_hydrogen)
 
 #something for plotting in 3D
 def set_axes_radius(ax, origin, radius):
@@ -120,7 +118,8 @@ def set_axes_equal(ax):
     origin = np.mean(limits, axis=1)
     radius = 0.5 * np.max(np.abs(limits[:, 1] - limits[:, 0]))
     set_axes_radius(ax, origin, radius)
-    
+
+outer_diameter=3.486
 alpha=np.linspace(0,2*np.pi,40)
 x=np.cos(alpha)*outer_diameter/2
 y=np.sin(alpha)*outer_diameter/2
