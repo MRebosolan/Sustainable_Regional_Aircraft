@@ -12,12 +12,12 @@ def tank_sizing(HYDROGENVOLUME,LENGTH,N):
     #N is number of tanks
     R=0
     result=0
-    while result<HYDROGENVOLUME:
+    while result<=HYDROGENVOLUME:
         R+=0.001
-        hsc=R #spherical cap height
+        hsc=R/2 #spherical cap height
         asc=R #spherical cap radius
         result=3.14159*(LENGTH-2*hsc*N)*R**2+N*2*3.14159*hsc/6*(3*asc**2+hsc**2) #NOW INCLUDES SPHERICAL CAPS INSTEAD OF HEMISPHERICAL CAPS!
-    # print(R)
+    print(R)
     TANK_DIAMETER=R*2
     hsc=R #spherical cap height
     asc=R #spherical cap radius
@@ -107,6 +107,7 @@ def tank_sizing(HYDROGENVOLUME,LENGTH,N):
     STRUCTURAL_TANK_MASS+=INSULATION_MASS
     TOTAL_STRUCTURAL_TANK_MASS =N*STRUCTURAL_TANK_MASS    
     TANK_DIAMETER+=2*INSULATION_THICKNESS
+    print(HYDROGENVOLUME)
     
         
         
@@ -120,7 +121,7 @@ def tank_sizing_fuselage(HYDROGENVOLUME, R,N):
     #N is number of tanks
     LENGTH=0
     result=0
-    hsc=R #SPHERICAL CAP HEIGHT
+    hsc=R/5 #SPHERICAL CAP HEIGHT
     asc=R #SPHERICAL CAP RADIUS
     while result<HYDROGENVOLUME:
         LENGTH+=0.001
@@ -207,6 +208,7 @@ def tank_sizing_fuselage(HYDROGENVOLUME, R,N):
             break
         
         counter+=1
+    print(HYDROGENVOLUME)
     INSULATION_MASS=INSULATION_THICKNESS*TANK_SURFACE_AREA*N*INSULATION_DENSITY
     STRUCTURAL_TANK_MASS+=INSULATION_MASS
     TOTAL_STRUCTURAL_TANK_MASS =N*STRUCTURAL_TANK_MASS 
