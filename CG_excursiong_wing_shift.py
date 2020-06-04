@@ -43,6 +43,7 @@ pax_abreast = input.pax_abreast
 x_start_Cr = np.arange(0.2 * l_f, 0.8 * l_f, 1)   #x-location measured from the nose where root chord starts
 x_lemac = [i + x_lemac_Cr for i in x_start_Cr]
 x_engine = x_lemac       #Assume engine cg is at lemac
+print('Make x_eninge not wing location dependent if we end up having fuselage mounted engines')
 x_nacelle = x_engine     #assume nacelle cg is at engine cg
 x_ac = [i + 0.25 * MAC for i in x_lemac]            #assume ac at quarter chord point
 #Small calculations with raw inputs

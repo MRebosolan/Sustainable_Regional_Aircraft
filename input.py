@@ -55,7 +55,7 @@ zh = bv * 0.95  #??
 Sh = 20.75                        # m2 crj700 shizzle yo, horizontal tail area
 half_chord_sweep_hor = np.radians(20)   # deg, sweep at half chord of horizontal tail
 half_chord_sweep_vert = np.radians(35)  # deg, sweep at half chord of vertical tail
-
+AR_h = 4                                #Aspect ratio of the horizontal tail [-], TBD
 
 
 #Fuselage, cabin and loading parameters
@@ -178,8 +178,8 @@ Cla_aileron = 6.4                  #1/rad, sectional lift curve slope at wing se
 Cd0_aileron = 0.0039               #zero drag coefficient [-] at wing section where aileron is located, determine by airfoil simulation
 
 # Aerodynamics for scissor plot:
-cl0 = 0.153333                     # preliminary estimate 
-cm0 = -0.018                       # preliminary estimate
+cl0 = 0.153333                     # preliminary estimate, TBD 
+cm0 = -0.018                       # preliminary estimate, TBD
 tail_speedratio = 1**0.5           # SEAD, T tail
 zero_lift_angle = np.radians(4)    # degrees, PRELIMINARY estimate
 z_position_wing = 0.3              # m, PRELIMINARY, still requires thought, for downwash calc

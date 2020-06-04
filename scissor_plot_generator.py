@@ -202,7 +202,6 @@ cm_ac = cm_wing + cm_flaps + cm_fus + cm_nac
 
 ShS = np.arange(0.0,0.605,0.005)
 stabilityxcg_cruise = xac_cruise + ShS*(clalpha_tail/clalpha_acless)*(1-downwash)*speedratio*tail_armh/MAC
-stabilityxcg = xac + ShS*(clalpha_tail_lowspeed/clalpha_acless_lowspeed)*(1-downwash_lowspeed)*speedratio*tail_armh/MAC
 controlxcg = xac - cm_ac/CL + ShS*(C_lh_max/CL)*(tail_armh/MAC)*speedratio
 
 plt.close()
