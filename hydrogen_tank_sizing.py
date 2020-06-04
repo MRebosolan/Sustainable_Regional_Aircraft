@@ -100,9 +100,9 @@ def tank_sizing(HYDROGENVOLUME,LENGTH,N):
         for boiloff in yilist:
             
             if boiloff<0.005*HYDROGENVOLUME*DENSITY_LH:
-                print('boiloff ',boiloff)
+                #print('boiloff ',boiloff)
                 INSULATION_THICKNESS=xilist[counter]
-                print('insulation thickness ',INSULATION_THICKNESS)
+                #print('insulation thickness ',INSULATION_THICKNESS)
                 break
             
             counter+=1
@@ -113,7 +113,7 @@ def tank_sizing(HYDROGENVOLUME,LENGTH,N):
     STRUCTURAL_TANK_MASS+=INSULATION_MASS
     TOTAL_STRUCTURAL_TANK_MASS =N*STRUCTURAL_TANK_MASS    
     TANK_DIAMETER+=2*INSULATION_THICKNESS+2*TANK_THICKNESS
-    print(HYDROGENVOLUME)
+    #print(HYDROGENVOLUME)
     
     return(TANK_THICKNESS,round(STRUCTURAL_TANK_MASS,2),round(TOTAL_STRUCTURAL_TANK_MASS,1), round(TANK_DIAMETER,3),round(LENGTH,3))
     
@@ -203,12 +203,9 @@ def tank_sizing_fuselage(HYDROGENVOLUME, R,N):
     for boiloff in yilist:
         
         if boiloff<0.005*HYDROGENVOLUME*DENSITY_LH:
-            print(boiloff)
+            #print('boiloff ',boiloff)
             INSULATION_THICKNESS=xilist[counter]
-            print(INSULATION_THICKNESS)
-            print('boiloff ',boiloff)
-            INSULATION_THICKNESS=xilist[counter]
-            print('insulation thickness ',INSULATION_THICKNESS)
+            #print('insulation thickness ',INSULATION_THICKNESS)
             break
         
         counter+=1
