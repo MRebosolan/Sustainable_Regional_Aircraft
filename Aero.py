@@ -2,6 +2,7 @@ import numpy as np
 import input as inp
 import matplotlib.pyplot as plt
 import Envelope
+#import Aileron_sizing
 
 
 """
@@ -37,6 +38,9 @@ V_C = Envelope.V_C  # Cruise Speed
 V_D = Envelope.V_D  # Dive Speed
 V_S = Envelope.V_S  # Stall Speed
 V_A = Envelope.V_A  # Max Gust Speed
+
+b1=8
+b2=11.2
 
 # ---------------------------- Line Intersection Point
 
@@ -174,58 +178,66 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf):
              (-Df * np.tan(sweep_cLE) - (hinge_c/100) * chord_length(c_root, c_tip, Df, b)),
              (-(Df + x2) * np.tan(sweep_cLE) - (hinge_c/100) * chord_length(c_root, c_tip, (Df + x2), b)),
              (-(Df + x2) * np.tan(sweep_cLE) - chord_length(c_root, c_tip, (Df + x2), b))]
+    
+    x_ail = [b1, b1, b2, b2]
+    y_ail = [(-b1*np.tan(sweep_cLE) - chord_length(c_root, c_tip, b1, b)),
+             (-b1 * np.tan(sweep_cLE) - (hinge_c/100) * chord_length(c_root, c_tip, b1, b)),
+             (-b2 * np.tan(sweep_cLE) - (hinge_c/100) * chord_length(c_root, c_tip, b2, b)),
+             (-b2 * np.tan(sweep_cLE) - chord_length(c_root, c_tip, b2, b))]
+    
+    ail   = [x_ail,y_ail]
+    hld   = [x_hld, y_hld]
 
-    hld = [x_hld, y_hld]
 
 
+    return wing, geom,cross1, hld, ail
 
-    return wing, geom,cross1, hld
 
-
-wing, geom, cross1, hld = wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf)
+wing, geom, cross1, hld, ail = wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf)
 
 
 #----------------------------- .txt File Airfoil Coordinates
 
 #Read from file
-f=open('airfoil2.txt','r')
-lines=f.readlines()
-
-#Create empty lists
-xcoord1=[]
-xcoord2=[]
-ycoord1=[]
-ycoord2=[]
-camline=[]
-
-for i in lines[:26]:
-    xcoord1.append(float(i.split('     ')[0]))
-    ycoord1.append(float(i.split('     ')[1].strip('\n')))
-for i in lines[26:]:
-    xcoord2.append(float(i.split('     ')[0]))
-    ycoord2.append(float(i.split('     ')[1].strip('\n')))
-
-#Add origin to list to connect
-xcoord2.insert(0,0.0)
-ycoord2.insert(0,0.0)
-    
-#Reverse order 
-xcoord1=xcoord1[::-1]
-ycoord1=ycoord1[::-1]
-
-#Camber Line
-for i in range(0,len(xcoord1)):
-    camline.append((ycoord1[i]+ycoord2[i])/2)
-
-print(lines)
-print(xcoord1)
-print(ycoord1)
-print(ycoord2)
-
+#f=open('airfoil1.txt','r')
+#lines=f.readlines()
+#
+##Create empty lists
+#xcoord1=[]
+#xcoord2=[]
+#ycoord1=[]
+#ycoord2=[]
+#camline=[]
+#
+#for i in lines[:26]:
+#    xcoord1.append(float(i.split(' ')[0]))
+#    ycoord1.append(float(i.split(' ')[1].strip('\n')))
+#for i in lines[26:]:
+#    xcoord2.append(float(i.split(' ')[0]))
+#    ycoord2.append(float(i.split(' ')[1].strip('\n')))
+#
+##Add origin to list to connect
+#xcoord2.insert(0,0.0)
+#ycoord2.insert(0,0.0)
+#    
+##Reverse order 
+#xcoord1=xcoord1[::-1]
+#ycoord1=ycoord1[::-1]
+#
+##Camber Line
+#for i in range(0,len(xcoord1)):
+#    camline.append((ycoord1[i]+ycoord2[i])/2)
+#
+#print(lines1)
+#print(xcoord1)
+#print(ycoord1)
+#print(ycoord2)
+#print(camline)
+#
 #----------------------------- Plotting
 
 plt.figure(0)
-plt.plot(geom[0], geom[1], geom[2], geom[3], hld[0], hld[1])
+plt.plot(geom[0], geom[1], geom[2], geom[3], hld[0], hld[1],ail[0],ail[1])
 plt.text(cross1[0],cross1[1],'Fuselage Wall Line')
 plt.grid(True,which="major",color="#999999")
 plt.grid(True,which="minor",color="#DDDDDD",ls="--")
@@ -234,19 +246,19 @@ plt.ylim(-10.0,2.0)
 plt.ylabel('x [m]')
 plt.xlabel('y [m]')
 
-plt.figure(1)
-plt.grid(True,which="major",color="#999999")
-plt.grid(True,which="minor",color="#DDDDDD",ls="--")
-plt.minorticks_on()
-plt.plot(xcoord1,ycoord1,color='r')
-plt.plot(xcoord1,camline,'--',color='r')
-plt.plot(xcoord2,ycoord2,color='r')
-plt.xlim(0,1)
-plt.ylim(-0.3,0.3)
-plt.text(0.0,0.0,'LE')
-plt.text(1.0,0.0,'TE')
-plt.ylabel('y/c [-]')
-plt.xlabel('x/c [-]')
+#plt.figure(1)
+#plt.grid(True,which="major",color="#999999")
+#plt.grid(True,which="minor",color="#DDDDDD",ls="--")
+#plt.minorticks_on()
+#plt.plot(xcoord1,ycoord1,color='r')
+#plt.plot(xcoord1,camline,'--',color='r')
+#plt.plot(xcoord2,ycoord2,color='r')
+#plt.xlim(0,1)
+#plt.ylim(-0.3,0.3)
+#plt.text(0.0,0.0,'LE')
+#plt.text(1.0,0.0,'TE')
+#plt.ylabel('y/c [-]')
+#plt.xlabel('x/c [-]')
 
 plt.show()
 
