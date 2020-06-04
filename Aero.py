@@ -30,13 +30,42 @@ M_cruise = 0.75
 S = inp.S
 AR = inp.AR
 MTOW = inp.MTOW
+widthf = inp.widthf
 
 V_C = Envelope.V_C  # Cruise Speed
 V_D = Envelope.V_D  # Dive Speed
 V_S = Envelope.V_S  # Stall Speed
 V_A = Envelope.V_A  # Max Gust Speed
 
-def wing_geometry(M_cruise, S, AR, MTOW, V_C):
+# ---------------------------- Line Intersection Point
+
+def line_intersect(Ax1, Ay1, Ax2, Ay2, Bx1, By1, Bx2, By2):
+    """ returns a (x, y) tuple or None if there is no intersection """
+    d = (By2 - By1) * (Ax2 - Ax1) - (Bx2 - Bx1) * (Ay2 - Ay1)
+    if d:
+        uA = ((Bx2 - Bx1) * (Ay1 - By1) - (By2 - By1) * (Ax1 - Bx1)) / d
+        uB = ((Ax2 - Ax1) * (Ay1 - By1) - (Ay2 - Ay1) * (Ax1 - Bx1)) / d
+    else:
+        return
+    if not(0 <= uA <= 1 and 0 <= uB <= 1):
+        return
+    x = Ax1 + uA * (Ax2 - Ax1)
+    y = Ay1 + uA * (Ay2 - Ay1)
+
+    return x, y
+
+<<<<<<< HEAD
+=======
+# --------------------------------- Chord length at a spanwise point x
+
+def chord_length(c_root, c_tip, x, b):
+    l_chord = -2 * ((c_root - c_tip)/b) * x + c_root
+    return l_chord
+
+>>>>>>> b29fe89e17984d855544738417507b62b9e5c078
+# --------------------------------- Wing Geometry
+
+def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf):
 
     if M_cruise >= 0.7:
         sweep_c4 = np.arccos(0.75*(0.935/(0.03 + M_cruise)))
@@ -73,10 +102,19 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C):
 
     x_wing = [0, b/2, b/2, 0, 0]
     y_wing = [0, -b/2*np.tan(sweep_cLE), (-b/2*np.tan(sweep_cLE) - c_tip), - c_root, 0]
+    x_fus = [widthf/2, widthf/2]
+    y_fus = [0, -6]
+<<<<<<< HEAD
 
-    plt.plot(x_wing, y_wing)
-    plt.plot()
-    plt.show()
+    geom = [x_wing, y_wing, x_fus, y_fus]
+
+=======
+
+    geom = [x_wing, y_wing, x_fus, y_fus]
+
+>>>>>>> b29fe89e17984d855544738417507b62b9e5c078
+    AR_check = 17.7 * (2 - taper) * np.exp(- 0.043 * sweep_c4/np.pi*180)
+    print(AR_check)
 
     WS_cr_start = 0.9843800695598843 * MTOW / S
 
@@ -91,31 +129,128 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C):
 
     Re = V_C * 0.514444 * c_mac / visc_k
     print(Re)
+    # With CL_max = 1.8 we could take airfoil NACA 63(3)-618 (supercritical with 0.18 t/c)
+
+    # CLmax take-off: 2.1 , Clmax landing: 2.25
+    #     # target for take-off: Delta CLmax = 0.3
+    #     # target for landing: Delta CLmax = 0.45
+
+    dCLmax_land = 0.45
+    dCLmax_to   = 0.3
+
+    dClmax_land = 1.3
+<<<<<<< HEAD
+    hinge_c     = 80 #percent
+=======
+    hinge_c     = 60 #percent
+>>>>>>> b29fe89e17984d855544738417507b62b9e5c078
+    sweep_hinge = np.arctan(np.tan(sweep_c4) - 4/AR * ((hinge_c-25)/100 * (1 - taper)/(1 + taper)))
+
+    SwfS = dCLmax_land/ (0.9 * dClmax_land * np.cos(sweep_hinge))
+
+<<<<<<< HEAD
+    x1 = widthf/2
+
+    a = -2 * (c_root - c_tip)/b
+
+    D = (2 * (a * x1 + c_root))**2 + 4 * a * SwfS * S
+
+    x2 = max((-2 * (a * x1 + c_root) + np.sqrt(D))/(2*a),  (-2 * (a * x1 + c_root) - np.sqrt(D))/(2*a))
+    print(x2)
+=======
+    Df = widthf/2
+
+    a = -2 * (c_root - c_tip)/b
+    ch = 1 - (hinge_c/100)
+
+    D = (-4 * a * Df + 2 * c_root)**2 + 4 * 2 * a * (-2 * SwfS * S/ ch)
+
+    print("D = ", D)
+
+    x2 = max((-(-4 * a * Df + 2 * c_root) + np.sqrt(D))/ (-4 * a), (-(-4 * a * Df + 2 * c_root) - np.sqrt(D)) / (-4 * a))
+    print("x2 = ", (x2 + Df))
+>>>>>>> b29fe89e17984d855544738417507b62b9e5c078
+
+    wing = [sweep_c4, taper, c_root, c_tip, c_mac, y_mac, t_c, dihedral,
+            Cl_des, dCLmax_land, dCLmax_to]
+    
+    cross1 = line_intersect(x_fus[0],y_fus[0],x_fus[1],y_fus[1],x_wing[0],y_wing[0],x_wing[1],y_wing[1])
+
+<<<<<<< HEAD
+    return wing, geom,cross1
 
 
-    return sweep_c4, taper, c_root, c_tip, c_mac, y_mac, t_c, dihedral, Cl_des
+wing, geom, cross1 = wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf)
+=======
+    x_hld = [Df, Df, x2 + Df, x2 + Df]
+    y_hld = [(-Df*np.tan(sweep_cLE) - chord_length(c_root, c_tip, Df, b)),
+             (-Df * np.tan(sweep_cLE) - (hinge_c/100) * chord_length(c_root, c_tip, Df, b)),
+             (-(Df + x2) * np.tan(sweep_cLE) - (hinge_c/100) * chord_length(c_root, c_tip, (Df + x2), b)),
+             (-(Df + x2) * np.tan(sweep_cLE) - chord_length(c_root, c_tip, (Df + x2), b))]
 
-wing_geometry(M_cruise, S, AR, MTOW, V_C)
+    hld = [x_hld, y_hld]
 
-#def airfoilplot('airfoil1.txt'):
-f=open('airfoil1.txt','r')
+    return wing, geom,cross1, hld
+
+
+wing, geom, cross1, hld = wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf)
+>>>>>>> b29fe89e17984d855544738417507b62b9e5c078
+
+
+#----------------------------- .txt File Airfoil Coordinates
+
+f=open('airfoil2.txt','r')
 lines=f.readlines()
-result=[]
-for x in lines:
-    result.append(x.split('\n'))
-f.close()
-#    return result
+xcoord1=[]
+xcoord2=[]
+ycoord1=[]
+ycoord2=[]
+for i in lines[:26]:
+    xcoord1.append(float(i.split('     ')[0]))
+    ycoord1.append(float(i.split('     ')[1].strip('\n')))
+for i in lines[26:]:
+    xcoord2.append(float(i.split('     ')[0]))
+    ycoord2.append(float(i.split('     ')[1].strip('\n')))
 
-#    f=open('datfile','r')
-#    lines=f.readlines()
-#    xy=lines.split('/n')
-#    xcoord=[]
-#    ycoord1=[]
-#    ycoord2=[]
-#    for i in range(0,len(xy)):
-#        xcoord.append(float(xy[i][0]))
-#        ycoord1.append(float(xy[i][1]))
-#    return xcoord, ycoord1, ycoord2
+xcoord2.insert(0,0.0)
+ycoord2.insert(0,0.0)
+
+print(lines)
+print(xcoord1)
+print(ycoord1)
+print(ycoord2)
+
+#----------------------------- Plotting
+
+plt.figure(0)
+<<<<<<< HEAD
+plt.plot(geom[0], geom[1], geom[2], geom[3])
+=======
+plt.plot(geom[0], geom[1], geom[2], geom[3], hld[0], hld[1])
+>>>>>>> b29fe89e17984d855544738417507b62b9e5c078
+plt.text(cross1[0],cross1[1],'Fuselage Wall Line')
+plt.grid(True,which="major",color="#999999")
+plt.grid(True,which="minor",color="#DDDDDD",ls="--")
+plt.minorticks_on()
+plt.ylim(-10.0,2.0)
+plt.ylabel('x [m]')
+plt.xlabel('y [m]')
+
+plt.figure(1)
+plt.grid(True,which="major",color="#999999")
+plt.grid(True,which="minor",color="#DDDDDD",ls="--")
+plt.minorticks_on()
+plt.plot(xcoord1,ycoord1,color='r')
+plt.plot(xcoord2,ycoord2,color='r')
+plt.xlim(0,1)
+plt.ylim(-0.3,0.3)
+plt.text(0.0,0.0,'LE')
+plt.text(1.0,0.0,'TE')
+plt.ylabel('y/c [-]')
+plt.xlabel('x/c [-]')
+
+plt.show()
+
 
 
 
