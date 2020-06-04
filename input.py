@@ -55,7 +55,7 @@ zh = bv * 0.95  #??
 Sh = 20.75                        # m2 crj700 shizzle yo, horizontal tail area
 half_chord_sweep_hor = np.radians(20)   # deg, sweep at half chord of horizontal tail
 half_chord_sweep_vert = np.radians(35)  # deg, sweep at half chord of vertical tail
-
+AR_h = 4                                #Aspect ratio of the horizontal tail [-], TBD
 
 
 #Fuselage, cabin and loading parameters
@@ -101,7 +101,7 @@ N_eng = 2                         # number of engines
 N_t = 2                           # number of fuel tanks
 rho_hydrogen = 70                 # g/l
 K_fsp = 0.820                     # kg/l, jet A, jet fuel density
-H_to_ker_ratio = 0                # hydrogen to kerosene ratio
+H_to_ker_ratio = 1                # hydrogen to kerosene ratio
 
 
 
@@ -178,8 +178,8 @@ Cla_aileron = 6.4                  #1/rad, sectional lift curve slope at wing se
 Cd0_aileron = 0.0039               #zero drag coefficient [-] at wing section where aileron is located, determine by airfoil simulation
 
 # Aerodynamics for scissor plot:
-cl0 = 0.153333                     # preliminary estimate 
-cm0 = -0.018                       # preliminary estimate
+cl0 = 0.153333                     # preliminary estimate, TBD 
+cm0 = -0.018                       # preliminary estimate, TBD
 tail_speedratio = 1**0.5           # SEAD, T tail
 zero_lift_angle = np.radians(4)    # degrees, PRELIMINARY estimate
 z_position_wing = 0.3              # m, PRELIMINARY, still requires thought, for downwash calc
@@ -228,9 +228,17 @@ LD_c2 = 17                         # L/D cruise2
 LD_loiter = 17                     # L/D Loiter
 
 #Relevant distances for aerodynamic calculations, tail sizing, landing gear sizing
-lh = 15                            # very random estimate, distance between wing and tail aerodynamic centers
+lh = 15                            # very random estimate, distance between wing and tail QUARTER CHORD
 lv = 16                            # very random estimate, distance between wing and vertical tail aerodynamic centers
-x_ac = 12                          # x location of wing aerodynamic center measured from the nose of the aircraft, TBD
 x_apu = 20.                        # cg location of the apu measured from the nose of the aircraft [m], TBD
 x_engine = 13                      # cg location of engines, measured from the nose of the aircraft [m], TBD
 x_nacelle = 13                     # cg location of engine nacelles, measured from the nose of the aircraft [m], TBD
+
+x_engine_start = x_LEMAC_nose - 1.5 #m, RANDOM, begin of engine measured from nose
+bn = 1.2 #maximum width of engine
+e_tail = 0.85 #oswald efficiency factor of tail, TBD
+
+
+
+
+

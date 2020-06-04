@@ -10,11 +10,11 @@ from math import sqrt, pi, tan, atan
 import input
 import Class_2_estimation as cl2
 from Xacregression_scissor import Xacregression, Xacregression_app
-
+import Aero
 
 MAC = input.MAC
 lemac = input.x_LEMAC_nose
-tail_armh = input.lh
+# tail_armh = input.lh
 
 S =  cl2.S#m^2
 b = cl2.b
@@ -44,7 +44,7 @@ AR_tail = b_tail**2/horizontal_area
 AR = input.AR
 sweep = input.quarter_sweep
 
-C_h = horizontal_area*tail_armh/(S*MAC)
+# C_h = horizontal_area*tail_armh/(S*MAC)
 
 
 C_lh_max = -0.8 #adjustable tail
@@ -62,41 +62,12 @@ clalpha_acless_wing = clalpha_datcom*(1+2.15*(widthf/b))*(S-area_fuselage)/S
 clalpha_acless_fuselage = (np.pi*widthf**2)/(2*S)# not sure bout this
 clalpha_acless = clalpha_acless_wing+clalpha_acless_fuselage
 
-r = 2*tail_armh/b
-K_ea = (0.1124+0.1265*sweep+0.1766*sweep**2)/(r**2) + 0.1024/r +2 #ADSEE LECTURE 4 SLIDE 43
-K_0 = 0.1124/(r**2)+0.1024/r +2 #ADSEE LECTURE 4 SLIDE 43
-
-theta = np.tanh((input.z_position_horizontal - input.z_position_wing)/tail_armh)
-hypotenuse = tail_armh/np.cos(theta)
-tail_wing_distance = hypotenuse*np.cos(theta+input.zero_lift_angle)
-m_tv = tail_wing_distance *2/b
-
-part_a = (r*0.4876)/((r**2+m_tv**2)*((r**2+m_tv**2+0.6319)**0.5)) #ADSEE LECTURE 4 SLIDE 43
-part_b = 1+ ((r**2)/(r**2+0.7915+5.0734*m_tv**2))**0.3113 
-part_c = 1-((m_tv**2)/(1+m_tv**2))**0.5
-
-downwash = (K_ea/K_0)*((part_a)+part_b*part_c)*clalpha_datcom/(np.pi*AR)
-
-assert    0.1 < downwash/(4/(AR+2)) < 1, 'downwash value not within expected range for T-Tail'
-
-
-
-
-beta_low = (1-mach_app**2)**0.5
-beta_low_tail = (1- speedratio*mach_app**2)**0.5
-
-clalpha_datcom_lowspeed =  2*np.pi*AR/(2+((4+ ((AR*beta_low)**2)*(1+ (np.tan(sweep)**2)/beta_low**2))**0.5))
-clalpha_acless_lowspeed = clalpha_datcom_lowspeed*(1+2.15*(widthf/b))*(S-area_fuselage)/S + (np.pi*widthf**2)/(2*S)
-clalpha_tail_lowspeed =  2*np.pi*AR_tail/(2+((4+ ((AR_tail*beta_low_tail/n)**2)*(1+ (np.tan(stabilizer_sweep)**2)/beta_low_tail**2))**0.5))
-
-downwash_lowspeed = (K_ea/K_0)*((part_a)+part_b*part_c)*clalpha_datcom_lowspeed/(np.pi*AR)
-
 
 
 rho = input.rho
 OEW = cl2.OEWINPUT
 payload = input.W_payload
-MLW = cl2.M_zfw_kg
+MLW = cl2.M_zfw_kg ### STILL SIZE MLW
 mass = MLW #kg, mlw
 MTOW = cl2.MTOW_kg
 CL = 2*mass*9.81/(rho*(v_approach**2)*S) #approach CL
@@ -126,6 +97,14 @@ beta_A_app = AR*beta_app
 sweepbeta_app = np.degrees(sweep)/beta_app
 
 
+
+beta_low = (1-mach_app**2)**0.5
+beta_low_tail = (1- speedratio*mach_app**2)**0.5
+
+clalpha_datcom_lowspeed =  2*np.pi*AR/(2+((4+ ((AR*beta_low)**2)*(1+ (np.tan(sweep)**2)/beta_low**2))**0.5))
+clalpha_acless_lowspeed = clalpha_datcom_lowspeed*(1+2.15*(widthf/b))*(S-area_fuselage)/S + (np.pi*widthf**2)/(2*S)
+clalpha_tail_lowspeed =  2*np.pi*AR_tail/(2+((4+ ((AR_tail*beta_low_tail/n)**2)*(1+ (np.tan(stabilizer_sweep)**2)/beta_low_tail**2))**0.5))
+
 # Look in SEAD lecture 4 slide 33 to get xac_w from these parameters
 xac_w = Xacregression(beta_A, taper, sweepbeta) # for Mach = 0.78 (cruise)
 xac_w2 = Xacregression_app(beta_A_app, taper, sweepbeta_app) # for Vappr = 66.36 (approach/landing)
@@ -141,12 +120,36 @@ xac_f2_cruise = 0.273*widthf*(S/b)*(b-widthf)*tan(sweep) / ((1+taper)*MAC*MAC*(b
 xac_n_cruise = 2*kn*bn*bn*ln / (S*MAC*CLalpha_Ah)
 xac_cruise = xac_w+xac_f1+xac_f2+xac_n
 
+tail_armh = input.lh + MAC * (0.25-xac_cruise)
+
+r = 2*tail_armh/b
+K_ea = (0.1124+0.1265*sweep+0.1766*sweep**2)/(r**2) + 0.1024/r +2 #ADSEE LECTURE 4 SLIDE 43
+K_0 = 0.1124/(r**2)+0.1024/r +2 #ADSEE LECTURE 4 SLIDE 43
+
+theta = np.tanh((input.z_position_horizontal - input.z_position_wing)/tail_armh)
+hypotenuse = tail_armh/np.cos(theta)
+tail_wing_distance = hypotenuse*np.cos(theta+input.zero_lift_angle)
+m_tv = tail_wing_distance *2/b
+
+part_a = (r*0.4876)/((r**2+m_tv**2)*((r**2+m_tv**2+0.6319)**0.5)) #ADSEE LECTURE 4 SLIDE 43
+part_b = 1+ ((r**2)/(r**2+0.7915+5.0734*m_tv**2))**0.3113 
+part_c = 1-((m_tv**2)/(1+m_tv**2))**0.5
+
+downwash = (K_ea/K_0)*((part_a)+part_b*part_c)*clalpha_datcom/(np.pi*AR)
+
+assert    0.1 < downwash/(4/(AR+2)) < 1, 'downwash value not within expected range for T-Tail'
+
+
+downwash_lowspeed = (K_ea/K_0)*((part_a)+part_b*part_c)*clalpha_datcom_lowspeed/(np.pi*AR)
+
+
+
 
 
 
 
 ####################### CONTROL
-CL0_flapped = cl0+0.9*DClmax*(Swf/S)*0.975
+
 
 mu1 = 0.18
 mu2 = 1.1
@@ -157,21 +160,32 @@ print('Read off acutal values from SEAD lecture 5 slides 18-20 once wing is desi
 DClmax = cprime_c*1.3 # Based on adsee 2
 print('Change to *1.6 if double slotted flaps are used, see slide 35 ADSEE II')
 
+Cr = input.Cr
+Ct = input.Ct
+
+def chord_along_span(Cr, Ct, b, y):
+    c = Cr - (Cr - Ct) / (b / 2) * y
+    return c
+
+
+outboard_flap = widthf + Aero.x2
+print(widthf, outboard_flap)
+def Swf(widthf, outboard_flap):
+    b_imag = outboard_flap - widthf
+    swf = 2 * b_imag * (chord_along_span(Cr, Ct, b, widthf) + chord_along_span(Cr, Ct, b, outboard_flap)) / 2
+    return swf
+
+Swf = Swf(widthf, outboard_flap)
+print(Swf)
+CL0_flapped = cl0+0.9*DClmax*(Swf/S)*0.975
 
 cm_wing = cm0 *(AR *np.cos(sweep)**2)/(AR + 2*np.cos(sweep))
 cm_fus = -1.8 * (1 - 2.5*widthf/fuselage_lenght)*(A_fuselage*fuselage_lenght*CL0_flapped/(4*S*MAC*clalpha_acless_lowspeed))
-DCm025 = mu2*(-mu1*DClmax*cprime_c-(CL+DClmax*(1-Swf/S))*0.125*cprime_c*(cprime_c-1)) + 0.7*AR*mu3*DClmax*tan(sweep) / (1+2/AR)
+DCm025 = mu2*(-mu1*DClmax*cprime_c-(CL+DClmax*(1-Swf/S))*0.125*cprime_c*(cprime_c-1)) + 0.7*AR*mu3*DClmax*tan(sweep) / (1+2/AR) - CL * (0.25 - xac / MAC)
 
 
+    
 
-
-# Based on SEAD lecture 5
-
-
-# deltaf = 40*pi/180 # deflection angle in radians
-Swf = 79.1 # Geometric estimation
-
-print(DCm025)
 
 
 
@@ -188,27 +202,36 @@ cm_ac = cm_wing + cm_flaps + cm_fus + cm_nac
 
 ShS = np.arange(0.0,0.605,0.005)
 stabilityxcg_cruise = xac_cruise + ShS*(clalpha_tail/clalpha_acless)*(1-downwash)*speedratio*tail_armh/MAC
-stabilityxcg = xac + ShS*(clalpha_tail_lowspeed/clalpha_acless_lowspeed)*(1-downwash_lowspeed)*speedratio*tail_armh/MAC
 controlxcg = xac - cm_ac/CL + ShS*(C_lh_max/CL)*(tail_armh/MAC)*speedratio
 
 
-vertical1 = 0.184 *100
-vertical2 = 0.373 *100
-# plt.plot(stabilityxcg_cruise*100,ShS, color = 'grey', label = 'Neutral stability')
-# plt.plot(stabilityxcg_cruise*100 -5,ShS, color = 'b', label = 'Stability aft limit')
-plt.close()
-plt.subplot(1,1,1)
-plt.plot(stabilityxcg_cruise*100,ShS, color = 'grey', label = 'Neutral stability')
-plt.plot(stabilityxcg_cruise*100 -5,ShS, color = 'b', label = 'Stability aft limit')
-plt.plot(controlxcg*100,ShS, color = 'orange', label = 'Control fwd limit')
-# plt.axvline(vertical1, color = 'r', label = 'Front CG limit')
-# plt.axvline(vertical2, color = 'magenta', label = 'Aft CG limit')
-# plt.axhline(0.33, color = 'black',label = 'Surface ratio')
-plt.plot([vertical1,vertical2], [0.33,0.33], color = 'r', marker = '|')
-plt.grid()
-plt.xlabel("Xcg/MAC [%]")
-plt.ylabel("Sh/S [-]")
-# plt.legend(loc = 'lower left')
-plt.title('CS100')
-plt.show()
+def scissorplot(stabilityxcg_cruise,controlxcg, ShS, frontcg, aftcg, Sh_over_S  ):
+    plt.figure()
+    plt.close()
+    plt.plot(stabilityxcg_cruise*100,ShS, color = 'grey', label = 'Neutral stability')
+    plt.plot(stabilityxcg_cruise*100 -5,ShS, color = 'b', label = 'Stability aft limit')
+    plt.plot(controlxcg*100,ShS, color = 'orange', label = 'Control fwd limit')
+    plt.plot([frontcg,aftcg], [Sh_over_S, Sh_over_S], color = 'r', marker = '|')
+    plt.grid()
+    plt.xlabel("Xcg/MAC [%]")
+    plt.ylabel("Sh/S [-]")
+    plt.legend(loc = 'lower left')
+    plt.title('CS100')
+    plt.show()
     
+scissorplot(stabilityxcg_cruise,controlxcg, Shs, frontcg, aftcg, Sh_over_S  )
+
+Moment_ac = 0.5* rho_cruise *v_cruise**2 * cm_ac * MAC
+
+Lift_tail = Moment_ac/tail_armh
+CL_h = Lift_tail/(0.5* rho_cruise *v_cruise**2  * horizontal_area)
+e_tail = input.e_tail #Oswald efficiency factor
+k = 1 / (np.pi*AR_tail *e_tail)
+
+Dtrim = abs(0.5* rho_cruise *v_cruise**2 *speedratio * horizontal_area * CL_h * k)
+
+
+
+
+
+#todo: check capability of horizontal tail for providing negative lift to sufficiently rotate the aircraft at take-off
