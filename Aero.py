@@ -199,41 +199,41 @@ wing, geom, cross1, hld, ail = wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf)
 #----------------------------- .txt File Airfoil Coordinates
 
 #Read from file
-f=open('airfoil2.txt','r')
-lines=f.readlines()
-
-#Create empty lists
-xcoord1=[]
-xcoord2=[]
-ycoord1=[]
-ycoord2=[]
-camline=[]
-
-for i in lines[:26]:
-    xcoord1.append(float(i.split('     ')[0]))
-    ycoord1.append(float(i.split('     ')[1].strip('\n')))
-for i in lines[26:]:
-    xcoord2.append(float(i.split('     ')[0]))
-    ycoord2.append(float(i.split('     ')[1].strip('\n')))
-
-#Add origin to list to connect
-xcoord2.insert(0,0.0)
-ycoord2.insert(0,0.0)
-    
-#Reverse order 
-xcoord1=xcoord1[::-1]
-ycoord1=ycoord1[::-1]
-
-#Camber Line
-for i in range(0,len(xcoord1)):
-    camline.append((ycoord1[i]+ycoord2[i])/2)
-
-print(lines)
-print(xcoord1)
-print(ycoord1)
-print(ycoord2)
-print(camline)
-
+#f=open('airfoil1.txt','r')
+#lines=f.readlines()
+#
+##Create empty lists
+#xcoord1=[]
+#xcoord2=[]
+#ycoord1=[]
+#ycoord2=[]
+#camline=[]
+#
+#for i in lines[:26]:
+#    xcoord1.append(float(i.split(' ')[0]))
+#    ycoord1.append(float(i.split(' ')[1].strip('\n')))
+#for i in lines[26:]:
+#    xcoord2.append(float(i.split(' ')[0]))
+#    ycoord2.append(float(i.split(' ')[1].strip('\n')))
+#
+##Add origin to list to connect
+#xcoord2.insert(0,0.0)
+#ycoord2.insert(0,0.0)
+#    
+##Reverse order 
+#xcoord1=xcoord1[::-1]
+#ycoord1=ycoord1[::-1]
+#
+##Camber Line
+#for i in range(0,len(xcoord1)):
+#    camline.append((ycoord1[i]+ycoord2[i])/2)
+#
+#print(lines1)
+#print(xcoord1)
+#print(ycoord1)
+#print(ycoord2)
+#print(camline)
+#
 #----------------------------- Plotting
 
 plt.figure(0)
@@ -246,19 +246,19 @@ plt.ylim(-10.0,2.0)
 plt.ylabel('x [m]')
 plt.xlabel('y [m]')
 
-plt.figure(1)
-plt.grid(True,which="major",color="#999999")
-plt.grid(True,which="minor",color="#DDDDDD",ls="--")
-plt.minorticks_on()
-plt.plot(xcoord1,ycoord1,color='r')
-plt.plot(xcoord1,camline,'--',color='r')
-plt.plot(xcoord2,ycoord2,color='r')
-plt.xlim(0,1)
-plt.ylim(-0.3,0.3)
-plt.text(0.0,0.0,'LE')
-plt.text(1.0,0.0,'TE')
-plt.ylabel('y/c [-]')
-plt.xlabel('x/c [-]')
+#plt.figure(1)
+#plt.grid(True,which="major",color="#999999")
+#plt.grid(True,which="minor",color="#DDDDDD",ls="--")
+#plt.minorticks_on()
+#plt.plot(xcoord1,ycoord1,color='r')
+#plt.plot(xcoord1,camline,'--',color='r')
+#plt.plot(xcoord2,ycoord2,color='r')
+#plt.xlim(0,1)
+#plt.ylim(-0.3,0.3)
+#plt.text(0.0,0.0,'LE')
+#plt.text(1.0,0.0,'TE')
+#plt.ylabel('y/c [-]')
+#plt.xlabel('x/c [-]')
 
 plt.show()
 
