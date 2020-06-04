@@ -241,3 +241,5 @@ cm0 = -0.018 #preliminary estimate
 
 tail_speedratio = 1**0.5 # sead, T tail
 
+# Landing gear sizing
+theta = 15 #Clearance angle
