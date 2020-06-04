@@ -173,12 +173,17 @@ def loading():
     plt.ylabel('mass [kg]')
     plt.xlabel('xcg [% of MAC]')
     plt.show()
-    extreme_cg = maccie(onlyfwdcargo[0], x_lemac, MAC), maccie(onlyaftcargo[0], x_lemac, MAC)
+    
+    cg_excursion = np.array([[onlyfwdcargo[0]], [onlyaftcargo[0]], [bothcargo[0]], [window[0]], window_back[0], 
+                             middle[0], middle_back[0], aisle[0], aisle_back[0], fully_loaded[0]]) - x_lemac / MAC
+    cg_fwd = np.min(cg_excursion) * 0.98        #subtract 2% margin
+    cg_aft = np.max(cg_excursion) * 1.02        #add 2% margin
+    print(cg_fwd,cg_aft)
+    #extreme_cg = maccie(onlyfwdcargo[0], x_lemac, MAC), maccie(onlyaftcargo[0], x_lemac, MAC)
     return fully_loaded[0], extreme_cg
 
 
 cgMTOW, extreme_cg = loading()  # extreme cg is in % of mac, first fwd, then aft, fully loaded is cg
-
 
 
 #calculate extremes and add 2% margin on both sides
