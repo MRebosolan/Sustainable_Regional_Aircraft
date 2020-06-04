@@ -56,8 +56,6 @@ def cabin_design(fractioninfus,fractionintail,HYDROGENVOLUME):
         
     
     
-    fractioninfus=0 #FRACTION OF FUEL IN FUSELAGE (CYLINDER AND TAIL)
-    fractionintail=0 #FRACTION OF FUSELAGE FUEL IN TAIL
         
     V_tank_cyl=(fractioninfus-fractionintail*fractioninfus)*V_tank
     V_tank_tail=fractionintail*fractioninfus*V_tank
@@ -89,12 +87,14 @@ def cabin_design(fractioninfus,fractionintail,HYDROGENVOLUME):
 
 
 
-t_cyl,m_cyl, tm_cyl, d_cyl,l_cyl,t_tail,m_tail, tm_tail, d_tail,l_tail,t_top,m_top,tm_top,d_top,l_top,totalcabinlength,V_tank_cyl, V_tank_tail, V_tank_top=cabin_design(0,0,30)
+t_cyl,m_cyl, tm_cyl, d_cyl,l_cyl,t_tail,m_tail, tm_tail, d_tail,l_tail,t_top,m_top,tm_top,d_top,l_top,totalcabinlength,V_tank_cyl, V_tank_tail, V_tank_top=cabin_design(0.5,0,30)
 
+rho_hydrogen=70
 
-
-
-
+tm_tanksystem=tm_cyl+tm_tail+tm_top
+CGtank=((tm_cyl)*(totalcabinlength+l_cyl/2)+(tm_top)*(totalcabinlength/2+l_cyl/2)+(tm_tail)*(totalcabinlength+l_cyl+l_tail/2))/tm_tanksystem
+CGfuelfull=((V_tank_cyl*rho_hydrogen)*(totalcabinlength+l_cyl/2)+(V_tank_top*rho_hydrogen)*(totalcabinlength/2+l_cyl/2)+(V_tank_tail*rho_hydrogen)*(totalcabinlength+l_cyl+l_tail/2))/(V_tank_cyl+V_tank_tail+V_tank_top)/rho_hydrogen
+CGcomb=(CGtank*tm_tanksystem+CGfuelfull*(V_tank_cyl+V_tank_tail+V_tank_top)*rho_hydrogen)/(tm_tanksystem+(V_tank_cyl+V_tank_tail+V_tank_top)*rho_hydrogen)
 
 #something for plotting in 3D
 def set_axes_radius(ax, origin, radius):
