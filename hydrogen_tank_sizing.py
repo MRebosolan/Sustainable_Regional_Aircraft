@@ -12,6 +12,8 @@ def tank_sizing(HYDROGENVOLUME,LENGTH,N):
     #N is number of tanks
     R=0
     result=0
+    hsc=R/2 #spherical cap height
+    asc=R #spherical cap radius
     while result<=HYDROGENVOLUME:
         R+=0.001
         hsc=R/2 #spherical cap height
