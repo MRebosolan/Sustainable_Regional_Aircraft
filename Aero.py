@@ -185,6 +185,7 @@ xcoord1=[]
 xcoord2=[]
 ycoord1=[]
 ycoord2=[]
+camline=[]
 
 for i in lines[:26]:
     xcoord1.append(float(i.split('     ')[0]))
@@ -200,6 +201,10 @@ ycoord2.insert(0,0.0)
 #Reverse order 
 xcoord1=xcoord1[::-1]
 ycoord1=ycoord1[::-1]
+
+#Camber Line
+for i in range(0,len(xcoord1)):
+    camline.append((ycoord1[i]+ycoord2[i])/2)
 
 print(lines)
 print(xcoord1)
@@ -223,6 +228,7 @@ plt.grid(True,which="major",color="#999999")
 plt.grid(True,which="minor",color="#DDDDDD",ls="--")
 plt.minorticks_on()
 plt.plot(xcoord1,ycoord1,color='r')
+plt.plot(xcoord1,camline,'--',color='r')
 plt.plot(xcoord2,ycoord2,color='r')
 plt.xlim(0,1)
 plt.ylim(-0.3,0.3)
