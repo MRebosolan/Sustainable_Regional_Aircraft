@@ -130,30 +130,32 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf):
     dCLmax_land = 0.45
     dCLmax_to   = 0.3
 
-    dClmax_land = 1.3
-    hinge_c     = 60 #percent
+    dClmax_land = 0.9
+    hinge_c     = 80 #percent
     sweep_hinge = np.arctan(np.tan(sweep_c4) - 4/AR * ((hinge_c-25)/100 * (1 - taper)/(1 + taper)))
 
     SwfS = dCLmax_land/ (0.9 * dClmax_land * np.cos(sweep_hinge))
 
-    Df = widthf/2
+    Df = widthf/2 * 1
 
     a = -2 * (c_root - c_tip)/b
     ch = 1 - (hinge_c/100)
 
-    D = (-4 * a * Df + 2 * c_root)**2 + 4 * 2 * a * (-2 * SwfS * S/ ch)
+    D = (-4 * a * Df + 2 * c_root)**2 + 4 * 2 * a * (-2 * SwfS * S)
 
     print("D = ", D)
 
-    x2 = max((-(-4 * a * Df + 2 * c_root) + np.sqrt(D))/ (-4 * a), (-(-4 * a * Df + 2 * c_root) - np.sqrt(D)) / (-4 * a))/2
+    x2 = max((-(-4 * a * Df + 2 * c_root) + np.sqrt(D))/ (-4 * a), (-(-4 * a * Df + 2 * c_root) - np.sqrt(D)) / (-4 * a))
     print("x2 = ", (x2 + Df))
 
-    Sw_check = ((-2 * a * Df + c_root) + (-2 * a * (Df + x2) + c_root)) * x2 / 2 / S
+    Sw_check = ((-2 * a * Df + c_root) + (-2 * a * (Df + x2) + c_root)) * x2 / 2 / S   #verified
     print(SwfS, Sw_check)
 
     wing = [sweep_c4, taper, c_root, c_tip, c_mac, y_mac, t_c, dihedral,
             Cl_des, dCLmax_land, dCLmax_to]
-    
+
+    print("wing =", wing)
+
     cross1 = line_intersect(x_fus[0],y_fus[0],x_fus[1],y_fus[1],x_wing[0],y_wing[0],x_wing[1],y_wing[1])
 
     x_hld = [Df, Df, x2 + Df, x2 + Df]
@@ -163,6 +165,8 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf):
              (-(Df + x2) * np.tan(sweep_cLE) - chord_length(c_root, c_tip, (Df + x2), b))]
 
     hld = [x_hld, y_hld]
+
+
 
     return wing, geom,cross1, hld
 
