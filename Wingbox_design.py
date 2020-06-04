@@ -67,43 +67,19 @@ for i in range(1,100):
 
 
 #-------ELLIPTICAL/GENERAL LIFT DISTRIBUTION CALCULATIONS------------------
-<<<<<<< HEAD
-
-
-def generate_spanwise_locations(n, b=wing_length):
-    x_array = np.linspace(0, b, n, endpoint=False)
-    return x_array[1:]
-<<<<<<< HEAD
-
-def general_lift_d (x, a=11.43427, b=15926.5):
-    #Insert formula for lift distribution here
-    #current obtained by fitting elliptical distribution to given wing loading, a=half wing span - half fuselage width
-    loading_at_x = np.sqrt((1-(x**2/a**2))*b**2)
-    return loading_at_x
-
-=======
-
-def general_lift_d (x, a=11.43427, b=15926.5):
-    #Insert formula for lift distribution here
-    #current obtained by fitting elliptical distribution to given wing loading, a=half wing span - half fuselage width
-    loading_at_x = np.sqrt((1-(x**2/a**2))*b**2)
-    return loading_at_x
-
->>>>>>> b29fe89e17984d855544738417507b62b9e5c078
-=======
-
 
 def generate_spanwise_locations(n, b=wing_length):
     x_array = np.linspace(0, b, n, endpoint=False)
     return x_array[1:]
 
+
 def general_lift_d (x, a=11.43427, b=15926.5):
     #Insert formula for lift distribution here
     #current obtained by fitting elliptical distribution to given wing loading, a=half wing span - half fuselage width
     loading_at_x = np.sqrt((1-(x**2/a**2))*b**2)
     return loading_at_x
 
->>>>>>> 90088981bcf15a41058c792902db0a3ecc85d8e9
+
 def general_weight_d (x, slope=-450.248, intercept=5148.26):
     #Insert weight distribution. Current is linear for wing weight of 300*9.81
     weight_at_x = intercept + slope*x
@@ -146,35 +122,15 @@ def wing_root_reaction_forces (L_wing, x_lift, W_wing, x_weight, W_engine, x_eng
     R_x = T_to #aft-ward positive
     M_z = T_to * x_engine #left hand positive
     return (R_y, M_x, R_x, M_z)
-<<<<<<< HEAD
-<<<<<<< HEAD
 
-R_y, M_x, R_x, M_z = wing_root_reaction_forces(L_wing, x_lift, wing_weight, x_weight, w_engine, x_engine_root, T_to)
-=======
 
 R_y, M_x, R_x, M_z = wing_root_reaction_forces(L_wing, x_lift, wing_weight, x_weight, w_engine, x_engine_root, T_to)
 
->>>>>>> b29fe89e17984d855544738417507b62b9e5c078
-=======
-
-R_y, M_x, R_x, M_z = wing_root_reaction_forces(L_wing, x_lift, wing_weight, x_weight, w_engine, x_engine_root, T_to)
-
->>>>>>> 90088981bcf15a41058c792902db0a3ecc85d8e9
 
 def internal_x_bending_moment(x, x_array=x_array, lift_array=lift_array, w_engine=w_engine,\
     weight_array=weight_array, x_engine = x_engine_root, R_y = R_y, M = M_x):
     #counterclockwise positive
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-def internal_x_bending_moment(x, x_array=x_array, lift_array=lift_array, w_engine=w_engine,\
-    weight_array=weight_array, x_engine = x_engine_root, R_y = R_y, M = M_x):
-    #counterclockwise positive
-
-=======
->>>>>>> b29fe89e17984d855544738417507b62b9e5c078
-=======
->>>>>>> 90088981bcf15a41058c792902db0a3ecc85d8e9
     x = min(x_array, key=lambda y:abs(y-x))
     x_index = np.where(x_array == x)[0][0]
     x_array = x_array[:x_index]
@@ -240,18 +196,10 @@ plt.plot(x_array[2:], moment_array)
 plt.plot(x_array[2:], shear_array)
 plt.plot(x_array[2:], moment_array2)
 plt.plot(x_array[2:], shear_array2)
-<<<<<<< HEAD
-<<<<<<< HEAD
 
-
-=======
 plt.xlabel("spanwise coordinate")
 plt.ylabel("loads in N/moments in N/m")
->>>>>>> b29fe89e17984d855544738417507b62b9e5c078
-=======
-plt.xlabel("spanwise coordinate")
-plt.ylabel("loads in N/moments in N/m")
->>>>>>> 90088981bcf15a41058c792902db0a3ecc85d8e9
+
 
 
 #-------BENDING STRESS CALCULATIONS------------------
@@ -269,8 +217,6 @@ def thickness_wingbox(min_thickness_mm,max_thickness_mm):
         thickness_wb.append(i/1000)
     return thickness_wb
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 thickness_wb = thickness_wingbox(1,10)
 
 def mass_wingbox(base_wb,height_wb,b=b,thickness_wb=thickness_wb, material_wb=material_wb):
@@ -291,9 +237,7 @@ def mass_wingbox(base_wb,height_wb,b=b,thickness_wb=thickness_wb, material_wb=ma
 
 #
 # plt.show()
-=======
-=======
->>>>>>> 90088981bcf15a41058c792902db0a3ecc85d8e9
+
 
 thickness_array = thickness_wingbox(1,10)
 
@@ -341,8 +285,3 @@ def buckling_sweep(buckling_stress, ir_buckling):
     buckling_stress_sweep = 4*buckling_stress/3
     ir_buckling_sweep = 4*ir_buckling/3
     return buckling_stress_sweep, ir_buckling_sweep
-
-<<<<<<< HEAD
->>>>>>> b29fe89e17984d855544738417507b62b9e5c078
-=======
->>>>>>> 90088981bcf15a41058c792902db0a3ecc85d8e9
