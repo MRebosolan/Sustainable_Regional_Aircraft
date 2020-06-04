@@ -186,12 +186,16 @@ wing, geom, cross1, hld = wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf)
 
 #----------------------------- .txt File Airfoil Coordinates
 
+#Read from file
 f=open('airfoil2.txt','r')
 lines=f.readlines()
+
+#Create empty lists
 xcoord1=[]
 xcoord2=[]
 ycoord1=[]
 ycoord2=[]
+
 for i in lines[:26]:
     xcoord1.append(float(i.split('     ')[0]))
     ycoord1.append(float(i.split('     ')[1].strip('\n')))
@@ -199,8 +203,13 @@ for i in lines[26:]:
     xcoord2.append(float(i.split('     ')[0]))
     ycoord2.append(float(i.split('     ')[1].strip('\n')))
 
+#Add origin to list to connect
 xcoord2.insert(0,0.0)
 ycoord2.insert(0,0.0)
+    
+#Reverse order 
+xcoord1=xcoord1[::-1]
+ycoord1=ycoord1[::-1]
 
 print(lines)
 print(xcoord1)
