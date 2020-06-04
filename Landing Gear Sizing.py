@@ -2,7 +2,7 @@ import numpy as np
 import input
 import Class_2_estimation as Cl2
 """
-Responsible person: Tobias
+Responsible person: Tobias | FOR NOW!!!! run from line 53
 
 This code requires as inputs:
     MTOW           | Maximum take-off weight
