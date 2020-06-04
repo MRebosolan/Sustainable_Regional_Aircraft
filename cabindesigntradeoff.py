@@ -4,7 +4,7 @@ Created on Thu Jun  4 11:55:00 2020
 
 @author: malfl
 """
-
+from cabindesign import cabin_design
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 fig = plt.figure()
