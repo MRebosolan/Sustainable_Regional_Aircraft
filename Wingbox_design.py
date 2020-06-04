@@ -68,16 +68,17 @@ for i in range(1,100):
 
 #-------ELLIPTICAL/GENERAL LIFT DISTRIBUTION CALCULATIONS------------------
 
-
 def generate_spanwise_locations(n, b=wing_length):
     x_array = np.linspace(0, b, n, endpoint=False)
     return x_array[1:]
+
 
 def general_lift_d (x, a=11.43427, b=15926.5):
     #Insert formula for lift distribution here
     #current obtained by fitting elliptical distribution to given wing loading, a=half wing span - half fuselage width
     loading_at_x = np.sqrt((1-(x**2/a**2))*b**2)
     return loading_at_x
+
 
 def general_weight_d (x, slope=-450.248, intercept=5148.26):
     #Insert weight distribution. Current is linear for wing weight of 300*9.81
@@ -121,6 +122,7 @@ def wing_root_reaction_forces (L_wing, x_lift, W_wing, x_weight, W_engine, x_eng
     R_x = T_to #aft-ward positive
     M_z = T_to * x_engine #left hand positive
     return (R_y, M_x, R_x, M_z)
+
 
 R_y, M_x, R_x, M_z = wing_root_reaction_forces(L_wing, x_lift, wing_weight, x_weight, w_engine, x_engine_root, T_to)
 
@@ -194,8 +196,10 @@ plt.plot(x_array[2:], moment_array)
 plt.plot(x_array[2:], shear_array)
 plt.plot(x_array[2:], moment_array2)
 plt.plot(x_array[2:], shear_array2)
+
 plt.xlabel("spanwise coordinate")
 plt.ylabel("loads in N/moments in N/m")
+
 
 
 #-------BENDING STRESS CALCULATIONS------------------
@@ -212,6 +216,27 @@ def thickness_wingbox(min_thickness_mm,max_thickness_mm):
     for i in range (min_thickness_mm,max_thickness_mm+1):
         thickness_wb.append(i/1000)
     return thickness_wb
+
+thickness_wb = thickness_wingbox(1,10)
+
+def mass_wingbox(base_wb,height_wb,b=b,thickness_wb=thickness_wb, material_wb=material_wb):
+    mass_wb =[]
+    for j in material_wb:
+        for i in thickness_wb:
+            area_wb = 2*i*(base_wb+height_wb) #area of wingbox
+            volume_wb = area_wb * b/2  # assume that the wingbox covers the majority of the wing length
+            mass_wb = volume_wb * j
+    return mass_wb
+
+
+
+    # moi_rectangle_x = i*base_wb*height_wb**2/3
+    # moi_rectangle_y = i*base_wb**2*height_wb/3
+    # hoop_x = - bending_moment*(height_wb/2)/moi_rectangle_x
+    # hoop_y = - bending_moment*(base_wb/2)/moi_rectangle_y
+
+#
+# plt.show()
 
 
 thickness_array = thickness_wingbox(1,10)
@@ -260,4 +285,3 @@ def buckling_sweep(buckling_stress, ir_buckling):
     buckling_stress_sweep = 4*buckling_stress/3
     ir_buckling_sweep = 4*ir_buckling/3
     return buckling_stress_sweep, ir_buckling_sweep
-
