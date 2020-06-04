@@ -17,11 +17,12 @@ def tank_sizing(HYDROGENVOLUME,LENGTH,N):
         hsc=R/2 #spherical cap height
         asc=R #spherical cap radius
         result=3.14159*(LENGTH-2*hsc*N)*R**2+N*2*3.14159*hsc/6*(3*asc**2+hsc**2) #NOW INCLUDES SPHERICAL CAPS INSTEAD OF HEMISPHERICAL CAPS!
-    print(R)
+    # print(R)
     TANK_DIAMETER=R*2
-    hsc=R #spherical cap height
-    asc=R #spherical cap radius
+
     TANK_SURFACE_AREA = (LENGTH-N*2*hsc)/N*3.14159*TANK_DIAMETER + 4*3.14159*R*hsc #ONE TANK!!!
+
+
     TANK_MATERIAL_DENSITY = 2825 #MONOLITHIC METAL Aluminium alloy 2219 KG/M3
 
     # TANK THICKNESS COMPUTATION
@@ -63,7 +64,7 @@ def tank_sizing(HYDROGENVOLUME,LENGTH,N):
     xilist=[]
     yilist=[]
     
-    IWISHTOLOOP=False #SET THIS VALUE TO TRUE IF YOU WANT TO DETERMINE THICKNESS ACCURATELY, OTHERWISE THREE CM IS USED WHICH SHOULD BE SUFFICENT
+    IWISHTOLOOP=True #SET THIS VALUE TO TRUE IF YOU WANT TO DETERMINE THICKNESS ACCURATELY, OTHERWISE THREE CM IS USED WHICH SHOULD BE SUFFICENT
     
     if IWISHTOLOOP:
         for L in range(1,100):
@@ -109,18 +110,11 @@ def tank_sizing(HYDROGENVOLUME,LENGTH,N):
         INSULATION_THICKNESS=0.03
             
     INSULATION_MASS=INSULATION_THICKNESS*TANK_SURFACE_AREA*N*INSULATION_DENSITY
-    
-    
     STRUCTURAL_TANK_MASS+=INSULATION_MASS
     TOTAL_STRUCTURAL_TANK_MASS =N*STRUCTURAL_TANK_MASS    
     TANK_DIAMETER+=2*INSULATION_THICKNESS
     print(HYDROGENVOLUME)
     
-        
-        
-            
-            
-
     return(TANK_THICKNESS,round(STRUCTURAL_TANK_MASS,2),round(TOTAL_STRUCTURAL_TANK_MASS,1), round(TANK_DIAMETER,3),round(LENGTH,3))
     
     
@@ -209,17 +203,23 @@ def tank_sizing_fuselage(HYDROGENVOLUME, R,N):
     for boiloff in yilist:
         
         if boiloff<0.005*HYDROGENVOLUME*DENSITY_LH:
+            print(boiloff)
+            INSULATION_THICKNESS=xilist[counter]
+            print(INSULATION_THICKNESS)
             print('boiloff ',boiloff)
             INSULATION_THICKNESS=xilist[counter]
-            print('insulation thickness', INSULATION_THICKNESS)
+            print('insulation thickness ',INSULATION_THICKNESS)
             break
         
         counter+=1
-    print(HYDROGENVOLUME)
+
     INSULATION_MASS=INSULATION_THICKNESS*TANK_SURFACE_AREA*N*INSULATION_DENSITY
+        
     STRUCTURAL_TANK_MASS+=INSULATION_MASS
     TOTAL_STRUCTURAL_TANK_MASS =N*STRUCTURAL_TANK_MASS 
     TANK_DIAMETER+=2*INSULATION_THICKNESS
         
-
     return(TANK_THICKNESS,round(STRUCTURAL_TANK_MASS,2),round(TOTAL_STRUCTURAL_TANK_MASS,1), round(TANK_DIAMETER,3),round(LENGTH,3))
+    
+    
+
