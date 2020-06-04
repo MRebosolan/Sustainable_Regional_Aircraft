@@ -167,17 +167,20 @@ def chord_along_span(Cr, Ct, b, y):
     c = Cr - (Cr - Ct) / (b / 2) * y
     return c
 
-outboard_flap = 2# Aero.x2
+
+outboard_flap = widthf + Aero.x2
 def Swf(widthf, outboard_flap):
-    swf = 2 * (outboard_flap - widthf) * (chord_along_span(widthf) - chord_along_span(outboard_flap)) / 2
+    b_imag = outboard_flap - widthf
+    swf = 2 * b_imag * (chord_along_span(Cr, Ct, b, widthf) - chord_along_span(Cr, Ct, b, outboard_flap)) / 2
     return swf
-# print(Swf(widthf, outboard_flap))
-Swf=30
+
+Swf = Swf(widthf, outboard_flap)
+print(Swf)
 CL0_flapped = cl0+0.9*DClmax*(Swf/S)*0.975
 
 cm_wing = cm0 *(AR *np.cos(sweep)**2)/(AR + 2*np.cos(sweep))
 cm_fus = -1.8 * (1 - 2.5*widthf/fuselage_lenght)*(A_fuselage*fuselage_lenght*CL0_flapped/(4*S*MAC*clalpha_acless_lowspeed))
-DCm025 = mu2*(-mu1*DClmax*cprime_c-(CL+DClmax*(1-Swf/S))*0.125*cprime_c*(cprime_c-1)) + 0.7*AR*mu3*DClmax*tan(sweep) / (1+2/AR)
+DCm025 = mu2*(-mu1*DClmax*cprime_c-(CL+DClmax*(1-Swf/S))*0.125*cprime_c*(cprime_c-1)) + 0.7*AR*mu3*DClmax*tan(sweep) / (1+2/AR) - CL * (0.25 - xac / MAC)
 
 
     
@@ -188,7 +191,7 @@ DCm025 = mu2*(-mu1*DClmax*cprime_c-(CL+DClmax*(1-Swf/S))*0.125*cprime_c*(cprime_
 # deltaf = 40*pi/180 # deflection angle in radians
 Swf = 79.1 # Geometric estimation
 
-print(DCm025)
+
 
 
 
@@ -238,3 +241,9 @@ e_tail = input.e_tail #Oswald efficiency factor
 k = 1 / (np.pi*AR_tail *e_tail)
 
 Dtrim = abs(0.5* rho_cruise *v_cruise**2 *speedratio * horizontal_area * CL_h * k)
+
+
+
+
+
+#todo: check capability of horizontal tail for providing negative lift to sufficiently rotate the aircraft at take-off
