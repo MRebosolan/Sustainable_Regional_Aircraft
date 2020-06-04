@@ -40,7 +40,7 @@ x_cargo_fwd = input.x_cg_fwd_cargo #front cargo cg measured from nose [m]
 x_cargo_aft = input.x_cg_aft_cargo #aft cargo cg measured from nose [m]
 pax_abreast = input.pax_abreast
 
-x_start_Cr = np.arange(0.2 * l_f, 0.8 * l_f, 50)   #x-location measured from the nose where root chord starts
+x_start_Cr = np.arange(0.2 * l_f, 0.8 * l_f, 1)   #x-location measured from the nose where root chord starts
 x_lemac = [i + x_lemac_Cr for i in x_start_Cr]
 x_engine = x_lemac       #Assume engine cg is at lemac
 x_nacelle = x_engine     #assume nacelle cg is at engine cg
@@ -78,14 +78,13 @@ x_lg_front = 3     #cg location of front landing gear [m], measured from the nos
 x_lg_main = [i + 2 * Cr / 3 for i in x_start_Cr]     #cg location of main landing gear [m], assumed 2/3 root chord length further than start of root chord (used for calculating cg at oew, not to be changed per se)
 print("In calculation of cg @ OEW, take into account the exact tank placement and cg location once agreed on a specific configuration")
 
-
 def cg_excursion_wing_shift():
+    plt.close()
     cg_fwd_excursion_lst = []
     cg_aft_excursion_lst = []
     for i in range(len(x_start_Cr)):
-        x_cg_wing_nose = wing_cg(sweep, b, Cr, Ct, MAC, x_lemac_Cr, x_lemac[i])[0]
-        print(x_lemac[i], x_empennage[i])
-        cg_oew_nose = cg_OEW_wrt_lemac(x_engine[i], w_engine, x_nacelle[i], w_nacelle, x_empennage[i], w_empennage, x_apu, w_apu, x_tank, w_tank, x_cg_wing_nose, w_wing, x_lg_front, w_lg_front, x_lg_main, w_lg_main, OEW, x_lemac[i], MAC)[1]
+        x_cg_wing_nose, x_cg_wing_mac = wing_cg(sweep, b, Cr, Ct, MAC, x_lemac_Cr, x_lemac[i])
+        cg_oew_wrt_lemac, cg_oew_nose = cg_OEW_wrt_lemac(x_engine[i], w_engine, x_nacelle[i], w_nacelle, x_empennage[i], w_empennage, x_apu, w_apu, x_tank, w_tank, x_cg_wing_nose, w_wing, x_lg_front, w_lg_front, x_lg_main[i], w_lg_main, OEW, x_lemac[i], MAC)
         onlyfwdcargo = loadingcg(OEW, cg_oew_nose, fwd_cargo_max, x_cargo_fwd)
         onlyaftcargo = loadingcg(OEW, cg_oew_nose, aft_cargo_max, x_cargo_aft)
         bothcargo = loadingcg(onlyfwdcargo[1], onlyfwdcargo[0], aft_cargo_max, x_cargo_aft)
@@ -100,18 +99,20 @@ def cg_excursion_wing_shift():
                              middle[0], middle_back[0], aisle[0], aisle_back[0], fully_loaded[0]]) 
         cgmin_lst = []
         cgmax_lst = []
-        for i in range(len(cg_excursion)):
-            cgmin = np.min(cg_excursion[i])
-            cgmax = np.max(cg_excursion[i])
+        for j in range(len(cg_excursion)):
+            cgmin = np.min(cg_excursion[j])
+            cgmax = np.max(cg_excursion[j])
             cgmin_lst.append(cgmin)
             cgmax_lst.append(cgmax)
-            
         
-        cg_fwd = (np.min(cgmin_lst) - x_lemac) / MAC * 0.98      #subtract 2% margin, assuming most forward cg is after lemac
-        cg_aft = (np.max(cgmax_lst) - x_lemac) / MAC * 1.02      #add 2% margin
+        cg_fwd = (np.min(cgmin_lst) - x_lemac[i]) / MAC * 0.98      #subtract 2% margin, assuming most forward cg is after lemac
+        cg_aft = (np.max(cgmax_lst) - x_lemac[i]) / MAC * 1.02      #add 2% margin
         cg_fwd_excursion_lst.append(cg_fwd)
         cg_aft_excursion_lst.append(cg_aft)
-    plt.plot(cg_fwd_excursion_lst, x_lemac / l_f, cg_aft_excursion_lst, x_lemac / l_f)
+        
+    plt.plot(cg_fwd_excursion_lst, [i / l_f for i in x_lemac], cg_aft_excursion_lst, [i / l_f for i in x_lemac])
+    plt.xlabel('x_cg / MAC [-]')
+    plt.ylabel('x_lemac / l_fus [-]')
     plt.show()
     
     return 
