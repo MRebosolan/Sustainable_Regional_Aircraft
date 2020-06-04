@@ -2,6 +2,7 @@ import numpy as np
 import input as inp
 import matplotlib.pyplot as plt
 import Envelope
+import Aileron_sizing
 
 
 """
@@ -37,6 +38,9 @@ V_C = Envelope.V_C  # Cruise Speed
 V_D = Envelope.V_D  # Dive Speed
 V_S = Envelope.V_S  # Stall Speed
 V_A = Envelope.V_A  # Max Gust Speed
+
+b1=Aileron_sizing.b1
+b2=Aileron_sizing.b2
 
 # ---------------------------- Line Intersection Point
 
@@ -174,15 +178,22 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf):
              (-Df * np.tan(sweep_cLE) - (hinge_c/100) * chord_length(c_root, c_tip, Df, b)),
              (-(Df + x2) * np.tan(sweep_cLE) - (hinge_c/100) * chord_length(c_root, c_tip, (Df + x2), b)),
              (-(Df + x2) * np.tan(sweep_cLE) - chord_length(c_root, c_tip, (Df + x2), b))]
+    
+    x_ail = [b1, b1, b2, b2]
+    y_ail = [(-b1*np.tan(sweep_cLE) - chord_length(c_root, c_tip, b1, b)),
+             (-b1 * np.tan(sweep_cLE) - (hinge_c/100) * chord_length(c_root, c_tip, b1, b)),
+             (-b2 * np.tan(sweep_cLE) - (hinge_c/100) * chord_length(c_root, c_tip, b2, b)),
+             (-b2 * np.tan(sweep_cLE) - chord_length(c_root, c_tip, b2, b))]
+    
+    ail   = [x_ail,y_ail]
+    hld   = [x_hld, y_hld]
 
-    hld = [x_hld, y_hld]
 
 
+    return wing, geom,cross1, hld, ail
 
-    return wing, geom,cross1, hld
 
-
-wing, geom, cross1, hld = wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf)
+wing, geom, cross1, hld, ail = wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf)
 
 
 #----------------------------- .txt File Airfoil Coordinates
@@ -221,11 +232,12 @@ print(lines)
 print(xcoord1)
 print(ycoord1)
 print(ycoord2)
+print(camline)
 
 #----------------------------- Plotting
 
 plt.figure(0)
-plt.plot(geom[0], geom[1], geom[2], geom[3], hld[0], hld[1])
+plt.plot(geom[0], geom[1], geom[2], geom[3], hld[0], hld[1],ail[0],ail[1])
 plt.text(cross1[0],cross1[1],'Fuselage Wall Line')
 plt.grid(True,which="major",color="#999999")
 plt.grid(True,which="minor",color="#DDDDDD",ls="--")
