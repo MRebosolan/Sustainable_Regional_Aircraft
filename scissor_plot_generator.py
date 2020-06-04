@@ -14,7 +14,7 @@ import Aero
 
 MAC = input.MAC
 lemac = input.x_LEMAC_nose
-tail_armh = input.lh
+# tail_armh = input.lh
 
 S =  cl2.S#m^2
 b = cl2.b
@@ -44,7 +44,7 @@ AR_tail = b_tail**2/horizontal_area
 AR = input.AR
 sweep = input.quarter_sweep
 
-C_h = horizontal_area*tail_armh/(S*MAC)
+# C_h = horizontal_area*tail_armh/(S*MAC)
 
 
 C_lh_max = -0.8 #adjustable tail
@@ -61,35 +61,6 @@ clalpha_tail_degrees = np.radians(clalpha_tail)
 clalpha_acless_wing = clalpha_datcom*(1+2.15*(widthf/b))*(S-area_fuselage)/S
 clalpha_acless_fuselage = (np.pi*widthf**2)/(2*S)# not sure bout this
 clalpha_acless = clalpha_acless_wing+clalpha_acless_fuselage
-
-r = 2*tail_armh/b
-K_ea = (0.1124+0.1265*sweep+0.1766*sweep**2)/(r**2) + 0.1024/r +2 #ADSEE LECTURE 4 SLIDE 43
-K_0 = 0.1124/(r**2)+0.1024/r +2 #ADSEE LECTURE 4 SLIDE 43
-
-theta = np.tanh((input.z_position_horizontal - input.z_position_wing)/tail_armh)
-hypotenuse = tail_armh/np.cos(theta)
-tail_wing_distance = hypotenuse*np.cos(theta+input.zero_lift_angle)
-m_tv = tail_wing_distance *2/b
-
-part_a = (r*0.4876)/((r**2+m_tv**2)*((r**2+m_tv**2+0.6319)**0.5)) #ADSEE LECTURE 4 SLIDE 43
-part_b = 1+ ((r**2)/(r**2+0.7915+5.0734*m_tv**2))**0.3113 
-part_c = 1-((m_tv**2)/(1+m_tv**2))**0.5
-
-downwash = (K_ea/K_0)*((part_a)+part_b*part_c)*clalpha_datcom/(np.pi*AR)
-
-assert    0.1 < downwash/(4/(AR+2)) < 1, 'downwash value not within expected range for T-Tail'
-
-
-
-
-beta_low = (1-mach_app**2)**0.5
-beta_low_tail = (1- speedratio*mach_app**2)**0.5
-
-clalpha_datcom_lowspeed =  2*np.pi*AR/(2+((4+ ((AR*beta_low)**2)*(1+ (np.tan(sweep)**2)/beta_low**2))**0.5))
-clalpha_acless_lowspeed = clalpha_datcom_lowspeed*(1+2.15*(widthf/b))*(S-area_fuselage)/S + (np.pi*widthf**2)/(2*S)
-clalpha_tail_lowspeed =  2*np.pi*AR_tail/(2+((4+ ((AR_tail*beta_low_tail/n)**2)*(1+ (np.tan(stabilizer_sweep)**2)/beta_low_tail**2))**0.5))
-
-downwash_lowspeed = (K_ea/K_0)*((part_a)+part_b*part_c)*clalpha_datcom_lowspeed/(np.pi*AR)
 
 
 
@@ -126,6 +97,14 @@ beta_A_app = AR*beta_app
 sweepbeta_app = np.degrees(sweep)/beta_app
 
 
+
+beta_low = (1-mach_app**2)**0.5
+beta_low_tail = (1- speedratio*mach_app**2)**0.5
+
+clalpha_datcom_lowspeed =  2*np.pi*AR/(2+((4+ ((AR*beta_low)**2)*(1+ (np.tan(sweep)**2)/beta_low**2))**0.5))
+clalpha_acless_lowspeed = clalpha_datcom_lowspeed*(1+2.15*(widthf/b))*(S-area_fuselage)/S + (np.pi*widthf**2)/(2*S)
+clalpha_tail_lowspeed =  2*np.pi*AR_tail/(2+((4+ ((AR_tail*beta_low_tail/n)**2)*(1+ (np.tan(stabilizer_sweep)**2)/beta_low_tail**2))**0.5))
+
 # Look in SEAD lecture 4 slide 33 to get xac_w from these parameters
 xac_w = Xacregression(beta_A, taper, sweepbeta) # for Mach = 0.78 (cruise)
 xac_w2 = Xacregression_app(beta_A_app, taper, sweepbeta_app) # for Vappr = 66.36 (approach/landing)
@@ -140,6 +119,30 @@ xac_f1_cruise = -1.8*widthf*hf*l_fn / (S * MAC * CLalpha_Ah) #due to nose, desta
 xac_f2_cruise = 0.273*widthf*(S/b)*(b-widthf)*tan(sweep) / ((1+taper)*MAC*MAC*(b+2.15*widthf)) # liftloss of intersection with wing, stabilizing
 xac_n_cruise = 2*kn*bn*bn*ln / (S*MAC*CLalpha_Ah)
 xac_cruise = xac_w+xac_f1+xac_f2+xac_n
+
+tail_armh = input.lh + MAC * (0.25-xac_cruise)
+
+r = 2*tail_armh/b
+K_ea = (0.1124+0.1265*sweep+0.1766*sweep**2)/(r**2) + 0.1024/r +2 #ADSEE LECTURE 4 SLIDE 43
+K_0 = 0.1124/(r**2)+0.1024/r +2 #ADSEE LECTURE 4 SLIDE 43
+
+theta = np.tanh((input.z_position_horizontal - input.z_position_wing)/tail_armh)
+hypotenuse = tail_armh/np.cos(theta)
+tail_wing_distance = hypotenuse*np.cos(theta+input.zero_lift_angle)
+m_tv = tail_wing_distance *2/b
+
+part_a = (r*0.4876)/((r**2+m_tv**2)*((r**2+m_tv**2+0.6319)**0.5)) #ADSEE LECTURE 4 SLIDE 43
+part_b = 1+ ((r**2)/(r**2+0.7915+5.0734*m_tv**2))**0.3113 
+part_c = 1-((m_tv**2)/(1+m_tv**2))**0.5
+
+downwash = (K_ea/K_0)*((part_a)+part_b*part_c)*clalpha_datcom/(np.pi*AR)
+
+assert    0.1 < downwash/(4/(AR+2)) < 1, 'downwash value not within expected range for T-Tail'
+
+
+downwash_lowspeed = (K_ea/K_0)*((part_a)+part_b*part_c)*clalpha_datcom_lowspeed/(np.pi*AR)
+
+
 
 
 
@@ -227,8 +230,11 @@ plt.title('CS100')
 plt.show()
     
 
+Moment_ac = 0.5* rho_cruise *v_cruise**2 * cm_ac * MAC
 
+Lift_tail = Moment_ac/tail_armh
+CL_h = Lift_tail/(0.5* rho_cruise *v_cruise**2  * horizontal_area)
 e_tail = input.e_tail #Oswald efficiency factor
 k = 1 / (np.pi*AR_tail *e_tail)
 
-Dtrim = 0.5* rho_cruise *v_cruise**2 *speedratio * horizontal_area * CL_h * k
+Dtrim = abs(0.5* rho_cruise *v_cruise**2 *speedratio * horizontal_area * CL_h * k)
