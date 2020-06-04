@@ -78,8 +78,8 @@ def set_axes_equal(ax):
     
 
 
-fractioninfus=1 #FRACTION OF FUEL IN FUSELAGE (CYLINDER AND TAIL)
-fractionintail=0.5 #FRACTION OF FUSELAGE FUEL IN TAIL
+fractioninfus=0 #FRACTION OF FUEL IN FUSELAGE (CYLINDER AND TAIL)
+fractionintail=0 #FRACTION OF FUSELAGE FUEL IN TAIL
     
 V_tank_cyl=(fractioninfus-fractionintail*fractioninfus)*V_tank
 V_tank_tail=fractionintail*fractioninfus*V_tank
