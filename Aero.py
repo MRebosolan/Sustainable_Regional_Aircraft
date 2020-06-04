@@ -190,10 +190,10 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf):
 
 
 
-    return wing, geom,cross1, hld, ail
+    return wing, geom,cross1, hld, ail, x2
 
 
-wing, geom, cross1, hld, ail = wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf)
+wing, geom, cross1, hld, ail, x2 = wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf)
 
 
 #----------------------------- .txt File Airfoil Coordinates
