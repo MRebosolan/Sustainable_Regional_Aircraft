@@ -25,7 +25,7 @@ pitch = input.seat_pitch        #seat pitch [inch]
 rows = input.n_rows             #number of passegner rows [-]
 lh = input.lh                   #distance between wing and horizontal tail aerodynamic centers
 lv = input.lv                   #distance between wing and vertical tail aerodynamic centers
-x_ac = input.x_ac               #x location of wing aerodynamic center measured from the nose of the aircraft
+x_ac = x_lemac + MAC / 4               #x location of wing aerodynamic center measured from the nose of the aircraft
 x_apu = input.x_apu             #cg location of the apu measured from the nose of the aircraft [m]
 x_engine = input.x_engine       #cg location of engines, measured from the nose of the aircraft [m]
 x_nacelle = input.x_nacelle     #cg location of engine nacelles, measured from the nose of the aircraft [m]
@@ -110,25 +110,10 @@ def cg_OEW_wrt_lemac(x_engine, w_engine, x_nacelle, w_nacelle, x_empennage, w_em
     return cg_oew_wrt_lemac, cg_oew_nose
 
 
-#Calculate x_cg & OEW
-w_engine = cl2.df['SRA']['Engines']  # kg
-w_nacelle = cl2.df['SRA']['Nacelle']  # kg  
-w_empennage = cl2.df['SRA']['Empennage']    #kg
-w_wing = cl2.df['SRA']['Wing group'] #kg 
-w_apu = cl2.df['SRA']['APU']    #kg
-w_tank = 500
-x_tank = 20
-print("change w_tank and x_tank to variables used in other files once decided on a fuel tank configuration")
-x_fuel = x_tank                 #fuel cg measured from nose, assumed same as tank cg as most likely the tank will be symmetrical
-w_lg_main = cl2.df['SRA']['Main LG']    #kg
-w_lg_front = cl2.df['SRA']['Nose LG']    #kg
 
 x_engine = 15       #x_location of c.g. of engines measured from the nose [m]
 x_nacelle = 15      #x_location of c.g. of engine nacelles measured from the nose [m]
-x_empennage = x_ac + (lh + lv) / 2 #Assume cg of empennage is in the middle of the aerodynamic center of horizontal and vertical tail, measured from the nose
-x_lg_front = 3     #cg location of front landing gear [m], measured from the nose, assumed to be 3 m (used for calculating cg at oew, not to be changed per se)
-x_lg_main = x_start_Cr + 2 * Cr / 3      #cg location of main landing gear [m], assumed 2/3 root chord length further than start of root chord (used for calculating cg at oew, not to be changed per se)
-print("In calculation of cg @ OEW, take into account the exact tank placement and cg location once agreed on a specific configuration")
+
 
 
 def wing_cg(sweep, b, Cr, Ct, MAC, x_lemac_Cr, x_lemac):

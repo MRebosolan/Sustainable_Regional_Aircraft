@@ -164,12 +164,13 @@ def chord_along_span(Cr, Ct, b, y):
     c = Cr - (Cr - Ct) / (b / 2) * y
     return c
 
-outboard_flap = Aero.x2
+outboard_flap = widthf + Aero.x2
 def Swf(widthf, outboard_flap):
-    swf = 2 * (outboard_flap - widthf) * (chord_along_span(widthf) - chord_along_span(outboard_flap)) / 2
+    b_imag = outboard_flap - widthf
+    swf = 2 * b_imag * (chord_along_span(Cr, Ct, b, widthf) - chord_along_span(Cr, Ct, b, outboard_flap)) / 2
     return swf
-print(Swf(widthf, outboard_flap)) #test
-
+Swf = Swf(widthf, outboard_flap)
+print(Swf)
 CL0_flapped = cl0+0.9*DClmax*(Swf/S)*0.975
 
 cm_wing = cm0 *(AR *np.cos(sweep)**2)/(AR + 2*np.cos(sweep))
@@ -185,7 +186,7 @@ DCm025 = mu2*(-mu1*DClmax*cprime_c-(CL+DClmax*(1-Swf/S))*0.125*cprime_c*(cprime_
 # deltaf = 40*pi/180 # deflection angle in radians
 Swf = 79.1 # Geometric estimation
 
-print(DCm025)
+
 
 
 
