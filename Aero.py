@@ -116,10 +116,11 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf):
     print("Cl design =", CL_des, Cl_des)
 
     T_alt = 288 * (1 - 0.0065*inp.Cruise_alt*1000/288)
-    visc_k = 9.2e-6
+    mu = 1.458e-6 * T_alt**1.5 / (T_alt + 110.4)
+    rho = p_cruise / (287 * T_alt)
 
-    Re = V_C * 0.514444 * c_mac / visc_k
-    print(Re)
+    Re = (rho * V_C * 0.514444 * c_mac) / mu
+    print("Re =", Re, rho)
     # With CL_max = 1.8 we could take airfoil NACA 63(3)-618 (supercritical with 0.18 t/c)
 
     # CLmax take-off: 2.1 , Clmax landing: 2.25
