@@ -86,7 +86,7 @@ def wing_cg(sweep, b, Cr, Ct, MAC, x_lemac_Cr, x_lemac):
     x_3 = a +  Ct / 3
     Atot = A1 + A2 + A3
     x_cg_wrt_xlemac_Cr = (A1 * (x_1 - x_lemac_Cr) + A2 * (x_2 - x_lemac_Cr) + A3 * (x_3 - x_lemac_Cr)) / Atot
-    x_cg_nose = x_start_Cr + x_cg_wrt_xlemac_Cr
+    x_cg_nose = x_start_Cr + + x_lemac_Cr + x_cg_wrt_xlemac_Cr
     x_cg_mac= x_cg_nose - x_lemac 
     return x_cg_nose, x_cg_mac
 
@@ -143,7 +143,6 @@ def loading():
     bothcargo = loadingcg(onlyfwdcargo[1], onlyfwdcargo[0], aft_cargo_max, x_cargo_aft)
     cargo1 = plt.plot(100 * (np.array([cg_oew_nose, onlyfwdcargo[0], bothcargo[0]]) - x_lemac) / MAC,
                       [OEW, onlyfwdcargo[1], bothcargo[1]], label='Cargo', marker='x', color='brown')
-
     onlyaftcargo = loadingcg(OEW, cg_oew_nose, aft_cargo_max, x_cargo_aft)
     bothcargo2 = loadingcg(onlyaftcargo[1], onlyaftcargo[0], fwd_cargo_max, x_cargo_fwd)
     cargo2 = plt.plot(100 * (np.array([cg_oew_nose, onlyaftcargo[0], bothcargo2[0]]) - x_lemac) / MAC,
@@ -182,7 +181,8 @@ cgMTOW, extreme_cg = loading()  # extreme cg is in % of mac, first fwd, then aft
 
 
 
-
+#calculate extremes and add 2% margin on both sides
+#vary wing position
 
 
 
