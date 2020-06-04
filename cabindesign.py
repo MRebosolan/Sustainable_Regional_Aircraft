@@ -41,8 +41,8 @@ def cabin_design(fractioninfus,fractionintail,HYDROGENVOLUME):
     
     #two types I exits
     #two types III exits
-    paxsectionlength=round(15*seat_pitch+emergency_clearance,3)
-    aft_galley_length=1
+    paxsectionlength=round(16*seat_pitch+emergency_clearance,3)
+    aft_galley_length=0.9
     front_galley_length=1.8
     totalcabinlength=paxsectionlength+aft_galley_length+front_galley_length
     
