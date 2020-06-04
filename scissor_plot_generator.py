@@ -113,8 +113,9 @@ l_fn = 11.5
 
 CLalpha_Ah = clalpha_acless
 kn = -4         # Nacelles are mounted before wing LE
-bn = 2.48
-ln = 3.53
+bn = input.bn
+ln = # distance between front of 
+
 
 beta = sqrt(1-mach*mach)
 beta_A = AR*beta
@@ -128,6 +129,8 @@ sweepbeta_app = np.degrees(sweep)/beta_app
 # Look in SEAD lecture 4 slide 33 to get xac_w from these parameters
 xac_w = Xacregression(beta_A, taper, sweepbeta) # for Mach = 0.78 (cruise)
 xac_w2 = Xacregression_app(beta_A_app, taper, sweepbeta_app) # for Vappr = 66.36 (approach/landing)
+
+
 xac_f1 = -1.8*widthf*hf*l_fn / (S * MAC * clalpha_acless_lowspeed) #due to nose, destabilizing
 xac_f2 = 0.273*widthf*(S/b)*(b-widthf)*tan(sweep) / ((1+taper)*MAC*MAC*(b+2.15*widthf)) # liftloss of intersection with wing, stabilizing
 xac_n = 2*kn*bn*bn*ln / (S*MAC*clalpha_acless_lowspeed)

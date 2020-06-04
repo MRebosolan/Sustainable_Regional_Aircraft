@@ -63,12 +63,13 @@ Cd0_aileron = 0.0039                     #zero drag coefficient [-] at wing sect
 lf = 30  #lenght of fuselage m estimate, lil shorter than CRJ as 5 seat rows are used
 hf = 2.5  # height of fuselage estimate
 A_inlet = 1.17  # m2, engine inlet area
-ln = 0.8129  # m 1/4 of CRJ engine length, length of nacelle
+ln = 0.8129*4  # m CRJ engine length, length of nacelle
+bn = 2.48 # m PRELIMINARY, width of engine nacelle
 b = (S * AR)**0.5 #wingspan [m]
 print('please use b from class 2')
 t_r = 1.0  # maximum thickness at root [m] #bullshit estimation
 widthf = 2.8  # m max fuselage width
-A_fuselage = np.pi*widthf*0.5*hf*0.5
+A_fuselage = np.pi*widthf*0.5*hf*0.5 #very very rough estimate in m2
 ellipse_fuselage = 2*np.pi * (((widthf/2)**2 + (hf/2)**2)/2)**0.5
 S_fgs = ellipse_fuselage * lf * 0.9  # fuselage gross shell area, APPROXIMATION
 lh = 15  # very random estimate, distance between wing and tail aerodynamic centers
