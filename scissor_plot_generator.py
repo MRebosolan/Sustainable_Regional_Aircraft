@@ -226,3 +226,9 @@ plt.ylabel("Sh/S [-]")
 plt.title('CS100')
 plt.show()
     
+
+
+e_tail = input.e_tail #Oswald efficiency factor
+k = 1 / (np.pi*AR_tail *e_tail)
+
+Dtrim = 0.5* rho_cruise *v_cruise**2 *speedratio * horizontal_area * CL_h * k
