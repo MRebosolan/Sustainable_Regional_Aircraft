@@ -28,10 +28,23 @@ for t in t_options:
 x_mg = 15 #main gear from nose in m
 x_ng = 4 #nose gear from nose in m
 x_wg = 7 #wing group from nose in m
-x_em = 18 #empennage group from nose in m
+x_emp = 18 #empennage group from nose in m
+
+#weight of systems required
 mtow = 35000 #maximum take of weight
 w_wg = 2300 #weight of wing group
 w_emp = 23000 #weight of empennage group
+
+#fuselage length required
+fuselage_length = 40
+
+
+
+
+#Reaction force at the main gear
+Reaction_MG = (w_emp(x_emp-x_ng)+w_wg(x_wg-x_ng)+(mtow-w_emp-w_wg)*(fuselage_length/2-x_ng))/(x_mg-x_ng)
+#Reaction force at the nose landing gear
+Reaction_NG = mtow-Reaction_MG
 
 
 
