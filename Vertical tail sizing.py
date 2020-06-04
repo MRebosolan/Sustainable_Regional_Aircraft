@@ -1,6 +1,5 @@
 import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
+import Class_2_estimation as Cl2
 import input
 
 """
@@ -26,11 +25,11 @@ the google drive Final report -> stability and control
 """
 
 Vbar_v = 0.086  #Vertical tail volume
-Sr_over_Sv = 0.303
+Sr_over_Sv = 0.303    #Ratio of rudder area over vtail area
 
-S =   input.S     #input.S  [m]
-b =   input.b    #input.b  [m]
-x_v =  10.5 #input.x_v    #Estimate for now #Distance Aerodynamic centre Vtail to c.g.
+S =   Cl2.S     #input.S  [m]
+b =   Cl2.b    #input.b  [m]
+x_v =  10.5    #input.x_v    #Estimate for now #Distance Aerodynamic centre Vtail to c.g.
 
 #Calculatetes preliminary area of the vertical tail surface and rudder
 def S_v(Vbar_v,S,b,x_v):
@@ -38,4 +37,4 @@ def S_v(Vbar_v,S,b,x_v):
     S_r = Sr_over_Sv*S_v
     return S_v,S_r
 S_v,S_r = S_v(Vbar_v,S,b,x_v)
-print ('The vertical tail area equals', np.round(S_v,3), 'm^2. The rudder area equals' , np.round(S_r,3),'m^2.')
+print ('The vertical tail area equals', np.round(S_v,4), 'm^2. The rudder area equals' , np.round(S_r,3),'m^2.')

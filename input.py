@@ -74,19 +74,19 @@ S_fgs = ellipse_fuselage * lf * 0.9  # fuselage gross shell area, APPROXIMATION
 lh = 15  # very random estimate, distance between wing and tail aerodynamic centers
 lv = 16 #very random estimate, distance between wing and vertical tail aerodynamic centers
 x_ac = 12           #x location of wing aerodynamic center measured from the nose of the aircraft, TBD
-x_apu = 20            #cg location of the apu measured from the nose of the aircraft [m], TBD
+x_apu = 20.            #cg location of the apu measured from the nose of the aircraft [m], TBD
 x_engine = 13       #cg location of engines, measured from the nose of the aircraft [m], TBD
 x_nacelle = 13     #cg location of engine nacelles, measured from the nose of the aircraft [m], TBD
 
-Kgr = 1.08  # constant for the gear, torenbeek parameter
-V_pax = 282.391  # m^3, cabin volume
-lpax = 20  # estimate, meters, cabin length
-Npax = 75 #number of passengers
+Kgr = 1.08           # constant for the gear, torenbeek parameter
+V_pax = 282.391      # m^3, cabin volume
+lpax = 20            # estimate, meters, cabin length
+Npax = 75            #number of passengers
 pax_abreast = 3+2
-N_fdc = 2  # probably, pilots
-N_cc = 2  # probably, cabin crew
-P_c = 74682.5  # Pa, design cabin pressure
-Sff = 7.6  # freight floor area estimate
+N_fdc = 2            # probably, pilots
+N_cc = 2             # probably, cabin crew
+P_c = 74682.5        # Pa, design cabin pressure
+Sff = 7.6            # freight floor area estimate
 N_eng = 2  # number of engines
 N_t = 2  # number of fuel tanks
 rho_hydrogen = 70  # g/l
@@ -243,3 +243,5 @@ zero_lift_angle = np.radians(4) #degrees, PRELIMINARY estimate
 z_position_wing = 0.3 #m, PRELIMINARY, still requires thought, for downwash calc
 z_position_horizontal = zh + hf #where tail is positioned, for downwash calc
 
+# Landing gear sizing
+theta = 15 #Clearance angle
