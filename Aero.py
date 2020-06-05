@@ -67,7 +67,7 @@ def chord_length(c_root, c_tip, x, b):
 
 # --------------------------------- Wing Geometry
 
-def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf):
+def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S):
 
     # Wing sweep, also consider M_crit?
     if M_cruise >= 0.7:
@@ -75,7 +75,7 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf):
     else:
         sweep_c4 = np.arccos(1)
 
-    # --------------------------- Equations
+    print("Sweep =", sweep_c4 * 180 / np.pi)
 
     taper = 0.2 * (2 - sweep_c4)
 
@@ -121,6 +121,7 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf):
 
     CL_des = 1.1/q * (0.5*(WS_cr_start + WS_cr_end))
     Cl_des = CL_des / np.cos(sweep_c4)**2
+    Cl_des = Cl_des * np.sqrt(1 - M_cruise**2)
     print("Cl design =", CL_des, Cl_des)
 
     T_alt = 288 * (1 - 0.0065*inp.Cruise_alt*1000/288)
@@ -128,7 +129,13 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf):
     rho = p_cruise / (287 * T_alt)
 
     Re = (rho * V_C * 0.514444 * c_mac) / mu
-    print("Re =", Re)
+
+    Re_sea = (1.225 * V_S * 0.514444 * c_mac) / 1.789e-5
+
+    M_sea = V_S / np.sqrt(1.4*287*288)
+    print("M_sea = ", M_sea)
+
+    print("Re =", Re, Re_sea)
     # With CL_max = 1.8 we could take airfoil NACA 63(3)-618 (supercritical with 0.18 t/c)
 
     # CLmax take-off: 2.1 , Clmax landing: 2.25
@@ -139,8 +146,10 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf):
     dCLmax_to   = 0.3
 
     dClmax_land = 0.9
+
     hinge_c     = 75 #percent
     aileron_C   = 75 #percent
+
     sweep_hinge = np.arctan(np.tan(sweep_c4) - 4/AR * ((hinge_c-25)/100 * (1 - taper)/(1 + taper)))
     print(sweep_hinge)
     SwfS = dCLmax_land/ (0.9 * dClmax_land * np.cos(sweep_hinge))
@@ -193,7 +202,7 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf):
     return wing, geom,cross1, hld, ail, x2
 
 
-wing, geom, cross1, hld, ail, x2 = wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf)
+wing, geom, cross1, hld, ail, x2 = wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S)
 
 
 #----------------------------- .txt File Airfoil Coordinates
