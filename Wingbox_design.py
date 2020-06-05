@@ -17,6 +17,8 @@ widthf = input.widthf
 wing_length = 0.5*(b)
 wing_weight = 3000*9.81
 T_to = input.Tto
+print(wingloading*S*0.5)
+print(b/2)
 
 total_lift = wingloading/wing_length
 total_lift_half = total_lift/2
@@ -36,7 +38,7 @@ x_loc = []
 y_shear_uniform = []
 y_moment_uniform = []
 
-for i in range(1,100):
+for i in range(1, 100):
     x = wing_length*(i/100)
     if x<x_engine:
         Shear_Force = (lift_duniform - w_wingd)*x
@@ -73,7 +75,7 @@ def generate_spanwise_locations(n, b=wing_length):
     return x_array[1:]
 
 
-def general_lift_d (x, a=11.43427, b=15926.5):
+def general_lift_d (x, a=11.67, b=16234.5):
     #Insert formula for lift distribution here
     #current obtained by fitting elliptical distribution to given wing loading, a=half wing span - half fuselage width
     loading_at_x = np.sqrt((1-(x**2/a**2))*b**2)
@@ -252,7 +254,6 @@ def mass_wingbox(base_wb,height_wb,b=b,thickness_array=thickness_array, material
     return mass_wb
 
 
-print(mass_wb)
 
 def moment_of_intertia_x(base_wb, height_wb, thickness_wb=thickness_wb):
     hoop_x_array = []
