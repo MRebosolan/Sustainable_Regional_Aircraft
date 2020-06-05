@@ -1,32 +1,25 @@
 # -*- coding: utf-8 -*-
 ''' 
 file to be used for scissor plots. Being worked out atm
-responsible: Jorn
+responsible: Jorn & Rick
 '''
 
 import numpy as np
 import matplotlib.pyplot as plt
-from math import sqrt, pi, tan, atan
 import input
+from math import sqrt, pi, tan, atan
 import Class_2_estimation as cl2
 from Xacregression_scissor import Xacregression, Xacregression_app
 import Aero
 
 MAC = input.MAC
 lemac = input.x_LEMAC_nose
-# tail_armh = input.lh
-
-S =  cl2.S#m^2
+S =  cl2.S
 b = cl2.b
-horizontal_area = input.Sh
-b_tail = input.bh
- 
 widthf = input.widthf
 fuselage_lenght = input.lf #m
 hf = input.hf
 A_fuselage = input.A_fuselage
-
-
 speedratio = input.tail_speedratio**2 #already squared
 cl0 = input.cl0
 cm0 = input.cm0
@@ -35,69 +28,63 @@ area_fuselage = widthf * Chord_root
 mach = input.mach_cruise
 v_approach = input.v_approach
 mach_app = input.mach_app
-beta = (1-(mach**2))**0.5
-beta_tail = (1-speedratio*(mach**2))**0.5
-n = 0.95
+n = 0.95                                            #airfoil efficiency
 stabilizer_sweep = input.half_chord_sweep_hor
-
-AR_tail = b_tail**2/horizontal_area
+AR_tail = input.AR_h
 AR = input.AR
 sweep = input.quarter_sweep
-
-# C_h = horizontal_area*tail_armh/(S*MAC)
-
-
-C_lh_max = -0.8 #adjustable tail
-
-
-
-clalpha_datcom =  2*np.pi*AR/(2+((4+ ((AR*beta/n)**2)*(1+ (np.tan(sweep)**2)/beta**2))**0.5))
-
-
-clalpha_tail =  2*np.pi*AR_tail/(2+((4+ ((AR_tail*beta_tail/n)**2)*(1+ (np.tan(stabilizer_sweep)**2)/beta_tail**2))**0.5))
-clalpha_tail_degrees = np.radians(clalpha_tail)
-
-
-clalpha_acless_wing = clalpha_datcom*(1+2.15*(widthf/b))*(S-area_fuselage)/S
-clalpha_acless_fuselage = (np.pi*widthf**2)/(2*S)# not sure bout this
-clalpha_acless = clalpha_acless_wing+clalpha_acless_fuselage
-
-
-
 rho = input.rho
 OEW = cl2.OEWINPUT
 payload = input.W_payload
-MLW = cl2.M_zfw_kg ### STILL SIZE MLW
-mass = MLW #kg, mlw
+MLW = cl2.M_zfw_kg                      ### STILL SIZE MLW
+mass = MLW                              #kg, mlw
 MTOW = cl2.MTOW_kg
-CL = 2*mass*9.81/(rho*(v_approach**2)*S) #approach CL
-v_cruise = input.V_C_estimate #m/s
+v_cruise = input.V_C_estimate                #m/s
 rho_cruise = input.rho_c
-CL_cruise = 2*MTOW*9.81/(rho_cruise*(v_cruise**2)*S) #approach CL
-
-
+kn = -4                                         # Nacelles are mounted before wing LE, change in case of fuselage mounted engines
+bn = input.bn
+ln = 0.25 * MAC - input.x_engine_start
 ct = input.Ct
 cr = input.Cr
 taper = input.taper
-l_fn = 11.5
+x_start_Cr = input.x_start_Cr
+sweep_LE = input.LE_sweep
+C_lh_max = -0.8                                 #adjustable tail, from SEAD slides
+lh = input.lh
+z_position_horizontal = input.z_position_horizontal
+z_position_wing = input.z_position_wing
+zero_lift_angle = input.zero_lift_angle
+e_tail = input.e_tail                   #Oswald efficiency factor
+x_lemac_Cr = input.x_lemac_rootchord #x location of leading edge mac measured from root chord [m]
 
 
+
+#Minor calculations with input parameters
+CL = 2*mass*9.81/(rho*(v_approach**2)*S)            #approach CL
+CL_cruise = 2*MTOW*9.81/(rho_cruise*(v_cruise**2)*S) #approach CL
+l_fn = x_start_Cr + widthf * np.tan(sweep_LE)
+beta = (1-(mach**2))**0.5
+beta_tail = (1-speedratio*(mach**2))**0.5
+# C_h = horizontal_area*tail_armh/(S*MAC)
+
+
+#Datcom method to compute lift curve slopes
+clalpha_datcom =  2*np.pi*AR/(2+((4+ ((AR*beta/n)**2)*(1+ (np.tan(sweep)**2)/beta**2))**0.5))
+clalpha_tail =  2*np.pi*AR_tail/(2+((4+ ((AR_tail*beta_tail/n)**2)*(1+ (np.tan(stabilizer_sweep)**2)/beta_tail**2))**0.5))
+clalpha_tail_degrees = np.radians(clalpha_tail)
+clalpha_acless_wing = clalpha_datcom*(1+2.15*(widthf/b))*(S-area_fuselage)/S
+clalpha_acless_fuselage = (np.pi*widthf**2)/(2*S)# not sure bout this
+clalpha_acless = clalpha_acless_wing+clalpha_acless_fuselage
 CLalpha_Ah = clalpha_acless
-kn = -4         # Nacelles are mounted before wing LE
-bn = input.bn
-ln = input.x_LEMAC_nose + 0.25*MAC - input.x_engine_start# distance between front of engine to quarter chord mac
+
 
 
 beta = sqrt(1-mach*mach)
 beta_A = AR*beta
 sweepbeta = np.degrees(sweep)/beta
-
 beta_app = sqrt(1-mach_app*mach_app)
 beta_A_app = AR*beta_app
 sweepbeta_app = np.degrees(sweep)/beta_app
-
-
-
 beta_low = (1-mach_app**2)**0.5
 beta_low_tail = (1- speedratio*mach_app**2)**0.5
 
@@ -120,15 +107,15 @@ xac_f2_cruise = 0.273*widthf*(S/b)*(b-widthf)*tan(sweep) / ((1+taper)*MAC*MAC*(b
 xac_n_cruise = 2*kn*bn*bn*ln / (S*MAC*CLalpha_Ah)
 xac_cruise = xac_w+xac_f1+xac_f2+xac_n
 
-tail_armh = input.lh + MAC * (0.25-xac_cruise)
+tail_armh = lh + MAC * (0.25-xac_cruise)
 
 r = 2*tail_armh/b
 K_ea = (0.1124+0.1265*sweep+0.1766*sweep**2)/(r**2) + 0.1024/r +2 #ADSEE LECTURE 4 SLIDE 43
 K_0 = 0.1124/(r**2)+0.1024/r +2 #ADSEE LECTURE 4 SLIDE 43
 
-theta = np.tanh((input.z_position_horizontal - input.z_position_wing)/tail_armh)
+theta = np.tanh((z_position_horizontal - z_position_wing)/tail_armh)
 hypotenuse = tail_armh/np.cos(theta)
-tail_wing_distance = hypotenuse*np.cos(theta+input.zero_lift_angle)
+tail_wing_distance = hypotenuse*np.cos(theta+zero_lift_angle)
 m_tv = tail_wing_distance *2/b
 
 part_a = (r*0.4876)/((r**2+m_tv**2)*((r**2+m_tv**2+0.6319)**0.5)) #ADSEE LECTURE 4 SLIDE 43
@@ -160,8 +147,6 @@ print('Read off acutal values from SEAD lecture 5 slides 18-20 once wing is desi
 DClmax = cprime_c*1.3 # Based on adsee 2
 print('Change to *1.6 if double slotted flaps are used, see slide 35 ADSEE II')
 
-Cr = input.Cr
-Ct = input.Ct
 
 def chord_along_span(Cr, Ct, b, y):
     c = Cr - (Cr - Ct) / (b / 2) * y
@@ -169,32 +154,21 @@ def chord_along_span(Cr, Ct, b, y):
 
 
 outboard_flap = widthf + Aero.x2
-print(widthf, outboard_flap)
+
 def Swf(widthf, outboard_flap):
     b_imag = outboard_flap - widthf
-    swf = 2 * b_imag * (chord_along_span(Cr, Ct, b, widthf) + chord_along_span(Cr, Ct, b, outboard_flap)) / 2
+    swf = 2 * b_imag * (chord_along_span(cr, ct, b, widthf) + chord_along_span(cr, ct, b, outboard_flap)) / 2
     return swf
 
 Swf = Swf(widthf, outboard_flap)
-print(Swf)
+
 CL0_flapped = cl0+0.9*DClmax*(Swf/S)*0.975
 
 cm_wing = cm0 *(AR *np.cos(sweep)**2)/(AR + 2*np.cos(sweep))
 cm_fus = -1.8 * (1 - 2.5*widthf/fuselage_lenght)*(A_fuselage*fuselage_lenght*CL0_flapped/(4*S*MAC*clalpha_acless_lowspeed))
 DCm025 = mu2*(-mu1*DClmax*cprime_c-(CL+DClmax*(1-Swf/S))*0.125*cprime_c*(cprime_c-1)) + 0.7*AR*mu3*DClmax*tan(sweep) / (1+2/AR) - CL * (0.25 - xac / MAC)
-
-
-    
-
-
-
-
-
 cm_flaps = DCm025 -CL*(0.25 - xac/MAC)
 cm_nac = 0
-
-
-
 cm_ac = cm_wing + cm_flaps + cm_fus + cm_nac
 
 
@@ -205,7 +179,7 @@ stabilityxcg_cruise = xac_cruise + ShS*(clalpha_tail/clalpha_acless)*(1-downwash
 controlxcg = xac - cm_ac/CL + ShS*(C_lh_max/CL)*(tail_armh/MAC)*speedratio
 
 
-def scissorplot(stabilityxcg_cruise,controlxcg, ShS, frontcg, aftcg, Sh_over_S  ):
+def scissorplot(stabilityxcg_cruise,controlxcg, ShS, frontcg, aftcg, Sh_over_S):
     plt.figure()
     plt.close()
     plt.plot(stabilityxcg_cruise*100,ShS, color = 'grey', label = 'Neutral stability')
@@ -218,14 +192,13 @@ def scissorplot(stabilityxcg_cruise,controlxcg, ShS, frontcg, aftcg, Sh_over_S  
     plt.legend(loc = 'lower left')
     plt.title('CS100')
     plt.show()
-    
-scissorplot(stabilityxcg_cruise,controlxcg, Shs, frontcg, aftcg, Sh_over_S  )
+
+
 
 Moment_ac = 0.5* rho_cruise *v_cruise**2 * cm_ac * MAC
 
 Lift_tail = Moment_ac/tail_armh
 CL_h = Lift_tail/(0.5* rho_cruise *v_cruise**2  * horizontal_area)
-e_tail = input.e_tail #Oswald efficiency factor
 k = 1 / (np.pi*AR_tail *e_tail)
 
 Dtrim = abs(0.5* rho_cruise *v_cruise**2 *speedratio * horizontal_area * CL_h * k)

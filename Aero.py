@@ -208,77 +208,133 @@ wing, geom, cross1, hld, ail, x2 = wing_geometry(M_cruise, S, AR, MTOW, V_C, wid
 #----------------------------- .txt File Airfoil Coordinates
 
 #Read from file
-#
-##Create empty lists
-#
-#lines  = [[],[],[],[]]
-#xcoord1= [[],[],[],[]]
-#xcoord2= [[],[],[],[]]
-#ycoord1= [[],[],[],[]]
-#ycoord2= [[],[],[],[]]
-#camline= [[],[],[],[]]
-#
-##
-#dct={}
-#for i in range(0,4):
-#    f1=open('airfoil1.txt','r')
-#    f2=open('airfoil2.txt','r')
-#    f3=open('airfoil3.txt','r')
-#    f4=open('airfoil4.txt','r')
-#
-#    for j in lines%i[:26]:
-#        xcoord1[i].append(float(i.split(' ')[0]))
-#        ycoord1.append(float(i.split(' ')[1].strip('\n')))
-#    for i in lines[26:]:
-#        xcoord2.append(float(i.split(' ')[0]))
-#        ycoord2.append(float(i.split(' ')[1].strip('\n')))
-#    
-#    #Add origin to list to connect
-#    xcoord2.insert(0,0.0)
-#    ycoord2.insert(0,0.0)
-#        
-#    #Reverse order 
-#    xcoord1=xcoord1[::-1]
-#    ycoord1=ycoord1[::-1]
-#    
-#    #Camber Line
-#    for i in range(0,len(xcoord1)):
-#        camline.append((ycoord1[i]+ycoord2[i])/2)
 
-#print(lines1)
-#print(xcoord1)
-#print(ycoord1)
-#print(ycoord2)
-#print(camline)
-#
+#Create empty lists
+
+lines  = [[],[],[],[]]
+xcoord1= [[],[],[],[]]
+xcoord2= [[],[],[],[]]
+ycoord1= [[],[],[],[]]
+ycoord2= [[],[],[],[]]
+camline= [[],[],[],[]]
+
+#Read from file
+f0=open('airfoil1.txt','r')
+f1=open('airfoil2.txt','r')
+f2=open('airfoil3.txt','r')
+f3=open('airfoil4.txt','r')
+
+lines0=f0.readlines()
+lines1=f1.readlines()
+lines2=f2.readlines()
+lines3=f3.readlines()
+
+for i in range(0,103):
+    xcoord1[0].append(float(lines0[i].split()[0]))
+    xcoord1[1].append(float(lines1[i].split()[0]))
+    xcoord1[2].append(float(lines2[i].split()[0]))
+    ycoord1[0].append(float(lines0[i].split()[1]))
+    ycoord1[1].append(float(lines1[i].split()[1]))
+    ycoord1[2].append(float(lines2[i].split()[1]))
+        
+for i in range(0,71):
+    xcoord1[3].append(float(lines3[i].split()[0]))
+    ycoord1[3].append(float(lines3[i].split()[1]))
+    
+for i in range(103,205):
+    xcoord2[0].append(float(lines0[i].split()[0]))
+    xcoord2[1].append(float(lines1[i].split()[0]))
+    xcoord2[2].append(float(lines2[i].split()[0]))
+    ycoord2[0].append(float(lines0[i].split()[1]))
+    ycoord2[1].append(float(lines1[i].split()[1]))
+    ycoord2[2].append(float(lines2[i].split()[1]))
+        
+for i in range(71,139):
+    xcoord2[3].append(float(lines3[i].split()[0]))
+    ycoord2[3].append(float(lines3[i].split()[1]))
+
+for i in range(0,3):
+    xcoord2[i].insert(-1,1.0)
+    xcoord2[i]=xcoord2[i][::-1]
+    ycoord2[i].insert(-1,0.0)
+    xcoord2[i]=xcoord2[i][::-1]
+    
+    
+
+##Camber Line
+for i in range(0,len(xcoord1[0])):
+    camline[0].append((ycoord1[0][i]+ycoord2[0][i])/2)
+
 #----------------------------- Plotting
 
-plt.figure(0)
-plt.plot(geom[0], geom[1], geom[2], geom[3], hld[0], hld[1],ail[0],ail[1])
-plt.text(cross1[0],cross1[1],'Fuselage Wall Line')
-plt.grid(True,which="major",color="#999999")
-plt.grid(True,which="minor",color="#DDDDDD",ls="--")
-plt.minorticks_on()
-plt.ylim(-10.0,2.0)
-plt.ylabel('x [m]')
-plt.xlabel('y [m]')
-
+#plt.figure(0)
+#plt.plot(geom[0], geom[1], geom[2], geom[3], hld[0], hld[1],ail[0],ail[1])
+#plt.text(cross1[0],cross1[1],'Fuselage Wall Line')
+#plt.grid(True,which="major",color="#999999")
+#plt.grid(True,which="minor",color="#DDDDDD",ls="--")
+#plt.minorticks_on()
+#plt.ylim(-10.0,2.0)
+#plt.ylabel('x [m]')
+#plt.xlabel('y [m]')
+#
 #plt.figure(1)
 #plt.grid(True,which="major",color="#999999")
 #plt.grid(True,which="minor",color="#DDDDDD",ls="--")
 #plt.minorticks_on()
-#plt.plot(xcoord1,ycoord1,color='r')
-#plt.plot(xcoord1,camline,'--',color='r')
-#plt.plot(xcoord2,ycoord2,color='r')
+#plt.plot(xcoord1[0],ycoord1[0],color='r')
+##plt.plot(xcoord1,camline[0],'--',color='r')
+#plt.plot(xcoord2[0],ycoord2[0],color='r')
 #plt.xlim(0,1)
 #plt.ylim(-0.3,0.3)
 #plt.text(0.0,0.0,'LE')
 #plt.text(1.0,0.0,'TE')
 #plt.ylabel('y/c [-]')
 #plt.xlabel('x/c [-]')
-
-plt.show()
-
+#
+#plt.figure(2)
+#plt.grid(True,which="major",color="#999999")
+#plt.grid(True,which="minor",color="#DDDDDD",ls="--")
+#plt.minorticks_on()
+#plt.plot(xcoord1[1],ycoord1[1],color='r')
+##plt.plot(xcoord1,camline,'--',color='r')
+#plt.plot(xcoord2[1],ycoord2[1],color='r')
+#plt.xlim(0,1)
+#plt.ylim(-0.3,0.3)
+#plt.text(0.0,0.0,'LE')
+#plt.text(1.0,0.0,'TE')
+#plt.ylabel('y/c [-]')
+#plt.xlabel('x/c [-]')
+#
+#plt.figure(3)
+#plt.grid(True,which="major",color="#999999")
+#plt.grid(True,which="minor",color="#DDDDDD",ls="--")
+#plt.minorticks_on()
+#plt.plot(xcoord1[2],ycoord1[2],color='r')
+##plt.plot(xcoord1,camline,'--',color='r')
+#plt.plot(xcoord2[2],ycoord2[2],color='r')
+#plt.xlim(0,1)
+#plt.ylim(-0.3,0.3)
+#plt.text(0.0,0.0,'LE')
+#plt.text(1.0,0.0,'TE')
+#plt.ylabel('y/c [-]')
+#plt.xlabel('x/c [-]')
+#
+#plt.figure(4)
+#plt.grid(True,which="major",color="#999999")
+#plt.grid(True,which="minor",color="#DDDDDD",ls="--")
+#plt.minorticks_on()
+#plt.plot(xcoord1[3],ycoord1[3],color='r')
+##plt.plot(xcoord1,camline,'--',color='r')
+#plt.plot(xcoord2[3],ycoord2[3],color='r')
+#plt.xlim(0,1)
+#plt.ylim(-0.3,0.3)
+#plt.text(0.0,0.0,'LE')
+#plt.text(1.0,0.0,'TE')
+#plt.ylabel('y/c [-]')
+#plt.xlabel('x/c [-]')
+#
+#plt.show()
+#
 
 
 

@@ -2,7 +2,7 @@
 """
 Created on Thu Jun  4 09:33:37 2020
 
-@author: Gebruiker
+@author: Rick
 """
 
 # loading diagram generator
@@ -28,8 +28,6 @@ x_lemac_Cr = input.x_lemac_rootchord #x location of leading edge mac measured fr
 seat_start = input.x_first_pax  #x-location measured from the nose where first passenger row is located
 pitch = input.seat_pitch        #seat pitch [inch]
 rows = input.n_rows             #number of passegner rows [-]
-lh = input.lh                   #distance between wing and horizontal tail aerodynamic centers
-lv = input.lv                   #distance between wing and vertical tail aerodynamic centers
 x_apu = input.x_apu             #cg location of the apu measured from the nose of the aircraft [m]
 
 Cr = input.Cr                   #wing root chord length [m]
@@ -46,6 +44,12 @@ x_engine = x_lemac       #Assume engine cg is at lemac
 print('Make x_eninge not wing location dependent if we end up having fuselage mounted engines')
 x_nacelle = x_engine     #assume nacelle cg is at engine cg
 x_ac = [i + 0.25 * MAC for i in x_lemac]            #assume ac at quarter chord point
+lh_fix = input.lh                   #distance between wing and horizontal tail aerodynamic centers
+lv_fix = input.lv                   #distance between wing and vertical tail aerodynamic centers
+lh = [lh_fix - (i - input.x_start_Cr) for i in x_start_Cr]
+lv = [lh_fix - (i - input.x_start_Cr) for i in x_start_Cr]
+
+
 #Small calculations with raw inputs
 pax_cabin = Npax * w_person
 fwd_cargo_max = cargo * input.cargo_fwd_fraction
@@ -74,7 +78,7 @@ w_lg_main = cl2.df['SRA']['Main LG']    #kg
 w_lg_front = cl2.df['SRA']['Nose LG']    #kg
 
 
-x_empennage = [i + (lh + lv) / 2 for i in x_ac] #Assume cg of empennage is in the middle of the aerodynamic center of horizontal and vertical tail, measured from the nose
+x_empennage = [x_ac[i] + (lh[i] + lv[i]) / 2 for i in range(len(x_start_Cr))] #Assume cg of empennage is in the middle of the aerodynamic center of horizontal and vertical tail, measured from the nose
 x_lg_front = 3     #cg location of front landing gear [m], measured from the nose, assumed to be 3 m (used for calculating cg at oew, not to be changed per se)
 x_lg_main = [i + 2 * Cr / 3 for i in x_start_Cr]     #cg location of main landing gear [m], assumed 2/3 root chord length further than start of root chord (used for calculating cg at oew, not to be changed per se)
 print("In calculation of cg @ OEW, take into account the exact tank placement and cg location once agreed on a specific configuration")
@@ -116,8 +120,8 @@ def cg_excursion_wing_shift():
     plt.ylabel('x_lemac / l_fus [-]')
     plt.show()
     
-    return 
-cg_excursion_wing_shift()
+    return cg_fwd_excursion_lst, cg_aft_excursion_lst
+cg_fwd_excursion_lst, cg_aft_excursion_lst = cg_excursion_wing_shift()
 
 
 
