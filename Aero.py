@@ -2,6 +2,7 @@ import numpy as np
 import input as inp
 import matplotlib.pyplot as plt
 import Envelope
+import Class_2_estimation as CL2
 #import Aileron_sizing
 
 
@@ -29,7 +30,7 @@ description
 # ---------------------------- Import Parameters
 
 M_cruise = 0.75
-S = inp.S
+S = CL2.S
 AR = inp.AR
 MTOW = inp.MTOW
 widthf = inp.widthf
@@ -39,8 +40,8 @@ V_D = Envelope.V_D  # Dive Speed
 V_S = Envelope.V_S  # Stall Speed
 V_A = Envelope.V_A  # Max Gust Speed
 
-b1=8
-b2=11.2
+b1 = 8
+b2 = 11.2
 
 # ---------------------------- Line Intersection Point
 
@@ -67,7 +68,7 @@ def chord_length(c_root, c_tip, x, b):
 
 # --------------------------------- Wing Geometry
 
-def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf):
+def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S):
 
     # Wing sweep, also consider M_crit?
     if M_cruise >= 0.7:
@@ -75,7 +76,9 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf):
     else:
         sweep_c4 = np.arccos(1)
 
-    # --------------------------- Equations
+    sweep_c4 = 36.86989765 * np.pi / 180 # from airfoil selection
+
+    print("Sweep =", sweep_c4 * 180 / np.pi)
 
     taper = 0.2 * (2 - sweep_c4)
 
@@ -121,6 +124,7 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf):
 
     CL_des = 1.1/q * (0.5*(WS_cr_start + WS_cr_end))
     Cl_des = CL_des / np.cos(sweep_c4)**2
+    Cl_des = Cl_des * np.sqrt(1 - M_cruise**2)
     print("Cl design =", CL_des, Cl_des)
 
     T_alt = 288 * (1 - 0.0065*inp.Cruise_alt*1000/288)
@@ -128,19 +132,33 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf):
     rho = p_cruise / (287 * T_alt)
 
     Re = (rho * V_C * 0.514444 * c_mac) / mu
-    print("Re =", Re)
+
+    Re_sea = (1.225 * V_S * 0.514444 * c_mac) / 1.789e-5
+
+    M_sea = V_S / np.sqrt(1.4*287*288)
+    print("M_sea = ", M_sea)
+
+    print("Re =", Re, Re_sea)
     # With CL_max = 1.8 we could take airfoil NACA 63(3)-618 (supercritical with 0.18 t/c)
 
     # CLmax take-off: 2.1 , Clmax landing: 2.25
     #     # target for take-off: Delta CLmax = 0.3
     #     # target for landing: Delta CLmax = 0.45
 
+    k = (0.115 * 180 / np.pi) / (2 * np.pi)
+
+    beta = np.sqrt(1 - M_cruise**2)
+    CLalpha = (2*np.pi*AR)/ (2 + np.sqrt(4 + (AR * beta / k) * (1 + (np.tan(sweep_c2)**2/beta**2))))
+
+
     dCLmax_land = 0.45
     dCLmax_to   = 0.3
 
     dClmax_land = 0.9
+
     hinge_c     = 75 #percent
     aileron_C   = 75 #percent
+
     sweep_hinge = np.arctan(np.tan(sweep_c4) - 4/AR * ((hinge_c-25)/100 * (1 - taper)/(1 + taper)))
     print(sweep_hinge)
     SwfS = dCLmax_land/ (0.9 * dClmax_land * np.cos(sweep_hinge))
@@ -193,7 +211,7 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf):
     return wing, geom,cross1, hld, ail, x2
 
 
-wing, geom, cross1, hld, ail, x2 = wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf)
+wing, geom, cross1, hld, ail, x2 = wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S)
 
 
 #----------------------------- .txt File Airfoil Coordinates
@@ -226,9 +244,8 @@ for i in range(0,103):
     xcoord1[2].append(float(lines2[i].split()[0]))
     ycoord1[0].append(float(lines0[i].split()[1]))
     ycoord1[1].append(float(lines1[i].split()[1]))
-    ycoord1[2].append(float(lines2[i].split()[1]))
-        
-for i in range(0,71):
+    ycoord1[2].append(float(lines2[i].split()[1]))        
+for i in range(0,70):
     xcoord1[3].append(float(lines3[i].split()[0]))
     ycoord1[3].append(float(lines3[i].split()[1]))
     
@@ -238,23 +255,25 @@ for i in range(103,205):
     xcoord2[2].append(float(lines2[i].split()[0]))
     ycoord2[0].append(float(lines0[i].split()[1]))
     ycoord2[1].append(float(lines1[i].split()[1]))
-    ycoord2[2].append(float(lines2[i].split()[1]))
-        
-for i in range(71,139):
+    ycoord2[2].append(float(lines2[i].split()[1]))        
+for i in range(70,139):
     xcoord2[3].append(float(lines3[i].split()[0]))
     ycoord2[3].append(float(lines3[i].split()[1]))
 
-for i in range(0,3):
+for i in range(0,4):
     xcoord2[i].insert(-1,1.0)
-    xcoord2[i]=xcoord2[i][::-1]
     ycoord2[i].insert(-1,0.0)
-    xcoord2[i]=xcoord2[i][::-1]
-    
-    
+    xcoord1[i]=xcoord1[i][::-1]
+    ycoord1[i]=ycoord1[i][::-1]
 
 ##Camber Line
 for i in range(0,len(xcoord1[0])):
     camline[0].append((ycoord1[0][i]+ycoord2[0][i])/2)
+    camline[1].append((ycoord1[1][i]+ycoord2[1][i])/2)
+    camline[2].append((ycoord1[1][i]+ycoord2[1][i])/2)
+for i in range(0,len(xcoord1[3])):
+    camline[3].append((ycoord1[3][i]+ycoord2[3][i])/2)
+
 
 #----------------------------- Plotting
 
@@ -264,7 +283,7 @@ for i in range(0,len(xcoord1[0])):
 #plt.grid(True,which="major",color="#999999")
 #plt.grid(True,which="minor",color="#DDDDDD",ls="--")
 #plt.minorticks_on()
-#plt.ylim(-10.0,2.0)
+#plt.ylim(-12.0,2.0)
 #plt.ylabel('x [m]')
 #plt.xlabel('y [m]')
 #
@@ -273,7 +292,7 @@ for i in range(0,len(xcoord1[0])):
 #plt.grid(True,which="minor",color="#DDDDDD",ls="--")
 #plt.minorticks_on()
 #plt.plot(xcoord1[0],ycoord1[0],color='r')
-##plt.plot(xcoord1,camline[0],'--',color='r')
+#plt.plot(xcoord2[0],camline[0],'--',color='r')
 #plt.plot(xcoord2[0],ycoord2[0],color='r')
 #plt.xlim(0,1)
 #plt.ylim(-0.3,0.3)
@@ -287,7 +306,7 @@ for i in range(0,len(xcoord1[0])):
 #plt.grid(True,which="minor",color="#DDDDDD",ls="--")
 #plt.minorticks_on()
 #plt.plot(xcoord1[1],ycoord1[1],color='r')
-##plt.plot(xcoord1,camline,'--',color='r')
+#plt.plot(xcoord2[1],camline[1],'--',color='r')
 #plt.plot(xcoord2[1],ycoord2[1],color='r')
 #plt.xlim(0,1)
 #plt.ylim(-0.3,0.3)
@@ -301,7 +320,7 @@ for i in range(0,len(xcoord1[0])):
 #plt.grid(True,which="minor",color="#DDDDDD",ls="--")
 #plt.minorticks_on()
 #plt.plot(xcoord1[2],ycoord1[2],color='r')
-##plt.plot(xcoord1,camline,'--',color='r')
+#plt.plot(xcoord2[2],camline[2],'--',color='r')
 #plt.plot(xcoord2[2],ycoord2[2],color='r')
 #plt.xlim(0,1)
 #plt.ylim(-0.3,0.3)
@@ -315,7 +334,7 @@ for i in range(0,len(xcoord1[0])):
 #plt.grid(True,which="minor",color="#DDDDDD",ls="--")
 #plt.minorticks_on()
 #plt.plot(xcoord1[3],ycoord1[3],color='r')
-##plt.plot(xcoord1,camline,'--',color='r')
+#plt.plot(xcoord2[3],camline[3],'--',color='r')
 #plt.plot(xcoord2[3],ycoord2[3],color='r')
 #plt.xlim(0,1)
 #plt.ylim(-0.3,0.3)
@@ -325,7 +344,7 @@ for i in range(0,len(xcoord1[0])):
 #plt.xlabel('x/c [-]')
 #
 #plt.show()
-#
+
 
 
 
