@@ -220,11 +220,19 @@ lines1=f1.readlines()
 lines2=f2.readlines()
 lines3=f3.readlines()
 
+linesnew0=[]
+linesnew1=[]
+linesnew2=[]
+linesnew3=[]
+
+
 for j in range(0,len(lines0)):
-    linesnew0=lines0[j].split(' ')
-    linesnew1=lines1[j].split(' ')
-    linesnew2=lines2[j].split(' ')
-    linesnew3=lines3[j].split(' ')
+    linesnew0.append(lines0[j].split(' '))
+    linesnew1.append(lines1[j].split(' '))
+    linesnew2.append(lines2[j].split(' '))
+    
+for j in range(0,len(lines3)):
+    linesnew3.append(lines3[j].split(' '))
 
 
 #for j in lines%i[:26]:
