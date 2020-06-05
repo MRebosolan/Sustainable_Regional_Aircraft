@@ -233,8 +233,13 @@ for j in range(0,len(lines0)):
     
 for j in range(0,len(lines3)):
     linesnew3.append(lines3[j].split(' '))
-
-
+    
+while not len(linesnew0[4])==2:
+    for i in range(0,(len(linesnew0))):
+        for j in range(0,len(linesnew0[i])):
+            if linesnew0[i][j]=='':
+                linesnew0[i].pop(j)
+    
 #for j in lines%i[:26]:
 #xcoord1[i].append(float(i.split(' ')[0]))
 #    ycoord1.append(float(i.split(' ')[1].strip('\n')))

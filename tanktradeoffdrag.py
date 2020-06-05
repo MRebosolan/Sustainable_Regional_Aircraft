@@ -5,6 +5,8 @@ Created on Fri Jun  5 11:31:42 2020
 @author: malfl
 """
 
+from cabindesign import cabin_design
+
 finfuslist=[]
 cdlist=[]
 
