@@ -59,10 +59,10 @@ AR_h = 4                                #Aspect ratio of the horizontal tail [-]
 
 
 #Fuselage, cabin and loading parameters
-Dfus = 2.6,                       # Fuselage diameter
+Dfus = 2.6                        # Fuselage diameter
 print ("if you encounter an error here with fuselage diameter, make your program dependent on a different variable, ask Jorn")
 lf = 30                           # lenght of fuselage m estimate, lil shorter than CRJ as 5 seat rows are used
-hf = 3.486                         # height of fuselage estimate
+hf = 3.486                        # height of fuselage estimate
 widthf = 3.486                      # m max fuselage width
 A_fuselage = np.pi*widthf*0.5*hf*0.5 # Area of the fuselage in m^2
 ellipse_fuselage = 2*np.pi * (((widthf/2)**2 + (hf/2)**2)/2)**0.5
@@ -182,7 +182,7 @@ cl0 = 0.153333                     # preliminary estimate, TBD
 cm0 = -0.018                       # preliminary estimate, TBD
 tail_speedratio = 1**0.5           # SEAD, T tail
 zero_lift_angle = np.radians(4)    # degrees, PRELIMINARY estimate
-z_position_wing = 0.3              # m, PRELIMINARY, still requires thought, for downwash calc
+z_position_wing = hf - 0.6              # m, PRELIMINARY, still requires thought, for downwash calc
 z_position_horizontal = zh + hf    # where tail is positioned, for downwash calc
 
 

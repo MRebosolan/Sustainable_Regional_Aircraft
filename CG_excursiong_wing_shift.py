@@ -2,7 +2,7 @@
 """
 Created on Thu Jun  4 09:33:37 2020
 
-@author: Gebruiker
+@author: Rick
 """
 
 # loading diagram generator
