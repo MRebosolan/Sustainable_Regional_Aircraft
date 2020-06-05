@@ -229,7 +229,6 @@ def scissorplot(stabilityxcg_cruise,controlxcg, ShS, frontcg, aftcg, Sh_over_S  
     plt.title('CS100')
     plt.show()
     
-scissorplot(stabilityxcg_cruise,controlxcg, ShS, frontcg, aftcg, Sh_over_S  )
 
 Moment_ac = 0.5* rho_cruise *v_cruise**2 * cm_ac * MAC
 
