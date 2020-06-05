@@ -201,40 +201,58 @@ wing, geom, cross1, hld, ail, x2 = wing_geometry(M_cruise, S, AR, MTOW, V_C, wid
 #Read from file
 #
 ##Create empty lists
+
+lines  = [[],[],[],[]]
+xcoord1= [[],[],[],[]]
+xcoord2= [[],[],[],[]]
+ycoord1= [[],[],[],[]]
+ycoord2= [[],[],[],[]]
+camline= [[],[],[],[]]
+
+#Read from file
+f0=open('airfoil1.txt','r')
+f1=open('airfoil2.txt','r')
+f2=open('airfoil3.txt','r')
+f3=open('airfoil4.txt','r')
+
+lines0=f0.readlines()
+lines1=f1.readlines()
+lines2=f2.readlines()
+lines3=f3.readlines()
+
+linesnew0=[]
+linesnew1=[]
+linesnew2=[]
+linesnew3=[]
+
+
+for j in range(0,len(lines0)):
+    linesnew0.append(lines0[j].split(' '))
+    linesnew1.append(lines1[j].split(' '))
+    linesnew2.append(lines2[j].split(' '))
+    
+for j in range(0,len(lines3)):
+    linesnew3.append(lines3[j].split(' '))
+
+
+#for j in lines%i[:26]:
+#xcoord1[i].append(float(i.split(' ')[0]))
+#    ycoord1.append(float(i.split(' ')[1].strip('\n')))
+#for i in lines[26:]:
+#    xcoord2.append(float(i.split(' ')[0]))
+#    ycoord2.append(float(i.split(' ')[1].strip('\n')))
 #
-#lines  = [[],[],[],[]]
-#xcoord1= [[],[],[],[]]
-#xcoord2= [[],[],[],[]]
-#ycoord1= [[],[],[],[]]
-#ycoord2= [[],[],[],[]]
-#camline= [[],[],[],[]]
-#
-##
-#dct={}
-#for i in range(0,4):
-#    f1=open('airfoil1.txt','r')
-#    f2=open('airfoil2.txt','r')
-#    f3=open('airfoil3.txt','r')
-#    f4=open('airfoil4.txt','r')
-#
-#    for j in lines%i[:26]:
-#        xcoord1[i].append(float(i.split(' ')[0]))
-#        ycoord1.append(float(i.split(' ')[1].strip('\n')))
-#    for i in lines[26:]:
-#        xcoord2.append(float(i.split(' ')[0]))
-#        ycoord2.append(float(i.split(' ')[1].strip('\n')))
+##Add origin to list to connect
+#xcoord2.insert(0,0.0)
+#ycoord2.insert(0,0.0)
 #    
-#    #Add origin to list to connect
-#    xcoord2.insert(0,0.0)
-#    ycoord2.insert(0,0.0)
-#        
-#    #Reverse order 
-#    xcoord1=xcoord1[::-1]
-#    ycoord1=ycoord1[::-1]
-#    
-#    #Camber Line
-#    for i in range(0,len(xcoord1)):
-#        camline.append((ycoord1[i]+ycoord2[i])/2)
+##Reverse order 
+#xcoord1=xcoord1[::-1]
+#ycoord1=ycoord1[::-1]
+#
+##Camber Line
+#for i in range(0,len(xcoord1)):
+#    camline.append((ycoord1[i]+ycoord2[i])/2)
 
 #print(lines1)
 #print(xcoord1)

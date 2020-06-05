@@ -1,4 +1,11 @@
 # -*- coding: utf-8 -*-
+"""
+Created on Fri Jun  5 09:04:23 2020
+
+@author: Gebruiker
+"""
+
+# -*- coding: utf-8 -*-
 ''' 
 file to be used for scissor plots. Being worked out atm
 responsible: Jorn & Rick
@@ -11,9 +18,19 @@ from math import sqrt, pi, tan, atan
 import Class_2_estimation as cl2
 from Xacregression_scissor import Xacregression, Xacregression_app
 import Aero
+import CG_excursion_wing_shift as shift
 
+#Inputs invarient with wing position
 MAC = input.MAC
-lemac = input.x_LEMAC_nose
+
+
+#Inputs varient with wing position
+
+x_start_Cr = shift.x_start_Cr
+lemac = shift.x_lemac
+
+
+
 S =  cl2.S
 b = cl2.b
 widthf = input.widthf
@@ -49,7 +66,7 @@ ln = input.x_LEMAC_nose + 0.25*MAC - input.x_engine_start# distance between fron
 ct = input.Ct
 cr = input.Cr
 taper = input.taper
-x_start_Cr = input.x_start_Cr
+
 sweep_LE = input.LE_sweep
 C_lh_max = -0.8                                 #adjustable tail, from SEAD slides
 lh = input.lh
