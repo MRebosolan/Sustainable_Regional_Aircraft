@@ -222,11 +222,14 @@ z_position_horizontal = zh + hf    # where tail is positioned, for downwash calc
 #------------------------------------------------------------------------------------------------------------------
 #TO BE CHANGED BY JARI
 cj_ck = 1.6 * 10 ** (-5)           # kerosene cj     
-cj_c = cj_ck * 0.349 * H_to_ker_ratio + cj_ck * (1 - H_to_ker_ratio)
-cj_ck2 = cj_ck * 0.9
-cj_c2 = cj_ck2 * 0.349 * H_to_ker_ratio + cj_ck2 * (1 - H_to_ker_ratio)
-cj_kloiter = cj_ck * 0.7
-cj_loiter = cj_kloiter * 0.349 * H_to_ker_ratio + cj_kloiter * (1 - H_to_ker_ratio)
+cj_c=(H_to_ker_ratio-1)*0.349*cj_ck/((H_to_ker_ratio-1)*0.349-H_to_ker_ratio)+0.349*(cj_ck-(H_to_ker_ratio-1)*0.349*cj_ck/((H_to_ker_ratio-1)*0.349-H_to_ker_ratio))
+
+
+cj_ck2=cj_ck*0.9
+cj_c2=(H_to_ker_ratio-1)*0.349*cj_ck2/((H_to_ker_ratio-1)*0.349-H_to_ker_ratio)+0.349*(cj_ck2-(H_to_ker_ratio-1)*0.349*cj_ck2/((H_to_ker_ratio-1)*0.349-H_to_ker_ratio))
+
+cj_kloiter=input.cj_kloiter
+cj_loiter=(H_to_ker_ratio-1)*0.349*cj_kloiter/((H_to_ker_ratio-1)*0.349-H_to_ker_ratio)+0.349*(cj_kloiter-(H_to_ker_ratio-1)*0.349*cj_kloiter/((H_to_ker_ratio-1)*0.349-H_to_ker_ratio))
 t_loiter = 2700                    # s, as in 45 minutes
 #------------------------------------------------------------------------------------------------------------------
 
