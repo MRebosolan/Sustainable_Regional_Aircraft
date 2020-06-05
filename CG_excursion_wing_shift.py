@@ -78,7 +78,7 @@ w_lg_main = cl2.df['SRA']['Main LG']    #kg
 w_lg_front = cl2.df['SRA']['Nose LG']    #kg
 
 
-x_empennage = [i + (lh + lv) / 2 for i in x_ac] #Assume cg of empennage is in the middle of the aerodynamic center of horizontal and vertical tail, measured from the nose
+x_empennage = [x_ac[i] + (lh[i] + lv[i]) / 2 for i in range(len(x_start_Cr))] #Assume cg of empennage is in the middle of the aerodynamic center of horizontal and vertical tail, measured from the nose
 x_lg_front = 3     #cg location of front landing gear [m], measured from the nose, assumed to be 3 m (used for calculating cg at oew, not to be changed per se)
 x_lg_main = [i + 2 * Cr / 3 for i in x_start_Cr]     #cg location of main landing gear [m], assumed 2/3 root chord length further than start of root chord (used for calculating cg at oew, not to be changed per se)
 print("In calculation of cg @ OEW, take into account the exact tank placement and cg location once agreed on a specific configuration")
