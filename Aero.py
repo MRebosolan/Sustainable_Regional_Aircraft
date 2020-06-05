@@ -202,43 +202,47 @@ wing, geom, cross1, hld, ail, x2 = wing_geometry(M_cruise, S, AR, MTOW, V_C, wid
 #
 ##Create empty lists
 
-lines  = [[],[],[],[]]
-xcoord1= [[],[],[],[]]
-xcoord2= [[],[],[],[]]
-ycoord1= [[],[],[],[]]
-ycoord2= [[],[],[],[]]
-camline= [[],[],[],[]]
-
-#Read from file
-f0=open('airfoil1.txt','r')
-f1=open('airfoil2.txt','r')
-f2=open('airfoil3.txt','r')
-f3=open('airfoil4.txt','r')
-
-lines0=f0.readlines()
-lines1=f1.readlines()
-lines2=f2.readlines()
-lines3=f3.readlines()
-
-linesnew0=[]
-linesnew1=[]
-linesnew2=[]
-linesnew3=[]
-
-
-for j in range(0,len(lines0)):
-    linesnew0.append(lines0[j].split(' '))
-    linesnew1.append(lines1[j].split(' '))
-    linesnew2.append(lines2[j].split(' '))
-    
-for j in range(0,len(lines3)):
-    linesnew3.append(lines3[j].split(' '))
-    
-while not len(linesnew0[4])==2:
-    for i in range(0,(len(linesnew0))):
-        for j in range(0,len(linesnew0[i])):
-            if linesnew0[i][j]=='':
-                linesnew0[i].pop(j)
+#lines  = [[],[],[],[]]
+#xcoord1= [[],[],[],[]]
+#xcoord2= [[],[],[],[]]
+#ycoord1= [[],[],[],[]]
+#ycoord2= [[],[],[],[]]
+#camline= [[],[],[],[]]
+#
+##Read from file
+#f0=open('airfoil1.txt','r')
+#f1=open('airfoil2.txt','r')
+#f2=open('airfoil3.txt','r')
+#f3=open('airfoil4.txt','r')
+#
+#lines0=f0.readlines()
+#lines1=f1.readlines()
+#lines2=f2.readlines()
+#lines3=f3.readlines()
+#
+#linesnew0=[]
+#linesnew1=[]
+#linesnew2=[]
+#linesnew3=[]
+#linesclean0=[]
+#linesclean1=[]
+#linesclean2=[]
+#linesclean3=[]
+#
+#
+#for j in range(0,len(lines0)):
+#    linesnew0.append(lines0[j].split(' '))
+#    linesnew1.append(lines1[j].split(' '))
+#    linesnew2.append(lines2[j].split(' '))
+#    
+#for j in range(0,len(lines3)):
+#    linesnew3.append(lines3[j].split(' '))
+#    
+#while not len(linesnew0[4])==2:
+#    for i in range(0,(len(linesnew0))):
+#        for j in range(0,len(linesnew0[i])):
+#            if not linesnew0[i][j]=='':
+#                linesclean0.append(linesnew0[i][j])
     
 #for j in lines%i[:26]:
 #xcoord1[i].append(float(i.split(' ')[0]))

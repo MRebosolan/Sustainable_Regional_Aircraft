@@ -179,7 +179,7 @@ stabilityxcg_cruise = xac_cruise + ShS*(clalpha_tail/clalpha_acless)*(1-downwash
 controlxcg = xac - cm_ac/CL + ShS*(C_lh_max/CL)*(tail_armh/MAC)*speedratio
 
 
-def scissorplot(stabilityxcg_cruise,controlxcg, ShS, frontcg, aftcg, Sh_over_S  ):
+def scissorplot(stabilityxcg_cruise,controlxcg, ShS, frontcg, aftcg, Sh_over_S):
     plt.figure()
     plt.close()
     plt.plot(stabilityxcg_cruise*100,ShS, color = 'grey', label = 'Neutral stability')
