@@ -39,6 +39,7 @@ V_C = Envelope.V_C  # Cruise Speed
 V_D = Envelope.V_D  # Dive Speed
 V_S = Envelope.V_S  # Stall Speed
 V_A = Envelope.V_A  # Max Gust Speed
+v_approach = inp.v_approach                  # approach speed m/s
 
 b1 = 8
 b2 = 11.2
@@ -68,7 +69,7 @@ def chord_length(c_root, c_tip, x, b):
 
 # --------------------------------- Wing Geometry
 
-def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S):
+def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S, v_approach):
 
     # Wing sweep, also consider M_crit?
     if M_cruise >= 0.7:
@@ -76,7 +77,7 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S):
     else:
         sweep_c4 = np.arccos(1)
 
-    sweep_c4 = 36.86989765 * np.pi / 180 # from airfoil selection
+    sweep_c4 = 40.535802011 * np.pi / 180 # from airfoil selection 36.86989765
 
     print("Sweep =", sweep_c4 * 180 / np.pi)
 
@@ -133,14 +134,14 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S):
 
     Re = (rho * V_C * 0.514444 * c_mac) / mu
 
-    Re_sea = (1.225 * V_S * 0.514444 * c_mac) / 1.789e-5
+    Re_sea = (1.225 * 66 * c_mac) / 1.802e-5
 
-    M_sea = V_S / np.sqrt(1.4*287*288)
+    M_sea = v_approach / np.sqrt(1.4*287*288)
     print("M_sea = ", M_sea)
 
     print("Re =", Re, Re_sea)
-    # With CL_max = 1.8 we could take airfoil NACA 63(3)-618 (supercritical with 0.18 t/c)
-
+    # With CL_max = 1.8
+    # CLmax = 2.464
     # CLmax take-off: 2.1 , Clmax landing: 2.25
     #     # target for take-off: Delta CLmax = 0.3
     #     # target for landing: Delta CLmax = 0.45
@@ -148,8 +149,15 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S):
     k = (0.115 * 180 / np.pi) / (2 * np.pi)
 
     beta = np.sqrt(1 - M_cruise**2)
-    CLalpha = (2*np.pi*AR)/ (2 + np.sqrt(4 + (AR * beta / k) * (1 + (tan(sweep_c2)**2/beta**2))))
+    CLalpha = (2*np.pi*AR)/ (2 + np.sqrt(4 + (AR * beta / k) * (1 + (np.tan(sweep_c2)**2/beta**2))))
+    alpha0L = -3.667/180 * np.pi
 
+    #CL = CLalpha * (alpha - alpha0L)
+
+    alpha_trim = CL_des / CLalpha + alpha0L
+
+    CLmax_corrected = 0.74 * 2.432
+    print("CLmax_corrected =", CLmax_corrected)
 
     dCLmax_land = 0.45
     dCLmax_to   = 0.3
@@ -183,7 +191,6 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S):
     d_alpha = d_alpha_0 * SwfS * np.cos(sweep_hinge)
 
 
-
     wing = [sweep_c4, taper, c_root, c_tip, c_mac, y_mac, t_c, dihedral,
             Cl_des, dCLmax_land, dCLmax_to]
 
@@ -211,7 +218,7 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S):
     return wing, geom,cross1, hld, ail, x2
 
 
-wing, geom, cross1, hld, ail, x2 = wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S)
+wing, geom, cross1, hld, ail, x2 = wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S, v_approach)
 
 
 #----------------------------- .txt File Airfoil Coordinates
