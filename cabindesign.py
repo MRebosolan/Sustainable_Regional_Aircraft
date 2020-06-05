@@ -120,7 +120,7 @@ def cabin_design(fractioninfus,fractionintail,HYDROGENVOLUME,top_selecter,podlen
     FFbody=1+2.2/lambdaf**1.5+3.8/lambdaf**3 #https://www.fzt.haw-hamburg.de/pers/Scholz/HOOU/AircraftDesign_13_Drag.pdf,https://arc.aiaa.org/doi/pdf/10.2514/1.47557?casa_token=Ba2QtSu7zucAAAAA:aOfBQWl3BJR2ssM7K9PD_LIeIrlhvPDfImqpjJwciE4oqVkbmIZ-AANSbmtXX6CmqAjgX6VQ0O0
     k_v=7.95*10**(-6) #kinematic viscosity at 206 KELVIN
     MACH=input.mach_cruise
-    Reynolds=input.V_C*0.51444*lf/k_v
+    Reynolds=input.V_C_TAS*lf/k_v
     Cfturb=0.455/((math.log(Reynolds,10))**2.58*(1+0.144*MACH**2)**0.65)
     CDzerofus=Cfturb*FFbody*fuselage_area/70 #ref area CRJ700
     
@@ -130,16 +130,16 @@ def cabin_design(fractioninfus,fractionintail,HYDROGENVOLUME,top_selecter,podlen
         pylon=2*1*0.5
         pod_area=np.pi*d_pod*(podlength-d_pod/2)+2*4*np.pi*d_pod**2/4+pylon#put hemispheres on ends
         FFpods=1+0.35/lambdaf_pods
-        Reynolds_pods=input.V_C*0.51444*podlength/k_v
+        Reynolds_pods=input.V_C_TAS*podlength/k_v
         Cfturb_pods=0.455/((math.log(Reynolds_pods,10))**2.58*(1+0.144*MACH**2)**0.65)
-        CDzeropods=Cfturb_pods*FFpods*pod_area/70
-        poddrag=2*0.5*input.rho_c*(input.V_C*0.514444)**2*(pod_area)*CDzeropods*(1-top_selecter) #two pods
+        CDzeropods=Q_interference*Cfturb_pods*FFpods*pod_area/70
+        poddrag=2*0.5*input.rho_c*(input.V_C_TAS)**2*(pod_area)*CDzeropods*(1-top_selecter) #two pods
         print('pods: ',poddrag)
     else: poddrag,Cfturb_pods,CDzeropods,Reynolds_pods,pod_area,lambdaf_pods,FFpods=0,0,0,0,0,0,0
     
     
-    fusdrag=0.5*input.rho_c*(input.V_C*0.514444)**2*fuselage_area*(CDzerofus)
-    
+    fusdrag=0.5*input.rho_c*(input.V_C_TAS)**2*70*(CDzerofus)
+    print(fuselage_area)    
     
     totdrag=fusdrag+poddrag #ONLY OF FUSELAGE AND PODS
     #AERODYNAMICS
