@@ -40,8 +40,8 @@ V_D = Envelope.V_D  # Dive Speed
 V_S = Envelope.V_S  # Stall Speed
 V_A = Envelope.V_A  # Max Gust Speed
 
-b1=8
-b2=11.2
+b1 = 8
+b2 = 11.2
 
 # ---------------------------- Line Intersection Point
 
@@ -144,6 +144,12 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S):
     # CLmax take-off: 2.1 , Clmax landing: 2.25
     #     # target for take-off: Delta CLmax = 0.3
     #     # target for landing: Delta CLmax = 0.45
+
+    k = (0.115 * 180 / np.pi) / (2 * np.pi)
+
+    beta = np.sqrt(1 - M_cruise**2)
+    CLalpha = (2*np.pi*AR)/ (2 + np.sqrt(4 + (AR * beta / k) * (1 + (tan(sweep_c2)**2/beta**2))))
+
 
     dCLmax_land = 0.45
     dCLmax_to   = 0.3
@@ -270,16 +276,16 @@ for i in range(0,len(xcoord1[0])):
 
 #----------------------------- Plotting
 
-#plt.figure(0)
-#plt.plot(geom[0], geom[1], geom[2], geom[3], hld[0], hld[1],ail[0],ail[1])
-#plt.text(cross1[0],cross1[1],'Fuselage Wall Line')
-#plt.grid(True,which="major",color="#999999")
-#plt.grid(True,which="minor",color="#DDDDDD",ls="--")
-#plt.minorticks_on()
-#plt.ylim(-10.0,2.0)
-#plt.ylabel('x [m]')
-#plt.xlabel('y [m]')
-#
+plt.figure(0)
+plt.plot(geom[0], geom[1], geom[2], geom[3], hld[0], hld[1],ail[0],ail[1])
+plt.text(cross1[0],cross1[1],'Fuselage Wall Line')
+plt.grid(True,which="major",color="#999999")
+plt.grid(True,which="minor",color="#DDDDDD",ls="--")
+plt.minorticks_on()
+plt.ylim(-12.0,2.0)
+plt.ylabel('x [m]')
+plt.xlabel('y [m]')
+
 #plt.figure(1)
 #plt.grid(True,which="major",color="#999999")
 #plt.grid(True,which="minor",color="#DDDDDD",ls="--")
@@ -336,7 +342,7 @@ for i in range(0,len(xcoord1[0])):
 #plt.ylabel('y/c [-]')
 #plt.xlabel('x/c [-]')
 #
-#plt.show()
+plt.show()
 #
 
 
