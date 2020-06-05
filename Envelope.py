@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import input
 
 
 """
@@ -49,7 +50,7 @@ Description
 ###########################################################
 # Parameters
 
-MTOW     = 32000     #kg
+MTOW     = 32846.20  #kg
 G_WoverS = 91.391484 #psf
 rho      = 0.00237   #slugs/ft^3
 S        = 871.88    #ft^2
