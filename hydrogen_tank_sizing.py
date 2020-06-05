@@ -19,8 +19,13 @@ def tank_sizing(HYDROGENVOLUME,LENGTH,N):
         R+=0.001
         hsc=R/2 #spherical cap height
         asc=R #spherical cap radius
-        result=np.pi*(LENGTH-2*hsc*N)*R**2+N*2*np.pi*hsc/6*(3*asc**2+hsc**2) #NOW INCLUDES SPHERICAL CAPS INSTEAD OF HEMISPHERICAL CAPS!
-    # print(R)
+
+        if (LENGTH-2*hsc*N)>0:
+            result=np.pi*(LENGTH-2*hsc*N)*R**2+N*2*np.pi*hsc/6*(3*asc**2+hsc**2) #NOW INCLUDES SPHERICAL CAPS INSTEAD OF HEMISPHERICAL CAPS!
+        else:
+            result=N*2*3.14159*hsc/6*(3*asc**2+hsc**2)
+            
+        #print(R,result)
     TANK_DIAMETER=R*2
 
     TANK_SURFACE_AREA = (LENGTH-N*2*hsc)/N*3.14159*TANK_DIAMETER + 4*3.14159*R*hsc #ONE TANK!!!
