@@ -68,7 +68,10 @@ e_tail = 0.85   #oswald efficiency factor of tail, TBD
 
 
 #Fuselage, cabin and loading parameters
+
 #------------------------------------------------------------------------------------------------------------------
+lf = 30                           # length of fuselage m estimate, lil shorter than CRJ as 5 seat rows are used
+hf = 3.486                        # height of fuselage estimate
 widthf = 3.486                      # m max fuselage width
 lpax = 17.76                        # estimate, meters, cabin length, based on a seat pitch of 32 inch
 seat_pitch = 32                   # Seat pitch [inch]
@@ -77,6 +80,7 @@ pax_abreast = 3+2                   #seating abreast configuration
 N_fdc = 2                         # number of pilots [probably]
 N_cc = 2                          # number of cabin crew [probably]
 P_c = 74682.5                     # Pa, design cabin pressure, [N/m^2]
+P_cruise = 22632.1                # Pa, outside pressure at cruise
 Sff = 7.6                         # freight floor area estimate
 W_pax = 93                        # total weight per passenger, includes luggage kg
 x_first_pax = 6.9                 # x-location measured from the nose [m] where first passenger row is located
