@@ -148,7 +148,7 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S):
     k = (0.115 * 180 / np.pi) / (2 * np.pi)
 
     beta = np.sqrt(1 - M_cruise**2)
-    CLalpha = (2*np.pi*AR)/ (2 + np.sqrt(4 + (AR * beta / k) * (1 + (tan(sweep_c2)**2/beta**2))))
+    CLalpha = (2*np.pi*AR)/ (2 + np.sqrt(4 + (AR * beta / k) * (1 + (np.tan(sweep_c2)**2/beta**2))))
 
 
     dCLmax_land = 0.45

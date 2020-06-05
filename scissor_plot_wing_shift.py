@@ -94,14 +94,16 @@ def trimdrag(cm_ac, tail_armh, horizontal_area):
 #Import cg ranges loading diagram due to wing shifting
 cg_fwd_lst = shift.cg_fwd_excursion_lst
 cg_aft_lst = shift.cg_aft_excursion_lst
-cg_fwd_lst [0.1567]
-cf_aft_lst = [0.3993]
+
+#cg_fwd_lst = [0.3]
+#cg_aft_lst = [1.9]
 
 print('Read off acutal values for cprime_c from SEAD lecture 5 slides 18-20 once wing is designed')
 print('Change to *1.6 in DCLmax if double slotted flaps are used, see slide 35 ADSEE II')
 def scissor_wing_shift():
     Sh_min_lst = []
     for i in range(len(x_start_Cr)):
+    #for i in range(len(cg_fwd_lst)):
         
         #Minor calculations with input parameters
         CL = 2*mass*9.81/(rho*(v_approach**2)*S)            #approach CL
@@ -217,9 +219,9 @@ def scissor_wing_shift():
                 Sh_min_lst.append([10,0,0,0,0,0, 0, 0])         #append a zero if this condition is not met
                 print('At a root chord position of', x_start_Cr[i],' [m], the scissor plot shows no intersection')
                 break 
-            if abs(cg_fwd_lst[j]) < cg_cont[j] or abs(cg_aft_lst[j]) > cg_stab[j]:   #in this case, the cg range does not meet the stability or contorllability requirements
+            if cg_fwd_lst[i] < cg_cont[j] or cg_aft_lst[i] > cg_stab[j]:   #in this case, the cg range does not meet the stability or contorllability requirements
                 Sh_min = ShS[j-1]*S
-                Sh_min_lst.append([ShS[j-1],x_start_Cr[i], cg_stab[j-1], cg_aft_lst[j-1], cg_cont[j-1], cg_fwd_lst[j-1], trimdrag(cm_ac, tail_armh, Sh_min), cg_cont, cg_stab])
+                Sh_min_lst.append([ShS[j-1],x_start_Cr[i], cg_stab[j-1], cg_aft_lst[i-1], cg_cont[j-1], cg_fwd_lst[i-1], trimdrag(cm_ac, tail_armh, Sh_min), cg_cont, cg_stab])
                 break
             else:
                 continue
