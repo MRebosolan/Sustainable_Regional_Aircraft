@@ -242,4 +242,3 @@ e_tail = 0.85 #oswald efficiency factor of tail, TBD
 
 
 
-
