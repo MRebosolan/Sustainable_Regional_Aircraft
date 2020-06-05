@@ -199,35 +199,43 @@ wing, geom, cross1, hld, ail, x2 = wing_geometry(M_cruise, S, AR, MTOW, V_C, wid
 #----------------------------- .txt File Airfoil Coordinates
 
 #Read from file
-#f=open('airfoil1.txt','r')
-#lines=f.readlines()
 #
 ##Create empty lists
-#xcoord1=[]
-#xcoord2=[]
-#ycoord1=[]
-#ycoord2=[]
-#camline=[]
 #
-#for i in lines[:26]:
-#    xcoord1.append(float(i.split(' ')[0]))
-#    ycoord1.append(float(i.split(' ')[1].strip('\n')))
-#for i in lines[26:]:
-#    xcoord2.append(float(i.split(' ')[0]))
-#    ycoord2.append(float(i.split(' ')[1].strip('\n')))
+#lines  = [[],[],[],[]]
+#xcoord1= [[],[],[],[]]
+#xcoord2= [[],[],[],[]]
+#ycoord1= [[],[],[],[]]
+#ycoord2= [[],[],[],[]]
+#camline= [[],[],[],[]]
 #
-##Add origin to list to connect
-#xcoord2.insert(0,0.0)
-#ycoord2.insert(0,0.0)
+##
+#dct={}
+#for i in range(0,4):
+#    f1=open('airfoil1.txt','r')
+#    f2=open('airfoil2.txt','r')
+#    f3=open('airfoil3.txt','r')
+#    f4=open('airfoil4.txt','r')
+#
+#    for j in lines%i[:26]:
+#        xcoord1[i].append(float(i.split(' ')[0]))
+#        ycoord1.append(float(i.split(' ')[1].strip('\n')))
+#    for i in lines[26:]:
+#        xcoord2.append(float(i.split(' ')[0]))
+#        ycoord2.append(float(i.split(' ')[1].strip('\n')))
 #    
-##Reverse order 
-#xcoord1=xcoord1[::-1]
-#ycoord1=ycoord1[::-1]
-#
-##Camber Line
-#for i in range(0,len(xcoord1)):
-#    camline.append((ycoord1[i]+ycoord2[i])/2)
-#
+#    #Add origin to list to connect
+#    xcoord2.insert(0,0.0)
+#    ycoord2.insert(0,0.0)
+#        
+#    #Reverse order 
+#    xcoord1=xcoord1[::-1]
+#    ycoord1=ycoord1[::-1]
+#    
+#    #Camber Line
+#    for i in range(0,len(xcoord1)):
+#        camline.append((ycoord1[i]+ycoord2[i])/2)
+
 #print(lines1)
 #print(xcoord1)
 #print(ycoord1)
