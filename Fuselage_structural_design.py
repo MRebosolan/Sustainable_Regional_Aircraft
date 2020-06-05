@@ -128,13 +128,32 @@ def max_fuselage_stresses(t, R, x_array, P_c, z_vl, rudder_load, moments_y, shea
 
     bending_stresses_top = np.array(bending_stresses_top) + axial_stress
     bending_stresses_bottom = np.array(bending_stresses_bottom) + axial_stress
+    shear_stresses = np.array(shear_stresses) + torque_shear_stress
+    #mohr_shear_stresses_top = []
+    #mohr_shear_stresses_bottom = []
+    #for s1 in bending_stresses_top:
+    #    if s1>0:
+    #        mohr_shear = max(hoop_stress, s1)/2
+    #    else:
+    #        mohr_shear = (hoop_stress-s1)/2
+    #    mohr_shear_stresses_top.append(mohr_shear)
+    #
+    #for s2 in bending_stresses_bottom:
+    #    if s1>0:
+    #        mohr_shear = max(hoop_stress, s2)/2
+    #    else:
+    #        mohr_shear = (hoop_stress-s2)/2
+    #    mohr_shear_stresses_bottom.append(mohr_shear)
 
-    return bending_stresses_bottom, bending_stresses_top
 
-st1, st2 =(max_fuselage_stresses(0.1, 2.12, x_array, P_c, z_vl, 0, moments, shears))
 
-plt.plot(x_array, st1)
-plt.plot(x_array, st2)
+    return bending_stresses_bottom, bending_stresses_top, shear_stresses
+
+bmb, bmt, sh1 =(max_fuselage_stresses(0.1, 2.12, x_array, P_c, z_vl, 0, moments, shears))
+
+plt.plot(x_array, bmb)
+plt.plot(x_array, bmt)
+plt.plot(x_array, shears)
 #plt.plot(x_array, bending_stresses_top)
 #plt.plot(x_array, bending_stresses_bottom)
 #plt.plot(x_array, moments)
