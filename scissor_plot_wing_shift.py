@@ -84,6 +84,10 @@ def swf(widthf, outboard_flap):
 #Import cg ranges loading diagram due to wing shifting
 cg_fwd_lst = shift.cg_fwd_excursion_lst
 cg_aft_lst = shift.cg_aft_excursion_lst
+
+
+print('Read off acutal values for cprime_c from SEAD lecture 5 slides 18-20 once wing is designed')
+print('Change to *1.6 in DCLmax if double slotted flaps are used, see slide 35 ADSEE II')
 def scissor_wing_shift():
     Sh_min_lst = []
     for i in range(len(x_start_Cr)):
@@ -153,7 +157,7 @@ def scissor_wing_shift():
         
         downwash = (K_ea/K_0)*((part_a)+part_b*part_c)*clalpha_datcom/(np.pi*AR)
         
-        print (downwash)
+
         assert    0.1 < downwash/(4/(AR+2)) < 2, 'downwash value not within expected range for T-Tail'
         
         
@@ -166,10 +170,10 @@ def scissor_wing_shift():
         mu2 = 1.1
         mu3 = 0.04
         cprime_c = 1.2 
-        print('Read off acutal values from SEAD lecture 5 slides 18-20 once wing is designed')
+        
         
         DClmax = cprime_c*1.3 # Based on adsee 2
-        print('Change to *1.6 if double slotted flaps are used, see slide 35 ADSEE II')
+        
 
         outboard_flap = widthf + Aero.x2
 
@@ -197,36 +201,45 @@ def scissor_wing_shift():
         cg_cont = controlxcg[::-1]
         ShS = ShS[::-1]
         for j in range(len(ShS)):
-            if cg_stab[-1] > cg_cont[-1]:
-                Sh_min_lst.append(0)         #append a zero if this condition is not met
+            if cg_stab[-1] >= cg_cont[-1]:
+                Sh_min_lst.append([10,0,0,0,0,0, 0, 0])         #append a zero if this condition is not met
                 break 
             if cg_fwd_lst[j] < cg_cont[j] or cg_aft_lst[j] > cg_stab[j]:   #in this case, the cg range does not meet the stability or contorllability requirements
-                Sh_min_lst.append([ShS[j+1],x_start_Cr[i], cg_stab[j+1], cg_aft_lst[j+1], cg_cont[j+1], cg_fwd_lst[j+1]])
+                Sh_min = ShS[j-1]*S
+                Sh_min_lst.append([ShS[j-1],x_start_Cr[i], cg_stab[j-1], cg_aft_lst[j-1], cg_cont[j-1], cg_fwd_lst[j-1], trimdrag(cm_ac, tail_armh, Sh_min), cg_cont, cg_stab])
                 break
             else:
                 continue
-    
-    min_Sh_over_S = min(Sh_min_lst)[0]
+        
+        
+    minimum = min(Sh_min_lst)
+    min_Sh_over_S = minimum[0]
     Sh_min = min_Sh_over_S * S
-    x_Cr_opt_nose = min(Sh_min_lst)[1]
-    cg_stab_lim = min(Sh_min_lst)[2]
-    cg_aft = min(Sh_min_lst)[3]
-    cg_cont_lim = min(Sh_min_lst)[4]
-    cg_fwd = min(Sh_min_lst)[5]
+    x_Cr_opt_nose = minimum[1]
+    cg_stab_lim = minimum[2]
+    cg_aft = minimum[3]
+    cg_cont_lim = minimum[4]
+    cg_fwd = minimum[5]
+    Dtrim = minimum[6]
+    controlplot = minimum[7]
+    stabilityplot = minimum[8]
     
     
-    Dtrim = trimdrag(cm_ac, tail_armh, Sh_min)
     
     
-    return Sh_min_lst, min_Sh_over_S, x_Cr_opt_nose, cg_stab_lim, cg_aft, cg_cont_lim, cg_fwd, Dtrim
+    
+    
+    return Sh_min_lst, min_Sh_over_S, x_Cr_opt_nose, cg_stab_lim, cg_aft, cg_cont_lim, cg_fwd, Dtrim, Sh_min, controlplot, stabilityplot, ShS
 
 
-def scissorplot(stabilityxcg_cruise,controlxcg, ShS, frontcg, aftcg, Sh_over_S  ):
+
+
+def scissorplot(stabilityplot,controlplot, ShS, frontcg, aftcg, Sh_over_S  ):
     plt.close()
     plt.figure()
-    plt.plot(stabilityxcg_cruise*100,ShS, color = 'grey', label = 'Neutral stability')
-    plt.plot(stabilityxcg_cruise*100 -5,ShS, color = 'b', label = 'Stability aft limit')
-    plt.plot(controlxcg*100,ShS, color = 'orange', label = 'Control fwd limit')
+    plt.plot(stabilityplot*100,ShS, color = 'grey', label = 'Neutral stability')
+    plt.plot(stabilityplot*100 -5,ShS, color = 'b', label = 'Stability aft limit')
+    plt.plot(controlplot*100,ShS, color = 'orange', label = 'Control fwd limit')
     plt.plot([frontcg,aftcg], [Sh_over_S, Sh_over_S], color = 'r', marker = '|')
     plt.grid()
     plt.xlabel("Xcg/MAC [%]")
@@ -246,8 +259,9 @@ def trimdrag(cm_ac, tail_armh, horizontal_area):
     
     return Dtrim
 
-scissor_wing_shift()
+Sh_min_lst, min_Sh_over_S, x_Cr_opt_nose, cg_stab_lim, cg_aft, cg_cont_lim, cg_fwd, Dtrim, Sh_min, controlplot, stabilityplot, ShS = scissor_wing_shift()
 
+scissorplot(stabilityplot, controlplot, ShS, cg_fwd, cg_aft, min_Sh_over_S  )
 
 
 #todo: check capability of horizontal tail for providing negative lift to sufficiently rotate the aircraft at take-off
