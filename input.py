@@ -234,7 +234,7 @@ x_apu = 20.                        # cg location of the apu measured from the no
 x_engine = 13                      # cg location of engines, measured from the nose of the aircraft [m], TBD
 x_nacelle = 13                     # cg location of engine nacelles, measured from the nose of the aircraft [m], TBD
 
-x_engine_start = x_LEMAC_nose - 1.5 #m, RANDOM, begin of engine measured from nose
+x_engine_start = - 1.5    #m, RANDOM, begin of engine measured from the lemac, negative means ... [m] closer to the nose
 bn = 1.2 #maximum width of engine
 e_tail = 0.85 #oswald efficiency factor of tail, TBD
 
