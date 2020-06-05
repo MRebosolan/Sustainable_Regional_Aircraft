@@ -57,8 +57,6 @@ for j in range(int(rows)):
     seatloc.append(row)
 
 
-
-
 #Calculate x_cg & OEW
 w_engine = cl2.df['SRA']['Engines']  # kg
 w_nacelle = cl2.df['SRA']['Nacelle']  # kg  
@@ -108,40 +106,6 @@ def cg_OEW_wrt_lemac(x_engine, w_engine, x_nacelle, w_nacelle, x_empennage, w_em
     cg_oew_nose = (x_engine * w_engine + x_nacelle * w_nacelle + x_empennage * w_empennage + x_apu * w_apu + x_tank * w_tank + x_cg_wing_nose * w_wing + x_lg_front * w_lg_front + x_lg_main * w_lg_main) / OEW
     cg_oew_wrt_lemac = (cg_oew_nose - x_lemac) / MAC
     return cg_oew_wrt_lemac, cg_oew_nose
-
-
-
-x_engine = 15       #x_location of c.g. of engines measured from the nose [m]
-x_nacelle = 15      #x_location of c.g. of engine nacelles measured from the nose [m]
-
-
-
-def wing_cg(sweep, b, Cr, Ct, MAC, x_lemac_Cr, x_lemac):
-    """
-    This function computes the wing cg w.r.t. the nose of the aircraft and the lemac
-    """
-    c = b / (2 * np.cos(sweep))
-    a = np.sqrt(c**2 - (b / 2)**2)
-    x_1 = 2 * a / 3
-    A1 = 0.5 * b / 2 * a
-    A2 = b / 2 * (Cr - a)
-    x_2 = a + (Cr - a) / 2
-    A3 = 0.5 * b / 2 * (Ct - (Cr - a))
-    x_3 = a +  Ct / 3
-    Atot = A1 + A2 + A3
-    x_cg_wrt_xlemac_Cr = (A1 * (x_1 - x_lemac_Cr) + A2 * (x_2 - x_lemac_Cr) + A3 * (x_3 - x_lemac_Cr)) / Atot
-
-    x_cg_nose = x_start_Cr + x_cg_wrt_xlemac_Cr
-
-    x_cg_nose = x_start_Cr + + x_lemac_Cr + x_cg_wrt_xlemac_Cr
-
-    x_cg_mac= x_cg_nose - x_lemac 
-    return x_cg_nose, x_cg_mac
-
-x_cg_wing_nose, x_cg_wing_mac = wing_cg(sweep, b, Cr, Ct, MAC, x_lemac_Cr, x_lemac)
-
-#vary x_start_Cr
-
 
 
 
