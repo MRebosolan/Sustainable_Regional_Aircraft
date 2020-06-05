@@ -103,11 +103,19 @@ def cabin_design(fractioninfus,fractionintail,HYDROGENVOLUME,top_selecter,podlen
     
     CGcomb=(CGtank*tm_tanksystem+CGfuelfull*(V_tank_cyl+V_tank_tail+V_tank_top+V_tank_pod)\
             *rho_hydrogen)/(tm_tanksystem+(V_tank_cyl+V_tank_tail+V_tank_top+V_tank_pod)*rho_hydrogen)
-    
-    #AERODYNAMICS
+
+
+    widthf=outer_diameter
+    if (d_top+1.55)<=widthf/2:
+        hf=widthf
+    else:
+        hf=widthf/2+1.55+d_top#CATIA  
+        
+    print(hf,widthf)
+    #AERODYNAMICS ###VERIFIED
     lf+=l_cyl
-    lambdaf=lf/outer_diameter #TORENBEEK
-    Perimeter=np.pi*outer_diameter+np.pi*d_top
+    lambdaf=lf/(hf) #TORENBEEK
+    Perimeter=np.pi*outer_diameter+np.pi*d_top*0.85
     fuselage_area=Perimeter*(lf)*(1-2/lambdaf)**(2/3)*(1+1/lambdaf**2) #TORENBEEK, and extra skin surface due to top
     FFbody=1+2.2/lambdaf**1.5+3.8/lambdaf**3 #https://www.fzt.haw-hamburg.de/pers/Scholz/HOOU/AircraftDesign_13_Drag.pdf,https://arc.aiaa.org/doi/pdf/10.2514/1.47557?casa_token=Ba2QtSu7zucAAAAA:aOfBQWl3BJR2ssM7K9PD_LIeIrlhvPDfImqpjJwciE4oqVkbmIZ-AANSbmtXX6CmqAjgX6VQ0O0
     k_v=7.95*10**(-6) #kinematic viscosity at 206 KELVIN
@@ -117,9 +125,11 @@ def cabin_design(fractioninfus,fractionintail,HYDROGENVOLUME,top_selecter,podlen
     CDzerofus=Cfturb*FFbody*fuselage_area/70 #ref area CRJ700
     
     if V_tank_pod!=0:
+        Q_interference=1.3
         lambdaf_pods=podlength/d_pod
-        pod_area=np.pi*d_pod*(podlength-d_pod/2)+2*4*np.pi*d_pod**2/4 #put hemispheres on ends
-        FFpods=1+2.2/lambdaf_pods**1.5+3.8/lambdaf_pods**3
+        pylon=2*1*0.5
+        pod_area=np.pi*d_pod*(podlength-d_pod/2)+2*4*np.pi*d_pod**2/4+pylon#put hemispheres on ends
+        FFpods=1+0.35/lambdaf_pods
         Reynolds_pods=input.V_C*0.51444*podlength/k_v
         Cfturb_pods=0.455/((math.log(Reynolds_pods,10))**2.58*(1+0.144*MACH**2)**0.65)
         CDzeropods=Cfturb_pods*FFpods*pod_area/70
@@ -136,20 +146,17 @@ def cabin_design(fractioninfus,fractionintail,HYDROGENVOLUME,top_selecter,podlen
     
     
     
-    widthf=outer_diameter
-    if (d_top+1.55)<=widthf/2:
-        hf=widthf
-    else:
-        hf=widthf/2+1.55+d_top#CATIA
+
         
         
     lh=(totalcabinlength+l_cyl)/2+3 #GUESS
     fuselage_weight=W_fuselage_torenbeek(input.V_dive, lh, widthf/0.3048, hf/0.3048, fuselage_area/0.3048/0.3048)    
     
+    empennage_length=lf-cockpit_length-totalcabinlength-l_cyl
     
     return(t_cyl,m_cyl, tm_cyl, d_cyl,l_cyl,t_tail,m_tail, tm_tail, d_tail,l_tail\
-           ,t_top,m_top,tm_top,d_top,l_top,totalcabinlength,V_tank_cyl, V_tank_tail, V_tank_top,\
-           tm_tanksystem,CGtank,CGfuelfull,CGcomb,totdrag,fuselage_weight,CDzerofus,FFbody,Cfturb,fuselage_area,CDzeropods,fusdrag,poddrag)
+           ,t_top,m_top,tm_top,d_top,l_top,t_pod,m_pod,tm_pod,d_pod,l_pod,totalcabinlength,V_tank_cyl, V_tank_tail, V_tank_top,V_tank_pod,\
+           tm_tanksystem,CGtank,CGfuelfull,CGcomb,totdrag,fuselage_weight,CDzerofus,FFbody,Cfturb,fuselage_area,CDzeropods,fusdrag,poddrag,empennage_length)
 
 
 
