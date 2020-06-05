@@ -153,7 +153,7 @@ def scissor_wing_shift():
         
         downwash = (K_ea/K_0)*((part_a)+part_b*part_c)*clalpha_datcom/(np.pi*AR)
         
-        print (downwash)
+        
         assert    0.1 < downwash/(4/(AR+2)) < 2, 'downwash value not within expected range for T-Tail'
         
         
@@ -246,7 +246,7 @@ def trimdrag(cm_ac, tail_armh, horizontal_area):
     
     return Dtrim
 
-scissor_wing_shift()
+Sh_min_lst, min_Sh_over_S, x_Cr_opt_nose, cg_stab_lim, cg_aft, cg_cont_lim, cg_fwd, Dtrim = scissor_wing_shift()
 
 
 
