@@ -28,8 +28,9 @@ Vbar_v = 0.086  #Vertical tail volume
 Sr_over_Sv = 0.303    #Ratio of rudder area over vtail area
 
 S =   Cl2.S     #input.S  [m]
-b =   Cl2.b    #input.b  [m]
-x_v =  10.5    #input.x_v    #Estimate for now #Distance Aerodynamic centre Vtail to c.g.
+b =   Cl2.b     #input.b  [m]
+x_v =  10.5     #input.x_v  #Distance Aerodynamic centre Vtail to c.g.
+                #x_v can be calculated the location of the htail aerodynamic center is know wrt either the aircraft c.g. OR the wing AC, provided the distance of the wing AC is know wrt the nose
 
 #Calculatetes preliminary area of the vertical tail surface and rudder
 def S_v(Vbar_v,S,b,x_v):
