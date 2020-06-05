@@ -1,15 +1,18 @@
 import input
 import numpy as np
 import matplotlib.pyplot as plt
+from math import pi
 
 """
 Written by Matteo & Manuel
 LOADS ACTING ON FUSELAGE: pressure vessel stresses, fuselage's own weight (assumed uniformly distributed
-wing weight, empennage weight, landing gear reaction forces.
+wing weight, empennage weight, landing gear reaction forces, horizontal tail lift
 
 #ASSUMPTIONS
 - Uniform longitudinal weight distribution
 - Tail lift applied at end of aircraft length
+- Cylindrical, thin walled fuselage
+- Effect of vertical tail neglected
 """
 
 P_c = input.P_c
@@ -18,32 +21,14 @@ z_vl = input.bv/2 #point of action of vertical tail lift, estimated at half vert
 t_options = np.linspace(0, 0.30, 1000)[1:]
 W_cruise = 0.985 * input.MTOW
 ac_length = 30 #dummy value
-x_ac = input.x_ac
+x_ac = 12 #estimate
 lh = input.lh
 
 x_array = np.linspace(0, ac_length, 1000)
 
+#----------FUSELAGE INTERNAL MOMENTS/SHEAR FORCES-----------------
 
 
-def pressure_vessel_stresses(t, P=P_c, r=r):
-    hoop_stress = (P*r)/t
-    longitudinal_stress = 0.5 * hoop_stress
-    return hoop_stress, longitudinal_stress
-
-hoop_stresses=[]
-longitudinal_stresses=[]
-
-for t in t_options:
-    hoop, long = pressure_vessel_stresses(t)
-    hoop_stresses.append(hoop)
-    longitudinal_stresses.append(long)
-
-
-def shear_flow_due_to_empennage(rudder_load, enclosed_area, z_vl=z_vl):
-    #rudder load positive towards right wing
-    torque = -rudder_load*z_vl #right hand positive
-    shear_flow = torque/(2*enclosed_area) #right hand positive
-    return shear_flow
 
 def internal_shear_and_moment_longitudinal(x, W= 322111, lf=ac_length, x_ac=x_ac, xh=ac_length):
     w_dist = W/lf
@@ -58,8 +43,8 @@ def internal_shear_and_moment_longitudinal(x, W= 322111, lf=ac_length, x_ac=x_ac
     else:
         d3,d4=0,0
 
-    shear_at_x = -w_dist*x + L*d1 + Lh*d3
-    moment_at_x = -w_dist*(0.5*x**2) + L*d2 + Lh*d4
+    shear_at_x = -w_dist*x + L*d1 + Lh*d3     #positive downwards
+    moment_at_x = -w_dist*(0.5*x**2) + L*d2 + Lh*d4  #sagging positive
     return shear_at_x, moment_at_x
 
 moments=[]
@@ -68,9 +53,94 @@ for x in x_array:
     moments.append(internal_shear_and_moment_longitudinal(x)[1])
     shears.append(internal_shear_and_moment_longitudinal(x)[0])
 
-plt.plot(x_array, moments)
-plt.plot(x_array, shears)
+
+
+
+
+#----------FUSELAGE INTERNAL STRESSES--------------
+#derived from internal moments/shears + pressure vessel stresses
+
+
+def pressure_vessel_stresses(t, R, P=P_c):
+    hoop_stress = (P*R)/t
+    longitudinal_stress = 0.5 * hoop_stress
+    max_shear_stress = 0.5 * hoop_stress #Mohr's circle
+    return hoop_stress, longitudinal_stress, max_shear_stress
+
+
+def shear_stress_due_to_empennage_torque(rudder_load, enclosed_area, z_vl, t):
+    #rudder load positive towards right wing
+    torque = -rudder_load*z_vl #right hand positive
+    shear_flow = torque/(2*enclosed_area) #right hand positive
+    shear_stress = shear_flow/t
+    return shear_stress
+
+
+def area_moments_of_inertia(R, t):
+    Iyy = pi*t*R**3
+    Izz = pi*t*R**3
+    return Iyy, Izz
+
+def max_internal_bending_stress(R, Iyy, My):
+    along_z = (My/Iyy)*R    #positive on top of fuselage
+    return along_z
+
+bending_stresses_bottom = []
+bending_stresses_top = []
+for m in moments:
+    Iyy = area_moments_of_inertia(2.12, 0.10)
+    bending_stresses_bottom.append(max_internal_bending_stress(2.12, Iyy, m))
+    bending_stresses_top.append(-max_internal_bending_stress(2.12, Iyy, m))
+
+
+
+
+
+
+
+def max_internal_vertical_shear(Iyy, Vz, R, t):
+    #Verified by hand calculation
+    #downward positive
+    ri = R-t
+    Q=(2/3)*(R**3-ri**3)
+    tau_max = (Vz*Q)/(Iyy*t*2)
+    return tau_max
+
+
+def max_fuselage_stresses(t, R, x_array, P_c, z_vl, rudder_load, moments_y, shears_z):
+
+    enclosed_area = pi*R**2
+    bending_stresses_bottom = []
+    bending_stresses_top = []
+    shear_stresses = []
+    hoop_stress, axial_stress, max_shear_stress = pressure_vessel_stresses(t, R, P_c)
+    torque_shear_stress = shear_stress_due_to_empennage_torque(rudder_load, enclosed_area, z_vl, t)
+
+    Iyy, Izz = area_moments_of_inertia(R, t)
+    for x in x_array:
+        x_index = np.where(x_array == x)[0][0]
+        bending_stress_bottom = max_internal_bending_stress(R, Iyy, moments_y[x_index])
+        bending_stress_top = -max_internal_bending_stress(R, Iyy, moments_y[x_index])
+        shear_stress = max_internal_vertical_shear(Iyy, shears_z[x_index], R, t)
+        bending_stresses_bottom.append(bending_stress_bottom)
+        bending_stresses_top.append(bending_stress_top)
+        shear_stresses.append(shear_stress)
+
+    bending_stresses_top = np.array(bending_stresses_top) + axial_stress
+    bending_stresses_bottom = np.array(bending_stresses_bottom) + axial_stress
+
+    return bending_stresses_bottom, bending_stresses_top
+
+st1, st2 =(max_fuselage_stresses(0.1, 2.12, x_array, P_c, z_vl, 0, moments, shears))
+
+plt.plot(x_array, st1)
+plt.plot(x_array, st2)
+#plt.plot(x_array, bending_stresses_top)
+#plt.plot(x_array, bending_stresses_bottom)
+#plt.plot(x_array, moments)
+#plt.plot(x_array, shears)
 plt.show()
+
 
 # location of the systems from nose
 x_mg = 15 #main gear from nose in m
