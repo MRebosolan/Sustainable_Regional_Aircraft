@@ -94,7 +94,8 @@ def trimdrag(cm_ac, tail_armh, horizontal_area):
 #Import cg ranges loading diagram due to wing shifting
 cg_fwd_lst = shift.cg_fwd_excursion_lst
 cg_aft_lst = shift.cg_aft_excursion_lst
-
+cg_fwd_lst [0.1567]
+cf_aft_lst = [0.3993]
 
 print('Read off acutal values for cprime_c from SEAD lecture 5 slides 18-20 once wing is designed')
 print('Change to *1.6 in DCLmax if double slotted flaps are used, see slide 35 ADSEE II')
