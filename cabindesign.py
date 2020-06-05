@@ -125,6 +125,7 @@ def cabin_design(fractioninfus,fractionintail,HYDROGENVOLUME,top_selecter,podlen
     CDzerofus=Cfturb*FFbody*fuselage_area/70 #ref area CRJ700
     
     if V_tank_pod!=0:
+        Q_interference=1.3
         lambdaf_pods=podlength/d_pod
         pylon=2*1*0.5
         pod_area=np.pi*d_pod*(podlength-d_pod/2)+2*4*np.pi*d_pod**2/4+pylon#put hemispheres on ends

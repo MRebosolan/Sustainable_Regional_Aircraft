@@ -228,7 +228,7 @@ cj_c=(H_to_ker_ratio-1)*0.349*cj_ck/((H_to_ker_ratio-1)*0.349-H_to_ker_ratio)+0.
 cj_ck2=cj_ck*0.9
 cj_c2=(H_to_ker_ratio-1)*0.349*cj_ck2/((H_to_ker_ratio-1)*0.349-H_to_ker_ratio)+0.349*(cj_ck2-(H_to_ker_ratio-1)*0.349*cj_ck2/((H_to_ker_ratio-1)*0.349-H_to_ker_ratio))
 
-cj_kloiter=input.cj_kloiter
+cj_kloiter=cj_ck*0.7
 cj_loiter=(H_to_ker_ratio-1)*0.349*cj_kloiter/((H_to_ker_ratio-1)*0.349-H_to_ker_ratio)+0.349*(cj_kloiter-(H_to_ker_ratio-1)*0.349*cj_kloiter/((H_to_ker_ratio-1)*0.349-H_to_ker_ratio))
 t_loiter = 2700                    # s, as in 45 minutes
 #------------------------------------------------------------------------------------------------------------------
