@@ -215,29 +215,29 @@ def scissor_wing_shift():
 
 
 
-def scissorplot(stabilityxcg_cruise,controlxcg, ShS, frontcg, aftcg, Sh_over_S  ):
-    plt.figure()
-    plt.close()
-    plt.plot(stabilityxcg_cruise*100,ShS, color = 'grey', label = 'Neutral stability')
-    plt.plot(stabilityxcg_cruise*100 -5,ShS, color = 'b', label = 'Stability aft limit')
-    plt.plot(controlxcg*100,ShS, color = 'orange', label = 'Control fwd limit')
-    plt.plot([frontcg,aftcg], [Sh_over_S, Sh_over_S], color = 'r', marker = '|')
-    plt.grid()
-    plt.xlabel("Xcg/MAC [%]")
-    plt.ylabel("Sh/S [-]")
-    plt.legend(loc = 'lower left')
-    plt.title('CS100')
-    plt.show()
-    
-scissorplot(stabilityxcg_cruise,controlxcg, ShS, frontcg, aftcg, Sh_over_S  )
-
-Moment_ac = 0.5* rho_cruise *v_cruise**2 * cm_ac * MAC
-
-Lift_tail = Moment_ac/tail_armh
-CL_h = Lift_tail/(0.5* rho_cruise *v_cruise**2  * horizontal_area)
-k = 1 / (np.pi*AR_tail *e_tail)
-
-Dtrim = abs(0.5* rho_cruise *v_cruise**2 *speedratio * horizontal_area * CL_h * k)
+#def scissorplot(stabilityxcg_cruise,controlxcg, ShS, frontcg, aftcg, Sh_over_S  ):
+#    plt.figure()
+#    plt.close()
+#    plt.plot(stabilityxcg_cruise*100,ShS, color = 'grey', label = 'Neutral stability')
+#    plt.plot(stabilityxcg_cruise*100 -5,ShS, color = 'b', label = 'Stability aft limit')
+#    plt.plot(controlxcg*100,ShS, color = 'orange', label = 'Control fwd limit')
+#    plt.plot([frontcg,aftcg], [Sh_over_S, Sh_over_S], color = 'r', marker = '|')
+#    plt.grid()
+#    plt.xlabel("Xcg/MAC [%]")
+#    plt.ylabel("Sh/S [-]")
+#    plt.legend(loc = 'lower left')
+#    plt.title('CS100')
+#    plt.show()
+#    
+#scissorplot(stabilityxcg_cruise,controlxcg, ShS, frontcg, aftcg, Sh_over_S  )
+#
+#Moment_ac = 0.5* rho_cruise *v_cruise**2 * cm_ac * MAC
+#
+#Lift_tail = Moment_ac/tail_armh
+#CL_h = Lift_tail/(0.5* rho_cruise *v_cruise**2  * horizontal_area)
+#k = 1 / (np.pi*AR_tail *e_tail)
+#
+#Dtrim = abs(0.5* rho_cruise *v_cruise**2 *speedratio * horizontal_area * CL_h * k)
 
 
 
