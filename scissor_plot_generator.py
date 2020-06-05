@@ -195,14 +195,14 @@ def scissorplot(stabilityxcg_cruise,controlxcg, ShS, frontcg, aftcg, Sh_over_S  
 
 
 
-Moment_ac = 0.5* rho_cruise *v_cruise**2 * cm_ac * MAC
-
-Lift_tail = Moment_ac/tail_armh
-CL_h = Lift_tail/(0.5* rho_cruise *v_cruise**2  * horizontal_area)
-k = 1 / (np.pi*AR_tail *e_tail)
-
-Dtrim = abs(0.5* rho_cruise *v_cruise**2 *speedratio * horizontal_area * CL_h * k)
-
+#Moment_ac = 0.5* rho_cruise *v_cruise**2 * cm_ac * MAC
+#
+#Lift_tail = Moment_ac/tail_armh
+#CL_h = Lift_tail/(0.5* rho_cruise *v_cruise**2  * horizontal_area)
+#k = 1 / (np.pi*AR_tail *e_tail)
+#
+#Dtrim = abs(0.5* rho_cruise *v_cruise**2 *speedratio * horizontal_area * CL_h * k)
+#
 
 
 

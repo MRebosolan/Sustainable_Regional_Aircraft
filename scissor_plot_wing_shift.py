@@ -153,7 +153,8 @@ def scissor_wing_shift():
         
         downwash = (K_ea/K_0)*((part_a)+part_b*part_c)*clalpha_datcom/(np.pi*AR)
         
-        assert    0.1 < downwash/(4/(AR+2)) < 1, 'downwash value not within expected range for T-Tail'
+        print (downwash)
+        assert    0.1 < downwash/(4/(AR+2)) < 2, 'downwash value not within expected range for T-Tail'
         
         
         #downwash_lowspeed = (K_ea/K_0)*((part_a)+part_b*part_c)*clalpha_datcom_lowspeed/(np.pi*AR)
@@ -206,18 +207,23 @@ def scissor_wing_shift():
                 continue
     
     min_Sh_over_S = min(Sh_min_lst)[0]
+    Sh_min = min_Sh_over_S * S
     x_Cr_opt_nose = min(Sh_min_lst)[1]
     cg_stab_lim = min(Sh_min_lst)[2]
     cg_aft = min(Sh_min_lst)[3]
     cg_cont_lim = min(Sh_min_lst)[4]
     cg_fwd = min(Sh_min_lst)[5]
-    return Sh_min_lst, min_Sh_over_S, x_Cr_opt_nose, cg_stab_lim, cg_aft, cg_cont_lim, cg_fwd    
-
+    
+    
+    Dtrim = trimdrag(cm_ac, tail_armh, Sh_min)
+    
+    
+    return Sh_min_lst, min_Sh_over_S, x_Cr_opt_nose, cg_stab_lim, cg_aft, cg_cont_lim, cg_fwd, Dtrim
 
 
 def scissorplot(stabilityxcg_cruise,controlxcg, ShS, frontcg, aftcg, Sh_over_S  ):
-    plt.figure()
     plt.close()
+    plt.figure()
     plt.plot(stabilityxcg_cruise*100,ShS, color = 'grey', label = 'Neutral stability')
     plt.plot(stabilityxcg_cruise*100 -5,ShS, color = 'b', label = 'Stability aft limit')
     plt.plot(controlxcg*100,ShS, color = 'orange', label = 'Control fwd limit')
@@ -229,16 +235,18 @@ def scissorplot(stabilityxcg_cruise,controlxcg, ShS, frontcg, aftcg, Sh_over_S  
     plt.title('CS100')
     plt.show()
     
+def trimdrag(cm_ac, tail_armh, horizontal_area):
+    Moment_ac = 0.5* rho_cruise *v_cruise**2 * cm_ac * MAC
+    
+    Lift_tail = Moment_ac/tail_armh
+    CL_h = Lift_tail/(0.5* rho_cruise *v_cruise**2  * horizontal_area)
+    k = 1 / (np.pi*AR_tail *e_tail)
+    
+    Dtrim = abs(0.5* rho_cruise *v_cruise**2 *speedratio * horizontal_area * CL_h**2 * k)
+    
+    return Dtrim
 
-Moment_ac = 0.5* rho_cruise *v_cruise**2 * cm_ac * MAC
-
-Lift_tail = Moment_ac/tail_armh
-CL_h = Lift_tail/(0.5* rho_cruise *v_cruise**2  * horizontal_area)
-k = 1 / (np.pi*AR_tail *e_tail)
-
-Dtrim = abs(0.5* rho_cruise *v_cruise**2 *speedratio * horizontal_area * CL_h * k)
-
-
+scissor_wing_shift()
 
 
 
