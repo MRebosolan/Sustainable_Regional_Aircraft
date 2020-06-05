@@ -56,7 +56,7 @@ rho      = 0.00237   #slugs/ft^3
 S        = 871.88    #ft^2
 CLmax    = 1.8
 CLmaxneg = -1.0
-kc       = 33        #Varies 36-29 as W/S varies from 20-100 psf
+kc       = 28        #Varies 36-29 as W/S varies from 20-100 psf
 nlim     = 4.4       #usually 4.4 but check 
 Kg       = 0.781     #Gust alleviation factor
 UdeB     = 85        #Depends on altitude in ft (above 20k ft) [ROSKAM V pg 38]
@@ -216,6 +216,9 @@ cross6 = line_intersect(0,0,V_A,nlimpos,V_B,1+nlimgustBslope*V_B,V_C,1+nlimgustC
 cross7 = (x_new3[35],y_new3[35])
 cross8 = (x_new2[41],y_new2[41])
 cross9 = (69.1,0.452)
+
+#maximum load factor
+nmax=1+nlimgustCslope*V_C
 
 #----------------------------------------------------------------------------------------------
 #
