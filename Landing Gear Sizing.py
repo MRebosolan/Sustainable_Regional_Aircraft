@@ -155,3 +155,9 @@ print ('This means the main landing gear stick out',np.round(min(y_lg_list)-z_cg
 print ()
 print ('Required htail area:', np.round(htail_area,3),'[m^2]')
 
+"""
+Strength of landing gear: take the shock of landing into account
+Size for strength
+Size tires
+Size strut?
+"""
