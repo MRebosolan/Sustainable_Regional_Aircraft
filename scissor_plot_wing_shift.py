@@ -84,6 +84,10 @@ def swf(widthf, outboard_flap):
 #Import cg ranges loading diagram due to wing shifting
 cg_fwd_lst = shift.cg_fwd_excursion_lst
 cg_aft_lst = shift.cg_aft_excursion_lst
+
+
+print('Read off acutal values for cprime_c from SEAD lecture 5 slides 18-20 once wing is designed')
+print('Change to *1.6 in DCLmax if double slotted flaps are used, see slide 35 ADSEE II')
 def scissor_wing_shift():
     Sh_min_lst = []
     for i in range(len(x_start_Cr)):
@@ -153,7 +157,7 @@ def scissor_wing_shift():
         
         downwash = (K_ea/K_0)*((part_a)+part_b*part_c)*clalpha_datcom/(np.pi*AR)
         
-        print (downwash)
+       
         assert    0.1 < downwash/(4/(AR+2)) < 2, 'downwash value not within expected range for T-Tail'
         
         
@@ -166,10 +170,10 @@ def scissor_wing_shift():
         mu2 = 1.1
         mu3 = 0.04
         cprime_c = 1.2 
-        print('Read off acutal values from SEAD lecture 5 slides 18-20 once wing is designed')
+        
         
         DClmax = cprime_c*1.3 # Based on adsee 2
-        print('Change to *1.6 if double slotted flaps are used, see slide 35 ADSEE II')
+        
 
         outboard_flap = widthf + Aero.x2
 
@@ -219,6 +223,9 @@ def scissor_wing_shift():
     
     
     return Sh_min_lst, min_Sh_over_S, x_Cr_opt_nose, cg_stab_lim, cg_aft, cg_cont_lim, cg_fwd, Dtrim
+
+Sh_min_lst, min_Sh_over_S, x_Cr_opt_nose, cg_stab_lim, cg_aft, cg_cont_lim, cg_fwd, Dtrim = scissor_wing_shift()
+print(min_Sh_over_S)
 
 
 def scissorplot(stabilityxcg_cruise,controlxcg, ShS, frontcg, aftcg, Sh_over_S  ):
