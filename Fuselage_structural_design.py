@@ -1,6 +1,7 @@
 import input
 import numpy as np
 import matplotlib.pyplot as plt
+from math import pi
 
 """
 Written by Matteo & Manuel
@@ -18,32 +19,14 @@ z_vl = input.bv/2 #point of action of vertical tail lift, estimated at half vert
 t_options = np.linspace(0, 0.30, 1000)[1:]
 W_cruise = 0.985 * input.MTOW
 ac_length = 30 #dummy value
-x_ac = input.x_ac
+x_ac = 12 #estimate
 lh = input.lh
 
 x_array = np.linspace(0, ac_length, 1000)
 
+#----------FUSELAGE INTERNAL MOMENTS/SHEAR FORCES-----------------
 
 
-def pressure_vessel_stresses(t, P=P_c, r=r):
-    hoop_stress = (P*r)/t
-    longitudinal_stress = 0.5 * hoop_stress
-    return hoop_stress, longitudinal_stress
-
-hoop_stresses=[]
-longitudinal_stresses=[]
-
-for t in t_options:
-    hoop, long = pressure_vessel_stresses(t)
-    hoop_stresses.append(hoop)
-    longitudinal_stresses.append(long)
-
-
-def shear_flow_due_to_empennage(rudder_load, enclosed_area, z_vl=z_vl):
-    #rudder load positive towards right wing
-    torque = -rudder_load*z_vl #right hand positive
-    shear_flow = torque/(2*enclosed_area) #right hand positive
-    return shear_flow
 
 def internal_shear_and_moment_longitudinal(x, W= 322111, lf=ac_length, x_ac=x_ac, xh=ac_length):
     w_dist = W/lf
@@ -58,8 +41,8 @@ def internal_shear_and_moment_longitudinal(x, W= 322111, lf=ac_length, x_ac=x_ac
     else:
         d3,d4=0,0
 
-    shear_at_x = -w_dist*x + L*d1 + Lh*d3
-    moment_at_x = -w_dist*(0.5*x**2) + L*d2 + Lh*d4
+    shear_at_x = -w_dist*x + L*d1 + Lh*d3     #positive downwards
+    moment_at_x = -w_dist*(0.5*x**2) + L*d2 + Lh*d4  #sagging positive
     return shear_at_x, moment_at_x
 
 moments=[]
@@ -67,6 +50,59 @@ shears=[]
 for x in x_array:
     moments.append(internal_shear_and_moment_longitudinal(x)[1])
     shears.append(internal_shear_and_moment_longitudinal(x)[0])
+
+#----------FUSELAGE INTERNAL STRESSES--------------
+#derived from internal moments/shears + pressure vessel stresses
+
+
+def pressure_vessel_stresses(t, P=P_c, r=r):
+    hoop_stress = (P*r)/t
+    longitudinal_stress = 0.5 * hoop_stress
+    max_shear_stress = 0.5 * hoop_stress #Mohr's circle
+    return hoop_stress, longitudinal_stress, max_shear_stress
+
+
+def shear_flow_due_to_empennage_torque(rudder_load, enclosed_area, z_vl=z_vl):
+    #rudder load positive towards right wing
+    torque = -rudder_load*z_vl #right hand positive
+    shear_flow = torque/(2*enclosed_area) #right hand positive
+    return shear_flow
+
+
+hoop_stresses=[]
+longitudinal_stresses=[]
+max_shear_stresses=[]
+
+
+for t in t_options:
+    hoop, long, shear = pressure_vessel_stresses(t)
+    hoop_stresses.append(hoop)
+    longitudinal_stresses.append(long)
+    max_shear_stresses.append(shear)
+
+def area_moments_of_inertia(R, t):
+    Iyy = pi*t*R**3
+    Izz = pi*t*R**3
+    return Iyy, Izz
+
+def max_internal_bending_stress(R, Iyy, Izz, My, Mz):
+    along_z = (My/Iyy)*R
+    along_y = (Mz/Izz)*R
+    return along_z, along_y
+
+def max_internal_vertical_shear(Iyy, Vz, R, t):
+    Q = 0.5*pi*(R**2-(R-t)**2) * 4/3 * R/pi
+    tau_max = (Vz*Q)/(Iyy*t)
+    return tau_max
+
+max_shear_stress = 0#shear from hoop/axial + shear from shear diagram
+max_normal_stress = 0#normal stress from hoop/axial + normal stress due to bending moment diagram
+
+
+
+
+
+
 
 plt.plot(x_array, moments)
 plt.plot(x_array, shears)

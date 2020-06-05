@@ -2,7 +2,7 @@ import input
 from CarbonFootprint import cf
 from cabindesign import cabin_design
 
-def CLASS1WEIGHTHYBRID(H_to_ker_ratio = input.H_to_ker_ratio,OEWINPUT = 1):
+def CLASS1WEIGHTHYBRID(H_to_ker_ratio = input.H_to_ker_ratio,OEWINPUT = 1, top_selecter = 0):
     W_hydrosys=H_to_ker_ratio*1500 #initial guess for hydro system weight
     e=2.71828182846
     n_pax= input.Npax
@@ -101,7 +101,7 @@ def CLASS1WEIGHTHYBRID(H_to_ker_ratio = input.H_to_ker_ratio,OEWINPUT = 1):
     
     if HYDROGENVOLUME!=0:
         t_cyl,m_cyl, tm_cyl, d_cyl,l_cyl,t_tail,m_tail, tm_tail, d_tail,l_tail,t_top,m_top,tm_top,\
-        d_top,l_top,totalcabinlength,V_tank_cyl, V_tank_tail, V_tank_top,tm_tanksystem,CGtank,CGfuelfull,CGcomb=cabin_design(0,0,HYDROGENVOLUME)
+        d_top,l_top,totalcabinlength,V_tank_cyl, V_tank_tail, V_tank_top,tm_tanksystem,CGtank,CGfuelfull,CGcomb=cabin_design(0,0,HYDROGENVOLUME, top_selecter)
     else:
         d_top=0
         tm_tanksystem=0
