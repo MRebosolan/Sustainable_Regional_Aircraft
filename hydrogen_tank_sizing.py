@@ -178,46 +178,52 @@ def tank_sizing_fuselage(HYDROGENVOLUME, R,N):
     # print(R)
     xilist=[]
     yilist=[]
-    for L in range(1,100):
-        INSULATION_THICKNESS=L/1000 #unit is meters, increment from 0,001 to 0,1 meters by a millimeter each time
-        running=True
-        T_SURROUND= 290#K
-        T_INITINSULATION =0#K
-        
-        while running:
+    
+    IWISHTOLOOP=False #SET THIS VALUE TO TRUE IF YOU WANT TO DETERMINE THICKNESS ACCURATELY, OTHERWISE THREE CM IS USED WHICH SHOULD BE SUFFICENT
+    
+    if IWISHTOLOOP:
+        for L in range(1,100):
+            INSULATION_THICKNESS=L/1000 #unit is meters, increment from 0,001 to 0,1 meters by a millimeter each time
+            running=True
+            T_SURROUND= 290#K
+            T_INITINSULATION =0#K
             
-            R_AD= 9.81*(1/T_SURROUND)*(T_SURROUND-T_INITINSULATION)*TANK_DIAMETER**3/(GAS_DIFFUSIVITY*GAS_VISCOSITY) #1/T_SURROUND IN KELVIN
-            N_UD = (0.6+0.387*R_AD**(1/6)/(1+(0.559/PR)**(9/16))**(8/27))**2
-            try:
-                CC_TANKAIR = N_UD*K_G/TANK_DIAMETER #convection coefficient
-            except:
-                CC_TANKAIR = 0
-            Q_CONVECTION = CC_TANKAIR*(T_SURROUND-T_INITINSULATION)
-            Q_RADIATION = EMIS_INSULATION*BOLTZMANN_CONSTANT*(T_SURROUND**4-T_INITINSULATION**4)
-            Q_IN = Q_CONVECTION + Q_RADIATION
-
-            Q_CONDUCTION = THERMAL_CONDUCTIVITY_INSULATION*(T_INITINSULATION-T_LH2)/(INSULATION_THICKNESS)
-            T_INITINSULATION +=0.1 #look for correct insulation temperature for each thickness
-            if Q_CONDUCTION>Q_IN:
-                running=False
+            while running:
+                
+                R_AD= 9.81*(1/T_SURROUND)*(T_SURROUND-T_INITINSULATION)*TANK_DIAMETER**3/(GAS_DIFFUSIVITY*GAS_VISCOSITY) #1/T_SURROUND IN KELVIN
+                N_UD = (0.6+0.387*R_AD**(1/6)/(1+(0.559/PR)**(9/16))**(8/27))**2
+                try:
+                    CC_TANKAIR = N_UD*K_G/TANK_DIAMETER #convection coefficient
+                except:
+                    CC_TANKAIR = 0
+                Q_CONVECTION = CC_TANKAIR*(T_SURROUND-T_INITINSULATION)
+                Q_RADIATION = EMIS_INSULATION*BOLTZMANN_CONSTANT*(T_SURROUND**4-T_INITINSULATION**4)
+                Q_IN = Q_CONVECTION + Q_RADIATION
+    
+                Q_CONDUCTION = THERMAL_CONDUCTIVITY_INSULATION*(T_INITINSULATION-T_LH2)/(INSULATION_THICKNESS)
+                T_INITINSULATION +=0.1 #look for correct insulation temperature for each thickness
+                if Q_CONDUCTION>Q_IN:
+                    running=False
+            
+            BOIL_OFF=N*THERMAL_CONDUCTIVITY_INSULATION*TANK_SURFACE_AREA/INSULATION_THICKNESS*(T_INITINSULATION-T_SURROUND)/446592 #BOIL OFF for thickness and insulation T.
+            # print(BOIL_OFF,BOIL_OFF*4*3600,INSULATION_THICKNESS,T_INITINSULATION,TANK_SURFACE_AREA)
+            xilist.append(INSULATION_THICKNESS)
+            yilist.append(-BOIL_OFF*4*3600)
+        #print(xilist)#Prints out insulation thicknesses and boil offs
+        #print(yilist)#Prints out insulation thicknesses and boil offs
+        counter=0
+        for boiloff in yilist:
+            
+            if boiloff<0.005*HYDROGENVOLUME*DENSITY_LH:
+                #print('boiloff ',boiloff)
+                INSULATION_THICKNESS=xilist[counter]
+                #print('insulation thickness ',INSULATION_THICKNESS)
+                break
+            
+            counter+=1
+    else:
+        INSULATION_THICKNESS=0.03
         
-        BOIL_OFF=N*THERMAL_CONDUCTIVITY_INSULATION*TANK_SURFACE_AREA/INSULATION_THICKNESS*(T_INITINSULATION-T_SURROUND)/446592 #BOIL OFF for thickness and insulation T.
-        # print(BOIL_OFF,BOIL_OFF*4*3600,INSULATION_THICKNESS,T_INITINSULATION,TANK_SURFACE_AREA)
-        xilist.append(INSULATION_THICKNESS)
-        yilist.append(-BOIL_OFF*4*3600)
-    #print(xilist)#Prints out insulation thicknesses and boil offs
-    #print(yilist)#Prints out insulation thicknesses and boil offs
-    counter=0
-    for boiloff in yilist:
-        
-        if boiloff<0.005*HYDROGENVOLUME*DENSITY_LH:
-            #print('boiloff ',boiloff)
-            INSULATION_THICKNESS=xilist[counter]
-            #print('insulation thickness ',INSULATION_THICKNESS)
-            break
-        
-        counter+=1
-
     INSULATION_MASS=INSULATION_THICKNESS*TANK_SURFACE_AREA*N*INSULATION_DENSITY
         
     STRUCTURAL_TANK_MASS+=INSULATION_MASS
