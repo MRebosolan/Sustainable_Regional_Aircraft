@@ -65,3 +65,5 @@ def Xacregression_app(BA, taper, sweepbeta):
         return print('sweepbeta is out of range for xac estimation')
     else:
         return regr.predict([[BA, taper, sweepbeta]])[0]
+    
+    

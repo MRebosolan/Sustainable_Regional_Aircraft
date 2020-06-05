@@ -2,6 +2,8 @@ import numpy as np
 import input as inp
 import matplotlib.pyplot as plt
 import Envelope
+#import Aileron_sizing
+
 
 """
 inputs
@@ -37,6 +39,9 @@ V_D = Envelope.V_D  # Dive Speed
 V_S = Envelope.V_S  # Stall Speed
 V_A = Envelope.V_A  # Max Gust Speed
 
+b1=8
+b2=11.2
+
 # ---------------------------- Line Intersection Point
 
 def line_intersect(Ax1, Ay1, Ax2, Ay2, Bx1, By1, Bx2, By2):
@@ -64,6 +69,7 @@ def chord_length(c_root, c_tip, x, b):
 
 def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf):
 
+    # Wing sweep, also consider M_crit?
     if M_cruise >= 0.7:
         sweep_c4 = np.arccos(0.75*(0.935/(0.03 + M_cruise)))
     else:
@@ -85,7 +91,9 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf):
     CL_cruise = MTOW/(q*S)
     sweep_c2 = np.arctan(np.tan(sweep_c4) - 4/AR * ((50-25)/100 * (1 - taper)/(1 + taper))) #* 180/np.pi
     t_c = min((np.cos(sweep_c2)**3 * (0.935 - (M_cruise + 0.03) * np.cos(sweep_c2)) - 0.115 * CL_cruise**1.5) \
-          / (np.cos(sweep_c2)**2), 0.18)
+          / (np.cos(sweep_c2)**2), 0.18) #Upper limit for wing thickness
+
+    print("t/c = ", t_c)
 
     dihedral = 3
     s = sweep_c4*180/np.pi
@@ -120,7 +128,7 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf):
     rho = p_cruise / (287 * T_alt)
 
     Re = (rho * V_C * 0.514444 * c_mac) / mu
-    print("Re =", Re, rho)
+    print("Re =", Re)
     # With CL_max = 1.8 we could take airfoil NACA 63(3)-618 (supercritical with 0.18 t/c)
 
     # CLmax take-off: 2.1 , Clmax landing: 2.25
@@ -130,27 +138,39 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf):
     dCLmax_land = 0.45
     dCLmax_to   = 0.3
 
-    dClmax_land = 1.3
-    hinge_c     = 70 #percent
+    dClmax_land = 0.9
+    hinge_c     = 75 #percent
+    aileron_C   = 75 #percent
     sweep_hinge = np.arctan(np.tan(sweep_c4) - 4/AR * ((hinge_c-25)/100 * (1 - taper)/(1 + taper)))
-
+    print(sweep_hinge)
     SwfS = dCLmax_land/ (0.9 * dClmax_land * np.cos(sweep_hinge))
 
-    Df = widthf/2
+    Df = widthf/2 * 1
 
     a = -2 * (c_root - c_tip)/b
     ch = 1 - (hinge_c/100)
 
-    D = (-4 * a * Df + 2 * c_root)**2 + 4 * 2 * a * (-2 * SwfS * S/ ch)
+    D = (-4 * a * Df + 2 * c_root)**2 + 4 * 2 * a * (-2 * SwfS * S)
 
     print("D = ", D)
 
-    x2 = max((-(-4 * a * Df + 2 * c_root) + np.sqrt(D))/ (-4 * a), (-(-4 * a * Df + 2 * c_root) - np.sqrt(D)) / (-4 * a))/2
+    x2 = max((-(-4 * a * Df + 2 * c_root) + np.sqrt(D))/ (-4 * a), (-(-4 * a * Df + 2 * c_root) - np.sqrt(D)) / (-4 * a))
     print("x2 = ", (x2 + Df))
+
+    Sw_check = ((-2 * a * Df + c_root) + (-2 * a * (Df + x2) + c_root)) * x2 / 2 / S   #verified
+    print(SwfS, Sw_check)
+
+    d_alpha_0 = -5 * np.pi / 180
+
+    d_alpha = d_alpha_0 * SwfS * np.cos(sweep_hinge)
+
+
 
     wing = [sweep_c4, taper, c_root, c_tip, c_mac, y_mac, t_c, dihedral,
             Cl_des, dCLmax_land, dCLmax_to]
-    
+
+    print("wing =", wing)
+
     cross1 = line_intersect(x_fus[0],y_fus[0],x_fus[1],y_fus[1],x_wing[0],y_wing[0],x_wing[1],y_wing[1])
 
     x_hld = [Df, Df, x2 + Df, x2 + Df]
@@ -158,42 +178,74 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf):
              (-Df * np.tan(sweep_cLE) - (hinge_c/100) * chord_length(c_root, c_tip, Df, b)),
              (-(Df + x2) * np.tan(sweep_cLE) - (hinge_c/100) * chord_length(c_root, c_tip, (Df + x2), b)),
              (-(Df + x2) * np.tan(sweep_cLE) - chord_length(c_root, c_tip, (Df + x2), b))]
+    
+    x_ail = [b1, b1, b2, b2]
+    y_ail = [(-b1*np.tan(sweep_cLE) - chord_length(c_root, c_tip, b1, b)),
+             (-b1 * np.tan(sweep_cLE) - (hinge_c/100) * chord_length(c_root, c_tip, b1, b)),
+             (-b2 * np.tan(sweep_cLE) - (hinge_c/100) * chord_length(c_root, c_tip, b2, b)),
+             (-b2 * np.tan(sweep_cLE) - chord_length(c_root, c_tip, b2, b))]
+    
+    ail   = [x_ail,y_ail]
+    hld   = [x_hld, y_hld]
 
-    hld = [x_hld, y_hld]
-
-    return wing, geom,cross1, hld
 
 
-wing, geom, cross1, hld = wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf)
+    return wing, geom,cross1, hld, ail, x2
+
+
+wing, geom, cross1, hld, ail, x2 = wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf)
 
 
 #----------------------------- .txt File Airfoil Coordinates
 
-f=open('airfoil2.txt','r')
-lines=f.readlines()
-xcoord1=[]
-xcoord2=[]
-ycoord1=[]
-ycoord2=[]
-for i in lines[:26]:
-    xcoord1.append(float(i.split('     ')[0]))
-    ycoord1.append(float(i.split('     ')[1].strip('\n')))
-for i in lines[26:]:
-    xcoord2.append(float(i.split('     ')[0]))
-    ycoord2.append(float(i.split('     ')[1].strip('\n')))
+#Read from file
+#
+##Create empty lists
+#
+#lines  = [[],[],[],[]]
+#xcoord1= [[],[],[],[]]
+#xcoord2= [[],[],[],[]]
+#ycoord1= [[],[],[],[]]
+#ycoord2= [[],[],[],[]]
+#camline= [[],[],[],[]]
+#
+##
+#dct={}
+#for i in range(0,4):
+#    f1=open('airfoil1.txt','r')
+#    f2=open('airfoil2.txt','r')
+#    f3=open('airfoil3.txt','r')
+#    f4=open('airfoil4.txt','r')
+#
+#    for j in lines%i[:26]:
+#        xcoord1[i].append(float(i.split(' ')[0]))
+#        ycoord1.append(float(i.split(' ')[1].strip('\n')))
+#    for i in lines[26:]:
+#        xcoord2.append(float(i.split(' ')[0]))
+#        ycoord2.append(float(i.split(' ')[1].strip('\n')))
+#    
+#    #Add origin to list to connect
+#    xcoord2.insert(0,0.0)
+#    ycoord2.insert(0,0.0)
+#        
+#    #Reverse order 
+#    xcoord1=xcoord1[::-1]
+#    ycoord1=ycoord1[::-1]
+#    
+#    #Camber Line
+#    for i in range(0,len(xcoord1)):
+#        camline.append((ycoord1[i]+ycoord2[i])/2)
 
-xcoord2.insert(0,0.0)
-ycoord2.insert(0,0.0)
-
-print(lines)
-print(xcoord1)
-print(ycoord1)
-print(ycoord2)
-
+#print(lines1)
+#print(xcoord1)
+#print(ycoord1)
+#print(ycoord2)
+#print(camline)
+#
 #----------------------------- Plotting
 
 plt.figure(0)
-plt.plot(geom[0], geom[1], geom[2], geom[3], hld[0], hld[1])
+plt.plot(geom[0], geom[1], geom[2], geom[3], hld[0], hld[1],ail[0],ail[1])
 plt.text(cross1[0],cross1[1],'Fuselage Wall Line')
 plt.grid(True,which="major",color="#999999")
 plt.grid(True,which="minor",color="#DDDDDD",ls="--")
@@ -202,18 +254,19 @@ plt.ylim(-10.0,2.0)
 plt.ylabel('x [m]')
 plt.xlabel('y [m]')
 
-plt.figure(1)
-plt.grid(True,which="major",color="#999999")
-plt.grid(True,which="minor",color="#DDDDDD",ls="--")
-plt.minorticks_on()
-plt.plot(xcoord1,ycoord1,color='r')
-plt.plot(xcoord2,ycoord2,color='r')
-plt.xlim(0,1)
-plt.ylim(-0.3,0.3)
-plt.text(0.0,0.0,'LE')
-plt.text(1.0,0.0,'TE')
-plt.ylabel('y/c [-]')
-plt.xlabel('x/c [-]')
+#plt.figure(1)
+#plt.grid(True,which="major",color="#999999")
+#plt.grid(True,which="minor",color="#DDDDDD",ls="--")
+#plt.minorticks_on()
+#plt.plot(xcoord1,ycoord1,color='r')
+#plt.plot(xcoord1,camline,'--',color='r')
+#plt.plot(xcoord2,ycoord2,color='r')
+#plt.xlim(0,1)
+#plt.ylim(-0.3,0.3)
+#plt.text(0.0,0.0,'LE')
+#plt.text(1.0,0.0,'TE')
+#plt.ylabel('y/c [-]')
+#plt.xlabel('x/c [-]')
 
 plt.show()
 

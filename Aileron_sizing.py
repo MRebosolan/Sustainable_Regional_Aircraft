@@ -17,7 +17,7 @@ import Class_2_estimation as Cl2
 Preq = np.radians(45/1.45)              #required roll rate from Class II aircraft regulations
 Cr = input.Cr                                  #Wing root chord
 Ct = input.Ct                               #Wing tip chord
-Dfus = input.Dfus                                #Fuselage diameter
+Dfus = input.widthf                                #Fuselage diameter
 S = Cl2.S                                 #Wing area
 b = Cl2.b                                  #Wing span
 Cla = input.Cla_aileron                     #1/rad, sectional lift curve slope at wing section where aileron is located, determine by datcom method or airfoil simulation
@@ -26,9 +26,9 @@ Cd0 = input.Cd0_aileron                             #zero drag coefficient at wi
 #Aileron sizing input parameters: adjust the geometry of the aileron untill desired roll rate is achieved
 tau = 0.5                               #Aileron effectiveness based on control-surfce-to-lifting-surface ratio. Read off graph
 delta_a_up_max = np.radians(25)             #Change to obtain required aileron geometry, compare to reference aircraft for realistic values
-b1 = 17                                     #aileron inside y position
-b2 = 25                                     #aileron outside y position
-V = 130                                     #Speed at which roll rate is computed, stall speed is most sizing propably
+b1 = 8                                      #aileron inside y position
+b2 = 11                                     #aileron outside y position
+V = 60                                      #Speed at which roll rate is computed, stall speed is most sizing propably
 #Minor calculations with input parameters
 Sref = S - Cr * Dfus                    #Wing reference area
 delta_a_do_max = delta_a_up_max * 0.75      #In order to prevent adverse yaw, upgoing deflection should be 4/3 times larger than downward max deflection
@@ -55,7 +55,7 @@ print("Clda = ", Clda)
 print("Clp = ", Clp)
 print("roll_rate [deg/s]=", P)
 
-if P < 0 or P < Preq:
+if P < 0 or P < np.degrees(Preq):
     print("The aileron geometry parameters DO NOT meet the roll rate requirement")
 
 else:
