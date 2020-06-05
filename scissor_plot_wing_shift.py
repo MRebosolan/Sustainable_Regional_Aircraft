@@ -157,7 +157,7 @@ def scissor_wing_shift():
         
         downwash = (K_ea/K_0)*((part_a)+part_b*part_c)*clalpha_datcom/(np.pi*AR)
         
-       
+
         assert    0.1 < downwash/(4/(AR+2)) < 2, 'downwash value not within expected range for T-Tail'
         
         
@@ -202,10 +202,10 @@ def scissor_wing_shift():
         ShS = ShS[::-1]
         for j in range(len(ShS)):
             if cg_stab[-1] > cg_cont[-1]:
-                Sh_min_lst.append(0)         #append a zero if this condition is not met
+                Sh_min_lst.append([10,0,0,0,0])         #append a zero if this condition is not met
                 break 
             if cg_fwd_lst[j] < cg_cont[j] or cg_aft_lst[j] > cg_stab[j]:   #in this case, the cg range does not meet the stability or contorllability requirements
-                Sh_min_lst.append([ShS[j+1],x_start_Cr[i], cg_stab[j+1], cg_aft_lst[j+1], cg_cont[j+1], cg_fwd_lst[j+1]])
+                Sh_min_lst.append([ShS[j-1],x_start_Cr[i], cg_stab[j-1], cg_aft_lst[j-1], cg_cont[j-1], cg_fwd_lst[j-1]])
                 break
             else:
                 continue
@@ -224,8 +224,7 @@ def scissor_wing_shift():
     
     return Sh_min_lst, min_Sh_over_S, x_Cr_opt_nose, cg_stab_lim, cg_aft, cg_cont_lim, cg_fwd, Dtrim
 
-Sh_min_lst, min_Sh_over_S, x_Cr_opt_nose, cg_stab_lim, cg_aft, cg_cont_lim, cg_fwd, Dtrim = scissor_wing_shift()
-print(min_Sh_over_S)
+
 
 
 def scissorplot(stabilityxcg_cruise,controlxcg, ShS, frontcg, aftcg, Sh_over_S  ):
@@ -253,7 +252,7 @@ def trimdrag(cm_ac, tail_armh, horizontal_area):
     
     return Dtrim
 
-scissor_wing_shift()
+Sh_min_lst, min_Sh_over_S, x_Cr_opt_nose, cg_stab_lim, cg_aft, cg_cont_lim, cg_fwd, Dtrim = scissor_wing_shift()
 
 
 
