@@ -201,7 +201,7 @@ def scissor_wing_shift():
         cg_cont = controlxcg[::-1]
         ShS = ShS[::-1]
         for j in range(len(ShS)):
-            if cg_stab[-1] > cg_cont[-1]:
+            if cg_stab[-1] >= cg_cont[-1]:
                 Sh_min_lst.append([10,0,0,0,0,0, 0, 0])         #append a zero if this condition is not met
                 break 
             if cg_fwd_lst[j] < cg_cont[j] or cg_aft_lst[j] > cg_stab[j]:   #in this case, the cg range does not meet the stability or contorllability requirements

@@ -16,6 +16,7 @@ wing weight, empennage weight, landing gear reaction forces, horizontal tail lif
 """
 
 P_c = input.P_c
+P_cruise = input.P_cruise
 r = input.widthf/2
 z_vl = input.bv/2 #point of action of vertical tail lift, estimated at half vert.tail height
 t_options = np.linspace(0, 0.30, 1000)[1:]
@@ -23,6 +24,8 @@ W_cruise = 0.985 * input.MTOW
 ac_length = 30 #dummy value
 x_ac = 12 #estimate
 lh = input.lh
+widthf = input.widthf
+
 
 x_array = np.linspace(0, ac_length, 1000)
 
@@ -61,7 +64,8 @@ for x in x_array:
 #derived from internal moments/shears + pressure vessel stresses
 
 
-def pressure_vessel_stresses(t, R, P=P_c):
+def pressure_vessel_stresses(t, R, P_c, P_cruise):
+    P = P_c - P_cruise
     hoop_stress = (P*R)/t
     longitudinal_stress = 0.5 * hoop_stress
     max_shear_stress = 0.5 * hoop_stress #Mohr's circle
@@ -107,13 +111,13 @@ def max_internal_vertical_shear(Iyy, Vz, R, t):
     return tau_max
 
 
-def max_fuselage_stresses(t, R, x_array, P_c, z_vl, rudder_load, moments_y, shears_z):
+def max_fuselage_stresses(t, R, x_array, P_c, P_cruise, z_vl, rudder_load, moments_y, shears_z):
 
     enclosed_area = pi*R**2
     bending_stresses_bottom = []
     bending_stresses_top = []
     shear_stresses = []
-    hoop_stress, axial_stress, max_shear_stress = pressure_vessel_stresses(t, R, P_c)
+    hoop_stress, axial_stress, max_shear_stress = pressure_vessel_stresses(t, R, P_c, P_cruise)
     torque_shear_stress = shear_stress_due_to_empennage_torque(rudder_load, enclosed_area, z_vl, t)
 
     Iyy, Izz = area_moments_of_inertia(R, t)
@@ -149,7 +153,7 @@ def max_fuselage_stresses(t, R, x_array, P_c, z_vl, rudder_load, moments_y, shea
 
     return bending_stresses_bottom, bending_stresses_top, shear_stresses
 
-bmb, bmt, sh1 =(max_fuselage_stresses(0.1, 2.12, x_array, P_c, z_vl, 0, moments, shears))
+bmb, bmt, sh1 =(max_fuselage_stresses(0.1, widthf/2, x_array, P_c, P_cruise, z_vl, 0, moments, shears))
 
 plt.plot(x_array, bmb)
 plt.plot(x_array, bmt)

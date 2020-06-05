@@ -12,7 +12,7 @@ from hydrogen_tank_sizing import tank_sizing_fuselage
 from fuselage_weight_estimation import W_fuselage_torenbeek
 import input
 
-def cabin_design(fractioninfus,fractionintail,HYDROGENVOLUME,top_selecter,podlength=4):
+def cabin_design(fractioninfus,fractionintail,HYDROGENVOLUME,top_selecter,podlength=5):
     #PASSENGER SECTION
     #LARGELY BASED ON AIRBUS A220
     
@@ -54,7 +54,7 @@ def cabin_design(fractioninfus,fractionintail,HYDROGENVOLUME,top_selecter,podlen
     R_tank_fus=outer_diameter/2-0.15
     R_tank_tail=1
     
-    print(totalcabinlength)
+    #print(totalcabinlength)
     
         
     lf=28 # derived from A220, adapt in input file, total length of fuselage
@@ -87,10 +87,10 @@ def cabin_design(fractioninfus,fractionintail,HYDROGENVOLUME,top_selecter,podlen
 
     #POD STORAGE
     print(V_tank_pod)
-    t_pod,m_pod,tm_pod,d_pod,l_pod=tank_sizing(V_tank_pod,podlength*2,2)
+    t_pod,m_pod,tm_pod,d_pod,l_pod=tank_sizing(V_tank_pod,podlength*0.9*2,2) #allow for some cones
     if V_tank_pod==0:
         t_pod,m_pod, tm_pod, d_pod,l_pod=0,0,0,0,0
-    print('POD TANK: ','| mass: ',tm_pod,'| diameter: ',d_pod,'| length: ',l_pod)
+    print('POD TANK (for each): ','| mass: ',tm_pod/2,'| diameter: ',d_pod,'| tank length: ',l_pod/2)
 
     
     tm_tanksystem=tm_cyl+tm_tail+tm_top+tm_pod
@@ -104,28 +104,36 @@ def cabin_design(fractioninfus,fractionintail,HYDROGENVOLUME,top_selecter,podlen
     CGcomb=(CGtank*tm_tanksystem+CGfuelfull*(V_tank_cyl+V_tank_tail+V_tank_top+V_tank_pod)\
             *rho_hydrogen)/(tm_tanksystem+(V_tank_cyl+V_tank_tail+V_tank_top+V_tank_pod)*rho_hydrogen)
     
+    #AERODYNAMICS
     lf+=l_cyl
     lambdaf=lf/outer_diameter #TORENBEEK
     Perimeter=np.pi*outer_diameter+np.pi*d_top
     fuselage_area=Perimeter*(lf)*(1-2/lambdaf)**(2/3)*(1+1/lambdaf**2) #TORENBEEK, and extra skin surface due to top
-    lh=(totalcabinlength+l_cyl)/2+3 #GUESS
     FFbody=1+2.2/lambdaf**1.5+3.8/lambdaf**3 #https://www.fzt.haw-hamburg.de/pers/Scholz/HOOU/AircraftDesign_13_Drag.pdf,https://arc.aiaa.org/doi/pdf/10.2514/1.47557?casa_token=Ba2QtSu7zucAAAAA:aOfBQWl3BJR2ssM7K9PD_LIeIrlhvPDfImqpjJwciE4oqVkbmIZ-AANSbmtXX6CmqAjgX6VQ0O0
-    
     k_v=7.95*10**(-6) #kinematic viscosity at 206 KELVIN
     MACH=input.mach_cruise
     Reynolds=input.V_C*0.51444*lf/k_v
     Cfturb=0.455/((math.log(Reynolds,10))**2.58*(1+0.144*MACH**2)**0.65)
-    
     CDzerofus=Cfturb*FFbody*fuselage_area/70 #ref area CRJ700
-    print(MACH,Reynolds,Cfturb,FFbody,CDzerofus)
-     
-    CDzeropods=0.005
+    
+    if V_tank_pod!=0:
+        lambdaf_pods=podlength/d_pod
+        pod_area=np.pi*d_pod*(podlength-d_pod/2)+2*4*np.pi*d_pod**2/4 #put hemispheres on ends
+        FFpods=1+2.2/lambdaf_pods**1.5+3.8/lambdaf_pods**3
+        Reynolds_pods=input.V_C*0.51444*podlength/k_v
+        Cfturb_pods=0.455/((math.log(Reynolds_pods,10))**2.58*(1+0.144*MACH**2)**0.65)
+        CDzeropods=Cfturb_pods*FFpods*pod_area/70
+        poddrag=2*0.5*input.rho_c*(input.V_C*0.514444)**2*(pod_area)*CDzeropods*(1-top_selecter) #two pods
+        print('pods: ',poddrag)
+    else: poddrag,Cfturb_pods,CDzeropods,Reynolds_pods,pod_area,lambdaf_pods,FFpods=0,0,0,0,0,0,0
+    
     
     fusdrag=0.5*input.rho_c*(input.V_C*0.514444)**2*fuselage_area*(CDzerofus)
     
-    poddrag=0.5*input.rho_c*(input.V_C*0.514444)**2*(d_pod**2/4*np.pi+np.pi*d_pod*l_pod)*CDzeropods*(1-top_selecter)
     
     totdrag=fusdrag+poddrag #ONLY OF FUSELAGE AND PODS
+    #AERODYNAMICS
+    
     
     
     widthf=outer_diameter
@@ -133,13 +141,15 @@ def cabin_design(fractioninfus,fractionintail,HYDROGENVOLUME,top_selecter,podlen
         hf=widthf
     else:
         hf=widthf/2+1.55+d_top#CATIA
-    
+        
+        
+    lh=(totalcabinlength+l_cyl)/2+3 #GUESS
     fuselage_weight=W_fuselage_torenbeek(input.V_dive, lh, widthf/0.3048, hf/0.3048, fuselage_area/0.3048/0.3048)    
     
     
     return(t_cyl,m_cyl, tm_cyl, d_cyl,l_cyl,t_tail,m_tail, tm_tail, d_tail,l_tail\
            ,t_top,m_top,tm_top,d_top,l_top,totalcabinlength,V_tank_cyl, V_tank_tail, V_tank_top,\
-           tm_tanksystem,CGtank,CGfuelfull,CGcomb,totdrag,fuselage_weight,CDzerofus,FFbody,Cfturb,fuselage_area)
+           tm_tanksystem,CGtank,CGfuelfull,CGcomb,totdrag,fuselage_weight,CDzerofus,FFbody,Cfturb,fuselage_area,CDzeropods,fusdrag,poddrag)
 
 
 
