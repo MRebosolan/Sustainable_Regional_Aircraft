@@ -215,6 +215,7 @@ def scissor_wing_shift():
 
 
 
+
 #def scissorplot(stabilityxcg_cruise,controlxcg, ShS, frontcg, aftcg, Sh_over_S  ):
 #    plt.figure()
 #    plt.close()
@@ -238,6 +239,8 @@ def scissor_wing_shift():
 #k = 1 / (np.pi*AR_tail *e_tail)
 #
 #Dtrim = abs(0.5* rho_cruise *v_cruise**2 *speedratio * horizontal_area * CL_h * k)
+
+
 
 
 
