@@ -28,8 +28,6 @@ area_fuselage = widthf * Chord_root
 mach = input.mach_cruise
 v_approach = input.v_approach
 mach_app = input.mach_app
-beta = (1-(mach**2))**0.5
-beta_tail = (1-speedratio*(mach**2))**0.5
 n = 0.95                                            #airfoil efficiency
 stabilizer_sweep = input.half_chord_sweep_hor
 AR_tail = input.AR_h
@@ -45,7 +43,7 @@ v_cruise = input.V_C_estimate                #m/s
 rho_cruise = input.rho_c
 kn = -4                                         # Nacelles are mounted before wing LE, change in case of fuselage mounted engines
 bn = input.bn
-ln = input.x_LEMAC_nose + 0.25*MAC - input.x_engine_start# distance between front of engine to quarter chord mac
+ln = 0.25 * MAC - input.x_engine_start
 ct = input.Ct
 cr = input.Cr
 taper = input.taper
@@ -65,6 +63,8 @@ x_lemac_Cr = input.x_lemac_rootchord #x location of leading edge mac measured fr
 CL = 2*mass*9.81/(rho*(v_approach**2)*S)            #approach CL
 CL_cruise = 2*MTOW*9.81/(rho_cruise*(v_cruise**2)*S) #approach CL
 l_fn = x_start_Cr + widthf * np.tan(sweep_LE)
+beta = (1-(mach**2))**0.5
+beta_tail = (1-speedratio*(mach**2))**0.5
 # C_h = horizontal_area*tail_armh/(S*MAC)
 
 

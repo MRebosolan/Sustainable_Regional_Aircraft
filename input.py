@@ -59,10 +59,10 @@ AR_h = 4                                #Aspect ratio of the horizontal tail [-]
 
 
 #Fuselage, cabin and loading parameters
-Dfus = 2.6,                       # Fuselage diameter
+Dfus = 2.6                        # Fuselage diameter
 print ("if you encounter an error here with fuselage diameter, make your program dependent on a different variable, ask Jorn")
 lf = 30                           # lenght of fuselage m estimate, lil shorter than CRJ as 5 seat rows are used
-hf = 3.486                         # height of fuselage estimate
+hf = 3.486                        # height of fuselage estimate
 widthf = 3.486                      # m max fuselage width
 A_fuselage = np.pi*widthf*0.5*hf*0.5 # Area of the fuselage in m^2
 ellipse_fuselage = 2*np.pi * (((widthf/2)**2 + (hf/2)**2)/2)**0.5
@@ -234,7 +234,7 @@ x_apu = 20.                        # cg location of the apu measured from the no
 x_engine = 13                      # cg location of engines, measured from the nose of the aircraft [m], TBD
 x_nacelle = 13                     # cg location of engine nacelles, measured from the nose of the aircraft [m], TBD
 
-x_engine_start = x_LEMAC_nose - 1.5 #m, RANDOM, begin of engine measured from nose
+x_engine_start = - 1.5    #m, RANDOM, begin of engine measured from the lemac, negative means ... [m] closer to the nose
 bn = 1.2 #maximum width of engine
 e_tail = 0.85 #oswald efficiency factor of tail, TBD
 
