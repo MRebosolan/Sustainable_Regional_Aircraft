@@ -2,6 +2,7 @@ import numpy as np
 import input as inp
 import matplotlib.pyplot as plt
 import Envelope
+import Class_2_estimation as CL2
 #import Aileron_sizing
 
 
@@ -29,7 +30,7 @@ description
 # ---------------------------- Import Parameters
 
 M_cruise = 0.75
-S = inp.S
+S = CL2.S
 AR = inp.AR
 MTOW = inp.MTOW
 widthf = inp.widthf
@@ -74,6 +75,8 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S):
         sweep_c4 = np.arccos(0.75*(0.935/(0.03 + M_cruise)))
     else:
         sweep_c4 = np.arccos(1)
+
+    sweep_c4 = 36.86989765 * np.pi / 180 # from airfoil selection
 
     print("Sweep =", sweep_c4 * 180 / np.pi)
 
