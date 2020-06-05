@@ -61,7 +61,7 @@ AR_h = 4                                #Aspect ratio of the horizontal tail [-]
 #Fuselage, cabin and loading parameters
 Dfus = 2.6                        # Fuselage diameter
 print ("if you encounter an error here with fuselage diameter, make your program dependent on a different variable, ask Jorn")
-lf = 30                           # lenght of fuselage m estimate, lil shorter than CRJ as 5 seat rows are used
+lf = 30                           # length of fuselage m estimate, lil shorter than CRJ as 5 seat rows are used
 hf = 3.486                        # height of fuselage estimate
 widthf = 3.486                      # m max fuselage width
 A_fuselage = np.pi*widthf*0.5*hf*0.5 # Area of the fuselage in m^2
@@ -75,6 +75,7 @@ pax_abreast = 3+2
 N_fdc = 2                         # number of pilots [probably]
 N_cc = 2                          # number of cabin crew [probably]
 P_c = 74682.5                     # Pa, design cabin pressure
+P_cruise = 22632.1                # Pa, outside pressure at cruise
 Sff = 7.6                         # freight floor area estimate
 W_pax = 93                        # total weight per passenger, includes luggage kg
 x_first_pax = 7.5                 # x-location measured from the nose [m] where first passenger row is located
