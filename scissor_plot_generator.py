@@ -179,7 +179,7 @@ stabilityxcg_cruise = xac_cruise + ShS*(clalpha_tail/clalpha_acless)*(1-downwash
 controlxcg = xac - cm_ac/CL + ShS*(C_lh_max/CL)*(tail_armh/MAC)*speedratio
 
 
-def scissorplot(stabilityxcg_cruise,controlxcg, ShS, frontcg, aftcg, Sh_over_S  ):
+def scissorplot(stabilityxcg_cruise,controlxcg, ShS, frontcg, aftcg, Sh_over_S):
     plt.figure()
     plt.close()
     plt.plot(stabilityxcg_cruise*100,ShS, color = 'grey', label = 'Neutral stability')
@@ -195,14 +195,14 @@ def scissorplot(stabilityxcg_cruise,controlxcg, ShS, frontcg, aftcg, Sh_over_S  
 
 
 
-#Moment_ac = 0.5* rho_cruise *v_cruise**2 * cm_ac * MAC
-#
-#Lift_tail = Moment_ac/tail_armh
-#CL_h = Lift_tail/(0.5* rho_cruise *v_cruise**2  * horizontal_area)
-#k = 1 / (np.pi*AR_tail *e_tail)
-#
-#Dtrim = abs(0.5* rho_cruise *v_cruise**2 *speedratio * horizontal_area * CL_h * k)
-#
+Moment_ac = 0.5* rho_cruise *v_cruise**2 * cm_ac * MAC
+
+Lift_tail = Moment_ac/tail_armh
+CL_h = Lift_tail/(0.5* rho_cruise *v_cruise**2  * horizontal_area)
+k = 1 / (np.pi*AR_tail *e_tail)
+
+Dtrim = abs(0.5* rho_cruise *v_cruise**2 *speedratio * horizontal_area * CL_h * k)
+
 
 
 
