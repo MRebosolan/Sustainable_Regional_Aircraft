@@ -182,7 +182,7 @@ cl0 = 0.153333                     # preliminary estimate, TBD
 cm0 = -0.018                       # preliminary estimate, TBD
 tail_speedratio = 1**0.5           # SEAD, T tail
 zero_lift_angle = np.radians(4)    # degrees, PRELIMINARY estimate
-z_position_wing = 0.3              # m, PRELIMINARY, still requires thought, for downwash calc
+z_position_wing = hf - 0.6              # m, PRELIMINARY, still requires thought, for downwash calc
 z_position_horizontal = zh + hf    # where tail is positioned, for downwash calc
 
 
