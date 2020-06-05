@@ -260,8 +260,8 @@ def trimdrag(cm_ac, tail_armh, horizontal_area):
     return Dtrim
 
 Sh_min_lst, min_Sh_over_S, x_Cr_opt_nose, cg_stab_lim, cg_aft, cg_cont_lim, cg_fwd, Dtrim, Sh_min, controlplot, stabilityplot, ShS = scissor_wing_shift()
-
-scissorplot(stabilityplot, controlplot, ShS, cg_fwd, cg_aft, min_Sh_over_S  )
+print(min_Sh_over_S)
+scissorplot(stabilityplot, controlplot, ShS, cg_fwd, cg_aft, min_Sh_over_S)
 
 
 #todo: check capability of horizontal tail for providing negative lift to sufficiently rotate the aircraft at take-off
