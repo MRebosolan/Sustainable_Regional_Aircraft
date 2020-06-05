@@ -57,6 +57,7 @@ S        = 871.88    #ft^2
 CLmax    = 1.8
 CLmaxneg = -1.0
 kc       = 28        #Varies 36-29 as W/S varies from 20-100 psf
+nlim     = 4.4       #Dummy variable
 Kg       = 0.781     #Gust alleviation factor
 UdeB     = 85        #Depends on altitude in ft (above 20k ft) [ROSKAM V pg 38]
 UdeC     = 65        #Depends on altitude in ft (above 20k ft) [ROSKAM V pg 38]
