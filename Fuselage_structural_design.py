@@ -5,8 +5,8 @@ from math import pi
 
 """
 Written by Matteo & Manuel
-LOADS ACTING ON FUSELAGE: pressure vessel stresses, fuselage's own weight (assumed uniformly distributed
-wing weight, empennage weight, landing gear reaction forces, horizontal tail lift
+LOADS ACTING ON FUSELAGE: pressure vessel stresses, fuselage's own weight (assumed uniformly distributed +)
+wing lift, horizontal tail lift
 
 #ASSUMPTIONS
 - Uniform longitudinal weight distribution
