@@ -35,7 +35,7 @@ rho_c = input.rho_c
 g = input.g
 MTOW = g*Cl2.MTOM
 CLmax = input.CLmax_land 
-y_engine = 6      #y distance of the engine from the c.g.
+y_engine = 0.35*Cl2.b/2      #y distance of the engine from the c.g.
 rho_to = input.rho0
 Vbar_v = 0.086  #Vertical tail volume
 Sr_over_Sv = 0.303    #Ratio of rudder area over vtail area
@@ -56,7 +56,7 @@ S = 80
 b = 25
 x_v =  10.5     #input.x_v  #Distance Aerodynamic centre Vtail to c.g.
 T_OEI = 80E3                #x_v can be calculated the location of the htail aerodynamic center is know wrt either the aircraft c.g. OR the wing AC, provided the distance of the wing AC is know wrt the nose
-y_engine = 5      #y distance of the engine from the c.g.
+y_engine = 0.35*Cl2.b/2       #y distance of the engine from the c.g.
 rho_to = input.rho0
 Vbar_v = 0.086  #Vertical tail volume
 Sr_over_Sv = 0.303    #Ratio of rudder area over vtail area
@@ -94,3 +94,6 @@ print ('The The maximum allowable engine distance from the c.g. at take-off is',
 print ()
 print ('The required vtail area to counteract the OEI moment at cruise is',Req_Sv[1],'[m]')
 print ('The The maximum allowable engine distance from the c.g. at take-off is',Req_y_engine[1],'[m]')
+
+# Research engine placement regulations (Stability related)
+# Slide 447-449 ADSEE I 0.35b/2
