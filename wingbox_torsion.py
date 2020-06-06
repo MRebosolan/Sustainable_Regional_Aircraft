@@ -48,10 +48,10 @@ ycoord2 = ycoord2[::-1]
 #------------------------------------------------------------------------------------------------------------------
 #INPUTS
 
-chord_length = 3  # chord length in meters
+chord_length = 2  # chord length in meters
 t_d = 0.01 #THICkNESS OF AIRFOIL 10cm
 number_points = 20 #NUMBER OF BOOMS  (ON TOP SIDE FOR NOW)
-moment_cs = 500000 #MOMENT OF CROSS SECTION
+moment_cs = 450000 #MOMENT OF CROSS SECTION
 
 #------------------------------------------------------------------------------------------------------------------
 
@@ -59,14 +59,18 @@ n = 1000 / number_points
 boom_locationx = []
 boom_locationy = []
 boom_area = []
-stress_boom = []
 boom_moi = []
+stress_boom_upper = []
+stress_boom_lower = []
+
+#make airfoil symetrical and remove negative values at end
 
 for i in range(len(xcoord1[:-3])):
     if int(xcoord1[i] * 1000) % n == 0:
         boom_locationx.append(xcoord1[i])
         boom_locationy.append(ycoord1[i])
 
+#compute the boom area and moment of inertia
 
 for i in range(len(boom_locationx)-1):
     if i > 0:
@@ -79,18 +83,24 @@ for i in range(len(boom_locationx)-1):
         b_2 = np.sqrt((boom_23dx)**2+(boom_23dy)**2)
 
         area_boom = t_d*b_1*(2+boom_locationy[i-1]/boom_locationy[i])/6+t_d*b_2*(2+boom_locationy[i+1]/boom_locationy[i])/6
-        boom_area.append(area_boom)
         moi_boom = area_boom*(boom_locationy[i]*chord_length)**2
+
+        boom_area.append(area_boom)
         boom_moi.append(moi_boom)
 
-moi_boom_total = sum(boom_moi)
+# total moment of inertia of the structure (2x top and bottom)
+moi_boom_total = sum(2*boom_moi)
 
 for i in range(len(boom_locationx)-1):
     if i>0:
         boom_stress = moment_cs*boom_locationy[i]*chord_length / moi_boom_total
-        stress_boom.append(boom_stress)
+        stress_boom_upper.append(boom_stress)
+        stress_boom_lower.append(-boom_stress)
 
-print(stress_boom)
+print(stress_boom_upper)
+print(stress_boom_lower)
 
+# Find the shear flows
 
+# Finally look at torsion
 
