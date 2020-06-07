@@ -50,7 +50,7 @@ ycoord2 = ycoord2[::-1]
 
 chord_length = 2  # chord length in meters
 t_d = 0.01 #THICkNESS OF AIRFOIL 10cm
-number_points = 20 #NUMBER OF BOOMS  (ON TOP SIDE FOR NOW)
+number_points = 20 #NUMBER OF POINTS (10 POINTS = 8 BOOMS)  (ON TOP SIDE FOR NOW)
 moment_cs = 450000 #MOMENT OF CROSS SECTION
 
 #------------------------------------------------------------------------------------------------------------------
@@ -70,10 +70,39 @@ for i in range(len(xcoord1[:-3])):
         boom_locationx.append(xcoord1[i])
         boom_locationy.append(ycoord1[i])
 
+
 #compute the boom area and moment of inertia
 
-for i in range(len(boom_locationx)-1):
-    if i > 0:
+for i in range(len(boom_locationx)):
+    if i == 1:
+        boom_12dx = (boom_locationx[i - 1] - boom_locationx[i]) * chord_length
+        boom_12dy = (boom_locationy[i - 1] - boom_locationy[i]) * chord_length
+        boom_23dx = (boom_locationx[i + 1] - boom_locationx[i]) * chord_length
+        boom_23dy = (boom_locationy[i + 1] - boom_locationy[i]) * chord_length
+
+        b_1 = 2*np.sqrt((boom_12dx) ** 2 + (boom_12dy) ** 2)
+        b_2 = np.sqrt((boom_23dx) ** 2 + (boom_23dy) ** 2)
+
+        area_boom = t_d * b_1 / 6 + t_d * b_2 * (2 + boom_locationy[i + 1] / boom_locationy[i]) / 6
+        moi_boom = area_boom * (boom_locationy[i] * chord_length) ** 2
+
+        boom_area.append(area_boom)
+        boom_moi.append(moi_boom)
+    elif i == len(boom_locationx)-1:
+        boom_12dx = (boom_locationx[i - 1] - boom_locationx[i]) * chord_length
+        boom_12dy = (boom_locationy[i - 1] - boom_locationy[i]) * chord_length
+        boom_23dx = (1 - boom_locationx[i]) * chord_length
+        boom_23dy = boom_locationy[i] * chord_length
+
+        b_1 = np.sqrt((boom_12dx) ** 2 + (boom_12dy) ** 2)
+        b_2 = 2* np.sqrt((boom_23dx) ** 2 + (boom_23dy) ** 2)
+
+        area_boom = t_d * b_1 * (2 + boom_locationy[i - 1] / boom_locationy[i]) / 6 + t_d * b_2 / 6
+        moi_boom = area_boom * (boom_locationy[i] * chord_length) ** 2
+
+        boom_area.append(area_boom)
+        boom_moi.append(moi_boom)
+    if i>1 and i< len(boom_locationx)-1:
         boom_12dx = (boom_locationx[i - 1] - boom_locationx[i]) * chord_length
         boom_12dy = (boom_locationy[i - 1] - boom_locationy[i]) * chord_length
         boom_23dx = (boom_locationx[i + 1] - boom_locationx[i]) * chord_length
@@ -98,7 +127,6 @@ for i in range(len(boom_locationx)-1):
         stress_boom_lower.append(-boom_stress)
 
 print(stress_boom_upper)
-print(stress_boom_lower)
 
 # Find the shear flows
 
