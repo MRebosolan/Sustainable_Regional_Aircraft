@@ -126,7 +126,6 @@ for i in range(len(boom_locationx)-1):
         stress_boom_upper.append(boom_stress)
         stress_boom_lower.append(-boom_stress)
 
-print(stress_boom_upper)
 
 # Find the shear flows
 
