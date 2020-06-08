@@ -1,7 +1,7 @@
 import numpy as np
 import input
 import Class_2_estimation as Cl2
-
+import scissor_plot_wing_shift
 """
 Responsible person: Tobias | FOR NOW!!!! run from line 55
 
@@ -29,19 +29,19 @@ Remark(s):
 #Variables that still need to be properly coupled to other code:
 z_cg  =  0.5*input.hf               # z loc cg. WRT fuselage!
 x_empennage = input.x_empennage     # x-location where fuselage diameter 
-#starts decreasing (clearance angle), wrt c.g. OR wrt nose
-#If it is wrt the the c.g. change x_empennage; [Start of the aft cone]
+                                    # starts decreasing (clearance angle), wrt c.g. OR wrt nose
+                                    # If it is wrt the the c.g. change x_empennage; [Start of the aft cone]
 Cl_htail = 0.0                      # tbd
-x_ac_htail = 0.0                    # distance from aerodynamic centre to nose of htail airfoil
+x_ac_htail = .x_ac_h                # distance from aerodynamic centre to nose of htail airfoil
 
 
 #Variables that will not change
 g = input.g
 MTOW = g*Cl2.MTOM
-theta = np.radians(input.theta)     #tip-back angle ~15 degrees
-x_cg  = input.x_cg                  #x location of the cg
-x_cg_fwrd = input.x_cg_fwrd         #x location of most forward cg
-x_cg_aft = input.x_cg_aft           #x-location of most aft cg
+theta = np.radians(input.theta)                 # tip-back angle ~15 degrees
+x_cg  = scissor_plot_wing_shift.cg_loaded_nose  # x location of the cg
+x_cg_fwrd = scissor_plot_wing_shift.cg_fwd      # x location of most forward cg
+x_cg_aft = scissor_plot_wing_shift.cg_aft       # x-location of most aft cg
 S = Cl2.S
 rho_0 = input.rho0
 rho_to = rho_0
@@ -74,7 +74,7 @@ Cl_htail = 1.5
 x_ac_htail = 22
 Vmin = np.sqrt(MTOW*2/(S*rho_to*CLmax))
 Vlof = Vmin*1.05
-
+htail_sweep = input.half_chord_sweep_hor      # Sweep of the horizontal tail
 
 #################################################
 
@@ -146,7 +146,7 @@ def lat_pos_lg(z_main_lg=z_main_lg,dist=dist,x_main_lg=x_main_lg,x_cg_aft=x_cg_a
 y_lg_list, b_n = lat_pos_lg(z_main_lg)
 
 def req_htail_area(x_main_lg,Cl_htail=Cl_htail,x_ac_htail=x_ac_htail,x_cg = x_cg,rho_to=rho_to,Vlof=Vlof,MTOW=MTOW,g=g,htail_sweep=htail_sweep):
-    htail_area = (x_main_lg-x_cg)/(x_ac_htail-x_main_lg)*MTOW*g/(0.5*rho_to*(Vlof/np.cos(htail_sweep))**2*Cl_htail)
+    htail_area = (x_main_lg-x_cg)/(x_ac_htail-x_main_lg)*MTOW/(0.5*rho_to*(Vlof/np.cos(htail_sweep))**2*Cl_htail)
     return htail_area
 htail_area = req_htail_area(x_main_lg)
 
@@ -225,10 +225,10 @@ print ()
 print ('TODO: estimate volume for storage, and tire selection, material selection')
 
 
-#Strength of landing gear: take the shock of landing into account
-#Size strut(s)
-#Oleo-pneumatic shock absorbers, for their high energy absorption efficiency (tires 0.47, olea 0.8)
+# Strength of landing gear: take the shock of landing into account
+# Size strut(s)
+# Oleo-pneumatic shock absorbers, for their high energy absorption efficiency (tires 0.47, olea 0.8)
 # Touchdown rate w_touchd = 12 feet per second (transports FAR 25.723 certified )
-#Roskam source 2 page 94: OLEO-pneumatic shock absorber explanation
+# Roskam source 2 page 94: OLEO-pneumatic shock absorber explanation
 # same source: linearly decrease in tire presure and loadpage 51
 # Just make an assumption on what tire is good enough, I have absolutely no clue what the linear relationship is...
