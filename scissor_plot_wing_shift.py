@@ -256,8 +256,6 @@ def scissor_wing_shift():
                     Sh_min = ShS[j-1]*S
                     Sh_min_lst.append([ShS[j-1],x_start_Cr[i], cg_stab[j-1], cg_aft_lst[i], cg_cont[j-1], cg_fwd_lst[i], trimdrag(cm_ac, tail_armh, Sh_min), cg_cont, cg_stab])
                     break
-            
-                
               else:
                 continue
         
