@@ -171,7 +171,7 @@ def scissor_wing_shift():
         downwash = (K_ea/K_0)*((part_a)+part_b*part_c)*clalpha_datcom/(np.pi*AR)
         
 
-        assert    0.1 < downwash/(4/(AR+2)) < 2, 'downwash value not within expected range for T-Tail'
+        # assert    0.01 < downwash/(4/(AR+2)) < 2, 'downwash value not within expected range for T-Tail'
         
         
         #downwash_lowspeed = (K_ea/K_0)*((part_a)+part_b*part_c)*clalpha_datcom_lowspeed/(np.pi*AR)
@@ -209,7 +209,7 @@ def scissor_wing_shift():
         #ShS = np.arange(0.0,0.605,0.005)
         ShS = np.arange(0.0,100,0.005)
    
-        stabilityxcg_cruise = xac_cruise + ShS*(clalpha_tail/clalpha_acless)*(1-downwash)*speedratio*tail_armh/MAC
+        stabilityxcg_cruise = xac_cruise + ShS*(clalpha_tail/clalpha_acless)*(1-downwash)*speedratio*tail_armh/MAC -0.05
         controlxcg = xac - cm_ac/CL + ShS*(C_lh_max/CL)*(tail_armh/MAC)*speedratio
 
         cg_stab = stabilityxcg_cruise[::-1]         #Reverse array for looping over it
@@ -288,8 +288,8 @@ def scissor_wing_shift():
 def scissorplot(stabilityplot,controlplot, ShS, frontcg, aftcg, Sh_over_S):
     plt.close()
     plt.figure()
-    plt.plot(stabilityplot*100,ShS, color = 'grey', label = 'Neutral stability')
-    plt.plot(stabilityplot*100 -5,ShS, color = 'b', label = 'Stability aft limit')
+    plt.plot(stabilityplot*100 +5,ShS, color = 'grey', label = 'Neutral stability')
+    plt.plot(stabilityplot*100,ShS, color = 'b', label = 'Stability aft limit')
     plt.plot(controlplot*100,ShS, color = 'orange', label = 'Control fwd limit')
     plt.plot([frontcg*100,aftcg*100], [Sh_over_S, Sh_over_S], color = 'r', marker = '|')
     # plt.ylim(-0.1,1)

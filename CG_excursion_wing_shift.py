@@ -38,7 +38,7 @@ x_cargo_fwd = input.x_cg_fwd_cargo #front cargo cg measured from nose [m]
 x_cargo_aft = input.x_cg_aft_cargo #aft cargo cg measured from nose [m]
 pax_abreast = input.pax_abreast
 
-x_start_Cr = np.arange(0.2 * l_f, 0.8 * l_f, 0.01)   #x-location measured from the nose where root chord starts
+x_start_Cr = np.arange(0.2 * l_f, 0.8 * l_f, 0.1)   #x-location measured from the nose where root chord starts
 x_lemac = [i + x_lemac_Cr for i in x_start_Cr]
 x_engine = x_lemac       #Assume engine cg is at lemac
 print('Make x_eninge not wing location dependent if we end up having fuselage mounted engines')

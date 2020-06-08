@@ -69,6 +69,22 @@ print("change w_tank and x_tank to variables used in other files once decided on
 x_fuel = x_tank                 #fuel cg measured from nose, assumed same as tank cg as most likely the tank will be symmetrical
 w_lg_main = cl2.df['SRA']['Main LG']    #kg
 w_lg_front = cl2.df['SRA']['Nose LG']    #kg
+w_fuselage = cl2.df['SRA']['Fuselage']
+x_fuselage = l_f/2 
+w_powercontrols = cl2.df['SRA']['Power controls']
+x_powercontrols = x_engine
+w_electrical = cl2.df['SRA']['Electrical systems']
+x_electrical = input.x_LEMAC_nose
+w_instruments = cl2.df['SRA']['Instruments']
+x_instruments = input.x_first_pax /3
+w_flightcontrols = cl2.df['SRA']['Flight controls']
+x_flightcontrols = x_start_Cr+Cr
+w_airconditioning = cl2.df['SRA']['Air conditioning']
+x_airconditioning = l_f/2
+w_furnishing = cl2.df['SRA']['Furnishing']
+x_furnishing = l_f/2
+w_cargohandling = cl2.df['SRA']['Cargo handling']
+x_cargohandling = x_cargo_aft *input.cargo_aft_fraction + x_cargo_fwd *input.cargo_fwd_fraction 
 
 
 x_empennage = x_ac + (lh + lv) / 2 #Assume cg of empennage is in the middle of the aerodynamic center of horizontal and vertical tail, measured from the nose
@@ -99,11 +115,13 @@ x_cg_wing_nose, x_cg_wing_mac = wing_cg(sweep, b, Cr, Ct, MAC, x_lemac_Cr, x_lem
 print(x_cg_wing_nose, x_cg_wing_mac)
 #vary x_start_Cr
 
-
+(w_engine +  w_nacelle +  w_empennage +  w_apu + w_tank +  w_wing +  w_lg_front +  w_lg_main + w_fuselage  + w_powercontrols \
+                   + w_electrical  + w_instruments + w_flightcontrols  + w_airconditioning + w_furnishing + w_cargohandling) / OEW
 
 
 def cg_OEW_wrt_lemac(x_engine, w_engine, x_nacelle, w_nacelle, x_empennage, w_empennage, x_apu, w_apu, x_tank, w_tank, x_cg_wing_nose, w_wing, x_lg_front, w_lg_front, x_lg_main, w_lg_main, OEW, x_lemac, MAC):
-    cg_oew_nose = (x_engine * w_engine + x_nacelle * w_nacelle + x_empennage * w_empennage + x_apu * w_apu + x_tank * w_tank + x_cg_wing_nose * w_wing + x_lg_front * w_lg_front + x_lg_main * w_lg_main) / OEW
+    cg_oew_nose = (x_engine * w_engine + x_nacelle * w_nacelle + x_empennage * w_empennage + x_apu * w_apu + x_tank * w_tank + x_cg_wing_nose * w_wing + x_lg_front * w_lg_front + x_lg_main * w_lg_main + w_fuselage * x_fuselage + w_powercontrols* x_powercontrols \
+                   + w_electrical * x_electrical + w_instruments*x_instruments + w_flightcontrols * x_flightcontrols + w_airconditioning*x_airconditioning + w_furnishing*x_furnishing + w_cargohandling*x_cargohandling) / OEW
     cg_oew_wrt_lemac = (cg_oew_nose - x_lemac) / MAC
     return cg_oew_wrt_lemac, cg_oew_nose
 
