@@ -87,6 +87,7 @@ def cg_excursion_wing_shift():
     plt.close()
     cg_fwd_excursion_lst = []
     cg_aft_excursion_lst = []
+    cg_loaded_lst = []
     for i in range(len(x_start_Cr)):
         x_cg_wing_nose, x_cg_wing_mac = wing_cg(sweep, b, Cr, Ct, MAC, x_lemac_Cr, x_lemac[i])
         cg_oew_wrt_lemac, cg_oew_nose = cg_OEW_wrt_lemac(x_engine[i], w_engine, x_nacelle[i], w_nacelle, x_empennage[i], w_empennage, x_apu, w_apu, x_tank, w_tank, x_cg_wing_nose, w_wing, x_lg_front, w_lg_front, x_lg_main[i], w_lg_main, OEW, x_lemac[i], MAC)
@@ -102,6 +103,7 @@ def cg_excursion_wing_shift():
         fully_loaded = loadingcg(aisle[1][-1], aisle[0][1], fuel_weight, x_fuel)
         cg_excursion = np.array([[onlyfwdcargo[0]], [onlyaftcargo[0]], [bothcargo[0]], [window[0]], window_back[0], 
                              middle[0], middle_back[0], aisle[0], aisle_back[0], fully_loaded[0]]) 
+        cg_loaded_lst.append(fully_loaded[0])
         cgmin_lst = []
         cgmax_lst = []
         for j in range(len(cg_excursion)):
@@ -120,9 +122,12 @@ def cg_excursion_wing_shift():
     plt.ylabel('x_lemac / l_fus [-]')
     plt.show()
     
-    return cg_fwd_excursion_lst, cg_aft_excursion_lst
-cg_fwd_excursion_lst, cg_aft_excursion_lst = cg_excursion_wing_shift()
+
+    
+    return cg_fwd_excursion_lst, cg_aft_excursion_lst, cg_loaded_lst
+cg_fwd_excursion_lst, cg_aft_excursion_lst, cg_loaded_lst = cg_excursion_wing_shift()
 print (min(cg_fwd_excursion_lst),max(cg_aft_excursion_lst))
+
 
 
 
