@@ -31,21 +31,21 @@ for i in range(0, 103):
 xcoord1 = xcoord1[::-1]
 ycoord1 = ycoord1[::-1]
 ycoord2 = ycoord2[::-1]
+print(ycoord1)
+plt.figure(1)
+plt.grid(True, which="major", color="#999999")
+plt.grid(True, which="minor", color="#DDDDDD", ls="--")
+plt.minorticks_on()
+plt.plot(xcoord1, ycoord1, color='r')
+plt.plot(xcoord1, ycoord2, color='r')
+plt.xlim(0, 1)
+plt.ylim(-0.3, 0.3)
+plt.text(0.0, 0.0, 'LE')
+plt.text(1.0, 0.0, 'TE')
+plt.ylabel('y/c [-]')
+plt.xlabel('x/c [-]')
 
-# plt.figure(1)
-# plt.grid(True, which="major", color="#999999")
-# plt.grid(True, which="minor", color="#DDDDDD", ls="--")
-# plt.minorticks_on()
-# plt.plot(xcoord1, ycoord1, color='r')
-# plt.plot(xcoord1, ycoord2, color='r')
-# plt.xlim(0, 1)
-# plt.ylim(-0.3, 0.3)
-# plt.text(0.0, 0.0, 'LE')
-# plt.text(1.0, 0.0, 'TE')
-# plt.ylabel('y/c [-]')
-# plt.xlabel('x/c [-]')
-#
-# # plt.show()
+plt.show()
 #------------------------------------------------------------------------------------------------------------------
 #INPUTS
 
@@ -64,7 +64,7 @@ boom_moi = []
 stress_boom_upper = []
 stress_boom_lower = []
 
-#make airfoil symetrical and remove negative values at end
+#make airfoil symmetrical and remove negative values at end
 
 for i in range(len(xcoord1[:-3])):
     if int(xcoord1[i] * 1000) % n == 0:
@@ -126,6 +126,26 @@ for i in range(len(boom_locationx)-1):
         boom_stress = moment_cs*boom_locationy[i]*chord_length / moi_boom_total
         stress_boom_upper.append(boom_stress)
         stress_boom_lower.append(-boom_stress)
+
+
+#-----------------ITERATE OVER WINGSPAN-----------------
+
+def generate_chord_array(y_array, Cr=Cr, Ct=Ct, b=wing_length):
+    chords = []
+    def generate_chord_lengths(y, Cr=Cr, Ct=Ct, b=wing_length):
+        c = Cr - y*(Cr-Ct)/b
+        return c
+    for y in y_array:
+        chords.append(generate_chord_lengths(y))
+    return chords
+
+moments_around_x = []
+moments_around_z = []
+
+for y in spanwise_array[2:]:
+    moments_around_x.append(internal_x_bending_moment(y))
+    moments_around_z.append(internal_z_bending_moment(y))
+
 
 # Find the shear flows
 
