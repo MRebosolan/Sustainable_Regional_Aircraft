@@ -66,6 +66,7 @@ for i in range(len(boom_locationx)):
 
 shear_flow1 = []
 shear_flow2 = []
+shear_stress = []
 
 shearflow = 0
 shear_flow1.append(shearflow)
@@ -78,5 +79,7 @@ for i in range(len(boom_locationx[:int(number_boom/4)])-1):
     shearflow = shearflow + boom_deltashear[i]
     shear_flow2.append(shearflow)
 
-print(boom_locationx)
-print(shear_flow2+shear_flow1)
+shear_flow = shear_flow2+shear_flow1
+shear_stress = np.array(shear_flow)/t_f
+
+# print(shear_stress)
