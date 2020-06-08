@@ -66,6 +66,7 @@ half_chord_sweep_hor = np.radians(20)   # deg, sweep at half chord of horizontal
 half_chord_sweep_vert = np.radians(35)  # deg, sweep at half chord of vertical tail
 AR_h = 4                          #Aspect ratio of the horizontal tail [-], TBD
 AR_v = 1.7                        #AR vtail; 1< AR_v<2
+taper_v = 0.6                     #taper ratio vertical tail
 e_tail = 0.85                     #oswald efficiency factor of tail, TBD
 
 
