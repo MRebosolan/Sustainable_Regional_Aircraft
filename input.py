@@ -89,6 +89,7 @@ n_rows = 15                       # Number of passenger rows [-] (=n_pax/n_seats
 W_cargo = 1000                    # kg #Extra cargo weight
 n_crew = N_fdc + N_cc             # Total amount of crew
 W_payload = Npax * W_pax + W_cargo
+cockpit_length=3.6 #Bit smaller than A220
 #------------------------------------------------------------------------------------------------------------------
 A_fuselage = np.pi*widthf*0.5*hf*0.5 # Area of the fuselage in m^2
 ellipse_fuselage = 2*np.pi * (((widthf/2)**2 + (hf/2)**2)/2)**0.5  #circumference of the fuselage [m]
