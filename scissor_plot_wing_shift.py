@@ -206,7 +206,8 @@ def scissor_wing_shift():
 
 
 
-        ShS = np.arange(0.0,0.605,0.005)
+        #ShS = np.arange(0.0,0.605,0.005)
+        ShS = np.arange(0.0,100,0.005)
    
         stabilityxcg_cruise = xac_cruise + ShS*(clalpha_tail/clalpha_acless)*(1-downwash)*speedratio*tail_armh/MAC
         controlxcg = xac - cm_ac/CL + ShS*(C_lh_max/CL)*(tail_armh/MAC)*speedratio
@@ -215,20 +216,47 @@ def scissor_wing_shift():
         cg_cont = controlxcg[::-1]
         ShS = ShS[::-1]
         for j in range(len(ShS)):
-            if cg_stab[-1] >= cg_cont[-1]:
+#            if cg_stab[-1] >= cg_cont[-1]:
+#                Sh_min_lst.append([10,0,0,0,0,0, 0, 0])         #append a zero if this condition is not met
+#                print('At a root chord position of', x_start_Cr[i],' [m], the scissor plot shows no intersection')
+#                break 
+#            if cg_fwd_lst[i] < cg_cont[j] or cg_aft_lst[i] > cg_stab[j]:   #in this case, the cg range does not meet the stability or contorllability requirements
+#                Sh_min = ShS[j-1]*S
+#                Sh_min_lst.append([ShS[j-1],x_start_Cr[i], cg_stab[j-1], cg_aft_lst[i-1], cg_cont[j-1], cg_fwd_lst[i-1], trimdrag(cm_ac, tail_armh, Sh_min), cg_cont, cg_stab])
+#                break
+#            else:
+#                continue
+#            if cg_cont[-1] - cg_stab[-1] < 0:
+#                Sh_min_lst.append([10,0,0,0,0,0, 0, 0])         #append a zero if this condition is not met
+#                print('At a root chord position of', x_start_Cr[i],' [m], the scissor plot shows no intersection')
+#                break
+#            if cg_fwd_lst[i] < min(cg_cont) or cg_aft_lst[i] > max(cg_stab[j]):
+#                Sh_min_lst.append([10,0,0,0,0,0, 0, 0])         #append a zero if this condition is not met
+#                print('No solution exists')
+#                break
+#            if cg_fwd_lst[i] > 0:
+#                if cg_fwd_lst[i] < cg_cont[j] or cg_aft_lst[i] > cg_stab[j]:   #in this case, the cg range does not meet the stability or contorllability requirements
+#                    Sh_min = ShS[j-1]*S
+#                    Sh_min_lst.append([ShS[j-1],x_start_Cr[i], cg_stab[j-1], cg_aft_lst[i-1], cg_cont[j-1], cg_fwd_lst[i-1], trimdrag(cm_ac, tail_armh, Sh_min), cg_cont, cg_stab])
+#                    break
+#                else:
+#                    continue
+              
+              if cg_cont[-1] - cg_stab[-1] < 0:
                 Sh_min_lst.append([10,0,0,0,0,0, 0, 0])         #append a zero if this condition is not met
                 print('At a root chord position of', x_start_Cr[i],' [m], the scissor plot shows no intersection')
                 break 
-            if cg_fwd_lst[i] < cg_cont[j] or cg_aft_lst[i] > cg_stab[j]:   #in this case, the cg range does not meet the stability or contorllability requirements
+              if cg_cont[j] - cg_fwd_lst[i] > 0 or cg_stab[j] - cg_aft_lst[i] < 0:   #in this case, the cg range does not meet the stability or contorllability requirements
                 Sh_min = ShS[j-1]*S
                 Sh_min_lst.append([ShS[j-1],x_start_Cr[i], cg_stab[j-1], cg_aft_lst[i-1], cg_cont[j-1], cg_fwd_lst[i-1], trimdrag(cm_ac, tail_armh, Sh_min), cg_cont, cg_stab])
+                print(Sh_min/S, cg_fwd_lst[i], cg_aft_lst[i])
+                print(cg_cont[j], cg_fwd_lst[i])
                 break
-            else:
+              else:
                 continue
-            
         
    
-    
+
     minimum = min(Sh_min_lst)
     min_Sh_over_S = minimum[0]
     Sh_min = min_Sh_over_S * S
@@ -251,7 +279,7 @@ def scissor_wing_shift():
 
 
 
-def scissorplot(stabilityplot,controlplot, ShS, frontcg, aftcg, Sh_over_S  ):
+def scissorplot(stabilityplot,controlplot, ShS, frontcg, aftcg, Sh_over_S):
     plt.close()
     plt.figure()
     plt.plot(stabilityplot*100,ShS, color = 'grey', label = 'Neutral stability')
@@ -262,6 +290,8 @@ def scissorplot(stabilityplot,controlplot, ShS, frontcg, aftcg, Sh_over_S  ):
     plt.xlabel("Xcg/MAC [%]")
     plt.ylabel("Sh/S [-]")
     plt.legend(loc = 'lower left')
+    #plt.xlim([-3,3])
+    #plt.ylim([0,1])
     plt.title('CS100')
     plt.show()
     

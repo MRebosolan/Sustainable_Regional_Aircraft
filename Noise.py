@@ -49,7 +49,8 @@ def OASPL_lg(Klg, rho, U, dCDlg, S, mu, mu_s, beta, a, R, Pref):
 
 wing_noise = OASPL_w(Kw, CDw, U, S, theta, phi, psi, Pref, a, R, c, v, rho)
 landing_gear_noise = OASPL_lg(Klg, rho, U, dCDlg, S, mu, mu_s, beta, a, R, Pref)
-airframe_noise
+airframe_noise = wing_noise + landing_gear_noise
 print(wing_noise)
 print(landing_gear_noise)
+print(airframe_noise)
 
