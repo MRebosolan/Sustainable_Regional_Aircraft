@@ -69,18 +69,27 @@ w_nacelle = cl2.df['SRA']['Nacelle']  # kg
 w_empennage = cl2.df['SRA']['Empennage']    #kg
 w_wing = cl2.df['SRA']['Wing group'] #kg 
 w_apu = cl2.df['SRA']['APU']    #kg
-w_tank = cl2.df['SRA']['Hydrogen tanks']
-x_tank = 20
+
+
+# w_tank = cl2.df['SRA']['Hydrogen tanks']
+x_pod_tank = np.array(x_lemac)
 x_cyl_tank=totalcabinlength+l_cyl/2+input.cockpit_length
 x_tail_tank=totalcabinlength+l_cyl+l_tail/2+input.cockpit_length
 w_pod_tank=tm_pod
 w_tail_tank=tm_tail
 w_cyl_tank=tm_cyl
+
+w_tank = w_pod_tank+w_tail_tank+w_cyl_tank
+x_tank = (w_pod_tank * x_pod_tank + w_tail_tank * x_tail_tank + w_cyl_tank * x_cyl_tank)/(w_tank)
+
 w_pod_fuel=V_tank_pod*input.rho_hydrogen
 w_tail_fuel=V_tank_tail*input.rho_hydrogen
 w_cyl_fuel=V_tank_cyl*input.rho_hydrogen
-print("change w_tank and x_tank to variables used in other files once decided on a fuel tank configuration")
-x_fuel = x_tank                 #fuel cg measured from nose, assumed same as tank cg as most likely the tank will be symmetrical
+# x_fuel = x_tank                 #fuel cg measured from nose, assumed same as tank cg as most likely the tank will be symmetrical
+
+x_fuel_fuselage = (w_tail_fuel *x_tail_tank + w_cyl_fuel * x_cyl_tank)/(w_tail_fuel + w_cyl_fuel)
+w_fuel_fuselage = w_tail_fuel + w_cyl_fuel
+
 w_lg_main = cl2.df['SRA']['Main LG']    #kg
 w_lg_front = cl2.df['SRA']['Nose LG']    #kg
 w_fuselage = cl2.df['SRA']['Fuselage']
@@ -210,19 +219,19 @@ def loading():
     plt.plot(100 * (np.array(aisle[0]) - x_lemac) / MAC, aisle[1], label='Aisle seats', marker='2', color='red')
     plt.plot(100 * (np.array(aisle_back[0]) - x_lemac) / MAC, aisle_back[1], marker='2', color='green')
 
-    fully_loaded = loadingcg(aisle[1][-1], aisle[0][1], fuel_weight, x_fuel)
-    plt.plot(100 * (np.array([aisle[0][-1], fully_loaded[0]]) - x_lemac) / MAC, [MZF, fully_loaded[1]], marker='^',
-              color='magenta', label='Fuel')
+    # fully_loaded = loadingcg(aisle[1][-1], aisle[0][1], fuel_weight, x_fuel)
+    # plt.plot(100 * (np.array([aisle[0][-1], fully_loaded[0]]) - x_lemac) / MAC, [MZF, fully_loaded[1]], marker='^',
+    #           color='magenta', label='Fuel')
     
-    # onlyfuselagefuel = loadingcg(aisle[1][-1], aisle[0][1], w_t_fuel, x_cyl_tank)
-    # bothfuel = loadingcg(onlyfuselagefuel[1], onlyfuselagefuel[0], drop_fuel, x_drop_tank)
-    # plt.plot(100 * (np.array([aisle[0][-1], onlyfuselagefuel[0], bothfuel[0]]) - x_lemac) / MAC,
-    #                   [MZF, onlyfuselagefuel[1], bothfuel[1]], marker='^', color='cyan', label = 'Hydrogen')
+    onlyfuselagefuel = loadingcg(aisle[1][-1], aisle[0][1], w_fuel_fuselage, x_fuel_fuselage)
+    bothfuel = loadingcg(onlyfuselagefuel[1], onlyfuselagefuel[0], w_pod_fuel, x_pod_tank)
+    plt.plot(100 * (np.array([aisle[0][-1], onlyfuselagefuel[0], bothfuel[0]]) - x_lemac) / MAC,
+                      [MZF, onlyfuselagefuel[1], bothfuel[1]], marker='^', color='cyan', label = 'Hydrogen')
     
-    # onlypodfuel = loadingcg(aisle[1][-1], aisle[0][1], w_t_fuel, x_cyl_tank)
-    # bothfuel2 = loadingcg(onlypodfuel[1], onlypodfuel[0], drop_fuel, x_drop_tank)
-    # plt.plot(100 * (np.array([aisle[0][-1], onlypodfuel[0], bothfuel2[0]]) - x_lemac) / MAC,
-    #                   [MZF, onlypodfuel[1], bothfuel2[1]], marker='^', color='brown', label = 'Hydrogen fwd first')
+    onlypodfuel = loadingcg(aisle[1][-1], aisle[0][1], w_pod_fuel, x_pod_tank)
+    bothfuel2 = loadingcg(onlypodfuel[1], onlypodfuel[0], w_fuel_fuselage, x_fuel_fuselage)
+    plt.plot(100 * (np.array([aisle[0][-1], onlypodfuel[0], bothfuel2[0]]) - x_lemac) / MAC,
+                      [MZF, onlypodfuel[1], bothfuel2[1]], marker='^', color='brown', label = 'Hydrogen fwd first')
     
     plt.legend()
     plt.grid()
@@ -230,7 +239,7 @@ def loading():
     plt.xlabel('xcg [% of MAC]')
     plt.show()
     cg_excursion = np.array([[onlyfwdcargo[0]], [onlyaftcargo[0]], [bothcargo[0]], [window[0]], window_back[0], 
-                             middle[0], middle_back[0], aisle[0], aisle_back[0], fully_loaded[0]]) 
+                         middle[0], middle_back[0], aisle[0], aisle_back[0], onlyfuselagefuel[0], onlypodfuel[0], bothfuel[0], bothfuel[0]]) 
     cgmin_lst = []
     cgmax_lst = []
     for i in range(len(cg_excursion)):
