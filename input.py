@@ -198,7 +198,7 @@ V_to = 1.05 * ((MTOW/S)*(2/1.225)*(1/CLmax_to))**0.5 #takeoff speed
 #------------------------------------------------------------------------------------------------------------------
 t_r = t_over_c * Cr                          # maximum thickness at root [m] #bullshit estimation
 #------------------------------------------------------------------------------------------------------------------
-x_start_Cr = 12                    # x-location where root chord starts, measured from the nose of the aircraft [m], TBD
+x_start_Cr = 10                    # x-location where root chord starts, measured from the nose of the aircraft [m], TBD
 MAC =  2 / 3 * Cr * ((1 + taper + taper**2) / (1 + taper)) #length of mean aerodynamic chord, formula taken from Adsee II
 y_MAC = b / 6 * ((1 + 2 * taper) / (1 + taper))            #spanwise location of mean aerodynamic chord
 x_lemac_rootchord = y_MAC * np.tan(LE_sweep)               #x position of mac at leading edge [m], measured from the start of the root choord!!!!
@@ -277,8 +277,8 @@ LD_loiter = 17                     # L/D Loiter, determine after wing sizing and
 
 #------------------------------------------------------------------------------------------------------------------
 
-lh = 15                            # very random estimate, distance between wing and tail QUARTER CHORD
-lv = 16                            # very random estimate, distance between wing and vertical tail aerodynamic centers
+lh = 25                            # very random estimate, distance between wing and tail QUARTER CHORD
+lv = 26                            # very random estimate, distance between wing and vertical tail aerodynamic centers
 x_apu = 20.                        # cg location of the apu measured from the nose of the aircraft [m], TBD
 x_engine = 13                      # cg location of engines, measured from the nose of the aircraft [m], TBD
 x_nacelle = 13                     # cg location of engine nacelles, measured from the nose of the aircraft [m], TBD
