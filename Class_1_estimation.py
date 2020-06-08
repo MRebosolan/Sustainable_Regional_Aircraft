@@ -2,7 +2,7 @@ import input
 from CarbonFootprint import cf
 from cabindesign import cabin_design
 
-def CLASS1WEIGHTHYBRID(H_to_ker_ratio = input.H_to_ker_ratio,OEWINPUT = 1, top_selecter = 0):
+def CLASS1WEIGHTHYBRID(H_to_ker_ratio = input.H_to_ker_ratio, OEWINPUT = 1, top_selecter = 0,fractioninfus=0.5,fractionintail=0):
     W_hydrosys=H_to_ker_ratio*1500 #initial guess for hydro system weight
     e=2.71828182846
     n_pax= input.Npax
@@ -19,9 +19,10 @@ def CLASS1WEIGHTHYBRID(H_to_ker_ratio = input.H_to_ker_ratio,OEWINPUT = 1, top_s
     LD_c2=input.LD_c2
     LD_loiter=input.LD_loiter
 
-    V_c= input.V_C*0.514444
-    V_c2= input.V_C2*0.514444
-    V_loiter= input.V_loiter*0.514444
+    V_c= input.V_C
+    print('speed ',V_c)
+    V_c2= input.V_C2
+    V_loiter= input.V_loiter
 
     R_c=Design_range-100 #km, correct for take off and landing covered distance
 
@@ -96,19 +97,20 @@ def CLASS1WEIGHTHYBRID(H_to_ker_ratio = input.H_to_ker_ratio,OEWINPUT = 1, top_s
     MZFW=MTOW-FUEL
     KEROSENE=(1-H_to_ker_ratio)*FUEL
     HYDROGEN=FUEL-KEROSENE
-    HYDROGENVOLUME=1.1*1.072*HYDROGEN/HYDROGEN_DENSITY #NASA PAPER
+    HYDROGENVOLUME=1.072*HYDROGEN/HYDROGEN_DENSITY #NASA PAPER
     print(HYDROGENVOLUME)
     
     if HYDROGENVOLUME!=0:
         t_cyl,m_cyl, tm_cyl, d_cyl,l_cyl,t_tail,m_tail, tm_tail, d_tail,l_tail\
            ,t_top,m_top,tm_top,d_top,l_top,t_pod,m_pod,tm_pod,d_pod,l_pod,totalcabinlength,V_tank_cyl, V_tank_tail, V_tank_top,V_tank_pod,\
-           tm_tanksystem,CGtank,CGfuelfull,CGcomb,totdrag,fuselage_weight,CDzerofus,FFbody,Cfturb,fuselage_area,CDzeropods,fusdrag,poddrag,empennage_length=cabin_design(0,0,HYDROGENVOLUME, top_selecter)
+           tm_tanksystem,CGtank,CGfuelfull,CGcomb,totdrag,fuselage_weight,CDzerofus,FFbody,Cfturb,fuselage_area,CDzeropods,fusdrag,poddrag,\
+           empennage_length=cabin_design(fractioninfus,fractionintail,HYDROGENVOLUME, top_selecter)
     else:
         d_top=0
         tm_tanksystem=0
         
 
 
-    INFO=[MTOW,OEW,FUEL,W_payload,(MZFW),(KEROSENE),(HYDROGEN),HYDROGENVOLUME,d_top,tm_tanksystem]
+    INFO=[MTOW,OEW,FUEL,W_payload,(MZFW),(KEROSENE),(HYDROGEN),HYDROGENVOLUME,d_top,tm_tanksystem,cj_c]
     return INFO
 

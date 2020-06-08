@@ -13,12 +13,14 @@ AR = b**2 / S #aspect ratio
 taper = input.taper #input taper
 t_r = input.t_r # input t_r
 SMC = b/AR #standar mean chord
+LE_sweep = input.LE_sweep
 widthf = input.widthf
 wing_length = 0.5*(b)
 wing_weight = 3000*9.81
 T_to = input.Tto
+
 print(wingloading*S*0.5)
-print(b/2)
+print(wing_length)
 
 total_lift = wingloading/wing_length
 total_lift_half = total_lift/2
@@ -75,7 +77,7 @@ def generate_spanwise_locations(n, b=wing_length):
     return x_array[1:]
 
 
-def general_lift_d (x, a=11.67, b=16234.5):
+def general_lift_d (x, a=11.3, b=15715.2):
     #Insert formula for lift distribution here
     #current obtained by fitting elliptical distribution to given wing loading, a=half wing span - half fuselage width
     loading_at_x = np.sqrt((1-(x**2/a**2))*b**2)
@@ -119,18 +121,18 @@ W_wing = trapezoidal_integration(x_array, weight_array)
 
 def wing_root_reaction_forces (L_wing, x_lift, W_wing, x_weight, W_engine, x_engine, T_to):
     #Drag reaction forces not included yet
-    R_y = W_wing + W_engine - L_wing  #upwards positive
+    R_z = W_wing + W_engine - L_wing  #upwards positive
     M_x = x_lift*L_wing - x_weight*W_wing - x_engine*W_engine #left hand positive
     R_x = T_to #aft-ward positive
     M_z = T_to * x_engine #left hand positive
-    return (R_y, M_x, R_x, M_z)
+    return (R_z, M_x, R_x, M_z)
 
 
-R_y, M_x, R_x, M_z = wing_root_reaction_forces(L_wing, x_lift, wing_weight, x_weight, w_engine, x_engine_root, T_to)
+R_z, M_x, R_x, M_z = wing_root_reaction_forces(L_wing, x_lift, wing_weight, x_weight, w_engine, x_engine_root, T_to)
 
 
-def internal_x_bending_moment(x, x_array=x_array, lift_array=lift_array, w_engine=w_engine,\
-    weight_array=weight_array, x_engine = x_engine_root, R_y = R_y, M = M_x):
+def internal_x_bending_moment(x, x_array=x_array, lift_array=lift_array, w_engine=w_engine, \
+                              weight_array=weight_array, x_engine = x_engine_root, R_z = R_z, M = M_x):
     #counterclockwise positive
 
     x = min(x_array, key=lambda y:abs(y-x))
@@ -146,7 +148,7 @@ def internal_x_bending_moment(x, x_array=x_array, lift_array=lift_array, w_engin
         engine_distance = x - x_engine
     else:
         engine_distance = 0
-    moment_at_x = M + R_y*x + lift*(x-x_lift) - w_engine*engine_distance - weight*(x-x_weight)
+    moment_at_x = M + R_z*x + lift*(x-x_lift) - w_engine*engine_distance - weight*(x-x_weight)
     return moment_at_x
 
 def internal_z_bending_moment(x, R_x=R_x, T_to=T_to, x_engine=x_engine_root, M_z=M_z):
@@ -159,7 +161,7 @@ def internal_z_bending_moment(x, R_x=R_x, T_to=T_to, x_engine=x_engine_root, M_z
 
 
 def internal_vertical_shear_force(x, x_array=x_array, lift_array=lift_array, w_engine=w_engine,\
-    weight_array=weight_array, x_engine = x_engine_root, R_y = R_y):
+    weight_array=weight_array, x_engine = x_engine_root, R_z = R_z):
     #downward positive
 
     x = min(x_array, key=lambda y: abs(y - x))
@@ -173,7 +175,7 @@ def internal_vertical_shear_force(x, x_array=x_array, lift_array=lift_array, w_e
         n=1
     else:
         n=0
-    shear_at_x = R_y + lift - weight - w_engine * n
+    shear_at_x = R_z + lift - weight - w_engine * n
     return shear_at_x
 
 def internal_longitudinal_shear_force(x, R_x=R_x, T_to=T_to, x_engine=x_engine_root):
@@ -194,96 +196,97 @@ for i in x_array[2:]:
     moment_array2.append(internal_z_bending_moment(i))
     shear_array2.append(internal_longitudinal_shear_force(i))
 
-plt.plot(x_array[2:], moment_array)
-plt.plot(x_array[2:], shear_array)
-plt.plot(x_array[2:], moment_array2)
-plt.plot(x_array[2:], shear_array2)
+#plt.plot(x_array[2:], moment_array)
+#plt.plot(x_array[2:], shear_array)
+#plt.plot(x_array[2:], moment_array2)
+#plt.plot(x_array[2:], shear_array2)
 
 plt.xlabel("spanwise coordinate")
 plt.ylabel("loads in N/moments in N/m")
 
-
-
-#-------BENDING STRESS CALCULATIONS------------------
-base_wb = 0.05 # wingbox base
-height_wb = 0.05 # wingbox height
-thickness_wb = [0.5,1,1.5] # create array of thickness
-material_wb = [100,200,300] # insert all material types
-y = 0.05  #y in meters
-# moment of inertia of a rectangle
-bending_moment = 890 # link to functions above feeding an input
-
-def thickness_wingbox(min_thickness_mm,max_thickness_mm):
-    thickness_wb = []
-    for i in range (min_thickness_mm,max_thickness_mm+1):
-        thickness_wb.append(i/1000)
-    return thickness_wb
-
-thickness_wb = thickness_wingbox(1,10)
-
-def mass_wingbox(base_wb,height_wb,b=b,thickness_wb=thickness_wb, material_wb=material_wb):
-    mass_wb =[]
-    for j in material_wb:
-        for i in thickness_wb:
-            area_wb = 2*i*(base_wb+height_wb) #area of wingbox
-            volume_wb = area_wb * b/2  # assume that the wingbox covers the majority of the wing length
-            mass_wb = volume_wb * j
-    return mass_wb
-
-
-
-    # moi_rectangle_x = i*base_wb*height_wb**2/3
-    # moi_rectangle_y = i*base_wb**2*height_wb/3
-    # hoop_x = - bending_moment*(height_wb/2)/moi_rectangle_x
-    # hoop_y = - bending_moment*(base_wb/2)/moi_rectangle_y
-
-#
 # plt.show()
 
-
-thickness_array = thickness_wingbox(1,10)
-
-def mass_wingbox(base_wb,height_wb,b=b,thickness_array=thickness_array, material=material_wb):
-    mass_wb =[]
-    for j in material:
-        for i in thickness_array:
-            area_wb = 2*i*(base_wb+height_wb) #area of wingbox
-            volume_wb = area_wb * b/2  # assume that the wingbox covers the majority of the wing length
-            mass = volume_wb * j
-            mass_wb.append(mass)
-    return mass_wb
-
-
-
-def moment_of_intertia_x(base_wb, height_wb, thickness_wb=thickness_wb):
-    hoop_x_array = []
-    hoop_y_array = []
-    for i in thickness_wb:
-        moi_rectangle_x = i * base_wb * height_wb ** 2 / 3
-        moi_rectangle_y = i * base_wb ** 2 * height_wb / 3
-        hoop_x = - bending_moment*(height_wb/2)/moi_rectangle_x
-        hoop_y = - bending_moment*(base_wb/2)/moi_rectangle_y
-        hoop_x_array.append(hoop_x)
-        hoop_y_array.append(hoop_y)
-    return hoop_x,hoop_y
-
-
-#find relationship between k_c and a/b depending on the clamped, free, hinged edges
-
-def buckling(K_c,E_material,stringer_pitch,thickness_array=thickness_array):
-    for i in thickness_array:
-        buckling_stress = K_c*E_material*(i/stringer_pitch)**2
-        return buckling_stress
-
-
-def inter_rivet_buckling(c,E_material,river_spacing,thickness_array=thickness_array):
-    for i in thickness_array:
-        ir_buckling = 0.9*c*E_material*(i/river_spacing)**2
-    return ir_buckling
-
-#the bending adjusted for a wing sweep angle of 30deg
-def buckling_sweep(buckling_stress, ir_buckling):
-    buckling_stress_sweep = 4*buckling_stress/3
-    ir_buckling_sweep = 4*ir_buckling/3
-    return buckling_stress_sweep, ir_buckling_sweep
-
+#
+# #-------BENDING STRESS CALCULATIONS------------------
+# base_wb = 0.05 # wingbox base
+# height_wb = 0.05 # wingbox height
+# thickness_wb = [0.5,1,1.5] # create array of thickness
+# material_wb = [100,200,300] # insert all material types
+# y = 0.05  #y in meters
+# # moment of inertia of a rectangle
+# bending_moment = 890 # link to functions above feeding an input
+#
+# def thickness_wingbox(min_thickness_mm,max_thickness_mm):
+#     thickness_wb = []
+#     for i in range (min_thickness_mm,max_thickness_mm+1):
+#         thickness_wb.append(i/1000)
+#     return thickness_wb
+#
+# thickness_wb = thickness_wingbox(1,10)
+#
+# def mass_wingbox(base_wb,height_wb,b=b,thickness_wb=thickness_wb, material_wb=material_wb):
+#     mass_wb =[]
+#     for j in material_wb:
+#         for i in thickness_wb:
+#             area_wb = 2*i*(base_wb+height_wb) #area of wingbox
+#             volume_wb = area_wb * b/2  # assume that the wingbox covers the majority of the wing length
+#             mass_wb = volume_wb * j
+#     return mass_wb
+#
+#
+#
+#     # moi_rectangle_x = i*base_wb*height_wb**2/3
+#     # moi_rectangle_y = i*base_wb**2*height_wb/3
+#     # hoop_x = - bending_moment*(height_wb/2)/moi_rectangle_x
+#     # hoop_y = - bending_moment*(base_wb/2)/moi_rectangle_y
+#
+# #
+# # plt.show()
+#
+#
+# thickness_array = thickness_wingbox(1,10)
+#
+# def mass_wingbox(base_wb,height_wb,b=b,thickness_array=thickness_array, material=material_wb):
+#     mass_wb =[]
+#     for j in material:
+#         for i in thickness_array:
+#             area_wb = 2*i*(base_wb+height_wb) #area of wingbox
+#             volume_wb = area_wb * b/2  # assume that the wingbox covers the majority of the wing length
+#             mass = volume_wb * j
+#             mass_wb.append(mass)
+#     return mass_wb
+#
+#
+#
+# def moment_of_intertia_x(base_wb, height_wb, thickness_wb=thickness_wb):
+#     hoop_x_array = []
+#     hoop_y_array = []
+#     for i in thickness_wb:
+#         moi_rectangle_x = i * base_wb * height_wb ** 2 / 3
+#         moi_rectangle_y = i * base_wb ** 2 * height_wb / 3
+#         hoop_x = - bending_moment*(height_wb/2)/moi_rectangle_x
+#         hoop_y = - bending_moment*(base_wb/2)/moi_rectangle_y
+#         hoop_x_array.append(hoop_x)
+#         hoop_y_array.append(hoop_y)
+#     return hoop_x,hoop_y
+#
+#
+# #find relationship between k_c and a/b depending on the clamped, free, hinged edges
+#
+# def buckling(K_c,E_material,stringer_pitch,thickness_array=thickness_array):
+#     for i in thickness_array:
+#         buckling_stress = K_c*E_material*(i/stringer_pitch)**2
+#         return buckling_stress
+#
+#
+# def inter_rivet_buckling(c,E_material,river_spacing,thickness_array=thickness_array):
+#     for i in thickness_array:
+#         ir_buckling = 0.9*c*E_material*(i/river_spacing)**2
+#     return ir_buckling
+#
+# #the bending adjusted for a wing sweep angle of 30deg
+# def buckling_sweep(buckling_stress, ir_buckling):
+#     buckling_stress_sweep = 4*buckling_stress/3
+#     ir_buckling_sweep = 4*ir_buckling/3
+#     return buckling_stress_sweep, ir_buckling_sweep
+#

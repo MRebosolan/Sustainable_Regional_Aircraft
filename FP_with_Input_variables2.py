@@ -83,7 +83,8 @@ rho_c = input.rho_c                       #Density at 10km cruise altitude
 rho_0 = input.rho0
 g = input.g
 S = Cl2.S
-T_to = Cl2.Tto 
+T_to = Cl2.Tto / 1.165 
+print(T_to)
 Vcr = 0.51444*input.V_C
 A = input.AR
 CD0 = input.CD0
@@ -101,20 +102,19 @@ MLW = input.MLW                       #Maximum landing weight [N]
 T_rev = input.Trev                    #total thrust reverse during braking, TBD
 CD0_landGD = input.CD0_landGD
 
-
-
 #Parameters to be changed
 W = 30000 * g 
 rho = 1.2
-rho_to = rho_0                        #Can be changed, depending on the runway height Both from 
+rho_to = 0.974  #rho_0                        #Can be changed, depending on the runway height Both from 
 nmax = 2.6                            # obtain nmax from max_load_factor function
 V_nmax = 96.5
 
 rho_land = rho_to                #might be changed
 CL_land = CLmax            
 CD_land = CD0_landGD + CL_land**2  / (np.pi * A * e)
-
-
+T_to_eq = T_to / (rho_to / rho_0)**0.75
+print(T_to_eq)
+print(T_to_eq / MTOW)
 def performance_diagrams(T_to, CD0, rho_0, rho, S, W, A, e):
     """ 
     This function constructs the performance diagrams for a particular flight condition you specify by changing the parameter rho the density at 
@@ -287,7 +287,7 @@ def take_off_distances(CLmax, CD_togd, rho_to, S, CL_to, MTOW, T_to, mu, g, h_s,
     The thrust seems to high as the take off distances are very low, also may reconsider friction coefficients
     """
     Vmin = np.sqrt(MTOW * 2 /(S * rho_to * CLmax))                  #or change to Vs, depends on whether the wing is sized for Vs or for CLmax
-    Vlof = 1.05 * Vmin                                             
+    Vlof = 1.05 * Vmin                                            
     Vbar = Vlof / np.sqrt(2)                                       
     D_to = dimensional(CD_togd, rho_to, Vbar, S)                    
     L_to = dimensional(CL_to, rho_to, Vbar, S)
@@ -307,7 +307,7 @@ def take_off_distances(CLmax, CD_togd, rho_to, S, CL_to, MTOW, T_to, mu, g, h_s,
     x_tot = s_to + x_airborne
     return s_to, x_airborne, x_tot
     
-#print(take_off_distances(CLmax, CD_togd, rho_to, S, CL_to, MTOW, T_to, mu, g, h_s, gamma_climb))
+print(take_off_distances(CLmax, CD_togd, rho_to, S, CL_to, MTOW, T_to, mu, g, h_s, gamma_climb))
 
 def landing_distances(MLW, S, rho_land, CLmax, gamma_app, h_s, CD_land, CL_land, T_rev, mu_brake, g=g):
     R = 1.3**2 * (MLW * 2 /(S * rho_land * CLmax)) / (0.1 * g)
@@ -401,7 +401,7 @@ def max_range(H,Vcr,F,S,A,e,CD0,c_t,g=g,rho_c=rho_c): #only holds at constant al
 
 Range,Range2,eta_t,Cl,Cd,F = max_range(H,Vcr,F,S,A,e,CD0,c_t)
 
-print (Range,Range2,eta_t,Cl,Cd)
+#print (Range,Range2,eta_t,Cl,Cd)
 
     
 

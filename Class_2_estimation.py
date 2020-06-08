@@ -214,7 +214,7 @@ while abs((OEW_class1_kg - OEWINPUT)*100/OEWINPUT)>= 0.01:
     
     W_engines = engine.engine_weight(T_dry_SL, N_eng)                                       #Verified
     W_fuel_system_kerosene = 0
-    W_fuel_system_hydrogen = to_pounds(class1[-1])
+    W_fuel_system_hydrogen = to_pounds(class1[9])
     W_power_controls = powercontrols.total(lf, b, W_engines, pneumatic = False)
     
     
@@ -242,7 +242,7 @@ plt.plot(np.arange(0, len(OEW_plot_class2)), OEW_plot_class2, label = 'class 2')
 plt.xlabel("iterations")
 plt.ylabel("OEW in kg")
 plt.legend()
-plt.show()
+#plt.show()
 
 df = pd.DataFrame({'data': ['MTOW','OEW'],
 'SRA': [MTOW, OEW_class2],
