@@ -87,7 +87,7 @@ def cabin_design(fractioninfus,fractionintail,HYDROGENVOLUME,top_selecter,podlen
 
     #POD STORAGE
     print(V_tank_pod)
-    t_pod,m_pod,tm_pod,d_pod,l_pod=tank_sizing(V_tank_pod,podlength*0.9*2,2) #allow for some cones
+    t_pod,m_pod,tm_pod,d_pod,l_pod=tank_sizing(V_tank_pod,podlength*2,2)
     if V_tank_pod==0:
         t_pod,m_pod, tm_pod, d_pod,l_pod=0,0,0,0,0
     print('POD TANK (for each): ','| mass: ',tm_pod/2,'| diameter: ',d_pod,'| tank length: ',l_pod/2)
@@ -126,9 +126,9 @@ def cabin_design(fractioninfus,fractionintail,HYDROGENVOLUME,top_selecter,podlen
     
     if V_tank_pod!=0:
         Q_interference=1.3
-        lambdaf_pods=podlength/d_pod
+        lambdaf_pods=(podlength+d_pod)/d_pod #cones
         pylon=2*1*0.5
-        pod_area=np.pi*d_pod*(podlength-d_pod/2)+2*4*np.pi*d_pod**2/4+pylon#put hemispheres on ends
+        pod_area=np.pi*d_pod*(podlength)+4*np.pi*d_pod**2/4+pylon#put hemispheres on ends
         FFpods=1+0.35/lambdaf_pods
         Reynolds_pods=input.V_C_TAS*podlength/k_v
         Cfturb_pods=0.455/((math.log(Reynolds_pods,10))**2.58*(1+0.144*MACH**2)**0.65)
@@ -158,6 +158,10 @@ def cabin_design(fractioninfus,fractionintail,HYDROGENVOLUME,top_selecter,podlen
            ,t_top,m_top,tm_top,d_top,l_top,t_pod,m_pod,tm_pod,d_pod,l_pod,totalcabinlength,V_tank_cyl, V_tank_tail, V_tank_top,V_tank_pod,\
            tm_tanksystem,CGtank,CGfuelfull,CGcomb,totdrag,fuselage_weight,CDzerofus,FFbody,Cfturb,fuselage_area,CDzeropods,fusdrag,poddrag,empennage_length)
 
+
+#t is thickness, m is mass of one tank, tm is mass of all tanks, d is diameter.
+
+#lf=cockpit_length+totalcabinlength+l_cyl+empennage_length
 
 
 

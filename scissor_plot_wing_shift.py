@@ -206,7 +206,8 @@ def scissor_wing_shift():
 
 
 
-        ShS = np.arange(0.0,0.605,0.005)
+        #ShS = np.arange(0.0,0.605,0.005)
+        ShS = np.arange(0.0,100,0.005)
    
         stabilityxcg_cruise = xac_cruise + ShS*(clalpha_tail/clalpha_acless)*(1-downwash)*speedratio*tail_armh/MAC
         controlxcg = xac - cm_ac/CL + ShS*(C_lh_max/CL)*(tail_armh/MAC)*speedratio
@@ -215,31 +216,66 @@ def scissor_wing_shift():
         cg_cont = controlxcg[::-1]
         ShS = ShS[::-1]
         for j in range(len(ShS)):
-            if cg_stab[-1] >= cg_cont[-1]:
+#            if cg_stab[-1] >= cg_cont[-1]:
+#                Sh_min_lst.append([10,0,0,0,0,0, 0, 0])         #append a zero if this condition is not met
+#                print('At a root chord position of', x_start_Cr[i],' [m], the scissor plot shows no intersection')
+#                break 
+#            if cg_fwd_lst[i] < cg_cont[j] or cg_aft_lst[i] > cg_stab[j]:   #in this case, the cg range does not meet the stability or contorllability requirements
+#                Sh_min = ShS[j-1]*S
+#                Sh_min_lst.append([ShS[j-1],x_start_Cr[i], cg_stab[j-1], cg_aft_lst[i-1], cg_cont[j-1], cg_fwd_lst[i-1], trimdrag(cm_ac, tail_armh, Sh_min), cg_cont, cg_stab])
+#                break
+#            else:
+#                continue
+#            if cg_cont[-1] - cg_stab[-1] < 0:
+#                Sh_min_lst.append([10,0,0,0,0,0, 0, 0])         #append a zero if this condition is not met
+#                print('At a root chord position of', x_start_Cr[i],' [m], the scissor plot shows no intersection')
+#                break
+#            if cg_fwd_lst[i] < min(cg_cont) or cg_aft_lst[i] > max(cg_stab[j]):
+#                Sh_min_lst.append([10,0,0,0,0,0, 0, 0])         #append a zero if this condition is not met
+#                print('No solution exists')
+#                break
+#            if cg_fwd_lst[i] > 0:
+#                if cg_fwd_lst[i] < cg_cont[j] or cg_aft_lst[i] > cg_stab[j]:   #in this case, the cg range does not meet the stability or contorllability requirements
+#                    Sh_min = ShS[j-1]*S
+#                    Sh_min_lst.append([ShS[j-1],x_start_Cr[i], cg_stab[j-1], cg_aft_lst[i-1], cg_cont[j-1], cg_fwd_lst[i-1], trimdrag(cm_ac, tail_armh, Sh_min), cg_cont, cg_stab])
+#                    break
+#                else:
+#                    continue
+              
+              if cg_cont[-1] - cg_stab[-1] < 0:
                 Sh_min_lst.append([10,0,0,0,0,0, 0, 0])         #append a zero if this condition is not met
                 print('At a root chord position of', x_start_Cr[i],' [m], the scissor plot shows no intersection')
                 break 
-            if cg_fwd_lst[i] < cg_cont[j] or cg_aft_lst[i] > cg_stab[j]:   #in this case, the cg range does not meet the stability or contorllability requirements
-                Sh_min = ShS[j-1]*S
-                Sh_min_lst.append([ShS[j-1],x_start_Cr[i], cg_stab[j-1], cg_aft_lst[i-1], cg_cont[j-1], cg_fwd_lst[i-1], trimdrag(cm_ac, tail_armh, Sh_min), cg_cont, cg_stab])
-                break
-            else:
-                continue
+              if cg_cont[j] - cg_fwd_lst[i] > 0 or cg_stab[j] - cg_aft_lst[i] < 0:   #in this case, the cg range does not meet the stability or contorllability requirements
+                if j==0: 
+                    Sh_min = ShS[j]*S
+                    Sh_min_lst.append([ShS[j],x_start_Cr[i], cg_stab[j], cg_aft_lst[i], cg_cont[j], cg_fwd_lst[i], trimdrag(cm_ac, tail_armh, Sh_min), cg_cont, cg_stab])
+                    print(cg_fwd_lst[i])
+                    break
+                else:
+                    Sh_min = ShS[j-1]*S
+                    Sh_min_lst.append([ShS[j-1],x_start_Cr[i], cg_stab[j-1], cg_aft_lst[i], cg_cont[j-1], cg_fwd_lst[i], trimdrag(cm_ac, tail_armh, Sh_min), cg_cont, cg_stab])
+                    break
             
+                
+              else:
+                continue
         
    
-    
+
     minimum = min(Sh_min_lst)
+    print(minimum)
     min_Sh_over_S = minimum[0]
     Sh_min = min_Sh_over_S * S
     x_Cr_opt_nose = minimum[1]
-    cg_stab_lim = minimum[2]
-    cg_aft = minimum[3]
-    cg_cont_lim = minimum[4]
-    cg_fwd = minimum[5]
+    cg_stab_lim = minimum[2] 
+    cg_aft = minimum[3] 
+    cg_cont_lim = minimum[4] 
+    cg_fwd = minimum[5] 
+    print(cg_fwd)
     Dtrim = minimum[6]
-    controlplot = minimum[7]
-    stabilityplot = minimum[8]
+    controlplot = minimum[7] 
+    stabilityplot = minimum[8] 
     
     
     
@@ -251,13 +287,18 @@ def scissor_wing_shift():
 
 
 
-def scissorplot(stabilityplot,controlplot, ShS, frontcg, aftcg, Sh_over_S  ):
+def scissorplot(stabilityplot,controlplot, ShS, frontcg, aftcg, Sh_over_S):
     plt.close()
     plt.figure()
     plt.plot(stabilityplot*100,ShS, color = 'grey', label = 'Neutral stability')
     plt.plot(stabilityplot*100 -5,ShS, color = 'b', label = 'Stability aft limit')
     plt.plot(controlplot*100,ShS, color = 'orange', label = 'Control fwd limit')
+
+    plt.plot([frontcg*100,aftcg*100], [Sh_over_S, Sh_over_S], color = 'r', marker = '|')
+
     plt.plot([frontcg,aftcg], [Sh_over_S, Sh_over_S], color = 'r', marker = '|')
+    # plt.ylim(-0.1,1)
+    # plt.xlim(-100, 200)
     plt.grid()
     plt.xlabel("Xcg/MAC [%]")
     plt.ylabel("Sh/S [-]")
@@ -269,6 +310,7 @@ def scissorplot(stabilityplot,controlplot, ShS, frontcg, aftcg, Sh_over_S  ):
 
 Sh_min_lst, min_Sh_over_S, x_Cr_opt_nose, cg_stab_lim, cg_aft, cg_cont_lim, cg_fwd, Dtrim, Sh_min, controlplot, stabilityplot, ShS = scissor_wing_shift()
 print(min_Sh_over_S)
+print(x_Cr_opt_nose)
 scissorplot(stabilityplot, controlplot, ShS, cg_fwd, cg_aft, min_Sh_over_S)
 
 
