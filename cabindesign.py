@@ -54,7 +54,7 @@ def cabin_design(fractioninfus,fractionintail,HYDROGENVOLUME,top_selecter,podlen
     R_tank_fus=outer_diameter/2-0.15
     R_tank_tail=1
     
-    #print(totalcabinlength)
+    print(totalcabinlength)
     
         
     lf=28 # derived from A220, adapt in input file, total length of fuselage
