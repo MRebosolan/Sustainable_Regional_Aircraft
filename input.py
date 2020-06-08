@@ -40,7 +40,7 @@ MLW = 25000 * g                   # maximum landing weight [N], to be calculated
 
 #Wing and Empennage parameters
 #------------------------------------------------------------------------------------------------------------------
-t_over_c = 0.134                    # estimate, [] , maximum thickness over chord ratio for main wing
+t_over_c = 0.134                  # estimate, [] , maximum thickness over chord ratio for main wing
 #------------------------------------------------------------------------------------------------------------------
 AR = 8                            # estimate, [-], Aspect ratio
 half_sweep = radians(27)          # estimate, [degrees], sweep at half chord for main wing
@@ -54,17 +54,20 @@ Cr = 5.5                          # Wing root chord [m]
 Ct = 1.2                          # Wing tip chord [m]
 taper = Ct / Cr                   # wing taper ratio [-]
 b = (S * AR)**0.5                 # wingspan [m]
+z_engine = -1                     # vertical placement of engine w.r.t. wing root
 print('please use b from class 2')
 
 Sv = 13.36                        # [m2] CRJ700 | Obtain realistic value from Vtail area sizing
 bv = 7.57                         # [m] vertical tail span CRJ700
 bh = 8.54                         # [m] Horizontal tail span 
-zh = bv * 0.95                    #Height of horizontal stabilizer measured from the bottom of the vertical tail [m]
+zh = bv * 0.95                    # Height of horizontal stabilizer measured from the bottom of the vertical tail [m]
 Sh = 20.75                        # m2 crj700 shizzle yo, horizontal tail area
 half_chord_sweep_hor = np.radians(20)   # deg, sweep at half chord of horizontal tail
 half_chord_sweep_vert = np.radians(35)  # deg, sweep at half chord of vertical tail
-AR_h = 4                                #Aspect ratio of the horizontal tail [-], TBD
-e_tail = 0.85   #oswald efficiency factor of tail, TBD
+AR_h = 4                          #Aspect ratio of the horizontal tail [-], TBD
+AR_v = 1.7                        #AR vtail; 1< AR_v<2
+taper_v = 0.6                     #taper ratio vertical tail
+e_tail = 0.85                     #oswald efficiency factor of tail, TBD
 
 
 #Fuselage, cabin and loading parameters
@@ -88,9 +91,8 @@ n_rows = 15                       # Number of passenger rows [-] (=n_pax/n_seats
 W_cargo = 1000                    # kg #Extra cargo weight
 n_crew = N_fdc + N_cc             # Total amount of crew
 W_payload = Npax * W_pax + W_cargo
+cockpit_length=3.6                #Bit smaller than A220
 #------------------------------------------------------------------------------------------------------------------
-lf = 28                           # lenght of fuselage m estimate, lil shorter than CRJ as 5 seat rows are used
-hf = 3.486                        # height of fuselage estimate
 A_fuselage = np.pi*widthf*0.5*hf*0.5 # Area of the fuselage in m^2
 ellipse_fuselage = 2*np.pi * (((widthf/2)**2 + (hf/2)**2)/2)**0.5  #circumference of the fuselage [m]
 S_fgs = ellipse_fuselage * lf * 0.9  # fuselage gross shell area, APPROXIMATION
@@ -198,7 +200,7 @@ V_to = 1.05 * ((MTOW/S)*(2/1.225)*(1/CLmax_to))**0.5 #takeoff speed
 #------------------------------------------------------------------------------------------------------------------
 t_r = t_over_c * Cr                          # maximum thickness at root [m] #bullshit estimation
 #------------------------------------------------------------------------------------------------------------------
-x_start_Cr = 12                    # x-location where root chord starts, measured from the nose of the aircraft [m], TBD
+x_start_Cr = 10                    # x-location where root chord starts, measured from the nose of the aircraft [m], TBD
 MAC =  2 / 3 * Cr * ((1 + taper + taper**2) / (1 + taper)) #length of mean aerodynamic chord, formula taken from Adsee II
 y_MAC = b / 6 * ((1 + 2 * taper) / (1 + taper))            #spanwise location of mean aerodynamic chord
 x_lemac_rootchord = y_MAC * np.tan(LE_sweep)               #x position of mac at leading edge [m], measured from the start of the root choord!!!!
@@ -277,9 +279,11 @@ LD_loiter = 17                     # L/D Loiter, determine after wing sizing and
 
 #------------------------------------------------------------------------------------------------------------------
 
+
 lh = 15                            # very random estimate, distance between wing and tail QUARTER CHORD
 lv = 16                            # very random estimate, distance between wing and vertical tail aerodynamic centers
-x_apu = 20.                        # cg location of the apu measured from the nose of the aircraft [m], TBD
+x_apu = lf-0.8                        # cg location of the apu measured from the nose of the aircraft [m], TBD
+
 x_engine = 13                      # cg location of engines, measured from the nose of the aircraft [m], TBD
 x_nacelle = 13                     # cg location of engine nacelles, measured from the nose of the aircraft [m], TBD
 

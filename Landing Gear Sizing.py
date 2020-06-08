@@ -61,8 +61,8 @@ theta = np.radians(15)
 z_cg = 0.5*(input.hf)   #z loc cg. WRT fuselage!
 x_cg_aft = 10
 x_cg = x_cg_aft-0.2
-MTOW = 26000
-g = 9.81
+g = input.g
+MTOW = g*Cl2.MTOM
 x_empennage = 17
 rho_to = 1.225
 S = 80
@@ -121,8 +121,8 @@ print()
 print('Nose gear: The maximum x-distance from the nose equals', np.round(np.max(dist),4),'[m]')
 print ()
 
-#dist_max = np.round(np.max(dist),3) #the minimum distance between the nose and nose landing gear
-#dist_min = np.round(np.min(dist),3) #the maximum distance between the nose and nose landing gear
+dist_max = np.round(np.max(dist),4) #the minimum distance between the nose and nose landing gear
+dist_min = np.round(np.min(dist),3) #the maximum distance between the nose and nose landing gear
 #dist_lg =  # this will be the actual value of the distance, above values are used to model the ranges of lateral positions of the main landing gear
 
 def lat_pos_lg(z_main_lg=z_main_lg,dist=dist,x_main_lg=x_main_lg,x_cg_aft=x_cg_aft):
@@ -161,7 +161,7 @@ N_w = 2       # Number of wheels per strut
 N_nw = 2      # Number of nosewheels
 N_mw = 2      # Number of main landing wheels | Rounded to nearest multiple of 2, Wto/120000
 N_struts = 2  # Number of struts for MAIN lg, if Number of wheels <= 12, 2 struts
-LCN = 23      # Load classification number, the ACN of CRJ700 = 23 max value for rigid pavement; this value should be taken as small as possible.
+LCN = 30      # Load classification number, the ACN of CRJ700 = 23 max value for rigid pavement; this value should be taken as small as possible.
 
 def tire_pressure(LCN=LCN):
     ptire_max = 430*np.log(LCN)-680   # maximum allowable tire pressure
@@ -171,16 +171,25 @@ print (np.round(ptire_max,4),'kPa',np.round(ptire_max,4)*0.145037738,'psi')
 
 mg_x_cg = x_main_lg-x_cg # distance from the main lg to the cg
 ng_x_cg = x_cg-np.round(np.max(dist),4) # distance from the main_lg to the cg
-def static_loads_lg(MTOW=MTOW,N_mw=N_mw,N_struts=N_struts,mg_x_cg=mg_x_cg,ng_x_cg=ng_x_cg):
-    P_mw = (1-mg_x_cg/ng_x_cg)*MTOW/(N_mw*N_struts)
-    P_nw = (mg_x_cg/ng_x_cg)*MTOW/(N_nw)
-    return P_mw,P_nw
-P_mw,P_nw = static_loads_lg()
 
+def static_loads_lg(MTOW=MTOW,N_mw=N_mw,N_struts=N_struts,mg_x_cg=mg_x_cg,ng_x_cg=ng_x_cg,z_cg=z_cg,dist_max=dist_max):
+    P_mw = (1-mg_x_cg/ng_x_cg)*MTOW/(N_struts)
+    P_nw = (mg_x_cg/ng_x_cg)*MTOW
+    ESWL_n = P_nw/1.33/g   # equivalent single wheel load twin dual | NOSE
+    ESWL_m = P_mw/1.33/g   # equivalent single wheel load twin dual | MAIN
+    P_nw_des = P_nw*1.5    # [N] ! Nose tires are designed for dynamic loads, according to Roskam page 25 book IV it is required to take the load 1.5 times higher (new designs)
+    return P_mw,P_nw, ESWL_n, ESWL_m,P_nw_des
+P_mw,P_nw, ESWL_n, ESWL_m,P_nw_des = static_loads_lg()
+print (ESWL_m,ESWL_n)
+
+
+"""
+Page 18 Roskam IV: Determining LCN and tire pressure
+"""
 ### #Adsee slides
 # Find LCN (loading classification number)
+#Size tires
 
 #Strength of landing gear: take the shock of landing into account
-#Size tires
 #Size strut(s)
 #touchdownrate < 10
