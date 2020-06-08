@@ -203,8 +203,8 @@ MAC =  2 / 3 * Cr * ((1 + taper + taper**2) / (1 + taper)) #length of mean aerod
 y_MAC = b / 6 * ((1 + 2 * taper) / (1 + taper))            #spanwise location of mean aerodynamic chord
 x_lemac_rootchord = y_MAC * np.tan(LE_sweep)               #x position of mac at leading edge [m], measured from the start of the root choord!!!!
 x_LEMAC_nose = x_start_Cr + x_lemac_rootchord
-Cla_aileron = 6.4                  #1/rad, sectional lift curve slope at wing section where aileron is located, determine by datcom method or airfoil simulation
-Cd0_aileron = 0.0039               #zero drag coefficient [-] at wing section where aileron is located, determine by airfoil simulation
+Cla_aileron = 6.48                  #1/rad, sectional lift curve slope at wing section where aileron is located, determine by datcom method or airfoil simulation
+Cd0_aileron = 0.007               #zero drag coefficient [-] at wing section where aileron is located, determine by airfoil simulation
 
 # Aerodynamics for scissor plot:
 #------------------------------------------------------------------------------------------------------------------
@@ -284,7 +284,6 @@ x_engine = 13                      # cg location of engines, measured from the n
 x_nacelle = 13                     # cg location of engine nacelles, measured from the nose of the aircraft [m], TBD
 
 x_engine_start = - 1.5             #m, RANDOM, begin of engine measured from the lemac, negative means ... [m] closer to the nose
-
 
 
 

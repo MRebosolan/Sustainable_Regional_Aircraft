@@ -77,7 +77,7 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S, v_approach):
     else:
         sweep_c4 = np.arccos(1)
 
-    sweep_c4 = 40.535802011 * np.pi / 180 # from airfoil selection 36.86989765
+    sweep_c4 = 40.535802011 * np.pi / 180 # from airfoil selection
 
     print("Sweep =", sweep_c4 * 180 / np.pi)
 
@@ -95,7 +95,7 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S, v_approach):
     CL_cruise = MTOW/(q*S)
     sweep_c2 = np.arctan(np.tan(sweep_c4) - 4/AR * ((50-25)/100 * (1 - taper)/(1 + taper))) #* 180/np.pi
     t_c = min((np.cos(sweep_c2)**3 * (0.935 - (M_cruise + 0.03) * np.cos(sweep_c2)) - 0.115 * CL_cruise**1.5) \
-          / (np.cos(sweep_c2)**2), 0.18) #Upper limit for wing thickness
+          / (np.cos(sweep_c2)**2), 0.18)  #Upper limit for wing thickness
 
     print("t/c = ", t_c)
 
