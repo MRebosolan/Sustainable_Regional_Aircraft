@@ -4,7 +4,13 @@ import matplotlib.pyplot as plt
 import numpy as np
 import Class_2_estimation as cl2
 import input
+from cabindesign import cabin_design()
 
+#Several cabin and fuel config parameters
+
+t_cyl,m_cyl, tm_cyl, d_cyl,l_cyl,t_tail,m_tail, tm_tail, d_tail,l_tail\
+           ,t_top,m_top,tm_top,d_top,l_top,t_pod,m_pod,tm_pod,d_pod,l_pod,totalcabinlength,V_tank_cyl, V_tank_tail, V_tank_top,V_tank_pod,\
+           tm_tanksystem,CGtank,CGfuelfull,CGcomb,totdrag,fuselage_weight,CDzerofus,FFbody,Cfturb,fuselage_area,CDzeropods,fusdrag,poddrag,empennage_length=cabin_design(1,0.35,25,0)
 
 #Raw inputs
 MTOW = cl2.MTOM                 #kg
@@ -64,7 +70,15 @@ w_empennage = cl2.df['SRA']['Empennage']    #kg
 w_wing = cl2.df['SRA']['Wing group'] #kg 
 w_apu = cl2.df['SRA']['APU']    #kg
 w_tank = cl2.df['SRA']['Hydrogen tanks']
-x_tank = 20
+x_pod_tank = 
+x_cyl_tank=totalcabinlength+l_cyl/2+input.cockpit_length
+x_tail_tank=totalcabinlength+l_cyl+l_tail/2+input.cockpit_length
+w_pod_tank=tm_pod
+w_tail_tank=tm_tail
+w_cyl_tank=tm_cyl
+w_pod_fuel=V_tank_pod*input.rho_hydrogen
+w_tail_fuel=V_tank_tail*input.rho_hydrogen
+w_cyl_fuel=V_tank_cyl*input.rho_hydrogen
 print("change w_tank and x_tank to variables used in other files once decided on a fuel tank configuration")
 x_fuel = x_tank                 #fuel cg measured from nose, assumed same as tank cg as most likely the tank will be symmetrical
 w_lg_main = cl2.df['SRA']['Main LG']    #kg
