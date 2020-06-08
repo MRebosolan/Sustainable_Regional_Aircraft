@@ -54,6 +54,7 @@ Cr = 5.5                          # Wing root chord [m]
 Ct = 1.2                          # Wing tip chord [m]
 taper = Ct / Cr                   # wing taper ratio [-]
 b = (S * AR)**0.5                 # wingspan [m]
+z_engine = -1                     # vertical placement of engine w.r.t. wing root
 print('please use b from class 2')
 
 Sv = 13.36                        # [m2] CRJ700 | Obtain realistic value from Vtail area sizing
