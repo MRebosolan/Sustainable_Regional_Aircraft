@@ -64,6 +64,8 @@ Vmin = np.sqrt(MTOW * 2 /(S * rho_to * CLmax))      #or change to Vs, depends on
 Vlof = 1.05 * Vmin
 V_c = 0.514444*input.V_C    #
 vtail_sweep = input.half_chord_sweep_vert # Radians
+AR_vtail = input.AR_v
+taper_v = input.taper_v
 
 #Calculatetes preliminary area of the vertical tail surface and rudder
 def S_v(Vbar_v,S,b,x_v):
@@ -87,7 +89,17 @@ print ('The vertical tail area (Class I) estimate is', np.round(S_v,4), 'm^2. Th
 print ()
 print ('The required vtail area to counteract the OEI moment at take-off is',Req_Sv[0],'[m^2]')
 print ('The required vtail area to counteract the OEI moment at cruise is',Req_Sv[1],'[m]')
+print ('The largest required area is',np.round(np.max(Req_Sv),4),'at take-off. The required rudder area is',np.round(np.max(Req_Sv)*Sr_over_Sv,4))
 
+def Vtail_dimensions(taper_v,AR_vtail,vtail_sweep,S_v):
+    return
+
+
+print ('The vertical tail area (Class I) estimate is', np.round(S_v,4), 'm^2. The rudder area equals' , np.round(S_r,3),'m^2.')
+print ()
+print ('The required vtail area to counteract the OEI moment at take-off is',Req_Sv[0],'[m^2]')
+print ('The required vtail area to counteract the OEI moment at cruise is',Req_Sv[1],'[m]')
+print ('The largest required area is',np.round(np.max(Req_Sv),4),'at take-off. The required rudder area is',np.round(np.max(Req_Sv)*Sr_over_Sv,4))
 # Research engine placement regulations (Stability related)
 # Slide 447-449 ADSEE I 0.35b/2
 #Tto: nog steeds uit Cl2 na een revisie eerder vandaag?

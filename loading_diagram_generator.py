@@ -136,8 +136,10 @@ print((w_engine +  w_nacelle +  w_empennage +  w_apu + w_tank +  w_wing +  w_lg_
 
 
 def cg_OEW_wrt_lemac(x_engine, w_engine, x_nacelle, w_nacelle, x_empennage, w_empennage, x_apu, w_apu, x_tank, w_tank, x_cg_wing_nose, w_wing, x_lg_front, w_lg_front, x_lg_main, w_lg_main, OEW, x_lemac, MAC):
+    OEW_recalc = w_engine +  w_nacelle +  w_empennage +  w_apu + w_tank +  w_wing +  w_lg_front +  w_lg_main + w_fuselage  + w_powercontrols \
+                   + w_electrical  + w_instruments + w_flightcontrols  + w_airconditioning + w_furnishing + w_cargohandling +w_paint
     cg_oew_nose = (x_engine * w_engine + x_nacelle * w_nacelle + x_empennage * w_empennage + x_apu * w_apu + x_tank * w_tank + x_cg_wing_nose * w_wing + x_lg_front * w_lg_front + x_lg_main * w_lg_main + w_fuselage * x_fuselage + w_powercontrols* x_powercontrols \
-                   + w_electrical * x_electrical + w_instruments*x_instruments + w_flightcontrols * x_flightcontrols + w_airconditioning*x_airconditioning + w_furnishing*x_furnishing + w_cargohandling*x_cargohandling + w_paint*x_paint) / OEW
+                   + w_electrical * x_electrical + w_instruments*x_instruments + w_flightcontrols * x_flightcontrols + w_airconditioning*x_airconditioning + w_furnishing*x_furnishing + w_cargohandling*x_cargohandling + w_paint*x_paint) / OEW_recalc
     cg_oew_wrt_lemac = (cg_oew_nose - x_lemac) / MAC
     return cg_oew_wrt_lemac, cg_oew_nose
 
