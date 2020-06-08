@@ -1,7 +1,7 @@
 import numpy as np
 import input
 import Class_2_estimation as Cl2
-import scissor_plot_wing_shift as scissor_w_shift
+
 """
 Responsible person: Tobias | FOR NOW!!!! run from line 55
 
@@ -26,30 +26,31 @@ Remark(s):
     which programs provide which parameters.
 
 """
+#Variables that still need to be properly coupled to other code:
+z_cg  =  0.5*input.hf               # z loc cg. WRT fuselage!
+x_empennage = input.x_empennage     # x-location where fuselage diameter 
+#starts decreasing (clearance angle), wrt c.g. OR wrt nose
+#If it is wrt the the c.g. change x_empennage; [Start of the aft cone]
+Cl_htail = 0.0                      # tbd
+x_ac_htail = 0.0                    # distance from aerodynamic centre to nose of htail airfoil
+
+
 #Variables that will not change
 g = input.g
 MTOW = g*Cl2.MTOM
-MLW = input.MLW
 theta = np.radians(input.theta)     #tip-back angle ~15 degrees
-z_cg  =  0.5*input.hf                  #z loc cg. WRT fuselage!
 x_cg  = input.x_cg                  #x location of the cg
 x_cg_fwrd = input.x_cg_fwrd         #x location of most forward cg
 x_cg_aft = input.x_cg_aft           #x-location of most aft cg
-x_empennage = input.x_empennage     #x-location where fuselage diameter 
-#starts decreasing (clearance angle), wrt c.g. OR wrt nose
-#If it is wrt the the c.g. change x_empennage; [Start of the aft cone]
-
-#Determining the minimum required surface area
 S = Cl2.S
 rho_0 = input.rho0
-CLmax = input.CLmax_land 
-Vmin = np.sqrt(MTOW*g * 2 /(S * rho_0 * CLmax))
-Vlof = 1.05*Vmin
-Cl_htail = 0.0 #tbd
-x_ac_htail = 0.0 # distance from aerodynamic centre to nose of htail airfoil
-
-safetymargin_theta = np.radians(1)
 rho_to = rho_0
+CLmax = input.CLmax_land 
+Vmin = np.sqrt(MTOW*g * 2 /(S * rho_to * CLmax))
+Vlof = 1.05*Vmin
+safetymargin_theta = np.radians(1)
+htail_sweep = input.half_chord_sweep_hor      # Sweep of the horizontal tail
+
 ######## Dummy variables to test the program, as some have not yet
 # Been determined ################################################
 import Class_2_estimation as Cl2
@@ -57,7 +58,7 @@ import input
 import numpy as np
 #import scissor_plot_wing_shift as scissor_w_shift
 
-MLW= input.MLW
+
 safetymargin_theta = np.radians(1)
 theta = np.radians(15)
 z_cg = 0.5*(input.hf)   #z loc cg. WRT fuselage!
@@ -144,8 +145,8 @@ def lat_pos_lg(z_main_lg=z_main_lg,dist=dist,x_main_lg=x_main_lg,x_cg_aft=x_cg_a
 
 y_lg_list, b_n = lat_pos_lg(z_main_lg)
 
-def req_htail_area(x_main_lg,Cl_htail=Cl_htail,x_ac_htail=x_ac_htail,x_cg = x_cg,rho_to=rho_to,Vlof=Vlof,MTOW=MTOW,g=g):
-    htail_area = (x_main_lg-x_cg)/(x_ac_htail-x_main_lg)*MTOW*g/(0.5*rho_to*Vlof**2*Cl_htail)
+def req_htail_area(x_main_lg,Cl_htail=Cl_htail,x_ac_htail=x_ac_htail,x_cg = x_cg,rho_to=rho_to,Vlof=Vlof,MTOW=MTOW,g=g,htail_sweep=htail_sweep):
+    htail_area = (x_main_lg-x_cg)/(x_ac_htail-x_main_lg)*MTOW*g/(0.5*rho_to*(Vlof/np.cos(htail_sweep))**2*Cl_htail)
     return htail_area
 htail_area = req_htail_area(x_main_lg)
 
