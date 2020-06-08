@@ -40,7 +40,7 @@ MLW = 25000 * g                   # maximum landing weight [N], to be calculated
 
 #Wing and Empennage parameters
 #------------------------------------------------------------------------------------------------------------------
-t_over_c = 0.134                    # estimate, [] , maximum thickness over chord ratio for main wing
+t_over_c = 0.134                  # estimate, [] , maximum thickness over chord ratio for main wing
 #------------------------------------------------------------------------------------------------------------------
 AR = 8                            # estimate, [-], Aspect ratio
 half_sweep = radians(27)          # estimate, [degrees], sweep at half chord for main wing
@@ -54,17 +54,20 @@ Cr = 5.5                          # Wing root chord [m]
 Ct = 1.2                          # Wing tip chord [m]
 taper = Ct / Cr                   # wing taper ratio [-]
 b = (S * AR)**0.5                 # wingspan [m]
+z_engine = -1                     # vertical placement of engine w.r.t. wing root
 print('please use b from class 2')
 
 Sv = 13.36                        # [m2] CRJ700 | Obtain realistic value from Vtail area sizing
 bv = 7.57                         # [m] vertical tail span CRJ700
 bh = 8.54                         # [m] Horizontal tail span 
-zh = bv * 0.95                    #Height of horizontal stabilizer measured from the bottom of the vertical tail [m]
+zh = bv * 0.95                    # Height of horizontal stabilizer measured from the bottom of the vertical tail [m]
 Sh = 20.75                        # m2 crj700 shizzle yo, horizontal tail area
 half_chord_sweep_hor = np.radians(20)   # deg, sweep at half chord of horizontal tail
 half_chord_sweep_vert = np.radians(35)  # deg, sweep at half chord of vertical tail
-AR_h = 4                                #Aspect ratio of the horizontal tail [-], TBD
-e_tail = 0.85   #oswald efficiency factor of tail, TBD
+AR_h = 4                          #Aspect ratio of the horizontal tail [-], TBD
+AR_v = 1.7                        #AR vtail; 1< AR_v<2
+taper_v = 0.6                     #taper ratio vertical tail
+e_tail = 0.85                     #oswald efficiency factor of tail, TBD
 
 
 #Fuselage, cabin and loading parameters
@@ -88,6 +91,7 @@ n_rows = 15                       # Number of passenger rows [-] (=n_pax/n_seats
 W_cargo = 1000                    # kg #Extra cargo weight
 n_crew = N_fdc + N_cc             # Total amount of crew
 W_payload = Npax * W_pax + W_cargo
+cockpit_length=3.6                #Bit smaller than A220
 #------------------------------------------------------------------------------------------------------------------
 A_fuselage = np.pi*widthf*0.5*hf*0.5 # Area of the fuselage in m^2
 ellipse_fuselage = 2*np.pi * (((widthf/2)**2 + (hf/2)**2)/2)**0.5  #circumference of the fuselage [m]

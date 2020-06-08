@@ -74,6 +74,7 @@ import Wing_weight_estimation as wing
 from Class_1_estimation import CLASS1WEIGHTHYBRID
 import input
 
+
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -214,6 +215,7 @@ while abs((OEW_class1_kg - OEWINPUT)*100/OEWINPUT)>= 0.01:
     
     W_engines = engine.engine_weight(T_dry_SL, N_eng)                                       #Verified
     W_fuel_system_kerosene = 0
+    
     W_fuel_system_hydrogen = to_pounds(class1[9])
     W_power_controls = powercontrols.total(lf, b, W_engines, pneumatic = False)
     
@@ -280,7 +282,7 @@ equipment = [{'data': 'Electrical systems', 'SRA': electrical_system_weight, 'F2
              {'data': 'Air conditioning', 'SRA': airconditioning_pressurization_weight + oxygen_system_weight, 'F28':1074, '737-200':1416},
              {'data': 'Furnishing', 'SRA': furnishing_weight, 'F28':4030, '737-200':6643},
              {'data': 'Cargo handling', 'SRA': cargo_equipment_weight},
-             {'data': 'Miscellanous', '737-200':124},
+             {'data': 'Miscellanous/paint', 'SRA': paint_weight, '737-200':124},
              {'data': 'Total fixed equipment', 'SRA': W_equipment, 'F28':9395, '737-200':14887}]
 df = df.append(equipment, ignore_index = True, sort = False)
 

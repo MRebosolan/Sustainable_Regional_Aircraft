@@ -21,8 +21,6 @@ xcoord1 = []
 ycoord1 = []
 ycoord2 = []
 
-
-
 for i in range(0, 103):
     xcoord1.append(float(lines1[i].split()[0]))
     ycoord1.append(float(lines1[i].split()[1]))
@@ -51,11 +49,15 @@ ycoord2 = ycoord2[::-1]
 
 chord_length = 2  # chord length in meters
 t_d = 0.01 #THICkNESS OF AIRFOIL
-number_points = 20 #NUMBER OF POINTS (10 POINTS = 8 BOOMS)  (ON TOP SIDE FOR NOW)
+number_booms = 4 #NUMBER OF POINTS (10 POINTS = 16 BOOMS,4p=4b 5p=6b )#  (ON TOP SIDE FOR NOW)
 moment_cs = 450000 #MOMENT OF CROSS SECTION
 
 #------------------------------------------------------------------------------------------------------------------
 
+def boom_moi(t_d,number_booms,moment_cs,chord_length):
+
+
+number_points = number_booms/2 + 2
 n = 1000 / number_points
 boom_locationx = []
 boom_locationy = []
@@ -63,6 +65,8 @@ boom_area = []
 boom_moi = []
 stress_boom_upper = []
 stress_boom_lower = []
+
+
 
 #make airfoil symetrical and remove negative values at end
 
@@ -127,12 +131,18 @@ for i in range(len(boom_locationx)-1):
         stress_boom_upper.append(boom_stress)
         stress_boom_lower.append(-boom_stress)
 
+print(stress_boom_lower)
 # Find the shear flows
+
+
+
+
+
 
 # Finally look at torsion
 
 LE_sweep = input.LE_sweep
-
+T_to = input.Tto
 y_array = Wingbox_design.generate_spanwise_locations(1000)
 x_array = y_array * np.sin(LE_sweep)
 lift_array_along_y = Wingbox_design.generate_lift_data_points(y_array)
@@ -148,10 +158,11 @@ weight = Wingbox_design.trapezoidal_integration(y_array, weight_array_along_y)
 y_engine = Wingbox_design.x_engine_root
 x_engine = y_engine*sin(LE_sweep)
 engine_weight = Wingbox_design.w_engine
+z_engine = input.z_engine
 
 
 def reaction_moment_about_y(lift, weight, engine_weight, x_lift, x_weight, x_engine):
-    M = lift*x_lift - weight*x_weight - engine_weight*x_engine
+    M = lift*x_lift - weight*x_weight - engine_weight*x_engine - T_to*-z_engine
     return M
 
 R_z, M_y = Wingbox_design.R_z, reaction_moment_about_y(lift, weight, engine_weight, x_lift, x_weight, x_engine)
@@ -182,5 +193,11 @@ for x in x_array[2:]:
 
 print(lift, weight, engine_weight, x_lift, x_weight, x_engine, M_y, R_z, x_array[-1])
 print(internal_y_bending_moment(x_array[-1]))
+<<<<<<< HEAD
 plt.plot(x_array[2:], M_y_array )
+# plt.show()
+
+=======
+plt.plot(y_array[2:], M_y_array )
 plt.show()
+>>>>>>> 542423d13928d25969d6114ef66bea4502ee60e3

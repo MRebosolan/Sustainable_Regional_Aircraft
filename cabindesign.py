@@ -46,7 +46,7 @@ def cabin_design(fractioninfus,fractionintail,HYDROGENVOLUME,top_selecter,podlen
     front_galley_length=2.5 #BIT SMALLER THAN A220
     front_aisle=0.8 #A220
     totalcabinlength=paxsectionlength+aft_galley_length+front_galley_length+front_aisle
-    cockpit_length=3.6#BIT SMALLER THAN A220
+    cockpit_length=input.cockpit_length#BIT SMALLER THAN A220
     
     outer_diameter=3.486 #A220
     inner_diameter=outer_diameter-wall_thickness

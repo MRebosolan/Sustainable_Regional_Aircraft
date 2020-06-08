@@ -171,7 +171,7 @@ def scissor_wing_shift():
         downwash = (K_ea/K_0)*((part_a)+part_b*part_c)*clalpha_datcom/(np.pi*AR)
         
 
-        assert    0.1 < downwash/(4/(AR+2)) < 2, 'downwash value not within expected range for T-Tail'
+        # assert    0.01 < downwash/(4/(AR+2)) < 2, 'downwash value not within expected range for T-Tail'
         
         
         #downwash_lowspeed = (K_ea/K_0)*((part_a)+part_b*part_c)*clalpha_datcom_lowspeed/(np.pi*AR)
@@ -209,7 +209,7 @@ def scissor_wing_shift():
         #ShS = np.arange(0.0,0.605,0.005)
         ShS = np.arange(0.0,100,0.005)
    
-        stabilityxcg_cruise = xac_cruise + ShS*(clalpha_tail/clalpha_acless)*(1-downwash)*speedratio*tail_armh/MAC
+        stabilityxcg_cruise = xac_cruise + ShS*(clalpha_tail/clalpha_acless)*(1-downwash)*speedratio*tail_armh/MAC -0.05
         controlxcg = xac - cm_ac/CL + ShS*(C_lh_max/CL)*(tail_armh/MAC)*speedratio
 
         cg_stab = stabilityxcg_cruise[::-1]         #Reverse array for looping over it
@@ -254,7 +254,7 @@ def scissor_wing_shift():
                     break
                 else:
                     Sh_min = ShS[j-1]*S
-                    Sh_min_lst.append([ShS[j-1],x_start_Cr[i], cg_stab[j-1], cg_aft_lst[i], cg_cont[j-1], cg_fwd_lst[i], trimdrag(cm_ac, tail_armh, Sh_min), cg_cont, cg_stab])
+                    Sh_min_lst.append([ShS[j-1],x_start_Cr[i], cg_stab[j-1], cg_aft_lst[i], cg_cont[j-1], cg_fwd_lst[i], trimdrag(cm_ac, tail_armh, Sh_min), cg_cont, cg_stab,i])
                     break
               else:
                 continue
@@ -262,7 +262,6 @@ def scissor_wing_shift():
    
 
     minimum = min(Sh_min_lst)
-    print(minimum)
     min_Sh_over_S = minimum[0]
     Sh_min = min_Sh_over_S * S
     x_Cr_opt_nose = minimum[1]
@@ -273,14 +272,15 @@ def scissor_wing_shift():
     print(cg_fwd)
     Dtrim = minimum[6]
     controlplot = minimum[7] 
-    stabilityplot = minimum[8] 
+    stabilityplot = minimum[8]
+    index = minimum[9]
     
     
     
     
     
     
-    return Sh_min_lst, min_Sh_over_S, x_Cr_opt_nose, cg_stab_lim, cg_aft, cg_cont_lim, cg_fwd, Dtrim, Sh_min, controlplot, stabilityplot, ShS
+    return Sh_min_lst, min_Sh_over_S, x_Cr_opt_nose, cg_stab_lim, cg_aft, cg_cont_lim, cg_fwd, Dtrim, Sh_min, controlplot, stabilityplot, ShS,index
 
 
 
@@ -288,8 +288,8 @@ def scissor_wing_shift():
 def scissorplot(stabilityplot,controlplot, ShS, frontcg, aftcg, Sh_over_S):
     plt.close()
     plt.figure()
-    plt.plot(stabilityplot*100,ShS, color = 'grey', label = 'Neutral stability')
-    plt.plot(stabilityplot*100 -5,ShS, color = 'b', label = 'Stability aft limit')
+    plt.plot(stabilityplot*100 +5,ShS, color = 'grey', label = 'Neutral stability')
+    plt.plot(stabilityplot*100,ShS, color = 'b', label = 'Stability aft limit')
     plt.plot(controlplot*100,ShS, color = 'orange', label = 'Control fwd limit')
     plt.plot([frontcg*100,aftcg*100], [Sh_over_S, Sh_over_S], color = 'r', marker = '|')
     # plt.ylim(-0.1,1)
@@ -303,10 +303,20 @@ def scissorplot(stabilityplot,controlplot, ShS, frontcg, aftcg, Sh_over_S):
     
 
 
-Sh_min_lst, min_Sh_over_S, x_Cr_opt_nose, cg_stab_lim, cg_aft, cg_cont_lim, cg_fwd, Dtrim, Sh_min, controlplot, stabilityplot, ShS = scissor_wing_shift()
-print(min_Sh_over_S)
-print(x_Cr_opt_nose)
-scissorplot(stabilityplot, controlplot, ShS, cg_fwd, cg_aft, min_Sh_over_S)
 
+Sh_min_lst, min_Sh_over_S, x_Cr_opt_nose, cg_stab_lim, cg_aft, cg_cont_lim, cg_fwd, Dtrim, Sh_min, controlplot, stabilityplot, ShS, index = scissor_wing_shift()
+scissorplot(stabilityplot, controlplot, ShS, cg_fwd, cg_aft, min_Sh_over_S)
+print(min_Sh_over_S, 'sh over s')
+print(x_Cr_opt_nose, 'root location')
 
 #todo: check capability of horizontal tail for providing negative lift to sufficiently rotate the aircraft at take-off
+
+cg_fully_loaded = shift.cg_loaded_lst[index]
+
+
+xlemac = input.x_LEMAC_nose
+cg_loaded_nose = xlemac + cg_fully_loaded / 100 * MAC
+x_ac_h_nose = shift.x_ac[index] + shift.lh_fix
+x_ac_v_nose = shift.x_ac[index] + shift.lv_fix
+print(cg_loaded_nose)
+print("Check that the final cg position after fuel loading is the same as above value for cg_loaded_nose, check with loading diagram after manually changing all input parameters")
