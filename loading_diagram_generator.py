@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import Class_2_estimation as cl2
 import input
-from cabindesign import cabin_design()
+from cabindesign import cabin_design
 
 #Several cabin and fuel config parameters
 
