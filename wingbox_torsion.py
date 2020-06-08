@@ -49,7 +49,7 @@ ycoord2 = ycoord2[::-1]
 #INPUTS
 
 chord_length = 2  # chord length in meters
-t_d = 0.01 #THICkNESS OF AIRFOIL 10cm
+t_d = 0.01 #THICkNESS OF AIRFOIL
 number_points = 20 #NUMBER OF POINTS (10 POINTS = 8 BOOMS)  (ON TOP SIDE FOR NOW)
 moment_cs = 450000 #MOMENT OF CROSS SECTION
 
@@ -125,7 +125,6 @@ for i in range(len(boom_locationx)-1):
         boom_stress = moment_cs*boom_locationy[i]*chord_length / moi_boom_total
         stress_boom_upper.append(boom_stress)
         stress_boom_lower.append(-boom_stress)
-
 
 # Find the shear flows
 
