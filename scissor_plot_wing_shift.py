@@ -292,12 +292,9 @@ def scissorplot(stabilityplot,controlplot, ShS, frontcg, aftcg, Sh_over_S):
     plt.plot(stabilityplot*100,ShS, color = 'grey', label = 'Neutral stability')
     plt.plot(stabilityplot*100 -5,ShS, color = 'b', label = 'Stability aft limit')
     plt.plot(controlplot*100,ShS, color = 'orange', label = 'Control fwd limit')
-
     plt.plot([frontcg*100,aftcg*100], [Sh_over_S, Sh_over_S], color = 'r', marker = '|')
-
-    plt.plot([frontcg,aftcg], [Sh_over_S, Sh_over_S], color = 'r', marker = '|')
     # plt.ylim(-0.1,1)
-    # plt.xlim(-100, 200)
+    # plt.xlim(-200, 200)
     plt.grid()
     plt.xlabel("Xcg/MAC [%]")
     plt.ylabel("Sh/S [-]")
