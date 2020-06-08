@@ -70,7 +70,7 @@ w_nacelle = cl2.df['SRA']['Nacelle']  # kg
 w_empennage = cl2.df['SRA']['Empennage']    #kg
 w_wing = cl2.df['SRA']['Wing group'] #kg 
 w_apu = cl2.df['SRA']['APU']    #kg
-w_tank = 500.
+w_tank = cl2.df['SRA']['Hydrogen tanks']
 x_tank = 20.
 print("change w_tank and x_tank to variables used in other files once decided on a fuel tank configuration")
 x_fuel = x_tank                 #fuel cg measured from nose, assumed same as tank cg as most likely the tank will be symmetrical
@@ -102,6 +102,16 @@ def cg_excursion_wing_shift():
         fully_loaded = loadingcg(aisle[1][-1], aisle[0][1], fuel_weight, x_fuel)
         cg_excursion = np.array([[onlyfwdcargo[0]], [onlyaftcargo[0]], [bothcargo[0]], [window[0]], window_back[0], 
                              middle[0], middle_back[0], aisle[0], aisle_back[0], fully_loaded[0]]) 
+        
+        # onlyfuselagefuel = loadingcg(aisle[1][-1], aisle[0][1], w_t_fuel, x_cyl_tank)
+        # bothfuel = loadingcg(onlyfuselagefuel[1], onlyfuselagefuel[0], drop_fuel, x_drop_tank)
+        # plt.plot(100 * (np.array([aisle[0][-1], onlyfuselagefuel[0], bothfuel[0]]) - x_lemac) / MAC,
+        #                   [MZF, onlyfuselagefuel[1], bothfuel[1]], marker='^', color='cyan', label = 'Hydrogen')
+        
+        # onlypodfuel = loadingcg(aisle[1][-1], aisle[0][1], w_t_fuel, x_cyl_tank)
+        # bothfuel2 = loadingcg(onlypodfuel[1], onlypodfuel[0], drop_fuel, x_drop_tank)
+        # plt.plot(100 * (np.array([aisle[0][-1], onlypodfuel[0], bothfuel2[0]]) - x_lemac) / MAC,
+        #                   [MZF, onlypodfuel[1], bothfuel2[1]], marker='^', color='brown', label = 'Hydrogen fwd first')
         cgmin_lst = []
         cgmax_lst = []
         for j in range(len(cg_excursion)):
