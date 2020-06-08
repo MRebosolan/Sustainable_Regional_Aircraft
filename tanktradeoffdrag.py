@@ -16,28 +16,37 @@ totdraglist=[]
 lcyllist=[]
 d_podlist=[]
 tmf_podlist=[]
+cylmass_list=[]
 
 
-for finfus in range(0,11):
-    finfus/=10
+for finfus in range(1,21):
+    
+    if finfus==1:
+        finfus=0.01
+    finfus/=20
+    
+
+   
     t_cyl,m_cyl, tm_cyl, d_cyl,l_cyl,t_tail,m_tail, tm_tail, d_tail,l_tail\
    ,t_top,m_top,tm_top,d_top,l_top,t_pod,m_pod,tm_pod,d_pod,l_pod,totalcabinlength,V_tank_cyl, V_tank_tail, V_tank_top,V_tank_pod,\
-   tm_tanksystem,CGtank,CGfuelfull,CGcomb,totdrag,fuselage_weight,CDzerofus,FFbody,Cfturb,fuselage_area,CDzeropods,fusdrag,poddrag,empennage_length=cabin_design(finfus,0,25,1)  
+   tm_tanksystem,CGtank,CGfuelfull,CGcomb,totdrag,fuselage_weight,CDzerofus,FFbody,Cfturb,fuselage_area,CDzeropods,fusdrag,poddrag,empennage_length=cabin_design(finfus,0,30,1)  
     cdlist.append(totdrag)
     finfuslist.append(1-finfus)
+    cylmass_list.append(tm_cyl+V_tank_cyl*70)
     
     t_cyl,m_cyl, tm_cyl, d_cyl,l_cyl,t_tail,m_tail, tm_tail, d_tail,l_tail\
    ,t_top,m_top,tm_top,d_top,l_top,t_pod,m_pod,tm_pod,d_pod,l_pod,totalcabinlength,V_tank_cyl, V_tank_tail, V_tank_top,V_tank_pod,\
-   tm_tanksystem,CGtank,CGfuelfull,CGcomb,totdrag,fuselage_weight,CDzerofus,FFbody,Cfturb,fuselage_area,CDzeropods,fusdrag,poddrag,empennage_length=cabin_design(finfus,0,25,0)  
+   tm_tanksystem,CGtank,CGfuelfull,CGcomb,totdrag,fuselage_weight,CDzerofus,FFbody,Cfturb,fuselage_area,CDzeropods,fusdrag,poddrag,empennage_length=cabin_design(finfus,0,30,0)  
     cd2list.append(fusdrag)
     lcyllist.append(l_cyl)
     totdraglist.append(totdrag)
     d_podlist.append(d_pod)
     tmf_podlist.append(tm_pod/2+V_tank_pod*70/2)
     if finfus==0:
-        podlength=l_pod/2+d_pod
+        podlength=l_pod/2
     
     print(totalcabinlength)
+    
     
 import matplotlib.pyplot as plt
 
@@ -58,6 +67,11 @@ plt.legend()
 plt.subplot(234)
 plt.plot(finfuslist,tmf_podlist,label='weight 1 pod')
 plt.legend()
+
+plt.subplot(235)
+plt.plot(finfuslist,cylmass_list,label='weight cyl')
+plt.legend()
+
 plt.show()
     
 #PODS WILL ALSO INFLUENCE FLOW OVER WINGS

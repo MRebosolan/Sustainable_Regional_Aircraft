@@ -221,7 +221,7 @@ z_position_horizontal = zh + hf    # where tail is positioned, for downwash calc
 #Parameters regarding Class I      # Parameters about class 1 weight estimation, ask Jari
 #------------------------------------------------------------------------------------------------------------------
 #TO BE CHANGED BY JARI
-cj_ck = 1.6 * 10 ** (-5)           # kerosene cj     
+cj_ck = 1.6 * 10 ** (-5)           # kerosene cj of a high bypass engine  
 cj_c=(H_to_ker_ratio-1)*0.349*cj_ck/((H_to_ker_ratio-1)*0.349-H_to_ker_ratio)+0.349*(cj_ck-(H_to_ker_ratio-1)*0.349*cj_ck/((H_to_ker_ratio-1)*0.349-H_to_ker_ratio))
 
 
