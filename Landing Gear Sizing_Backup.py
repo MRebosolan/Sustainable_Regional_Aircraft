@@ -32,8 +32,6 @@ x_empennage = input.x_empennage     # x-location where fuselage diameter
                                     # starts decreasing (clearance angle), wrt c.g. OR wrt nose
                                     # If it is wrt the the c.g. change x_empennage; [Start of the aft cone]
 Cl_htail = 0.0                      # tbd
-x_ac_htail = .x_ac_h                # distance from aerodynamic centre to nose of htail airfoil
-
 
 #Variables that will not change
 g = input.g
@@ -42,6 +40,7 @@ theta = np.radians(input.theta)                 # tip-back angle ~15 degrees
 x_cg  = scissor_plot_wing_shift.cg_loaded_nose  # x location of the cg
 x_cg_fwrd = scissor_plot_wing_shift.cg_fwd      # x location of most forward cg
 x_cg_aft = scissor_plot_wing_shift.cg_aft       # x-location of most aft cg
+x_ac_htail = scissor_plot_wing_shift.x_ac_v_nose       # distance from aerodynamic centre to nose of htail airfoil
 S = Cl2.S
 rho_0 = input.rho0
 rho_to = rho_0
@@ -153,7 +152,6 @@ htail_area = req_htail_area(x_main_lg)
 print ('The minimum lateral distance of the landing gear:',np.round(min(y_lg_list),3),'[m]')
 print ('This means the main landing gear stick out',np.round(min(y_lg_list)-z_cg,3),'meters from the fuselage' )
 print ()
-
 #if np.round(htail_area,3) < scissor_w_shift.min_Sh_over_S:
     #print('The htail surface area is large enough for take-off rotation')
 #else:
