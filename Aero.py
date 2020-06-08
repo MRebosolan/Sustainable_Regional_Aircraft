@@ -35,11 +35,12 @@ AR = inp.AR
 MTOW = inp.MTOW
 widthf = inp.widthf
 
-V_C = Envelope.V_C  # Cruise Speed
-V_D = Envelope.V_D  # Dive Speed
-V_S = Envelope.V_S  # Stall Speed
-V_A = Envelope.V_A  # Max Gust Speed
+V_C = inp.V_C  # Cruise Speed knots
+V_D = inp.V_dive  # Dive Speed knots
+V_S = inp.V_S  # Stall Speed knots
+V_A = inp.V_A  # Max Gust Speed knots
 v_approach = inp.v_approach                  # approach speed m/s
+V_C_TAS = inp.V_C_TAS    # True air speed cruise m/s
 
 b1 = 8
 b2 = 11.2
@@ -69,7 +70,7 @@ def chord_length(c_root, c_tip, x, b):
 
 # --------------------------------- Wing Geometry
 
-def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S, v_approach):
+def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S, v_approach, V_C_TAS):
 
     # Wing sweep, also consider M_crit?
     if M_cruise >= 0.7:
@@ -132,14 +133,17 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S, v_approach):
     mu = 1.458e-6 * T_alt**1.5 / (T_alt + 110.4)
     rho = p_cruise / (287 * T_alt)
 
-    Re = (rho * V_C * 0.514444 * c_mac) / mu
+    Re = (rho * V_C_TAS * c_mac) / mu
+    M_cruise2 = V_C_TAS / np.sqrt(1.4 * 287 * T_alt)
+    Re2 = (rho * M_cruise * np.sqrt(1.4 * 287 * T_alt)  * c_mac) / mu
+    print("V_C=", V_C, V_C_TAS)
 
     Re_sea = (1.225 * 66 * c_mac) / 1.802e-5
 
     M_sea = v_approach / np.sqrt(1.4*287*288)
-    print("M_sea = ", M_sea)
+    print("M_sea = ", M_sea, M_cruise2)
 
-    print("Re =", Re, Re_sea)
+    print("Re =", Re, Re2, Re_sea)
     # With CL_max = 1.8
     # CLmax = 2.464
     # CLmax take-off: 2.1 , Clmax landing: 2.25
@@ -150,6 +154,7 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S, v_approach):
 
     beta = np.sqrt(1 - M_cruise**2)
     CLalpha = (2*np.pi*AR)/ (2 + np.sqrt(4 + (AR * beta / k) * (1 + (np.tan(sweep_c2)**2/beta**2))))
+
     alpha0L = -3.667/180 * np.pi
 
     #CL = CLalpha * (alpha - alpha0L)
@@ -218,7 +223,7 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S, v_approach):
     return wing, geom,cross1, hld, ail, x2
 
 
-wing, geom, cross1, hld, ail, x2 = wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S, v_approach)
+wing, geom, cross1, hld, ail, x2 = wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S, v_approach, V_C_TAS)
 
 
 #----------------------------- .txt File Airfoil Coordinates
@@ -251,9 +256,8 @@ for i in range(0,103):
     xcoord1[2].append(float(lines2[i].split()[0]))
     ycoord1[0].append(float(lines0[i].split()[1]))
     ycoord1[1].append(float(lines1[i].split()[1]))
-    ycoord1[2].append(float(lines2[i].split()[1]))
-        
-for i in range(0,71):
+    ycoord1[2].append(float(lines2[i].split()[1]))        
+for i in range(0,70):
     xcoord1[3].append(float(lines3[i].split()[0]))
     ycoord1[3].append(float(lines3[i].split()[1]))
     
@@ -263,56 +267,58 @@ for i in range(103,205):
     xcoord2[2].append(float(lines2[i].split()[0]))
     ycoord2[0].append(float(lines0[i].split()[1]))
     ycoord2[1].append(float(lines1[i].split()[1]))
-    ycoord2[2].append(float(lines2[i].split()[1]))
-        
-for i in range(71,139):
+    ycoord2[2].append(float(lines2[i].split()[1]))        
+for i in range(70,139):
     xcoord2[3].append(float(lines3[i].split()[0]))
     ycoord2[3].append(float(lines3[i].split()[1]))
 
-for i in range(0,3):
+for i in range(0,4):
     xcoord2[i].insert(-1,1.0)
-    xcoord2[i]=xcoord2[i][::-1]
     ycoord2[i].insert(-1,0.0)
-    xcoord2[i]=xcoord2[i][::-1]
-    
-    
+    xcoord1[i]=xcoord1[i][::-1]
+    ycoord1[i]=ycoord1[i][::-1]
 
 ##Camber Line
 for i in range(0,len(xcoord1[0])):
     camline[0].append((ycoord1[0][i]+ycoord2[0][i])/2)
+    camline[1].append((ycoord1[1][i]+ycoord2[1][i])/2)
+    camline[2].append((ycoord1[1][i]+ycoord2[1][i])/2)
+for i in range(0,len(xcoord1[3])):
+    camline[3].append((ycoord1[3][i]+ycoord2[3][i])/2)
+
 
 #----------------------------- Plotting
 
-plt.figure(0)
-plt.plot(geom[0], geom[1], geom[2], geom[3], hld[0], hld[1],ail[0],ail[1])
-plt.text(cross1[0],cross1[1],'Fuselage Wall Line')
-plt.grid(True,which="major",color="#999999")
-plt.grid(True,which="minor",color="#DDDDDD",ls="--")
-plt.minorticks_on()
-plt.ylim(-12.0,2.0)
-plt.ylabel('x [m]')
-plt.xlabel('y [m]')
-
-#plt.figure(1)
+#plt.figure(0)
+#plt.plot(geom[0], geom[1], geom[2], geom[3], hld[0], hld[1],ail[0],ail[1])
+#plt.text(cross1[0],cross1[1],'Fuselage Wall Line')
 #plt.grid(True,which="major",color="#999999")
 #plt.grid(True,which="minor",color="#DDDDDD",ls="--")
 #plt.minorticks_on()
-#plt.plot(xcoord1[0],ycoord1[0],color='r')
-##plt.plot(xcoord1,camline[0],'--',color='r')
-#plt.plot(xcoord2[0],ycoord2[0],color='r')
-#plt.xlim(0,1)
-#plt.ylim(-0.3,0.3)
-#plt.text(0.0,0.0,'LE')
-#plt.text(1.0,0.0,'TE')
-#plt.ylabel('y/c [-]')
-#plt.xlabel('x/c [-]')
+#plt.ylim(-12.0,2.0)
+#plt.ylabel('x [m]')
+#plt.xlabel('y [m]')
 #
+plt.figure(1)
+plt.grid(True,which="major",color="#999999")
+plt.grid(True,which="minor",color="#DDDDDD",ls="--")
+plt.minorticks_on()
+plt.plot(xcoord1[0],ycoord1[0],color='r')
+plt.plot(xcoord2[0],camline[0],'--',color='r')
+plt.plot(xcoord2[0],ycoord2[0],color='r')
+plt.xlim(0,1)
+plt.ylim(-0.3,0.3)
+plt.text(0.0,0.0,'LE')
+plt.text(1.0,0.0,'TE')
+plt.ylabel('y/c [-]')
+plt.xlabel('x/c [-]')
+
 #plt.figure(2)
 #plt.grid(True,which="major",color="#999999")
 #plt.grid(True,which="minor",color="#DDDDDD",ls="--")
 #plt.minorticks_on()
 #plt.plot(xcoord1[1],ycoord1[1],color='r')
-##plt.plot(xcoord1,camline,'--',color='r')
+#plt.plot(xcoord2[1],camline[1],'--',color='r')
 #plt.plot(xcoord2[1],ycoord2[1],color='r')
 #plt.xlim(0,1)
 #plt.ylim(-0.3,0.3)
@@ -326,7 +332,7 @@ plt.xlabel('y [m]')
 #plt.grid(True,which="minor",color="#DDDDDD",ls="--")
 #plt.minorticks_on()
 #plt.plot(xcoord1[2],ycoord1[2],color='r')
-##plt.plot(xcoord1,camline,'--',color='r')
+#plt.plot(xcoord2[2],camline[2],'--',color='r')
 #plt.plot(xcoord2[2],ycoord2[2],color='r')
 #plt.xlim(0,1)
 #plt.ylim(-0.3,0.3)
@@ -340,7 +346,7 @@ plt.xlabel('y [m]')
 #plt.grid(True,which="minor",color="#DDDDDD",ls="--")
 #plt.minorticks_on()
 #plt.plot(xcoord1[3],ycoord1[3],color='r')
-##plt.plot(xcoord1,camline,'--',color='r')
+#plt.plot(xcoord2[3],camline[3],'--',color='r')
 #plt.plot(xcoord2[3],ycoord2[3],color='r')
 #plt.xlim(0,1)
 #plt.ylim(-0.3,0.3)
@@ -350,7 +356,7 @@ plt.xlabel('y [m]')
 #plt.xlabel('x/c [-]')
 #
 plt.show()
-#
+
 
 
 

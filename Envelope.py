@@ -128,7 +128,6 @@ def CruiseSpeed(G_WoverS):
 
 V_C=CruiseSpeed(G_WoverS)
 
-
 V_G=156#kts
 
 # Determination of Design Manoeuvering Speed (V_A minimum)
