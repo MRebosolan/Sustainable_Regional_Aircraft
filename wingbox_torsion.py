@@ -5,10 +5,6 @@ import Wingbox_design
 import matplotlib.pyplot as plt
 from math import *
 
-x_array = Wingbox_design.x_array[2:]
-moment_array = Wingbox_design.moment_array
-moment_array2 = Wingbox_design.moment_array2
-
 # coordinates for the airfoil
 yield_stress_material = 200  # start of with steel for now
 
@@ -54,90 +50,92 @@ moment_cs = 450000 #MOMENT OF CROSS SECTION
 
 #------------------------------------------------------------------------------------------------------------------
 
-def boom_moi(t_d,number_booms,moment_cs,chord_length):
+def boom_moi(moment_cs, chord_length, t_d=t_d, number_booms=number_booms):
 
 
-number_points = number_booms/2 + 2
-n = 1000 / number_points
-boom_locationx = []
-boom_locationy = []
-boom_area = []
-boom_moi = []
-stress_boom_upper = []
-stress_boom_lower = []
-
-<<<<<<< HEAD
-#make airfoil symmetrical and remove negative values at end
-=======
+    number_points = number_booms/2 + 2
+    n = 1000 / number_points
+    boom_locationx = []
+    boom_locationy = []
+    boom_area = []
+    boom_moi = []
+    stress_boom_upper = []
+    stress_boom_lower = []
 
 
-#make airfoil symetrical and remove negative values at end
->>>>>>> 704b77554710b16cd990a6dc7f1eeda377138bd8
-
-for i in range(len(xcoord1[:-3])):
-    if int(xcoord1[i] * 1000) % n == 0:
-        boom_locationx.append(xcoord1[i])
-        boom_locationy.append(ycoord1[i])
+    #make airfoil symmetrical and remove negative values at end
 
 
-#compute the boom area and moment of inertia
+    for i in range(len(xcoord1[:-3])):
+        if int(xcoord1[i] * 1000) % n == 0:
+            boom_locationx.append(xcoord1[i])
+            boom_locationy.append(ycoord1[i])
 
-for i in range(len(boom_locationx)):
-    if i == 1:
-        boom_12dx = (boom_locationx[i - 1] - boom_locationx[i]) * chord_length
-        boom_12dy = (boom_locationy[i - 1] - boom_locationy[i]) * chord_length
-        boom_23dx = (boom_locationx[i + 1] - boom_locationx[i]) * chord_length
-        boom_23dy = (boom_locationy[i + 1] - boom_locationy[i]) * chord_length
 
-        b_1 = 2*np.sqrt((boom_12dx) ** 2 + (boom_12dy) ** 2)
-        b_2 = np.sqrt((boom_23dx) ** 2 + (boom_23dy) ** 2)
+    #compute the boom area and moment of inertia
 
-        area_boom = t_d * b_1 / 6 + t_d * b_2 * (2 + boom_locationy[i + 1] / boom_locationy[i]) / 6
-        moi_boom = area_boom * (boom_locationy[i] * chord_length) ** 2
+    for i in range(len(boom_locationx)):
+        if i == 1:
+            boom_12dx = (boom_locationx[i - 1] - boom_locationx[i]) * chord_length
+            boom_12dy = (boom_locationy[i - 1] - boom_locationy[i]) * chord_length
+            boom_23dx = (boom_locationx[i + 1] - boom_locationx[i]) * chord_length
+            boom_23dy = (boom_locationy[i + 1] - boom_locationy[i]) * chord_length
 
-        boom_area.append(area_boom)
-        boom_moi.append(moi_boom)
-    elif i == len(boom_locationx)-1:
-        boom_12dx = (boom_locationx[i - 1] - boom_locationx[i]) * chord_length
-        boom_12dy = (boom_locationy[i - 1] - boom_locationy[i]) * chord_length
-        boom_23dx = (1 - boom_locationx[i]) * chord_length
-        boom_23dy = boom_locationy[i] * chord_length
+            b_1 = 2*np.sqrt((boom_12dx) ** 2 + (boom_12dy) ** 2)
+            b_2 = np.sqrt((boom_23dx) ** 2 + (boom_23dy) ** 2)
 
-        b_1 = np.sqrt((boom_12dx) ** 2 + (boom_12dy) ** 2)
-        b_2 = 2* np.sqrt((boom_23dx) ** 2 + (boom_23dy) ** 2)
+            area_boom = t_d * b_1 / 6 + t_d * b_2 * (2 + boom_locationy[i + 1] / boom_locationy[i]) / 6
+            moi_boom = area_boom * (boom_locationy[i] * chord_length) ** 2
 
-        area_boom = t_d * b_1 * (2 + boom_locationy[i - 1] / boom_locationy[i]) / 6 + t_d * b_2 / 6
-        moi_boom = area_boom * (boom_locationy[i] * chord_length) ** 2
+            boom_area.append(area_boom)
+            boom_moi.append(moi_boom)
+        elif i == len(boom_locationx)-1:
+            boom_12dx = (boom_locationx[i - 1] - boom_locationx[i]) * chord_length
+            boom_12dy = (boom_locationy[i - 1] - boom_locationy[i]) * chord_length
+            boom_23dx = (1 - boom_locationx[i]) * chord_length
+            boom_23dy = boom_locationy[i] * chord_length
 
-        boom_area.append(area_boom)
-        boom_moi.append(moi_boom)
-    if i>1 and i< len(boom_locationx)-1:
-        boom_12dx = (boom_locationx[i - 1] - boom_locationx[i]) * chord_length
-        boom_12dy = (boom_locationy[i - 1] - boom_locationy[i]) * chord_length
-        boom_23dx = (boom_locationx[i + 1] - boom_locationx[i]) * chord_length
-        boom_23dy = (boom_locationy[i + 1] - boom_locationy[i]) * chord_length
+            b_1 = np.sqrt((boom_12dx) ** 2 + (boom_12dy) ** 2)
+            b_2 = 2* np.sqrt((boom_23dx) ** 2 + (boom_23dy) ** 2)
 
-        b_1 = np.sqrt((boom_12dx)**2+(boom_12dy)**2)
-        b_2 = np.sqrt((boom_23dx)**2+(boom_23dy)**2)
+            area_boom = t_d * b_1 * (2 + boom_locationy[i - 1] / boom_locationy[i]) / 6 + t_d * b_2 / 6
+            moi_boom = area_boom * (boom_locationy[i] * chord_length) ** 2
 
-        area_boom = t_d*b_1*(2+boom_locationy[i-1]/boom_locationy[i])/6+t_d*b_2*(2+boom_locationy[i+1]/boom_locationy[i])/6
-        moi_boom = area_boom*(boom_locationy[i]*chord_length)**2
+            boom_area.append(area_boom)
+            boom_moi.append(moi_boom)
+        if i>1 and i< len(boom_locationx)-1:
+            boom_12dx = (boom_locationx[i - 1] - boom_locationx[i]) * chord_length
+            boom_12dy = (boom_locationy[i - 1] - boom_locationy[i]) * chord_length
+            boom_23dx = (boom_locationx[i + 1] - boom_locationx[i]) * chord_length
+            boom_23dy = (boom_locationy[i + 1] - boom_locationy[i]) * chord_length
 
-        boom_area.append(area_boom)
-        boom_moi.append(moi_boom)
+            b_1 = np.sqrt((boom_12dx)**2+(boom_12dy)**2)
+            b_2 = np.sqrt((boom_23dx)**2+(boom_23dy)**2)
 
-# total moment of inertia of the structure (2x top and bottom)
-moi_boom_total = sum(2*boom_moi)
+            area_boom = t_d*b_1*(2+boom_locationy[i-1]/boom_locationy[i])/6+t_d*b_2*(2+boom_locationy[i+1]/boom_locationy[i])/6
+            moi_boom = area_boom*(boom_locationy[i]*chord_length)**2
 
-for i in range(len(boom_locationx)-1):
-    if i>0:
-        boom_stress = moment_cs*boom_locationy[i]*chord_length / moi_boom_total
-        stress_boom_upper.append(boom_stress)
-        stress_boom_lower.append(-boom_stress)
+            boom_area.append(area_boom)
+            boom_moi.append(moi_boom)
 
-<<<<<<< HEAD
+    # total moment of inertia of the structure (2x top and bottom)
+    moi_boom_total = sum(2*boom_moi)
+
+    for i in range(len(boom_locationx)-1):
+        if i>0:
+            boom_stress = moment_cs*boom_locationy[i]*chord_length / moi_boom_total
+            stress_boom_upper.append(boom_stress)
+            stress_boom_lower.append(-boom_stress)
+
+    return moi_boom_total, stress_boom_upper, stress_boom_lower
+
 
 #-----------------ITERATE OVER WINGSPAN-----------------
+
+Cr = input.Cr
+Ct = input.Ct
+wing_length = input.b * 0.5
+
 
 def generate_chord_array(y_array, Cr=Cr, Ct=Ct, b=wing_length):
     chords = []
@@ -148,17 +146,34 @@ def generate_chord_array(y_array, Cr=Cr, Ct=Ct, b=wing_length):
         chords.append(generate_chord_lengths(y))
     return chords
 
+
+spanwise_array = Wingbox_design.generate_spanwise_locations(1000)[2:]
 moments_around_x = []
 moments_around_z = []
+chords = generate_chord_array(spanwise_array)
+moi_boom_along_span=[]
+upper_stress_along_span=[]
+lower_stress_along_span = []
 
-for y in spanwise_array[2:]:
-    moments_around_x.append(internal_x_bending_moment(y))
-    moments_around_z.append(internal_z_bending_moment(y))
+
+for y in spanwise_array:
+    moments_around_x.append(Wingbox_design.internal_x_bending_moment(y))
+    moments_around_z.append(Wingbox_design.internal_z_bending_moment(y))
+
+for i, y in enumerate(spanwise_array):
+    moment_around_x = moments_around_x[i-1]
+    chord = chords[i]
+    moi_boom, stress_boom_upper, stress_boom_lower = boom_moi(moment_around_x, chord)
+    moi_boom_along_span.append(moi_boom)
+    upper_stress_along_span.append(stress_boom_upper)
+    lower_stress_along_span.append(stress_boom_lower)
+
+plt.plot(spanwise_array, moi_boom_along_span)
+#plt.plot(spanwise_array, upper_stress_along_span)
+#plt.plot(spanwise_array, lower_stress_along_span)
+plt.show()
 
 
-=======
-print(stress_boom_lower)
->>>>>>> 704b77554710b16cd990a6dc7f1eeda377138bd8
 # Find the shear flows
 
 
@@ -220,11 +235,5 @@ for x in x_array[2:]:
 
 print(lift, weight, engine_weight, x_lift, x_weight, x_engine, M_y, R_z, x_array[-1])
 print(internal_y_bending_moment(x_array[-1]))
-<<<<<<< HEAD
 plt.plot(x_array[2:], M_y_array )
 # plt.show()
-
-=======
-plt.plot(y_array[2:], M_y_array )
-plt.show()
->>>>>>> 542423d13928d25969d6114ef66bea4502ee60e3
