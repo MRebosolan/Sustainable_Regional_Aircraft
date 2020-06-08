@@ -64,7 +64,8 @@ zh = bv * 0.95                    # Height of horizontal stabilizer measured fro
 Sh = 20.75                        # m2 crj700 shizzle yo, horizontal tail area
 half_chord_sweep_hor = np.radians(20)   # deg, sweep at half chord of horizontal tail
 half_chord_sweep_vert = np.radians(35)  # deg, sweep at half chord of vertical tail
-AR_h = 4                                #Aspect ratio of the horizontal tail [-], TBD
+AR_h = 4                          #Aspect ratio of the horizontal tail [-], TBD
+AR_v = 1.7                        #AR vtail; 1< AR_v<2
 e_tail = 0.85                     #oswald efficiency factor of tail, TBD
 
 
