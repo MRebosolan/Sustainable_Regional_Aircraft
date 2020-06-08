@@ -210,7 +210,17 @@ def loading():
 
     fully_loaded = loadingcg(aisle[1][-1], aisle[0][1], fuel_weight, x_fuel)
     plt.plot(100 * (np.array([aisle[0][-1], fully_loaded[0]]) - x_lemac) / MAC, [MZF, fully_loaded[1]], marker='^',
-             color='magenta', label='Fuel')
+              color='magenta', label='Fuel')
+    
+    # onlyfuselagefuel = loadingcg(aisle[1][-1], aisle[0][1], w_t_fuel, x_cyl_tank)
+    # bothfuel = loadingcg(onlyfuselagefuel[1], onlyfuselagefuel[0], drop_fuel, x_drop_tank)
+    # plt.plot(100 * (np.array([aisle[0][-1], onlyfuselagefuel[0], bothfuel[0]]) - x_lemac) / MAC,
+    #                   [MZF, onlyfuselagefuel[1], bothfuel[1]], marker='^', color='cyan', label = 'Hydrogen')
+    
+    # onlypodfuel = loadingcg(aisle[1][-1], aisle[0][1], w_t_fuel, x_cyl_tank)
+    # bothfuel2 = loadingcg(onlypodfuel[1], onlypodfuel[0], drop_fuel, x_drop_tank)
+    # plt.plot(100 * (np.array([aisle[0][-1], onlypodfuel[0], bothfuel2[0]]) - x_lemac) / MAC,
+    #                   [MZF, onlypodfuel[1], bothfuel2[1]], marker='^', color='brown', label = 'Hydrogen fwd first')
     
     plt.legend()
     plt.grid()
