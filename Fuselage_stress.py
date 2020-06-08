@@ -11,7 +11,7 @@ shear_cs = 150000 #SHEAR FORCE OF THE CROSS SECTION
 
 #------------------------------------------------------------------------------------------------------------------
 
-#make airfoil symetrical and remove negative values at end
+#make airfoil symmetrical and remove negative values at end
 location_angle1 = 360/(2*number_boom)
 delta_angle = 360/number_boom
 

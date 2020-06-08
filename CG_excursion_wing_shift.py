@@ -122,10 +122,11 @@ def cg_excursion_wing_shift():
     plt.ylabel('x_lemac / l_fus [-]')
     plt.show()
     
+
     
     return cg_fwd_excursion_lst, cg_aft_excursion_lst, cg_loaded_lst
 cg_fwd_excursion_lst, cg_aft_excursion_lst, cg_loaded_lst = cg_excursion_wing_shift()
-
+print (min(cg_fwd_excursion_lst),max(cg_aft_excursion_lst))
 
 
 

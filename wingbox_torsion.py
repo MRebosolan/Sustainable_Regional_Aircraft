@@ -132,7 +132,7 @@ for i in range(len(boom_locationx)-1):
 # Finally look at torsion
 
 LE_sweep = input.LE_sweep
-
+T_to = input.Tto
 y_array = Wingbox_design.generate_spanwise_locations(1000)
 x_array = y_array * np.sin(LE_sweep)
 lift_array_along_y = Wingbox_design.generate_lift_data_points(y_array)
@@ -148,10 +148,11 @@ weight = Wingbox_design.trapezoidal_integration(y_array, weight_array_along_y)
 y_engine = Wingbox_design.x_engine_root
 x_engine = y_engine*sin(LE_sweep)
 engine_weight = Wingbox_design.w_engine
+z_engine = input.z_engine
 
 
 def reaction_moment_about_y(lift, weight, engine_weight, x_lift, x_weight, x_engine):
-    M = lift*x_lift - weight*x_weight - engine_weight*x_engine
+    M = lift*x_lift - weight*x_weight - engine_weight*x_engine - T_to*-z_engine
     return M
 
 R_z, M_y = Wingbox_design.R_z, reaction_moment_about_y(lift, weight, engine_weight, x_lift, x_weight, x_engine)
@@ -182,5 +183,5 @@ for x in x_array[2:]:
 
 print(lift, weight, engine_weight, x_lift, x_weight, x_engine, M_y, R_z, x_array[-1])
 print(internal_y_bending_moment(x_array[-1]))
-plt.plot(x_array[2:], M_y_array )
+plt.plot(y_array[2:], M_y_array )
 plt.show()
