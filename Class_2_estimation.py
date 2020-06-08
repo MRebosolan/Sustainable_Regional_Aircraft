@@ -280,7 +280,7 @@ equipment = [{'data': 'Electrical systems', 'SRA': electrical_system_weight, 'F2
              {'data': 'Air conditioning', 'SRA': airconditioning_pressurization_weight + oxygen_system_weight, 'F28':1074, '737-200':1416},
              {'data': 'Furnishing', 'SRA': furnishing_weight, 'F28':4030, '737-200':6643},
              {'data': 'Cargo handling', 'SRA': cargo_equipment_weight},
-             {'data': 'Miscellanous', '737-200':124},
+             {'data': 'Miscellanous/paint', 'SRA': paint_weight, '737-200':124},
              {'data': 'Total fixed equipment', 'SRA': W_equipment, 'F28':9395, '737-200':14887}]
 df = df.append(equipment, ignore_index = True, sort = False)
 
