@@ -96,7 +96,7 @@ def wing_cg(sweep, b, Cr, Ct, MAC, x_lemac_Cr, x_lemac):
     return x_cg_nose, x_cg_mac
 
 x_cg_wing_nose, x_cg_wing_mac = wing_cg(sweep, b, Cr, Ct, MAC, x_lemac_Cr, x_lemac)
-
+print(x_cg_wing_nose, x_cg_wing_mac)
 #vary x_start_Cr
 
 

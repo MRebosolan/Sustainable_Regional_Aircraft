@@ -256,8 +256,6 @@ def scissor_wing_shift():
                     Sh_min = ShS[j-1]*S
                     Sh_min_lst.append([ShS[j-1],x_start_Cr[i], cg_stab[j-1], cg_aft_lst[i], cg_cont[j-1], cg_fwd_lst[i], trimdrag(cm_ac, tail_armh, Sh_min), cg_cont, cg_stab])
                     break
-            
-                
               else:
                 continue
         
@@ -293,12 +291,9 @@ def scissorplot(stabilityplot,controlplot, ShS, frontcg, aftcg, Sh_over_S):
     plt.plot(stabilityplot*100,ShS, color = 'grey', label = 'Neutral stability')
     plt.plot(stabilityplot*100 -5,ShS, color = 'b', label = 'Stability aft limit')
     plt.plot(controlplot*100,ShS, color = 'orange', label = 'Control fwd limit')
-
     plt.plot([frontcg*100,aftcg*100], [Sh_over_S, Sh_over_S], color = 'r', marker = '|')
-
-    plt.plot([frontcg,aftcg], [Sh_over_S, Sh_over_S], color = 'r', marker = '|')
     # plt.ylim(-0.1,1)
-    # plt.xlim(-100, 200)
+    # plt.xlim(-200, 200)
     plt.grid()
     plt.xlabel("Xcg/MAC [%]")
     plt.ylabel("Sh/S [-]")
