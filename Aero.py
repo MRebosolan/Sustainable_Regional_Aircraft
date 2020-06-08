@@ -287,20 +287,20 @@ for i in range(0,len(xcoord1[3])):
 #plt.ylabel('x [m]')
 #plt.xlabel('y [m]')
 #
-#plt.figure(1)
-#plt.grid(True,which="major",color="#999999")
-#plt.grid(True,which="minor",color="#DDDDDD",ls="--")
-#plt.minorticks_on()
-#plt.plot(xcoord1[0],ycoord1[0],color='r')
-#plt.plot(xcoord2[0],camline[0],'--',color='r')
-#plt.plot(xcoord2[0],ycoord2[0],color='r')
-#plt.xlim(0,1)
-#plt.ylim(-0.3,0.3)
-#plt.text(0.0,0.0,'LE')
-#plt.text(1.0,0.0,'TE')
-#plt.ylabel('y/c [-]')
-#plt.xlabel('x/c [-]')
-#
+plt.figure(1)
+plt.grid(True,which="major",color="#999999")
+plt.grid(True,which="minor",color="#DDDDDD",ls="--")
+plt.minorticks_on()
+plt.plot(xcoord1[0],ycoord1[0],color='r')
+plt.plot(xcoord2[0],camline[0],'--',color='r')
+plt.plot(xcoord2[0],ycoord2[0],color='r')
+plt.xlim(0,1)
+plt.ylim(-0.3,0.3)
+plt.text(0.0,0.0,'LE')
+plt.text(1.0,0.0,'TE')
+plt.ylabel('y/c [-]')
+plt.xlabel('x/c [-]')
+
 #plt.figure(2)
 #plt.grid(True,which="major",color="#999999")
 #plt.grid(True,which="minor",color="#DDDDDD",ls="--")
@@ -343,7 +343,7 @@ for i in range(0,len(xcoord1[3])):
 #plt.ylabel('y/c [-]')
 #plt.xlabel('x/c [-]')
 #
-#plt.show()
+plt.show()
 
 
 
