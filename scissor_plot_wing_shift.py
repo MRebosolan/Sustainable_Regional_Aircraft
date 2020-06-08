@@ -316,5 +316,7 @@ cg_fully_loaded = shift.cg_loaded_lst[index]
 
 xlemac = input.x_LEMAC_nose
 cg_loaded_nose = xlemac + cg_fully_loaded / 100 * MAC
+x_ac_h_nose = shift.x_ac[index] + shift.lh_fix
+x_ac_v_nose = shift.x_ac[index] + shift.lv_fix
 print(cg_loaded_nose)
 print("Check that the final cg position after fuel loading is the same as above value for cg_loaded_nose, check with loading diagram after manually changing all input parameters")
