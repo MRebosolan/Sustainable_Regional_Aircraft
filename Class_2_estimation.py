@@ -242,7 +242,7 @@ plt.plot(np.arange(0, len(OEW_plot_class2)), OEW_plot_class2, label = 'class 2')
 plt.xlabel("iterations")
 plt.ylabel("OEW in kg")
 plt.legend()
-plt.show()
+#plt.show()
 
 df = pd.DataFrame({'data': ['MTOW','OEW'],
 'SRA': [MTOW, OEW_class2],

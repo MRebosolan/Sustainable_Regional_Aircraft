@@ -81,16 +81,29 @@ def swf(widthf, outboard_flap):
     swf = 2 * b_imag * (chord_along_span(cr, ct, b, widthf) + chord_along_span(cr, ct, b, outboard_flap)) / 2
     return swf
 
+def trimdrag(cm_ac, tail_armh, horizontal_area):
+    Moment_ac = 0.5* rho_cruise *v_cruise**2 * cm_ac * MAC
+    
+    Lift_tail = Moment_ac/tail_armh
+    CL_h = Lift_tail/(0.5* rho_cruise *v_cruise**2  * horizontal_area)
+    k = 1 / (np.pi*AR_tail *e_tail)
+    
+    Dtrim = abs(0.5* rho_cruise *v_cruise**2 *speedratio * horizontal_area * CL_h**2 * k)
+    
+    return Dtrim
 #Import cg ranges loading diagram due to wing shifting
 cg_fwd_lst = shift.cg_fwd_excursion_lst
 cg_aft_lst = shift.cg_aft_excursion_lst
 
+#cg_fwd_lst = [0.3]
+#cg_aft_lst = [1.9]
 
 print('Read off acutal values for cprime_c from SEAD lecture 5 slides 18-20 once wing is designed')
 print('Change to *1.6 in DCLmax if double slotted flaps are used, see slide 35 ADSEE II')
 def scissor_wing_shift():
     Sh_min_lst = []
     for i in range(len(x_start_Cr)):
+    #for i in range(len(cg_fwd_lst)):
         
         #Minor calculations with input parameters
         CL = 2*mass*9.81/(rho*(v_approach**2)*S)            #approach CL
@@ -194,6 +207,7 @@ def scissor_wing_shift():
 
 
         ShS = np.arange(0.0,0.605,0.005)
+   
         stabilityxcg_cruise = xac_cruise + ShS*(clalpha_tail/clalpha_acless)*(1-downwash)*speedratio*tail_armh/MAC
         controlxcg = xac - cm_ac/CL + ShS*(C_lh_max/CL)*(tail_armh/MAC)*speedratio
 
@@ -203,15 +217,18 @@ def scissor_wing_shift():
         for j in range(len(ShS)):
             if cg_stab[-1] >= cg_cont[-1]:
                 Sh_min_lst.append([10,0,0,0,0,0, 0, 0])         #append a zero if this condition is not met
+                print('At a root chord position of', x_start_Cr[i],' [m], the scissor plot shows no intersection')
                 break 
-            if cg_fwd_lst[j] < cg_cont[j] or cg_aft_lst[j] > cg_stab[j]:   #in this case, the cg range does not meet the stability or contorllability requirements
+            if cg_fwd_lst[i] < cg_cont[j] or cg_aft_lst[i] > cg_stab[j]:   #in this case, the cg range does not meet the stability or contorllability requirements
                 Sh_min = ShS[j-1]*S
-                Sh_min_lst.append([ShS[j-1],x_start_Cr[i], cg_stab[j-1], cg_aft_lst[j-1], cg_cont[j-1], cg_fwd_lst[j-1], trimdrag(cm_ac, tail_armh, Sh_min), cg_cont, cg_stab])
+                Sh_min_lst.append([ShS[j-1],x_start_Cr[i], cg_stab[j-1], cg_aft_lst[i-1], cg_cont[j-1], cg_fwd_lst[i-1], trimdrag(cm_ac, tail_armh, Sh_min), cg_cont, cg_stab])
                 break
             else:
                 continue
+            
         
-        
+   
+    
     minimum = min(Sh_min_lst)
     min_Sh_over_S = minimum[0]
     Sh_min = min_Sh_over_S * S
@@ -248,16 +265,7 @@ def scissorplot(stabilityplot,controlplot, ShS, frontcg, aftcg, Sh_over_S  ):
     plt.title('CS100')
     plt.show()
     
-def trimdrag(cm_ac, tail_armh, horizontal_area):
-    Moment_ac = 0.5* rho_cruise *v_cruise**2 * cm_ac * MAC
-    
-    Lift_tail = Moment_ac/tail_armh
-    CL_h = Lift_tail/(0.5* rho_cruise *v_cruise**2  * horizontal_area)
-    k = 1 / (np.pi*AR_tail *e_tail)
-    
-    Dtrim = abs(0.5* rho_cruise *v_cruise**2 *speedratio * horizontal_area * CL_h**2 * k)
-    
-    return Dtrim
+
 
 Sh_min_lst, min_Sh_over_S, x_Cr_opt_nose, cg_stab_lim, cg_aft, cg_cont_lim, cg_fwd, Dtrim, Sh_min, controlplot, stabilityplot, ShS = scissor_wing_shift()
 print(min_Sh_over_S)

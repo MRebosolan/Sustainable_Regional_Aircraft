@@ -148,7 +148,7 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S):
     k = (0.115 * 180 / np.pi) / (2 * np.pi)
 
     beta = np.sqrt(1 - M_cruise**2)
-    CLalpha = (2*np.pi*AR)/ (2 + np.sqrt(4 + (AR * beta / k) * (1 + (tan(sweep_c2)**2/beta**2))))
+    CLalpha = (2*np.pi*AR)/ (2 + np.sqrt(4 + (AR * beta / k) * (1 + (np.tan(sweep_c2)**2/beta**2))))
 
 
     dCLmax_land = 0.45
@@ -244,9 +244,8 @@ for i in range(0,103):
     xcoord1[2].append(float(lines2[i].split()[0]))
     ycoord1[0].append(float(lines0[i].split()[1]))
     ycoord1[1].append(float(lines1[i].split()[1]))
-    ycoord1[2].append(float(lines2[i].split()[1]))
-        
-for i in range(0,71):
+    ycoord1[2].append(float(lines2[i].split()[1]))        
+for i in range(0,70):
     xcoord1[3].append(float(lines3[i].split()[0]))
     ycoord1[3].append(float(lines3[i].split()[1]))
     
@@ -256,56 +255,58 @@ for i in range(103,205):
     xcoord2[2].append(float(lines2[i].split()[0]))
     ycoord2[0].append(float(lines0[i].split()[1]))
     ycoord2[1].append(float(lines1[i].split()[1]))
-    ycoord2[2].append(float(lines2[i].split()[1]))
-        
-for i in range(71,139):
+    ycoord2[2].append(float(lines2[i].split()[1]))        
+for i in range(70,139):
     xcoord2[3].append(float(lines3[i].split()[0]))
     ycoord2[3].append(float(lines3[i].split()[1]))
 
-for i in range(0,3):
+for i in range(0,4):
     xcoord2[i].insert(-1,1.0)
-    xcoord2[i]=xcoord2[i][::-1]
     ycoord2[i].insert(-1,0.0)
-    xcoord2[i]=xcoord2[i][::-1]
-    
-    
+    xcoord1[i]=xcoord1[i][::-1]
+    ycoord1[i]=ycoord1[i][::-1]
 
 ##Camber Line
 for i in range(0,len(xcoord1[0])):
     camline[0].append((ycoord1[0][i]+ycoord2[0][i])/2)
+    camline[1].append((ycoord1[1][i]+ycoord2[1][i])/2)
+    camline[2].append((ycoord1[1][i]+ycoord2[1][i])/2)
+for i in range(0,len(xcoord1[3])):
+    camline[3].append((ycoord1[3][i]+ycoord2[3][i])/2)
+
 
 #----------------------------- Plotting
 
-plt.figure(0)
-plt.plot(geom[0], geom[1], geom[2], geom[3], hld[0], hld[1],ail[0],ail[1])
-plt.text(cross1[0],cross1[1],'Fuselage Wall Line')
-plt.grid(True,which="major",color="#999999")
-plt.grid(True,which="minor",color="#DDDDDD",ls="--")
-plt.minorticks_on()
-plt.ylim(-12.0,2.0)
-plt.ylabel('x [m]')
-plt.xlabel('y [m]')
-
-#plt.figure(1)
+#plt.figure(0)
+#plt.plot(geom[0], geom[1], geom[2], geom[3], hld[0], hld[1],ail[0],ail[1])
+#plt.text(cross1[0],cross1[1],'Fuselage Wall Line')
 #plt.grid(True,which="major",color="#999999")
 #plt.grid(True,which="minor",color="#DDDDDD",ls="--")
 #plt.minorticks_on()
-#plt.plot(xcoord1[0],ycoord1[0],color='r')
-##plt.plot(xcoord1,camline[0],'--',color='r')
-#plt.plot(xcoord2[0],ycoord2[0],color='r')
-#plt.xlim(0,1)
-#plt.ylim(-0.3,0.3)
-#plt.text(0.0,0.0,'LE')
-#plt.text(1.0,0.0,'TE')
-#plt.ylabel('y/c [-]')
-#plt.xlabel('x/c [-]')
+#plt.ylim(-12.0,2.0)
+#plt.ylabel('x [m]')
+#plt.xlabel('y [m]')
 #
+plt.figure(1)
+plt.grid(True,which="major",color="#999999")
+plt.grid(True,which="minor",color="#DDDDDD",ls="--")
+plt.minorticks_on()
+plt.plot(xcoord1[0],ycoord1[0],color='r')
+plt.plot(xcoord2[0],camline[0],'--',color='r')
+plt.plot(xcoord2[0],ycoord2[0],color='r')
+plt.xlim(0,1)
+plt.ylim(-0.3,0.3)
+plt.text(0.0,0.0,'LE')
+plt.text(1.0,0.0,'TE')
+plt.ylabel('y/c [-]')
+plt.xlabel('x/c [-]')
+
 #plt.figure(2)
 #plt.grid(True,which="major",color="#999999")
 #plt.grid(True,which="minor",color="#DDDDDD",ls="--")
 #plt.minorticks_on()
 #plt.plot(xcoord1[1],ycoord1[1],color='r')
-##plt.plot(xcoord1,camline,'--',color='r')
+#plt.plot(xcoord2[1],camline[1],'--',color='r')
 #plt.plot(xcoord2[1],ycoord2[1],color='r')
 #plt.xlim(0,1)
 #plt.ylim(-0.3,0.3)
@@ -319,7 +320,7 @@ plt.xlabel('y [m]')
 #plt.grid(True,which="minor",color="#DDDDDD",ls="--")
 #plt.minorticks_on()
 #plt.plot(xcoord1[2],ycoord1[2],color='r')
-##plt.plot(xcoord1,camline,'--',color='r')
+#plt.plot(xcoord2[2],camline[2],'--',color='r')
 #plt.plot(xcoord2[2],ycoord2[2],color='r')
 #plt.xlim(0,1)
 #plt.ylim(-0.3,0.3)
@@ -333,7 +334,7 @@ plt.xlabel('y [m]')
 #plt.grid(True,which="minor",color="#DDDDDD",ls="--")
 #plt.minorticks_on()
 #plt.plot(xcoord1[3],ycoord1[3],color='r')
-##plt.plot(xcoord1,camline,'--',color='r')
+#plt.plot(xcoord2[3],camline[3],'--',color='r')
 #plt.plot(xcoord2[3],ycoord2[3],color='r')
 #plt.xlim(0,1)
 #plt.ylim(-0.3,0.3)
@@ -343,7 +344,7 @@ plt.xlabel('y [m]')
 #plt.xlabel('x/c [-]')
 #
 plt.show()
-#
+
 
 
 
