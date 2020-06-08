@@ -122,7 +122,7 @@ def cg_excursion_wing_shift():
     
     return cg_fwd_excursion_lst, cg_aft_excursion_lst
 cg_fwd_excursion_lst, cg_aft_excursion_lst = cg_excursion_wing_shift()
-
+print (min(cg_fwd_excursion_lst),max(cg_aft_excursion_lst))
 
 
 
