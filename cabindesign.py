@@ -159,6 +159,10 @@ def cabin_design(fractioninfus,fractionintail,HYDROGENVOLUME,top_selecter,podlen
            tm_tanksystem,CGtank,CGfuelfull,CGcomb,totdrag,fuselage_weight,CDzerofus,FFbody,Cfturb,fuselage_area,CDzeropods,fusdrag,poddrag,empennage_length)
 
 
+#t is thickness, m is mass of one tank, tm is mass of all tanks, d is diameter.
+
+#lf=cockpit_length+totalcabinlength+l_cyl+empennage_length
+
 
 
 
