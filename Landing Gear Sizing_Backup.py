@@ -106,13 +106,13 @@ print ()
 def nose_lg_loc(x_main_lg= x_main_lg, x_cg=x_cg,MTOW=MTOW,g=g):
     dist = []
     d = 0.005
-    for distance in np.arange(0,x_cg,d):
-        F_nose_lg = MTOW*g*(x_main_lg-x_cg)/(x_cg-distance)
+    for distance in np.arange(-5,x_cg,d):
+        F_nose_lg = MTOW*(x_main_lg-x_cg)/(x_cg-distance)
         #Force_on_nose_lg.append(F_nose_lg)
-        if F_nose_lg <= 0.08*MTOW*g or F_nose_lg >= 0.15*MTOW*g:
-            continue
-        else:
+        if 0.08*MTOW <= F_nose_lg <= 0.15*MTOW and 0.08*W_fwrd_cg <= W_fwrd_cg*(x_main_lg-x_cg_fwrd)/(x_cg_fwrd-distance) <= 0.15*W_fwrd_cg and 0.08*W_aft_cg <= W_aft_cg*(x_main_lg-x_cg_aft)/(x_cg_aft-distance) <= 0.15*W_fwrd_cg:
             dist.append(distance)
+        else:
+            continue
     return dist
 dist = nose_lg_loc()
 
@@ -123,8 +123,8 @@ print()
 print('Nose gear: The maximum x-distance from the nose equals', np.round(np.max(dist),4),'[m]')
 print ()
 
-dist = np.round(np.min(dist),4)
-print (dist)
+#dist = np.round(np.min(dist),4)
+#print (dist)
 
 dist_max = np.round(np.max(dist),4) #-1 if it is too much forward; it does not have a large effect on the lateral position; that is to say, the effect is not severe.   #the minimum distance between the nose and nose landing gear
 dist_min = np.round(np.min(dist),4) #the maximum distance between the nose and nose landing gear

@@ -43,7 +43,6 @@ x_v =  sc_shift.x_ac_v_nose-sc_shift.cg_loaded_nose   # input.x_v  #Distance Aer
 vtail_sweep = input.half_chord_sweep_vert # Radians
 AR_vtail = input.AR_v
 taper_v = input.taper_v
-print (sc_shift.x_ac_v_nose)
 
 import numpy as np
 import Class_2_estimation as Cl2
@@ -112,16 +111,9 @@ print ('The required vtail area to counteract the OEI moment at take-off is',Req
 print ('The required vtail area to counteract the OEI moment at cruise is',Req_Sv[1],'[m]')
 print ('The largest required area is',np.round(np.max(Req_Sv),4),'at take-off. The required rudder area is',np.round(np.max(Req_Sv)*Sr_over_Sv,4))
 
-"""
-def Rudder_def(T_OEI,y_engine,S,b,rho_to):
-    qbar_mc = 1/2*rho_to*S*(Vmin*1.2)**2
-    N_t_crit = T_OEI*y_engine
-    N_D =0.25        # jet engine with high bypass ratio, 0.15 for low
-    Cn_delta_r = -Cy_delta_r ()    # Roskam book VI
-    r_def_max = ((N_D+1)*N_t_crit)/(qbar_mc*S*b*Cn_delta_r)
-    if  np.degrees(r_def_max) > 25:
-        print ('error, too large rudder deflection required. Adjust vtail size')
-    else:
-        print ('the rudder deflection is not too large, the vtail is capable of counteracting the yaw moment')
-    return
-"""
+def rudder_design(y_engine,T_OEI,S,b):
+    Nt_crit = y_engine*T_OEI      #Critical engine-out yawing moment
+    N_D = .25                     #For jet drive aircraft with high by-pass ratio 0.15 for low b.p.r.
+    q_mc =  #Dynamic pressure 
+    delta_r = ((N_D+1)*Nt_crit)/(q_mc*S*b*Cn_delta_r)     #[rad] rudder deflection
+    return delta_r
