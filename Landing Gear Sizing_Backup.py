@@ -39,8 +39,8 @@ g = input.g
 MTOW = g*Cl2.MTOM
 theta = np.radians(input.theta)                 # tip-back angle ~15 degrees
 x_cg  = sc_shift.cg_loaded_nose     # x location of the cg
-x_cg_fwrd = sc_shift.cg_fwd*sc_shift.MAC + sc_shift.x_Cr_opt_nose         # x location of most forward cg
-x_cg_aft = sc_shift.cg_aft*sc_shift.MAC + sc_shift.x_Cr_opt_nose           # x-location of most aft cg
+x_cg_fwrd = sc_shift.cg_fwd*sc_shift.MAC + sc_shift.xlemac      # x location of most forward cg
+x_cg_aft = sc_shift.cg_aft*sc_shift.MAC + sc_shift.xlemac        # x-location of most aft cg
 x_ac_htail = sc_shift.x_ac_h_nose   # distance from aerodynamic centre to nose of htail airfoil
 print (x_ac_htail,x_cg_fwrd)
 S = Cl2.S
