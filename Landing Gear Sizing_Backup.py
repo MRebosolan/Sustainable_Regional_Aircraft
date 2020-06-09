@@ -44,6 +44,7 @@ x_cg_aft = sc_shift.cg_aft*sc_shift.MAC + sc_shift.xlemac        # x-location of
 x_ac_htail = sc_shift.x_ac_h_nose   # distance from aerodynamic centre to nose of htail airfoil
 print (x_ac_htail,x_cg_fwrd)
 S = Cl2.S
+b = Cl2.b
 rho_0 = input.rho0
 rho_to = rho_0
 CLmax = input.CLmax_land 
@@ -122,12 +123,16 @@ print()
 print('Nose gear: The maximum x-distance from the nose equals', np.round(np.max(dist),4),'[m]')
 print ()
 
+dist = np.round(np.min(dist),4)
+print (dist)
+
 dist_max = np.round(np.max(dist),4) #-1 if it is too much forward; it does not have a large effect on the lateral position; that is to say, the effect is not severe.   #the minimum distance between the nose and nose landing gear
-dist_min = np.round(np.min(dist),3) #the maximum distance between the nose and nose landing gear
+dist_min = np.round(np.min(dist),4) #the maximum distance between the nose and nose landing gear
 #dist_lg =  # this will be the actual value of the distance, above values are used to model the ranges of lateral positions of the main landing gear
 
 def lat_pos_lg(z_main_lg=z_main_lg,dist=dist,x_main_lg=x_main_lg,x_cg_aft=x_cg_aft):
     y_lg_list = []
+    b_n_list = []
     d = 0.005
     for y_lg in np.arange(d,4+d,d):
         b_n = [x_cg_aft-dist_min,x_cg_aft-dist_max]   #distance from most forward nose lg to aft cg.
@@ -135,20 +140,25 @@ def lat_pos_lg(z_main_lg=z_main_lg,dist=dist,x_main_lg=x_main_lg,x_cg_aft=x_cg_a
             alpha = np.arctan2(y_lg,b_n[i])
             c = b_n[i]*np.sin(alpha)
             psi = np.arctan2(z_main_lg,c)
-            if psi < 55/180*np.pi and b_n[i] <= x_main_lg:
+            if psi < 55/180*np.pi and b_n[i] <= 10:
                 y_lg_list.append(y_lg)
+                b_n_list.append(b_n[i])
             else:
                 continue  
-    return y_lg_list, b_n
+    return y_lg_list, b_n_list
 
-y_lg_list, b_n = lat_pos_lg(z_main_lg)
+
+y_lg_list, b_n_list = lat_pos_lg(z_main_lg)
+"""
+def req_htail_area(x_main_lg,Cl_htail=Cl_htail,x_ac_htail=x_ac_htail,x_cg = x_cg,rho_to=rho_to,Vlof=Vlof,MTOW=MTOW,g=g,htail_sweep=htail_sweep):
 
 def req_htail_area(x_main_lg,Cl_htail=Cl_htail,x_ac_htail=x_ac_htail,x_cg = x_cg_fwrd,rho_to=rho_to,Vlof=Vlof,MTOW=MTOW,htail_sweep=htail_sweep):
+
     
-    htail_area = -(x_main_lg-x_cg)/(x_ac_htail-x_main_lg)*MTOW/(0.5*rho_to*(Vlof/np.cos(htail_sweep))**2*Cl_htail)
+    htail_area = -((x_main_lg-x_cg)*MTOW - .5*rho_to*(Vlof)**2*S*0*(x_main_lg-sc_shift.aerodynamiccenter) + sc_shift.momentcoefficient*.5*rho_to*(Vlof**2)*S*sc_shift.MAC )  /(0.5*rho_to*(Vlof/np.cos(htail_sweep))**2*Cl_htail)
     return htail_area
 htail_area = req_htail_area(x_main_lg)
-
+"""
 print ('The minimum lateral distance of the landing gear:',np.round(min(y_lg_list),3),'[m]')
 print ('This means the main landing gear stick out',np.round(min(y_lg_list)-z_cg,3),'meters from the fuselage' )
 print ()
@@ -171,10 +181,10 @@ ptire_max = tire_pressure()
 print (np.round(ptire_max,4),'kPa',np.round(ptire_max,4)*0.145037738,'psi')
 #print ('This is actually quite comparable to the CRJ700, according to their airport planning manual')
 mg_x_cg = x_main_lg-x_cg # distance from the main lg to the cg
-ng_x_cg = x_cg-np.round(np.max(dist),4) # distance from the nose_lg to the cg
-mw_nw_d = x_main_lg-np.round(np.max(dist),4)
+ng_x_cg = x_cg-np.round(np.min(dist),4) # distance from the nose_lg to the cg
+mw_nw_d = x_main_lg-np.round(np.min(dist),4)
 
-def static_loads_lg(MTOW=MTOW,N_mw=N_mw,N_struts=N_struts,mg_x_cg=mg_x_cg,ng_x_cg=ng_x_cg,z_cg=z_cg,dist_max=dist_max,mw_nw_d=mw_nw_d):
+def static_loads_lg(MTOW=MTOW,N_mw=N_mw,N_struts=N_struts,mg_x_cg=mg_x_cg,ng_x_cg=ng_x_cg,z_cg=z_cg,dist_max=dist_min,mw_nw_d=mw_nw_d):
     P_mw = (MTOW*ng_x_cg)/(N_struts*mw_nw_d) # [N]
     P_nw = MTOW-P_mw*N_struts                # [N]
     ESWL_n = P_nw/1.33/g                     # [kg] equivalent single wheel load twin dual | NOSE
