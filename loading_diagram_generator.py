@@ -193,6 +193,11 @@ def loading():
 
     plt.close()
     plt.figure()
+    
+    onlyfuel = loadingcg(OEW, cg_oew_nose, w_fuel_fuselage, x_fuel_fuselage)
+    plt.plot(100 * (np.array([cg_oew_nose, onlyfuel[0]]) - x_lemac) / MAC,
+                      [OEW, onlyfuel[1]], label='Fuel only', marker='3', color='magenta')
+    
     onlyfwdcargo = loadingcg(OEW, cg_oew_nose, fwd_cargo_max, x_cargo_fwd)
     bothcargo = loadingcg(onlyfwdcargo[1], onlyfwdcargo[0], aft_cargo_max, x_cargo_aft)
     cargo1 = plt.plot(100 * (np.array([cg_oew_nose, onlyfwdcargo[0], bothcargo[0]]) - x_lemac) / MAC,
