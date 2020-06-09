@@ -39,8 +39,8 @@ g = input.g
 MTOW = g*Cl2.MTOM
 theta = np.radians(input.theta)                 # tip-back angle ~15 degrees
 x_cg  = sc_shift.cg_loaded_nose     # x location of the cg
-x_cg_fwrd = sc_shift.cg_fwd*sc_shift.MAC + sc_shift.x_Cr_opt_nose         # x location of most forward cg
-x_cg_aft = sc_shift.cg_aft*sc_shift.MAC + sc_shift.x_Cr_opt_nose           # x-location of most aft cg
+x_cg_fwrd = sc_shift.cg_fwd*sc_shift.MAC + sc_shift.xlemac        # x location of most forward cg
+x_cg_aft = sc_shift.cg_aft*sc_shift.MAC + sc_shift.xlemac      # x-location of most aft cg
 x_ac_htail = sc_shift.x_ac_h_nose   # distance from aerodynamic centre to nose of htail airfoil
 print (x_ac_htail,x_cg_fwrd)
 S = Cl2.S
@@ -104,11 +104,11 @@ print ()
 
 def nose_lg_loc(x_main_lg= x_main_lg, x_cg=x_cg,MTOW=MTOW,g=g):
     dist = []
-    d = 0.005
+    d = 0.001
     for distance in np.arange(0,x_cg,d):
-        F_nose_lg = MTOW*g*(x_main_lg-x_cg)/(x_cg-distance)
+        F_nose_lg = MTOW*(x_main_lg-x_cg)/(x_cg-distance)
         #Force_on_nose_lg.append(F_nose_lg)
-        if F_nose_lg <= 0.08*MTOW*g or F_nose_lg >= 0.15*MTOW*g:
+        if F_nose_lg <= 0.08*MTOW or F_nose_lg >= 0.15*MTOW:
             continue
         else:
             dist.append(distance)

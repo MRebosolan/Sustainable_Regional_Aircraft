@@ -314,8 +314,8 @@ print(x_Cr_opt_nose, 'root location')
 cg_fully_loaded = shift.cg_loaded_lst[index]
 
 
-xlemac = input.x_LEMAC_nose
-cg_loaded_nose = xlemac + cg_fully_loaded / 100 * MAC
+xlemac = x_Cr_opt_nose + input.x_lemac_rootchord
+cg_loaded_nose =  cg_fully_loaded #/ 100 * MAC + xlemac 
 x_ac_h_nose = shift.x_ac[index] + shift.lh_fix
 x_ac_v_nose = shift.x_ac[index] + shift.lv_fix
 print(cg_loaded_nose)
