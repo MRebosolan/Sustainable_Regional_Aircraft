@@ -1,7 +1,8 @@
 import numpy as np
 import input
 import Class_2_estimation as Cl2
-import scissor_plot_wing_shift
+import scissor_plot_wing_shift as sc_shift
+from CG_excursion_wing_shift import tailcone_length
 """
 Responsible person: Tobias | FOR NOW!!!! run from line 55
 
@@ -28,8 +29,8 @@ Remark(s):
 """
 #Variables that still need to be properly coupled to other code:
 z_cg  =  0.5*input.hf               # z loc cg. WRT fuselage!
-x_empennage = input.x_empennage     # x-location where fuselage diameter 
-                                    # starts decreasing (clearance angle), wrt c.g. OR wrt nose
+#tailcone_length    # x-location where fuselage diameter 
+x_tailcone = input.lf - tailcone_length                                    # starts decreasing (clearance angle), wrt c.g. OR wrt nose
                                     # If it is wrt the the c.g. change x_empennage; [Start of the aft cone]
 Cl_htail = 0.0                      # tbd
 
@@ -37,10 +38,11 @@ Cl_htail = 0.0                      # tbd
 g = input.g
 MTOW = g*Cl2.MTOM
 theta = np.radians(input.theta)                 # tip-back angle ~15 degrees
-x_cg  = scissor_plot_wing_shift.cg_loaded_nose  # x location of the cg
-x_cg_fwrd = scissor_plot_wing_shift.cg_fwd      # x location of most forward cg
-x_cg_aft = scissor_plot_wing_shift.cg_aft       # x-location of most aft cg
-x_ac_htail = scissor_plot_wing_shift.x_ac_v_nose       # distance from aerodynamic centre to nose of htail airfoil
+x_cg  = sc_shift.cg_loaded_nose     # x location of the cg
+x_cg_fwrd = sc_shift.cg_fwd*sc_shift.MAC + sc_shift.x_Cr_opt_nose         # x location of most forward cg
+x_cg_aft = sc_shift.cg_aft*sc_shift.MAC + sc_shift.x_Cr_opt_nose           # x-location of most aft cg
+x_ac_htail = sc_shift.x_ac_h_nose   # distance from aerodynamic centre to nose of htail airfoil
+print (x_ac_htail,x_cg_fwrd)
 S = Cl2.S
 rho_0 = input.rho0
 rho_to = rho_0
@@ -50,48 +52,45 @@ Vlof = 1.05*Vmin
 safetymargin_theta = np.radians(1)
 htail_sweep = input.half_chord_sweep_hor      # Sweep of the horizontal tail
 
-######## Dummy variables to test the program, as some have not yet
-# Been determined ################################################
-import Class_2_estimation as Cl2
-import input
-import numpy as np
-#import scissor_plot_wing_shift as scissor_w_shift
+# ######## Dummy variables to test the program, as some have not yet
+# # Been determined ################################################
+# import Class_2_estimation as Cl2
+# import input
+# import numpy as np
+# #import scissor_plot_wing_shift as scissor_w_shift
 
 
-safetymargin_theta = np.radians(1)
-theta = np.radians(15)
-z_cg = 0.5*(input.hf)   #z loc cg. WRT fuselage!
-x_cg_aft = 10
-x_cg = x_cg_aft-0.2
-g = input.g
-MTOW = g*Cl2.MTOM
-x_empennage = 17
-rho_to = 1.225
-S = 80
-CLmax = 2.2
-Cl_htail = 1.5
-x_ac_htail = 22
-Vmin = np.sqrt(MTOW*2/(S*rho_to*CLmax))
-Vlof = Vmin*1.05
-htail_sweep = input.half_chord_sweep_hor      # Sweep of the horizontal tail
+# safetymargin_theta = np.radians(1)
+# theta = np.radians(15)
+# z_cg = 0.5*(input.hf)   #z loc cg. WRT fuselage!
+# x_cg_aft = 10
+# x_cg = x_cg_aft-0.2
+# g = input.g
+# MTOW = g*Cl2.MTOM
 
-#################################################
+# rho_to = 1.225
+# S = 80
+# CLmax = 2.2
+# Cl_htail = 1.5
+# x_ac_htail = 22
+# Vmin = np.sqrt(MTOW*2/(S*rho_to*CLmax))
+# Vlof = Vmin*1.05
+# htail_sweep = input.half_chord_sweep_hor      # Sweep of the horizontal tail
 
-def main_lg_loc(x_empennage=x_empennage,theta=theta,z_cg=z_cg,x_cg_aft=x_cg_aft,safetymargin_theta=safetymargin_theta):
+def main_lg_loc(x_tailcone=x_tailcone,theta=theta,z_cg=z_cg,x_cg_aft=x_cg_aft,safetymargin_theta=safetymargin_theta):
     d = 0.01
     for z_fus_ground in np.arange(0,5,d):
         
         z_main_lg1 = z_fus_ground + z_cg
         x_main_lg1 = x_cg_aft + z_main_lg1*np.tan(theta+safetymargin_theta)
-        if np.tan(z_fus_ground/(x_empennage-x_main_lg1)) >= np.radians(15):
+        if np.tan(z_fus_ground/(x_tailcone-x_main_lg1)) >= np.radians(15):
             z_main_lg = np.round(z_main_lg1,4)
             x_main_lg = np.round(x_main_lg1,4)
             z_f_ground = z_fus_ground
             break
         else:
             continue
-    print ()
-    print ('[Make sure that x_empennage is wrt the nose!]')
+
     return x_main_lg,z_main_lg, z_f_ground    
 x_main_lg, z_main_lg, z_f_ground  = main_lg_loc()
 
@@ -100,13 +99,13 @@ print('The x-location of the main landing gear w.r.t. the nose is', np.round(x_m
 print ()
 print ('The distance from the ground to c.g. equals:', z_main_lg,'[m]')
 print ()
-print ('The Clearance angle is:',np.round(np.tan((z_f_ground)/(x_empennage-x_main_lg))*180/np.pi,3),'[deg]')
+print ('The Clearance angle is:',np.round(np.tan((z_f_ground)/(x_tailcone-x_main_lg))*180/np.pi,3),'[deg]')
 print ()
 
 def nose_lg_loc(x_main_lg= x_main_lg, x_cg=x_cg,MTOW=MTOW,g=g):
     dist = []
     d = 0.005
-    for distance in np.arange(-10+d,x_cg,d):
+    for distance in np.arange(0,x_cg,d):
         F_nose_lg = MTOW*g*(x_main_lg-x_cg)/(x_cg-distance)
         #Force_on_nose_lg.append(F_nose_lg)
         if F_nose_lg <= 0.08*MTOW*g or F_nose_lg >= 0.15*MTOW*g:
@@ -218,7 +217,7 @@ def energy_absorption(g=g,w_td=w_td,eta_t=eta_t,eta_s=eta_s,s_t=s_t,N_struts=N_s
 s_s_des, d_s, s_s_des_nose,d_s_n = energy_absorption()
 print ()
 print ('The required stroke length of the shock absorption is:',s_s_des,'and the required diameter equals:',d_s,'Both in meters')
-print ('Shock absorber stroke nose landing gear equals:',s_s_des_nose, 'meters, with a diameter of',d_s_n,'meters')
+print ('Shock absorber stroke nose landing gear equals:',s_s_des_nose, 'meters, with a diameter of',d_s_n,'meters. diameter for main landing gear is taken.')
 print ()
 print ('TODO: estimate volume for storage, and tire selection, material selection')
 
