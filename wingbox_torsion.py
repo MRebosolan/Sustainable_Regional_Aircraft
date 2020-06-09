@@ -90,7 +90,7 @@ def boom_moi(moment_cs, chord_length, shear_cs, t_d=t_d, number_booms=number_boo
 
             boom_area.append(area_boom)
             boom_moi.append(moi_boom)
-        elif i == len(boom_locationx)-1:
+        if i == len(boom_locationx)-1:
             boom_12dx = (boom_locationx[i - 1] - boom_locationx[i]) * chord_length
             boom_12dy = (boom_locationy[i - 1] - boom_locationy[i]) * chord_length
             boom_23dx = (1 - boom_locationx[i]) * chord_length
