@@ -42,8 +42,8 @@ V_A = inp.V_A  # Max Gust Speed knots
 v_approach = inp.v_approach                  # approach speed m/s
 V_C_TAS = inp.V_C_TAS    # True air speed cruise m/s
 
-b1 = 7.665139773630276
-b2 = b1 + 2.80788
+b1 = 7.6               #aileron inside y position , starts where flap ends
+b2 = b1 + 2.707943    # The roll rate requirement is met with a difference of 9.196882743367496e-06 [deg/s]
 
 # ---------------------------- Line Intersection Point
 
@@ -176,7 +176,7 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S, v_approach, V_C_TAS):
     print(sweep_hinge)
     SwfS = dCLmax_land/ (0.9 * dClmax_land * np.cos(sweep_hinge))
 
-    Df = widthf/2 * 1.25
+    Df = widthf/2 * 1.25 # clearance of 1/8 * fuselage diameter completely arbitrary
 
     a = -2 * (c_root - c_tip)/b
     ch = 1 - (hinge_c/100)
