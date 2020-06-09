@@ -42,8 +42,8 @@ V_A = inp.V_A  # Max Gust Speed knots
 v_approach = inp.v_approach                  # approach speed m/s
 V_C_TAS = inp.V_C_TAS    # True air speed cruise m/s
 
-b1 = 8
-b2 = 11.2
+b1 = 7.665139773630276
+b2 = b1 + 2.80788
 
 # ---------------------------- Line Intersection Point
 
@@ -176,7 +176,7 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S, v_approach, V_C_TAS):
     print(sweep_hinge)
     SwfS = dCLmax_land/ (0.9 * dClmax_land * np.cos(sweep_hinge))
 
-    Df = widthf/2 * 1
+    Df = widthf/2 * 1.25
 
     a = -2 * (c_root - c_tip)/b
     ch = 1 - (hinge_c/100)
@@ -355,7 +355,7 @@ plt.xlabel('x/c [-]')
 #plt.ylabel('y/c [-]')
 #plt.xlabel('x/c [-]')
 #
-# plt.show()
+plt.show()
 
 
 
