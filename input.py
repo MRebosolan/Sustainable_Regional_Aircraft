@@ -62,8 +62,8 @@ e_tail = 0.85                     #oswald efficiency factor of tail, TBD
 S = MTOW /wingloading             # [m2] wing area
 print('please use S from class 2')
 
-Cr = 4.3382381513873955                    # Wing root chord [m]
-Ct = 1.3420532918401407                          # Wing tip chord [m]
+Cr = 4.292998                     # Wing root chord [m]
+Ct = 1.328058                     # Wing tip chord [m]
 taper = Ct / Cr                   # wing taper ratio [-]
 b = (S * AR)**0.5                 # wingspan [m]
 

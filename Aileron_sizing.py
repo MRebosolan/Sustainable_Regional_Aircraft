@@ -26,8 +26,8 @@ Cd0 = input.Cd0_aileron                             #zero drag coefficient at wi
 #Aileron sizing input parameters: adjust the geometry of the aileron untill desired roll rate is achieved
 tau = 0.5                               #Aileron effectiveness based on control-surfce-to-lifting-surface ratio. Read off graph
 delta_a_up_max = np.radians(25)             #Change to obtain required aileron geometry, compare to reference aircraft for realistic values
-b1 = 7.665139773630276                                      #aileron inside y position
-b2 = b1 + 2.80788                                     #aileron outside y position
+b1 = 7.6                                   #aileron inside y position
+b2 = b1 + 2.707943                                     #aileron outside y position
 V = 60                                      #Speed at which roll rate is computed, stall speed is most sizing propably
 #Minor calculations with input parameters
 Sref = S - Cr * Dfus                    #Wing reference area
