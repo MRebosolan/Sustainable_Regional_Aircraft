@@ -43,7 +43,7 @@ x_v =  sc_shift.x_ac_v_nose-sc_shift.cg_loaded_nose   # input.x_v  #Distance Aer
 vtail_sweep = input.half_chord_sweep_vert # Radians
 AR_vtail = input.AR_v
 taper_v = input.taper_v
-
+print (sc_shift.x_ac_v_nose)
 
 import numpy as np
 import Class_2_estimation as Cl2
