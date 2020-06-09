@@ -196,7 +196,7 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S, v_approach, V_C_TAS):
     d_alpha = d_alpha_0 * SwfS * np.cos(sweep_hinge)
 
 
-    wing = [sweep_c4, taper, c_root, c_tip, c_mac, y_mac, t_c, dihedral,
+    wing = [sweep_c4, sweep_c2, sweep_cLE, taper, c_root, c_tip, c_mac, y_mac, t_c, dihedral,
             Cl_des, dCLmax_land, dCLmax_to]
 
     print("wing =", wing)
@@ -355,7 +355,7 @@ plt.xlabel('x/c [-]')
 #plt.ylabel('y/c [-]')
 #plt.xlabel('x/c [-]')
 #
-plt.show()
+#plt.show()
 
 
 
