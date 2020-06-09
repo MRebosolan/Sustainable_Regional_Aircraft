@@ -82,7 +82,7 @@ def swf(widthf, outboard_flap):
     return swf
 
 def trimdrag(cm_ac, tail_armh, horizontal_area):
-    Moment_ac = 0.5* rho_cruise *v_cruise**2 * cm_ac * MAC
+    Moment_ac = 0.5* rho_cruise *v_cruise**2 * cm_ac * MAC *S
     
     Lift_tail = Moment_ac/tail_armh
     CL_h = Lift_tail/(0.5* rho_cruise *v_cruise**2  * horizontal_area)
@@ -198,10 +198,12 @@ def scissor_wing_shift():
 
         cm_wing = cm0 *(AR *np.cos(sweep)**2)/(AR + 2*np.cos(sweep))
         cm_fus = -1.8 * (1 - 2.5*widthf/fuselage_lenght)*(A_fuselage*fuselage_lenght*CL0_flapped/(4*S*MAC*clalpha_acless_lowspeed))
+        cm_fus_cruise = -1.8 * (1 - 2.5*widthf/fuselage_lenght)*(A_fuselage*fuselage_lenght*CL0_flapped/(4*S*MAC*clalpha_acless))
         DCm025 = mu2*(-mu1*DClmax*cprime_c-(CL+DClmax*(1-Swf/S))*0.125*cprime_c*(cprime_c-1)) + 0.7*AR*mu3*DClmax*tan(sweep) / (1+2/AR) - CL * (0.25 - xac / MAC)
         cm_flaps = DCm025 -CL*(0.25 - xac/MAC)
         cm_nac = 0
         cm_ac = cm_wing + cm_flaps + cm_fus + cm_nac
+        cm_cruise = cm_wing+cm_fus_cruise
 
 
 
@@ -249,12 +251,12 @@ def scissor_wing_shift():
               if cg_cont[j] - cg_fwd_lst[i] > 0 or cg_stab[j] - cg_aft_lst[i] < 0:   #in this case, the cg range does not meet the stability or contorllability requirements
                 if j==0: 
                     Sh_min = ShS[j]*S
-                    Sh_min_lst.append([ShS[j],x_start_Cr[i], cg_stab[j], cg_aft_lst[i], cg_cont[j], cg_fwd_lst[i], trimdrag(cm_ac, tail_armh, Sh_min), cg_cont, cg_stab])
+                    Sh_min_lst.append([ShS[j],x_start_Cr[i], cg_stab[j], cg_aft_lst[i], cg_cont[j], cg_fwd_lst[i], trimdrag(cm_cruise, tail_armh, Sh_min), cg_cont, cg_stab])
                     print(cg_fwd_lst[i])
                     break
                 else:
                     Sh_min = ShS[j-1]*S
-                    Sh_min_lst.append([ShS[j-1],x_start_Cr[i], cg_stab[j-1], cg_aft_lst[i], cg_cont[j-1], cg_fwd_lst[i], trimdrag(cm_ac, tail_armh, Sh_min), cg_cont, cg_stab,i, cm_ac, xac])
+                    Sh_min_lst.append([ShS[j-1],x_start_Cr[i], cg_stab[j-1], cg_aft_lst[i], cg_cont[j-1], cg_fwd_lst[i], trimdrag(cm_cruise, tail_armh, Sh_min), cg_cont, cg_stab,i, cm_ac, xac])
                     break
               else:
                 continue
