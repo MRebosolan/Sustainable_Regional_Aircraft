@@ -106,9 +106,9 @@ def nose_lg_loc(x_main_lg= x_main_lg, x_cg=x_cg,MTOW=MTOW,g=g):
     dist = []
     d = 0.005
     for distance in np.arange(0,x_cg,d):
-        F_nose_lg = MTOW*(x_main_lg-x_cg)/(x_cg-distance)
+        F_nose_lg = MTOW*g*(x_main_lg-x_cg)/(x_cg-distance)
         #Force_on_nose_lg.append(F_nose_lg)
-        if F_nose_lg <= 0.08*MTOW or F_nose_lg >= 0.15*MTOW:
+        if F_nose_lg <= 0.08*MTOW*g or F_nose_lg >= 0.15*MTOW*g:
             continue
         else:
             dist.append(distance)
