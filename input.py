@@ -29,24 +29,25 @@ T, P, rho_c, a = atmosphere_calculator(Cruise_alt*1000)
 #------------------------------------------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------------------------------------------
-MTOM = 32846.208787               # [kg]  #maximum takeoff mass calculated in class 2
+MTOM = 28083                      # [kg]  #maximum takeoff mass calculated in class 2
 print('please use MTOM from class 2')
-OEW = 22981.846450                # kg calculated in class 2
+OEW = 18332                # kg calculated in class 2
 print('please use OEW from class 2')
 MTOW = MTOM * g                   # [N] Make sure it is in Newtons!
-MLW = 25000 * g                   # maximum landing weight [N], to be calculated with landing requirement and stall requirement
+MLW = MTOW                   # maximum landing weight [N], same as MTOW because we burn low fuel
 
 
 
 #Wing and Empennage parameters
 #------------------------------------------------------------------------------------------------------------------
 t_over_c = 0.134                  # estimate, [] , maximum thickness over chord ratio for main wing
-#------------------------------------------------------------------------------------------------------------------
 AR = 8                            # estimate, [-], Aspect ratio
-half_sweep = radians(27)          # estimate, [degrees], sweep at half chord for main wing
-LE_sweep = np.radians(25)         # Leading egde wing sweepTBD, assumed backward let Rick know if it turns out to be forward sweep, calculate with Adsee formula 
-quarter_sweep = np.radians(26)
-wingloading = 4375.84             # [N/m2] estimate
+wingloading = 4375.84             # [N/m2] estimate 
+#------------------------------------------------------------------------------------------------------------------
+half_sweep = 0.663         # estimate, [degrees], sweep at half chord for main wing
+LE_sweep =0.7485         # Leading egde wing sweepTBD, 
+quarter_sweep = 0.707   
+
 S = MTOW /wingloading             # [m2] wing area
 print('please use S from class 2')
 
