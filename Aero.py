@@ -305,7 +305,7 @@ plt.plot(xcoord1[0],ycoord1[0],color='r')
 plt.plot(xcoord2[0],camline[0],'--',color='r')
 plt.plot(xcoord2[0],ycoord2[0],color='r')
 plt.xlim(0,1)
-plt.ylim(-0.3,0.3)
+plt.ylim(-0.4,0.4)
 plt.text(0.0,0.0,'LE')
 plt.text(1.0,0.0,'TE')
 plt.ylabel('y/c [-]')
@@ -353,7 +353,7 @@ plt.xlabel('x/c [-]')
 #plt.ylabel('y/c [-]')
 #plt.xlabel('x/c [-]')
 #
-plt.show()
+#plt.show()
 
 
 

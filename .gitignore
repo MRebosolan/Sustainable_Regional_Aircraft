@@ -1,4 +1,7 @@
-.idea/misc.xml
-*.pyc
 *.pyc
 __pycache__/
+.idea/
+venv/
+venv2/
+__pycache__/Envelope.cpython-37.pyc
+__pycache__/Envelope.cpython-37.pyc
