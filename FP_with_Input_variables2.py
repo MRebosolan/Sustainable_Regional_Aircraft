@@ -325,11 +325,11 @@ def landing_distances(MLW, S, rho_land, CLmax, gamma_app, h_s, CD_land, CL_land,
     required_field_length = 10 / 6 * x_gr
     x_tot = x_airborne + x_gr
     
-    return x_airborne, x_trans, x_brake, x_gr, x_tot, required_field_length, V_bar
+    return x_airborne, x_trans, x_brake, x_gr, x_tot, required_field_length, V_bar, V_app
 
-x_airborne, x_trans, x_brake, x_gr, x_tot, required_field_length, V_bar = landing_distances(MLW, S, rho_land, CLmax, gamma_app, h_s, CD_land, CL_land, T_rev, mu_brake)
+x_airborne, x_trans, x_brake, x_gr, x_tot, required_field_length, V_bar, Vap = landing_distances(MLW, S, rho_land, CLmax, gamma_app, h_s, CD_land, CL_land, T_rev, mu_brake)
 #print(landing_distances(MLW, S, rho_land, CLmax, gamma_app, h_s, CD_land, CL_land, T_rev, mu_brake, g=g))
-   
+print('Approach speed: ', Vap)
 
 #---------------------------------------------------------
 #Cruise economics
