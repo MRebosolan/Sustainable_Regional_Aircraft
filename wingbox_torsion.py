@@ -25,7 +25,7 @@ for i in range(0, 103):
 xcoord1 = xcoord1[::-1]
 ycoord1 = ycoord1[::-1]
 ycoord2 = ycoord2[::-1]
-print(ycoord1)
+
 plt.figure(1)
 plt.grid(True, which="major", color="#999999")
 plt.grid(True, which="minor", color="#DDDDDD", ls="--")
@@ -62,7 +62,7 @@ def boom_moi(moment_cs, chord_length, t_d=t_d, number_booms=number_booms):
     boom_moi = []
     stress_boom_upper = []
     stress_boom_lower = []
-
+    boom_deltashear = []
 
     #make airfoil symmetrical and remove negative values at end
 
@@ -128,7 +128,31 @@ def boom_moi(moment_cs, chord_length, t_d=t_d, number_booms=number_booms):
             stress_boom_upper.append(boom_stress)
             stress_boom_lower.append(-boom_stress)
 
-    return moi_boom_total, stress_boom_upper, stress_boom_lower
+    for i in range(len(boom_locationx-1)):
+        if i > 0:
+            deltashear_boom = shear_cs * boom_area[i] * boom_locationy[i] / moi_boom_total
+            boom_deltashear.append(deltashear_boom)
+
+    shear_flow1 = []
+    shear_flow2 = []
+
+    shearflow = 0
+    shear_flow1.append(shearflow)
+
+    for i in range(len(boom_locationx[int(number_booms/ 3):])):
+        shearflow = shearflow + boom_deltashear[int(number_boom / 3) + i]
+        shear_flow1.append(shearflow)
+
+    for i in range(len(boom_locationx[:int(number_booms / 3)]) - 1):
+        shearflow = shearflow + boom_deltashear[i]
+        shear_flow2.append(shearflow)
+
+    shear_flow = shear_flow2 + shear_flow1
+    shear_stress_upper = np.array(shear_flow) / t_f
+    shear_stress_lower = -shear_stress_upper
+
+
+    return moi_boom_total, stress_boom_upper, stress_boom_lower, shear_stress_upper, shear_stress_lower
 
 
 #-----------------ITERATE OVER WINGSPAN-----------------
@@ -177,10 +201,34 @@ for i, y in enumerate(spanwise_array):
 #-----------------------------------------------------------------------------------------------------------
 
 # Find the shear flows
+# boom_deltashear = []
+# for i in range(len(boom_locationx)):
+#     deltashear_boom = shear_cs*boom_area[i]*boom_locationy[i]/moi_boom_total
+#     boom_deltashear.append(deltashear_boom)
+#
+# # print(boom_deltashear)
+#
+#
+# shear_flow1 = []
+# shear_flow2 = []
+# shear_stress = []
+#
+# shearflow = 0
+# shear_flow1.append(shearflow)
+#
+# for i in range(len(boom_locationx[int(number_boom/4):])):
+#     shearflow = shearflow + boom_deltashear[int(number_boom/4)+i]
+#     shear_flow1.append(shearflow)
+#
+# for i in range(len(boom_locationx[:int(number_boom/4)])-1):
+#     shearflow = shearflow + boom_deltashear[i]
+#     shear_flow2.append(shearflow)
+#
+# shear_flow = shear_flow2+shear_flow1
+# shear_stress = np.array(shear_flow)/t_f
+#
 
-
-
-
+#-----------------------------------------------------------------------------------------------------------
 
 
 # Finally look at torsion
@@ -243,3 +291,4 @@ print(lift, weight, engine_weight, x_lift, x_weight, x_engine, M_y, R_z, x_array
 print(internal_y_bending_moment(x_array[-1]))
 plt.plot(y_array[2:], M_y_array )
 #plt.show()
+
