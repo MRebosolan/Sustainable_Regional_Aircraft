@@ -55,7 +55,7 @@ ct = input.Ct
 cr = input.Cr
 taper = input.taper
 sweep_LE = input.LE_sweep
-C_lh_max = -0.8                                 #adjustable tail, from SEAD slides
+C_lh_max = input.cl_htail_max                                 #adjustable tail, from SEAD slides
 lh_fix = input.lh                   #distance between wing and horizontal tail aerodynamic centers
 ln = 0.25 * MAC - input.x_engine_start        # distance between front of engine to quarter chord mac
 z_position_horizontal = input.z_position_horizontal
@@ -315,7 +315,7 @@ cg_fully_loaded = shift.cg_loaded_lst[index]
 
 
 xlemac = x_Cr_opt_nose + input.x_lemac_rootchord
-cg_loaded_nose =  cg_fully_loaded #/ 100 * MAC + xlemac 
+cg_loaded_nose =  cg_fully_loaded #this was first converted, but should actually be like this 
 x_ac_h_nose = shift.x_ac[index] + shift.lh_fix
 x_ac_v_nose = shift.x_ac[index] + shift.lv_fix
 print(cg_loaded_nose)

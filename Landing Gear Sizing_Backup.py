@@ -32,7 +32,7 @@ z_cg  =  0.5*input.hf               # z loc cg. WRT fuselage!
 #tailcone_length    # x-location where fuselage diameter 
 x_tailcone = input.lf - tailcone_length                                    # starts decreasing (clearance angle), wrt c.g. OR wrt nose
                                     # If it is wrt the the c.g. change x_empennage; [Start of the aft cone]
-Cl_htail = 0.0                      # tbd
+Cl_htail = input.cl_htail_max                     # tbd
 
 #Variables that will not change
 g = input.g
@@ -144,7 +144,8 @@ def lat_pos_lg(z_main_lg=z_main_lg,dist=dist,x_main_lg=x_main_lg,x_cg_aft=x_cg_a
 y_lg_list, b_n = lat_pos_lg(z_main_lg)
 
 def req_htail_area(x_main_lg,Cl_htail=Cl_htail,x_ac_htail=x_ac_htail,x_cg = x_cg,rho_to=rho_to,Vlof=Vlof,MTOW=MTOW,g=g,htail_sweep=htail_sweep):
-    htail_area = (x_main_lg-x_cg)/(x_ac_htail-x_main_lg)*MTOW/(0.5*rho_to*(Vlof/np.cos(htail_sweep))**2*Cl_htail)
+    
+    htail_area = -(x_main_lg-x_cg)/(x_ac_htail-x_main_lg)*MTOW/(0.5*rho_to*(Vlof/np.cos(htail_sweep))**2*Cl_htail)
     return htail_area
 htail_area = req_htail_area(x_main_lg)
 
