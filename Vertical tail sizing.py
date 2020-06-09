@@ -23,7 +23,6 @@ Vbar_v (Vertical tail volume) and Sr_over_Sv (Rudder area over Vtail area
 have both been determined from statistics, the excel file can be found on 
 the google drive Final report -> stability and control
 """
-
 S =   Cl2.S                # input.S  [m]
 b =   Cl2.b                # input.b  [m]
 T_OEI = 0.5*Cl2.Tto        # Thrust at 1 engine inoperative, 
