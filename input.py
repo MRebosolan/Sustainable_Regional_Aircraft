@@ -201,8 +201,8 @@ CD0_landGD = CD0 + .02 + .065      # [-], to be refined as this comes from roska
 Trev = 50000                       # [N], maximum thrust reverse force applied during braking
 c_t = 0.0002                       # [1/s] specific fuel consumption, to be refined
 
-v_approach = 66                    # m/s
-mach_app = v_approach/340.3        # RICK FIX THIS
+v_approach = 81.13                # m/s, update from flight performance
+mach_app = v_approach/340.3        # 
 V_to = 1.05 * ((MTOW/S)*(2/1.225)*(1/CLmax_to))**0.5 #takeoff speed
 
 
