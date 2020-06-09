@@ -35,13 +35,15 @@ AR = inp.AR
 MTOW = inp.MTOW
 widthf = inp.widthf
 
-V_C = Envelope.V_C  # Cruise Speed
-V_D = Envelope.V_D  # Dive Speed
-V_S = Envelope.V_S  # Stall Speed
-V_A = Envelope.V_A  # Max Gust Speed
+V_C = inp.V_C  # Cruise Speed knots
+V_D = inp.V_dive  # Dive Speed knots
+V_S = inp.V_S  # Stall Speed knots
+V_A = inp.V_A  # Max Gust Speed knots
+v_approach = inp.v_approach                  # approach speed m/s
+V_C_TAS = inp.V_C_TAS    # True air speed cruise m/s
 
-b1 = 8
-b2 = 11.2
+b1 = 7.6               #aileron inside y position , starts where flap ends
+b2 = b1 + 2.707943    # The roll rate requirement is met with a difference of 9.196882743367496e-06 [deg/s]
 
 # ---------------------------- Line Intersection Point
 
@@ -68,7 +70,7 @@ def chord_length(c_root, c_tip, x, b):
 
 # --------------------------------- Wing Geometry
 
-def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S):
+def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S, v_approach, V_C_TAS):
 
     # Wing sweep, also consider M_crit?
     if M_cruise >= 0.7:
@@ -76,7 +78,7 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S):
     else:
         sweep_c4 = np.arccos(1)
 
-    sweep_c4 = 36.86989765 * np.pi / 180 # from airfoil selection
+    #sweep_c4 = 40.535802011 * np.pi / 180 # from airfoil selection
 
     print("Sweep =", sweep_c4 * 180 / np.pi)
 
@@ -94,7 +96,7 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S):
     CL_cruise = MTOW/(q*S)
     sweep_c2 = np.arctan(np.tan(sweep_c4) - 4/AR * ((50-25)/100 * (1 - taper)/(1 + taper))) #* 180/np.pi
     t_c = min((np.cos(sweep_c2)**3 * (0.935 - (M_cruise + 0.03) * np.cos(sweep_c2)) - 0.115 * CL_cruise**1.5) \
-          / (np.cos(sweep_c2)**2), 0.18) #Upper limit for wing thickness
+          / (np.cos(sweep_c2)**2), 0.18)  #Upper limit for wing thickness
 
     print("t/c = ", t_c)
 
@@ -131,16 +133,19 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S):
     mu = 1.458e-6 * T_alt**1.5 / (T_alt + 110.4)
     rho = p_cruise / (287 * T_alt)
 
-    Re = (rho * V_C * 0.514444 * c_mac) / mu
+    Re = (rho * V_C_TAS * c_mac) / mu
+    M_cruise2 = V_C_TAS / np.sqrt(1.4 * 287 * T_alt)
+    Re2 = (rho * M_cruise * np.sqrt(1.4 * 287 * T_alt)  * c_mac) / mu
+    print("V_C=", V_C, V_C_TAS)
 
-    Re_sea = (1.225 * V_S * 0.514444 * c_mac) / 1.789e-5
+    Re_sea = (1.225 * 66 * c_mac) / 1.802e-5
 
-    M_sea = V_S / np.sqrt(1.4*287*288)
-    print("M_sea = ", M_sea)
+    M_sea = v_approach / np.sqrt(1.4*287*288)
+    print("M_sea = ", M_sea, M_cruise2)
 
-    print("Re =", Re, Re_sea)
-    # With CL_max = 1.8 we could take airfoil NACA 63(3)-618 (supercritical with 0.18 t/c)
-
+    print("Re =", Re, Re2, Re_sea)
+    # With CL_max = 1.8
+    # CLmax = 2.464
     # CLmax take-off: 2.1 , Clmax landing: 2.25
     #     # target for take-off: Delta CLmax = 0.3
     #     # target for landing: Delta CLmax = 0.45
@@ -150,6 +155,14 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S):
     beta = np.sqrt(1 - M_cruise**2)
     CLalpha = (2*np.pi*AR)/ (2 + np.sqrt(4 + (AR * beta / k) * (1 + (np.tan(sweep_c2)**2/beta**2))))
 
+    alpha0L = -3.667/180 * np.pi
+
+    #CL = CLalpha * (alpha - alpha0L)
+
+    alpha_trim = CL_des / CLalpha + alpha0L
+
+    CLmax_corrected = 0.74 * 2.432
+    print("CLmax_corrected =", CLmax_corrected)
 
     dCLmax_land = 0.45
     dCLmax_to   = 0.3
@@ -163,7 +176,7 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S):
     print(sweep_hinge)
     SwfS = dCLmax_land/ (0.9 * dClmax_land * np.cos(sweep_hinge))
 
-    Df = widthf/2 * 1
+    Df = widthf/2 * 1.25 # clearance of 1/8 * fuselage diameter completely arbitrary
 
     a = -2 * (c_root - c_tip)/b
     ch = 1 - (hinge_c/100)
@@ -183,8 +196,7 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S):
     d_alpha = d_alpha_0 * SwfS * np.cos(sweep_hinge)
 
 
-
-    wing = [sweep_c4, taper, c_root, c_tip, c_mac, y_mac, t_c, dihedral,
+    wing = [sweep_c4, sweep_c2, sweep_cLE, taper, c_root, c_tip, c_mac, y_mac, t_c, dihedral,
             Cl_des, dCLmax_land, dCLmax_to]
 
     print("wing =", wing)
@@ -206,12 +218,10 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S):
     ail   = [x_ail,y_ail]
     hld   = [x_hld, y_hld]
 
-
-
     return wing, geom,cross1, hld, ail, x2
 
 
-wing, geom, cross1, hld, ail, x2 = wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S)
+wing, geom, cross1, hld, ail, x2 = wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S, v_approach, V_C_TAS)
 
 
 #----------------------------- .txt File Airfoil Coordinates
@@ -277,15 +287,15 @@ for i in range(0,len(xcoord1[3])):
 
 #----------------------------- Plotting
 
-#plt.figure(0)
-#plt.plot(geom[0], geom[1], geom[2], geom[3], hld[0], hld[1],ail[0],ail[1])
-#plt.text(cross1[0],cross1[1],'Fuselage Wall Line')
-#plt.grid(True,which="major",color="#999999")
-#plt.grid(True,which="minor",color="#DDDDDD",ls="--")
-#plt.minorticks_on()
-#plt.ylim(-12.0,2.0)
-#plt.ylabel('x [m]')
-#plt.xlabel('y [m]')
+plt.figure(0)
+plt.plot(geom[0], geom[1], geom[2], geom[3], hld[0], hld[1],ail[0],ail[1])
+plt.text(cross1[0],cross1[1],'Fuselage Wall Line')
+plt.grid(True,which="major",color="#999999")
+plt.grid(True,which="minor",color="#DDDDDD",ls="--")
+plt.minorticks_on()
+plt.ylim(-12.0,2.0)
+plt.ylabel('x [m]')
+plt.xlabel('y [m]')
 #
 plt.figure(1)
 plt.grid(True,which="major",color="#999999")
@@ -295,7 +305,7 @@ plt.plot(xcoord1[0],ycoord1[0],color='r')
 plt.plot(xcoord2[0],camline[0],'--',color='r')
 plt.plot(xcoord2[0],ycoord2[0],color='r')
 plt.xlim(0,1)
-plt.ylim(-0.3,0.3)
+plt.ylim(-0.4,0.4)
 plt.text(0.0,0.0,'LE')
 plt.text(1.0,0.0,'TE')
 plt.ylabel('y/c [-]')
