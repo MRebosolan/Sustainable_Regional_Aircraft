@@ -40,12 +40,12 @@ MLW = MTOW                   # maximum landing weight [N], same as MTOW because 
 
 #Wing and Empennage parameters
 #------------------------------------------------------------------------------------------------------------------
-t_over_c = 0.134                  # estimate, [] , maximum thickness over chord ratio for main wing
+t_over_c = 0.14                  # estimate, [] , maximum thickness over chord ratio for main wing
 AR = 8                            # estimate, [-], Aspect ratio
 
-half_sweep = np.radians(27)          # estimate, [degrees], sweep at half chord for main wing
-LE_sweep = np.radians(25)         # Leading egde wing sweepTBD, assumed backward let Rick know if it turns out to be forward sweep, calculate with Adsee formula 
-quarter_sweep = np.radians(26)
+half_sweep = 0.3985698252407915         # estimate, [degrees], sweep at half chord for main wing
+LE_sweep = 0.5051251603789663         # Leading egde wing sweepTBD, assumed backward let Rick know if it turns out to be forward sweep, calculate with Adsee formula
+quarter_sweep = 0.45322773323204535
 wingloading = 4375.84             # [N/m2] estimate
 
 wingloading = 4375.84             # [N/m2] estimate 
@@ -54,16 +54,16 @@ AR_v = 1.7                        #AR vtail; 1< AR_v<2
 taper_v = 0.6                     #taper ratio vertical tail
 e_tail = 0.85                     #oswald efficiency factor of tail, TBD
 #------------------------------------------------------------------------------------------------------------------
-half_sweep = 0.663         # estimate, [degrees], sweep at half chord for main wing
-LE_sweep =0.7485         # Leading egde wing sweepTBD, 
-quarter_sweep = 0.707   
+# half_sweep = 0.663         # estimate, [degrees], sweep at half chord for main wing
+# LE_sweep =0.7485         # Leading egde wing sweepTBD,
+# quarter_sweep = 0.707
 
 
 S = MTOW /wingloading             # [m2] wing area
 print('please use S from class 2')
 
-Cr = 4.49                       # Wing root chord [m]
-Ct = 1.16                          # Wing tip chord [m]
+Cr = 4.3382381513873955                    # Wing root chord [m]
+Ct = 1.3420532918401407                          # Wing tip chord [m]
 taper = Ct / Cr                   # wing taper ratio [-]
 b = (S * AR)**0.5                 # wingspan [m]
 

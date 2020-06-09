@@ -218,8 +218,6 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S, v_approach, V_C_TAS):
     ail   = [x_ail,y_ail]
     hld   = [x_hld, y_hld]
 
-
-
     return wing, geom,cross1, hld, ail, x2
 
 
