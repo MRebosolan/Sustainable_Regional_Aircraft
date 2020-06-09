@@ -42,6 +42,7 @@ x_cg  = sc_shift.cg_loaded_nose     # x location of the cg
 x_cg_fwrd = sc_shift.cg_fwd*sc_shift.MAC + sc_shift.x_Cr_opt_nose         # x location of most forward cg
 x_cg_aft = sc_shift.cg_aft*sc_shift.MAC + sc_shift.x_Cr_opt_nose           # x-location of most aft cg
 x_ac_htail = sc_shift.x_ac_h_nose   # distance from aerodynamic centre to nose of htail airfoil
+print (x_ac_htail,x_cg_fwrd)
 S = Cl2.S
 rho_0 = input.rho0
 rho_to = rho_0
@@ -75,8 +76,6 @@ htail_sweep = input.half_chord_sweep_hor      # Sweep of the horizontal tail
 # Vmin = np.sqrt(MTOW*2/(S*rho_to*CLmax))
 # Vlof = Vmin*1.05
 # htail_sweep = input.half_chord_sweep_hor      # Sweep of the horizontal tail
-
-#################################################
 
 def main_lg_loc(x_tailcone=x_tailcone,theta=theta,z_cg=z_cg,x_cg_aft=x_cg_aft,safetymargin_theta=safetymargin_theta):
     d = 0.01
@@ -218,7 +217,7 @@ def energy_absorption(g=g,w_td=w_td,eta_t=eta_t,eta_s=eta_s,s_t=s_t,N_struts=N_s
 s_s_des, d_s, s_s_des_nose,d_s_n = energy_absorption()
 print ()
 print ('The required stroke length of the shock absorption is:',s_s_des,'and the required diameter equals:',d_s,'Both in meters')
-print ('Shock absorber stroke nose landing gear equals:',s_s_des_nose, 'meters, with a diameter of',d_s_n,'meters')
+print ('Shock absorber stroke nose landing gear equals:',s_s_des_nose, 'meters, with a diameter of',d_s_n,'meters. diameter for main landing gear is taken.')
 print ()
 print ('TODO: estimate volume for storage, and tire selection, material selection')
 
