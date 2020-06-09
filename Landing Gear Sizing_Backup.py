@@ -47,7 +47,7 @@ S = Cl2.S
 rho_0 = input.rho0
 rho_to = rho_0
 CLmax = input.CLmax_land 
-Vmin = np.sqrt(MTOW*g * 2 /(S * rho_to * CLmax))
+Vmin = np.sqrt(MTOW * 2 /(S * rho_to * CLmax))
 Vlof = 1.05*Vmin
 safetymargin_theta = np.radians(1)
 htail_sweep = input.half_chord_sweep_hor      # Sweep of the horizontal tail
@@ -143,7 +143,7 @@ def lat_pos_lg(z_main_lg=z_main_lg,dist=dist,x_main_lg=x_main_lg,x_cg_aft=x_cg_a
 
 y_lg_list, b_n = lat_pos_lg(z_main_lg)
 
-def req_htail_area(x_main_lg,Cl_htail=Cl_htail,x_ac_htail=x_ac_htail,x_cg = x_cg,rho_to=rho_to,Vlof=Vlof,MTOW=MTOW,g=g,htail_sweep=htail_sweep):
+def req_htail_area(x_main_lg,Cl_htail=Cl_htail,x_ac_htail=x_ac_htail,x_cg = x_cg_fwrd,rho_to=rho_to,Vlof=Vlof,MTOW=MTOW,htail_sweep=htail_sweep):
     
     htail_area = -(x_main_lg-x_cg)/(x_ac_htail-x_main_lg)*MTOW/(0.5*rho_to*(Vlof/np.cos(htail_sweep))**2*Cl_htail)
     return htail_area

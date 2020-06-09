@@ -210,7 +210,7 @@ def scissor_wing_shift():
         ShS = np.arange(0.0,100,0.005)
    
         stabilityxcg_cruise = xac_cruise + ShS*(clalpha_tail/clalpha_acless)*(1-downwash)*speedratio*tail_armh/MAC -0.05
-        controlxcg = xac - cm_ac/CL + ShS*(C_lh_max/CL)*(tail_armh/MAC)*speedratio
+        controlxcg = xac - cm_ac/CL + ShS*(C_lh_max/CL)*(tail_armh/MAC)*speedratio +0.05
 
         cg_stab = stabilityxcg_cruise[::-1]         #Reverse array for looping over it
         cg_cont = controlxcg[::-1]
@@ -254,7 +254,7 @@ def scissor_wing_shift():
                     break
                 else:
                     Sh_min = ShS[j-1]*S
-                    Sh_min_lst.append([ShS[j-1],x_start_Cr[i], cg_stab[j-1], cg_aft_lst[i], cg_cont[j-1], cg_fwd_lst[i], trimdrag(cm_ac, tail_armh, Sh_min), cg_cont, cg_stab,i])
+                    Sh_min_lst.append([ShS[j-1],x_start_Cr[i], cg_stab[j-1], cg_aft_lst[i], cg_cont[j-1], cg_fwd_lst[i], trimdrag(cm_ac, tail_armh, Sh_min), cg_cont, cg_stab,i, cm_ac, xac])
                     break
               else:
                 continue
@@ -274,13 +274,15 @@ def scissor_wing_shift():
     controlplot = minimum[7] 
     stabilityplot = minimum[8]
     index = minimum[9]
+    momentcoefficient = minimum[10]
+    aerodynamiccenter = minimum[11]
     
     
     
     
     
     
-    return Sh_min_lst, min_Sh_over_S, x_Cr_opt_nose, cg_stab_lim, cg_aft, cg_cont_lim, cg_fwd, Dtrim, Sh_min, controlplot, stabilityplot, ShS,index
+    return Sh_min_lst, min_Sh_over_S, x_Cr_opt_nose, cg_stab_lim, cg_aft, cg_cont_lim, cg_fwd, Dtrim, Sh_min, controlplot, stabilityplot, ShS,index, momentcoefficient, aerodynamiccenter
 
 
 
@@ -290,7 +292,9 @@ def scissorplot(stabilityplot,controlplot, ShS, frontcg, aftcg, Sh_over_S):
     plt.figure()
     plt.plot(stabilityplot*100 +5,ShS, color = 'grey', label = 'Neutral stability')
     plt.plot(stabilityplot*100,ShS, color = 'b', label = 'Stability aft limit')
-    plt.plot(controlplot*100,ShS, color = 'orange', label = 'Control fwd limit')
+    plt.plot(controlplot*100,ShS, color = 'orange', label = 'Control margin')
+    plt.plot(controlplot*100 -5,ShS, color = 'grey', label = 'Control fwd limit')
+
     plt.plot([frontcg*100,aftcg*100], [Sh_over_S, Sh_over_S], color = 'r', marker = '|', label = 'CG range')
     plt.ylim(-0.05,0.4)
     plt.xlim(0, 100)
@@ -304,7 +308,7 @@ def scissorplot(stabilityplot,controlplot, ShS, frontcg, aftcg, Sh_over_S):
 
 
 
-Sh_min_lst, min_Sh_over_S, x_Cr_opt_nose, cg_stab_lim, cg_aft, cg_cont_lim, cg_fwd, Dtrim, Sh_min, controlplot, stabilityplot, ShS, index = scissor_wing_shift()
+Sh_min_lst, min_Sh_over_S, x_Cr_opt_nose, cg_stab_lim, cg_aft, cg_cont_lim, cg_fwd, Dtrim, Sh_min, controlplot, stabilityplot, ShS, index, momentcoefficient, aerodynamiccenter = scissor_wing_shift()
 scissorplot(stabilityplot, controlplot, ShS, cg_fwd, cg_aft, min_Sh_over_S)
 print(min_Sh_over_S, 'sh over s')
 print(x_Cr_opt_nose, 'root location')
