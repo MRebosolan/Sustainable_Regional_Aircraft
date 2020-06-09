@@ -1,7 +1,7 @@
 import numpy as np
 import input
 import Class_2_estimation as Cl2
-import scissor_plot_wing_shift
+import scissor_plot_wing_shift as sc_shift
 """
 Responsible person: Tobias | FOR NOW!!!! run from line 55
 
@@ -37,10 +37,10 @@ Cl_htail = 0.0                      # tbd
 g = input.g
 MTOW = g*Cl2.MTOM
 theta = np.radians(input.theta)                 # tip-back angle ~15 degrees
-x_cg  = scissor_plot_wing_shift.cg_loaded_nose  # x location of the cg
-x_cg_fwrd = scissor_plot_wing_shift.cg_fwd      # x location of most forward cg
-x_cg_aft = scissor_plot_wing_shift.cg_aft       # x-location of most aft cg
-x_ac_htail = scissor_plot_wing_shift.x_ac_v_nose       # distance from aerodynamic centre to nose of htail airfoil
+x_cg  = sc_shift.cg_loaded_nose     # x location of the cg
+x_cg_fwrd = sc_shift.cg_fwd         # x location of most forward cg
+x_cg_aft = sc_shift.cg_aft          # x-location of most aft cg
+x_ac_htail = sc_shift.x_ac_h_nose   # distance from aerodynamic centre to nose of htail airfoil
 S = Cl2.S
 rho_0 = input.rho0
 rho_to = rho_0

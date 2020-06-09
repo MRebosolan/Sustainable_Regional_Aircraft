@@ -324,3 +324,4 @@ MTOM = to_kg(MTOW)
 MTOW = 9.81*MTOM
 OEM = OEWINPUT
 Tto = T_TO_newton
+print (S,b**2/8)
