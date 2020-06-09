@@ -2,6 +2,7 @@ import numpy as np
 import input
 import Class_2_estimation as Cl2
 import scissor_plot_wing_shift as sc_shift
+import cabindesign
 """
 Responsible person: Tobias | FOR NOW!!!! run from line 55
 
@@ -28,7 +29,7 @@ Remark(s):
 """
 #Variables that still need to be properly coupled to other code:
 z_cg  =  0.5*input.hf               # z loc cg. WRT fuselage!
-x_empennage = input.x_empennage     # x-location where fuselage diameter 
+x_empennage = cabindesign.tailcone_length     # x-location where fuselage diameter 
                                     # starts decreasing (clearance angle), wrt c.g. OR wrt nose
                                     # If it is wrt the the c.g. change x_empennage; [Start of the aft cone]
 Cl_htail = 0.0                      # tbd
@@ -41,6 +42,7 @@ x_cg  = sc_shift.cg_loaded_nose     # x location of the cg
 x_cg_fwrd = sc_shift.cg_fwd         # x location of most forward cg
 x_cg_aft = sc_shift.cg_aft          # x-location of most aft cg
 x_ac_htail = sc_shift.x_ac_h_nose   # distance from aerodynamic centre to nose of htail airfoil
+print (x_ac_htail,x_cg_fwrd)
 S = Cl2.S
 rho_0 = input.rho0
 rho_to = rho_0
@@ -52,6 +54,7 @@ htail_sweep = input.half_chord_sweep_hor      # Sweep of the horizontal tail
 
 ######## Dummy variables to test the program, as some have not yet
 # Been determined ################################################
+"""" 
 import Class_2_estimation as Cl2
 import input
 import numpy as np
@@ -74,7 +77,7 @@ x_ac_htail = 22
 Vmin = np.sqrt(MTOW*2/(S*rho_to*CLmax))
 Vlof = Vmin*1.05
 htail_sweep = input.half_chord_sweep_hor      # Sweep of the horizontal tail
-
+"""
 #################################################
 
 def main_lg_loc(x_empennage=x_empennage,theta=theta,z_cg=z_cg,x_cg_aft=x_cg_aft,safetymargin_theta=safetymargin_theta):
@@ -218,7 +221,7 @@ def energy_absorption(g=g,w_td=w_td,eta_t=eta_t,eta_s=eta_s,s_t=s_t,N_struts=N_s
 s_s_des, d_s, s_s_des_nose,d_s_n = energy_absorption()
 print ()
 print ('The required stroke length of the shock absorption is:',s_s_des,'and the required diameter equals:',d_s,'Both in meters')
-print ('Shock absorber stroke nose landing gear equals:',s_s_des_nose, 'meters, with a diameter of',d_s_n,'meters')
+print ('Shock absorber stroke nose landing gear equals:',s_s_des_nose, 'meters, with a diameter of',d_s_n,'meters. diameter for main landing gear is taken.')
 print ()
 print ('TODO: estimate volume for storage, and tire selection, material selection')
 
