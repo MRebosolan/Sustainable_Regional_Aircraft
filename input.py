@@ -218,6 +218,8 @@ zero_lift_angle = np.radians(4)    # degrees, PRELIMINARY estimate, TBD from air
 z_position_wing = hf - 0.6         # m, PRELIMINARY, still requires thought, for downwash calc
 z_position_horizontal = zh + hf    # where tail is positioned, for downwash calc
 
+cl_htail_max  = -0.8                #estimate coming from sead: maximum lift coefficient of tail
+
 
 
 #Parameters regarding Class I      # Parameters about class 1 weight estimation, ask Jari
