@@ -78,7 +78,7 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S, v_approach, V_C_TAS):
     else:
         sweep_c4 = np.arccos(1)
 
-    sweep_c4 = 40.535802011 * np.pi / 180 # from airfoil selection
+    #sweep_c4 = 40.535802011 * np.pi / 180 # from airfoil selection
 
     print("Sweep =", sweep_c4 * 180 / np.pi)
 
@@ -289,15 +289,15 @@ for i in range(0,len(xcoord1[3])):
 
 #----------------------------- Plotting
 
-#plt.figure(0)
-#plt.plot(geom[0], geom[1], geom[2], geom[3], hld[0], hld[1],ail[0],ail[1])
-#plt.text(cross1[0],cross1[1],'Fuselage Wall Line')
-#plt.grid(True,which="major",color="#999999")
-#plt.grid(True,which="minor",color="#DDDDDD",ls="--")
-#plt.minorticks_on()
-#plt.ylim(-12.0,2.0)
-#plt.ylabel('x [m]')
-#plt.xlabel('y [m]')
+plt.figure(0)
+plt.plot(geom[0], geom[1], geom[2], geom[3], hld[0], hld[1],ail[0],ail[1])
+plt.text(cross1[0],cross1[1],'Fuselage Wall Line')
+plt.grid(True,which="major",color="#999999")
+plt.grid(True,which="minor",color="#DDDDDD",ls="--")
+plt.minorticks_on()
+plt.ylim(-12.0,2.0)
+plt.ylabel('x [m]')
+plt.xlabel('y [m]')
 #
 plt.figure(1)
 plt.grid(True,which="major",color="#999999")
@@ -355,7 +355,7 @@ plt.xlabel('x/c [-]')
 #plt.ylabel('y/c [-]')
 #plt.xlabel('x/c [-]')
 #
-#plt.show()
+# plt.show()
 
 
 

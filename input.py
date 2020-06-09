@@ -29,24 +29,32 @@ T, P, rho_c, a = atmosphere_calculator(Cruise_alt*1000)
 #------------------------------------------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------------------------------------------
-MTOM = 32846.208787               # [kg]  #maximum takeoff mass calculated in class 2
+MTOM = 28083                      # [kg]  #maximum takeoff mass calculated in class 2
 print('please use MTOM from class 2')
-OEW = 22981.846450                # kg calculated in class 2
+OEW = 18332                # kg calculated in class 2
 print('please use OEW from class 2')
 MTOW = MTOM * g                   # [N] Make sure it is in Newtons!
-MLW = 25000 * g                   # maximum landing weight [N], to be calculated with landing requirement and stall requirement
+MLW = MTOW                   # maximum landing weight [N], same as MTOW because we burn low fuel
 
 
 
 #Wing and Empennage parameters
 #------------------------------------------------------------------------------------------------------------------
 t_over_c = 0.134                  # estimate, [] , maximum thickness over chord ratio for main wing
-#------------------------------------------------------------------------------------------------------------------
 AR = 8                            # estimate, [-], Aspect ratio
+
 half_sweep = np.radians(27)          # estimate, [degrees], sweep at half chord for main wing
 LE_sweep = np.radians(25)         # Leading egde wing sweepTBD, assumed backward let Rick know if it turns out to be forward sweep, calculate with Adsee formula 
 quarter_sweep = np.radians(26)
 wingloading = 4375.84             # [N/m2] estimate
+
+wingloading = 4375.84             # [N/m2] estimate 
+#------------------------------------------------------------------------------------------------------------------
+half_sweep = 0.663         # estimate, [degrees], sweep at half chord for main wing
+LE_sweep =0.7485         # Leading egde wing sweepTBD, 
+quarter_sweep = 0.707   
+
+
 S = MTOW /wingloading             # [m2] wing area
 print('please use S from class 2')
 
@@ -73,7 +81,7 @@ e_tail = 0.85                     #oswald efficiency factor of tail, TBD
 #Fuselage, cabin and loading parameters
 
 #------------------------------------------------------------------------------------------------------------------
-lf = 30                           # length of fuselage m estimate, lil shorter than CRJ as 5 seat rows are used
+lf = 28                           # length of fuselage m estimate, lil shorter than CRJ as 5 seat rows are used
 hf = 3.486                        # height of fuselage estimate
 widthf = 3.486                      # m max fuselage width
 lpax = 17.76                        # estimate, meters, cabin length, based on a seat pitch of 32 inch
@@ -200,7 +208,7 @@ V_to = 1.05 * ((MTOW/S)*(2/1.225)*(1/CLmax_to))**0.5 #takeoff speed
 #------------------------------------------------------------------------------------------------------------------
 t_r = t_over_c * Cr                          # maximum thickness at root [m] #bullshit estimation
 #------------------------------------------------------------------------------------------------------------------
-x_start_Cr = 10                    # x-location where root chord starts, measured from the nose of the aircraft [m], TBD
+x_start_Cr = 11                    # x-location where root chord starts, measured from the nose of the aircraft [m], TBD
 MAC =  2 / 3 * Cr * ((1 + taper + taper**2) / (1 + taper)) #length of mean aerodynamic chord, formula taken from Adsee II
 y_MAC = b / 6 * ((1 + 2 * taper) / (1 + taper))            #spanwise location of mean aerodynamic chord
 x_lemac_rootchord = y_MAC * np.tan(LE_sweep)               #x position of mac at leading edge [m], measured from the start of the root choord!!!!
@@ -217,6 +225,8 @@ cm0 = -0.018                       # preliminary estimate, TBD from airfoil anal
 zero_lift_angle = np.radians(4)    # degrees, PRELIMINARY estimate, TBD from airfoil analysis
 z_position_wing = hf - 0.6         # m, PRELIMINARY, still requires thought, for downwash calc
 z_position_horizontal = zh + hf    # where tail is positioned, for downwash calc
+
+cl_htail_max  = -0.8                #estimate coming from sead: maximum lift coefficient of tail
 
 
 

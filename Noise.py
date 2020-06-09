@@ -15,7 +15,8 @@ import Class_2_estimation as cl2
 Pref = 20E-6                        #Pa
 c = input.MAC
 U = input.v_approach
-a = U / input.mach_app
+M_ap = input.mach_app
+a = U / M_ap
 gamma_ap = input.gamma_ap
 v = 1.48E-5             #at 15 degrees celsius
 rho = 1.225
@@ -53,4 +54,49 @@ airframe_noise = wing_noise + landing_gear_noise
 print(wing_noise)
 print(landing_gear_noise)
 print(airframe_noise)
+
+
+#Fan noise
+Ae = ...            #Engine reference area [m^2]
+rs = ...            #Distance from source to observer [m]
+n_rot = ...         #Number of rotor blades [-]
+n_stat = ...        #Number of stator vanes [-]
+N_star = 0.3        #Rotational speed ,reference value [0,0.3,0.5], re a/d
+Mt = np.pi * N_star            #Fan rotor tip mach number [-]
+if Mt > 1.05:
+    Mt = Mt / abs(1 - n_stat / n_rot)
+Mm = 1                              #Design point mach number index = max(1,Md)
+A_star = ...                        #Fan inlet cross-sectional area
+m_dot_star = ...                    #Mass flow rate [kg/s]
+Mx = m_dot_star / A_star            #Axial flow mach number
+Mr = np.sqrt(Mt**2 - Mx**2)
+F = 1
+if Mr <= 0.9:
+    F = 0.81 * Mr**-2
+    
+frequency = np.arange(0,10000,1)   
+eta_l = int(10**(-1/20) * eta) + 1 #Lowest harmonic number that falls within the band, calculate nodes for each frequency
+eta_u = int(10**(1/20) * eta)       #Highest harmonic nubmer that falls within the band
+n_har = eta_u - eta_l + 1
+
+    
+def p_squared():
+    rs_star = rs / np.sqrt(Ae)
+    p2 = A * Pi / (4 * np.pi * rs_star**2) * D_theta * S_eta / (1 - M_ap * np.cos(theta_e))**4 
+    return P2
+
+def inlet_broadband_noise():
+    Pi = 1.552E-4 * np.exp()
+
+
+
+
+
+
+
+
+
+
+
+
 

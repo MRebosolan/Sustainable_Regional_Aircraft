@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from math import *
 import Class_2_estimation as cl2
+#import wingbox_torsion as tor
 
 
 wingloading = input.wingloading #import wingloading
@@ -72,12 +73,15 @@ for i in range(1,100):
 
 #-------ELLIPTICAL/GENERAL LIFT DISTRIBUTION CALCULATIONS------------------
 
+#Finds moment/shear diagrams in lift and thrust directions based on elliptical lift distribution and uniform
+#weight distribution
+
 def generate_spanwise_locations(n, b=wing_length):
     x_array = np.linspace(0, b, n, endpoint=False)
     return x_array[1:]
 
 
-def general_lift_d (x, a=11.3, b=15715.2):
+def general_lift_d (x, a=11.4, b=15861):
     #Insert formula for lift distribution here
     #current obtained by fitting elliptical distribution to given wing loading, a=half wing span - half fuselage width
     loading_at_x = np.sqrt((1-(x**2/a**2))*b**2)
@@ -205,6 +209,9 @@ plt.xlabel("spanwise coordinate")
 plt.ylabel("loads in N/moments in N/m")
 
 # plt.show()
+
+#-----------------------------------------------------------------------------------------------------
+
 
 #
 # #-------BENDING STRESS CALCULATIONS------------------

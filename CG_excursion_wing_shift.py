@@ -17,7 +17,7 @@ from cabindesign import cabin_design
 
 t_cyl,m_cyl, tm_cyl, d_cyl,l_cyl,t_tail,m_tail, tm_tail, d_tail,l_tail\
            ,t_top,m_top,tm_top,d_top,l_top,t_pod,m_pod,tm_pod,d_pod,l_pod,totalcabinlength,V_tank_cyl, V_tank_tail, V_tank_top,V_tank_pod,\
-           tm_tanksystem,CGtank,CGfuelfull,CGcomb,totdrag,fuselage_weight,CDzerofus,FFbody,Cfturb,fuselage_area,CDzeropods,fusdrag,poddrag,empennage_length=cabin_design(0.5,0.35,25,0)
+           tm_tanksystem,CGtank,CGfuelfull,CGcomb,totdrag,fuselage_weight,CDzerofus,FFbody,Cfturb,fuselage_area,CDzeropods,fusdrag,poddrag,tailcone_length=cabin_design(1,0.35,26,0)
            
            
 #Raw inputs
@@ -114,7 +114,9 @@ def cg_excursion_wing_shift():
     cg_loaded_lst = []
     for i in range(len(x_start_Cr)):
         x_cg_wing_nose, x_cg_wing_mac = wing_cg(sweep, b, Cr, Ct, MAC, x_lemac_Cr, x_lemac[i])
-        cg_oew_wrt_lemac, cg_oew_nose = cg_OEW_wrt_lemac(x_engine[i], w_engine, x_nacelle[i], w_nacelle, x_empennage[i], w_empennage, x_apu, w_apu, x_tank, w_tank, x_cg_wing_nose, w_wing, x_lg_front, w_lg_front, x_lg_main[i], w_lg_main, OEW, x_lemac[i], MAC)
+        cg_oew_wrt_lemac, cg_oew_nose = cg_OEW_wrt_lemac(x_engine[i], w_engine, x_nacelle[i], w_nacelle, x_empennage[i], w_empennage, x_apu, w_apu, x_tank[i], w_tank, x_cg_wing_nose, w_wing, x_lg_front, w_lg_front, x_lg_main[i], w_lg_main, OEW, x_lemac[i], MAC)
+       
+        onlyfuel = loadingcg(OEW, cg_oew_nose, w_fuel_fuselage, x_fuel_fuselage)
         onlyfwdcargo = loadingcg(OEW, cg_oew_nose, fwd_cargo_max, x_cargo_fwd)
         onlyaftcargo = loadingcg(OEW, cg_oew_nose, aft_cargo_max, x_cargo_aft)
         bothcargo = loadingcg(onlyfwdcargo[1], onlyfwdcargo[0], aft_cargo_max, x_cargo_aft)
@@ -126,10 +128,10 @@ def cg_excursion_wing_shift():
         aisle_back = passenger_loading(middle[1][-1], middle[0][-1], seatloc=seatloc[::-1])
         # fully_loaded = loadingcg(aisle[1][-1], aisle[0][1], fuel_weight, x_fuel)
         
-        onlyfuselagefuel = loadingcg(aisle[1][-1], aisle[0][1], w_fuel_fuselage, x_fuel_fuselage)
-        onlypodfuel = loadingcg(aisle[1][-1], aisle[0][1], w_pod_fuel, x_pod_tank)
+        onlyfuselagefuel = loadingcg(aisle[1][-1], aisle[0][-1], w_fuel_fuselage, x_fuel_fuselage)
+        onlypodfuel = loadingcg(aisle[1][-1], aisle[0][-1], w_pod_fuel, x_pod_tank[i])
 
-        bothfuel = loadingcg(onlyfuselagefuel[1], onlyfuselagefuel[0], w_pod_fuel, x_pod_tank)
+        bothfuel = loadingcg(onlyfuselagefuel[1], onlyfuselagefuel[0], w_pod_fuel, x_pod_tank[i])
         # plt.plot(100 * (np.array([aisle[0][-1], onlyfuselagefuel[0], bothfuel[0]]) - x_lemac) / MAC,
         #                   [MZF, onlyfuselagefuel[1], bothfuel[1]], marker='^', color='cyan', label = 'Hydrogen')
         
@@ -138,7 +140,7 @@ def cg_excursion_wing_shift():
         #                   [MZF, onlypodfuel[1], bothfuel2[1]], marker='^', color='brown', label = 'Hydrogen fwd first')
         
         
-        cg_excursion = np.array([[onlyfwdcargo[0]], [onlyaftcargo[0]], [bothcargo[0]], [window[0]], window_back[0], 
+        cg_excursion = np.array([[onlyfuel[0]],[onlyfwdcargo[0]], [onlyaftcargo[0]], [bothcargo[0]], [window[0]], window_back[0], 
                              middle[0], middle_back[0], aisle[0], aisle_back[0], onlyfuselagefuel[0], onlypodfuel[0], bothfuel[0], bothfuel[0]]) 
 
         cg_loaded_lst.append(bothfuel[0])

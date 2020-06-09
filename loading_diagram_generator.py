@@ -10,7 +10,7 @@ from cabindesign import cabin_design
 
 t_cyl,m_cyl, tm_cyl, d_cyl,l_cyl,t_tail,m_tail, tm_tail, d_tail,l_tail\
            ,t_top,m_top,tm_top,d_top,l_top,t_pod,m_pod,tm_pod,d_pod,l_pod,totalcabinlength,V_tank_cyl, V_tank_tail, V_tank_top,V_tank_pod,\
-           tm_tanksystem,CGtank,CGfuelfull,CGcomb,totdrag,fuselage_weight,CDzerofus,FFbody,Cfturb,fuselage_area,CDzeropods,fusdrag,poddrag,empennage_length=cabin_design(1,0.35,25,0)
+           tm_tanksystem,CGtank,CGfuelfull,CGcomb,totdrag,fuselage_weight,CDzerofus,FFbody,Cfturb,fuselage_area,CDzeropods,fusdrag,poddrag,tailcone_length=cabin_design(1,0.35,26,0)
 
 #Raw inputs
 MTOW = cl2.MTOM                 #kg
@@ -193,6 +193,11 @@ def loading():
 
     plt.close()
     plt.figure()
+    
+    onlyfuel = loadingcg(OEW, cg_oew_nose, w_fuel_fuselage, x_fuel_fuselage)
+    plt.plot(100 * (np.array([cg_oew_nose, onlyfuel[0]]) - x_lemac) / MAC,
+                      [OEW, onlyfuel[1]], label='Fuel only', marker='3', color='magenta')
+    
     onlyfwdcargo = loadingcg(OEW, cg_oew_nose, fwd_cargo_max, x_cargo_fwd)
     bothcargo = loadingcg(onlyfwdcargo[1], onlyfwdcargo[0], aft_cargo_max, x_cargo_aft)
     cargo1 = plt.plot(100 * (np.array([cg_oew_nose, onlyfwdcargo[0], bothcargo[0]]) - x_lemac) / MAC,
@@ -223,20 +228,21 @@ def loading():
     # plt.plot(100 * (np.array([aisle[0][-1], fully_loaded[0]]) - x_lemac) / MAC, [MZF, fully_loaded[1]], marker='^',
     #           color='magenta', label='Fuel')
     
-    onlyfuselagefuel = loadingcg(aisle[1][-1], aisle[0][1], w_fuel_fuselage, x_fuel_fuselage)
+    onlyfuselagefuel = loadingcg(aisle[1][-1], aisle[0][-1], w_fuel_fuselage, x_fuel_fuselage)
     bothfuel = loadingcg(onlyfuselagefuel[1], onlyfuselagefuel[0], w_pod_fuel, x_pod_tank)
     plt.plot(100 * (np.array([aisle[0][-1], onlyfuselagefuel[0], bothfuel[0]]) - x_lemac) / MAC,
-                      [MZF, onlyfuselagefuel[1], bothfuel[1]], marker='^', color='cyan', label = 'Hydrogen')
+                      [MZF, onlyfuselagefuel[1], bothfuel[1]], marker='^', color='magenta', label = 'Hydrogen')
     
-    onlypodfuel = loadingcg(aisle[1][-1], aisle[0][1], w_pod_fuel, x_pod_tank)
+    onlypodfuel = loadingcg(aisle[1][-1], aisle[0][-1], w_pod_fuel, x_pod_tank)
     bothfuel2 = loadingcg(onlypodfuel[1], onlypodfuel[0], w_fuel_fuselage, x_fuel_fuselage)
     plt.plot(100 * (np.array([aisle[0][-1], onlypodfuel[0], bothfuel2[0]]) - x_lemac) / MAC,
-                      [MZF, onlypodfuel[1], bothfuel2[1]], marker='^', color='brown', label = 'Hydrogen fwd first')
+                       [MZF, onlypodfuel[1], bothfuel2[1]], marker='^', color='black', )
     
     plt.legend()
     plt.grid()
     plt.ylabel('mass [kg]')
     plt.xlabel('xcg [% of MAC]')
+    plt.title('Tail Tank')
     plt.show()
     cg_excursion = np.array([[onlyfwdcargo[0]], [onlyaftcargo[0]], [bothcargo[0]], [window[0]], window_back[0], 
                          middle[0], middle_back[0], aisle[0], aisle_back[0], onlyfuselagefuel[0], onlypodfuel[0], bothfuel[0], bothfuel[0]]) 

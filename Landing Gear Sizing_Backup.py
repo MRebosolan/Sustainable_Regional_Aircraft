@@ -1,7 +1,8 @@
 import numpy as np
 import input
 import Class_2_estimation as Cl2
-import scissor_plot_wing_shift
+import scissor_plot_wing_shift as sc_shift
+from CG_excursion_wing_shift import tailcone_length
 """
 Responsible person: Tobias | FOR NOW!!!! run from line 55
 
@@ -28,70 +29,69 @@ Remark(s):
 """
 #Variables that still need to be properly coupled to other code:
 z_cg  =  0.5*input.hf               # z loc cg. WRT fuselage!
-x_empennage = input.x_empennage     # x-location where fuselage diameter 
-                                    # starts decreasing (clearance angle), wrt c.g. OR wrt nose
+#tailcone_length    # x-location where fuselage diameter 
+x_tailcone = input.lf - tailcone_length                                    # starts decreasing (clearance angle), wrt c.g. OR wrt nose
                                     # If it is wrt the the c.g. change x_empennage; [Start of the aft cone]
-Cl_htail = 0.0                      # tbd
+Cl_htail = input.cl_htail_max                     # tbd
 
 #Variables that will not change
 g = input.g
 MTOW = g*Cl2.MTOM
 theta = np.radians(input.theta)                 # tip-back angle ~15 degrees
-x_cg  = scissor_plot_wing_shift.cg_loaded_nose  # x location of the cg
-x_cg_fwrd = scissor_plot_wing_shift.cg_fwd      # x location of most forward cg
-x_cg_aft = scissor_plot_wing_shift.cg_aft       # x-location of most aft cg
-x_ac_htail = scissor_plot_wing_shift.x_ac_v_nose       # distance from aerodynamic centre to nose of htail airfoil
+x_cg  = sc_shift.cg_loaded_nose     # x location of the cg
+x_cg_fwrd = sc_shift.cg_fwd*sc_shift.MAC + sc_shift.xlemac      # x location of most forward cg
+x_cg_aft = sc_shift.cg_aft*sc_shift.MAC + sc_shift.xlemac        # x-location of most aft cg
+x_ac_htail = sc_shift.x_ac_h_nose   # distance from aerodynamic centre to nose of htail airfoil
+print (x_ac_htail,x_cg_fwrd)
 S = Cl2.S
+b = Cl2.b
 rho_0 = input.rho0
 rho_to = rho_0
 CLmax = input.CLmax_land 
-Vmin = np.sqrt(MTOW*g * 2 /(S * rho_to * CLmax))
+Vmin = np.sqrt(MTOW * 2 /(S * rho_to * CLmax))
 Vlof = 1.05*Vmin
 safetymargin_theta = np.radians(1)
 htail_sweep = input.half_chord_sweep_hor      # Sweep of the horizontal tail
 
-######## Dummy variables to test the program, as some have not yet
-# Been determined ################################################
-import Class_2_estimation as Cl2
-import input
-import numpy as np
-#import scissor_plot_wing_shift as scissor_w_shift
+# ######## Dummy variables to test the program, as some have not yet
+# # Been determined ################################################
+# import Class_2_estimation as Cl2
+# import input
+# import numpy as np
+# #import scissor_plot_wing_shift as scissor_w_shift
 
 
-safetymargin_theta = np.radians(1)
-theta = np.radians(15)
-z_cg = 0.5*(input.hf)   #z loc cg. WRT fuselage!
-x_cg_aft = 10
-x_cg = x_cg_aft-0.2
-g = input.g
-MTOW = g*Cl2.MTOM
-x_empennage = 17
-rho_to = 1.225
-S = 80
-CLmax = 2.2
-Cl_htail = 1.5
-x_ac_htail = 22
-Vmin = np.sqrt(MTOW*2/(S*rho_to*CLmax))
-Vlof = Vmin*1.05
-htail_sweep = input.half_chord_sweep_hor      # Sweep of the horizontal tail
+# safetymargin_theta = np.radians(1)
+# theta = np.radians(15)
+# z_cg = 0.5*(input.hf)   #z loc cg. WRT fuselage!
+# x_cg_aft = 10
+# x_cg = x_cg_aft-0.2
+# g = input.g
+# MTOW = g*Cl2.MTOM
 
-#################################################
+# rho_to = 1.225
+# S = 80
+# CLmax = 2.2
+# Cl_htail = 1.5
+# x_ac_htail = 22
+# Vmin = np.sqrt(MTOW*2/(S*rho_to*CLmax))
+# Vlof = Vmin*1.05
+# htail_sweep = input.half_chord_sweep_hor      # Sweep of the horizontal tail
 
-def main_lg_loc(x_empennage=x_empennage,theta=theta,z_cg=z_cg,x_cg_aft=x_cg_aft,safetymargin_theta=safetymargin_theta):
+def main_lg_loc(x_tailcone=x_tailcone,theta=theta,z_cg=z_cg,x_cg_aft=x_cg_aft,safetymargin_theta=safetymargin_theta):
     d = 0.01
     for z_fus_ground in np.arange(0,5,d):
         
         z_main_lg1 = z_fus_ground + z_cg
         x_main_lg1 = x_cg_aft + z_main_lg1*np.tan(theta+safetymargin_theta)
-        if np.tan(z_fus_ground/(x_empennage-x_main_lg1)) >= np.radians(15):
+        if np.tan(z_fus_ground/(x_tailcone-x_main_lg1)) >= np.radians(15):
             z_main_lg = np.round(z_main_lg1,4)
             x_main_lg = np.round(x_main_lg1,4)
             z_f_ground = z_fus_ground
             break
         else:
             continue
-    print ()
-    print ('[Make sure that x_empennage is wrt the nose!]')
+
     return x_main_lg,z_main_lg, z_f_ground    
 x_main_lg, z_main_lg, z_f_ground  = main_lg_loc()
 
@@ -100,13 +100,13 @@ print('The x-location of the main landing gear w.r.t. the nose is', np.round(x_m
 print ()
 print ('The distance from the ground to c.g. equals:', z_main_lg,'[m]')
 print ()
-print ('The Clearance angle is:',np.round(np.tan((z_f_ground)/(x_empennage-x_main_lg))*180/np.pi,3),'[deg]')
+print ('The Clearance angle is:',np.round(np.tan((z_f_ground)/(x_tailcone-x_main_lg))*180/np.pi,3),'[deg]')
 print ()
 
 def nose_lg_loc(x_main_lg= x_main_lg, x_cg=x_cg,MTOW=MTOW,g=g):
     dist = []
     d = 0.005
-    for distance in np.arange(-10+d,x_cg,d):
+    for distance in np.arange(0,x_cg,d):
         F_nose_lg = MTOW*g*(x_main_lg-x_cg)/(x_cg-distance)
         #Force_on_nose_lg.append(F_nose_lg)
         if F_nose_lg <= 0.08*MTOW*g or F_nose_lg >= 0.15*MTOW*g:
@@ -123,12 +123,16 @@ print()
 print('Nose gear: The maximum x-distance from the nose equals', np.round(np.max(dist),4),'[m]')
 print ()
 
+dist = np.round(np.min(dist),4)
+print (dist)
+
 dist_max = np.round(np.max(dist),4) #-1 if it is too much forward; it does not have a large effect on the lateral position; that is to say, the effect is not severe.   #the minimum distance between the nose and nose landing gear
-dist_min = np.round(np.min(dist),3) #the maximum distance between the nose and nose landing gear
+dist_min = np.round(np.min(dist),4) #the maximum distance between the nose and nose landing gear
 #dist_lg =  # this will be the actual value of the distance, above values are used to model the ranges of lateral positions of the main landing gear
 
 def lat_pos_lg(z_main_lg=z_main_lg,dist=dist,x_main_lg=x_main_lg,x_cg_aft=x_cg_aft):
     y_lg_list = []
+    b_n_list = []
     d = 0.005
     for y_lg in np.arange(d,4+d,d):
         b_n = [x_cg_aft-dist_min,x_cg_aft-dist_max]   #distance from most forward nose lg to aft cg.
@@ -136,19 +140,25 @@ def lat_pos_lg(z_main_lg=z_main_lg,dist=dist,x_main_lg=x_main_lg,x_cg_aft=x_cg_a
             alpha = np.arctan2(y_lg,b_n[i])
             c = b_n[i]*np.sin(alpha)
             psi = np.arctan2(z_main_lg,c)
-            if psi < 55/180*np.pi and b_n[i] <= x_main_lg:
+            if psi < 55/180*np.pi and b_n[i] <= 10:
                 y_lg_list.append(y_lg)
+                b_n_list.append(b_n[i])
             else:
                 continue  
-    return y_lg_list, b_n
+    return y_lg_list, b_n_list
 
-y_lg_list, b_n = lat_pos_lg(z_main_lg)
 
+y_lg_list, b_n_list = lat_pos_lg(z_main_lg)
+"""
 def req_htail_area(x_main_lg,Cl_htail=Cl_htail,x_ac_htail=x_ac_htail,x_cg = x_cg,rho_to=rho_to,Vlof=Vlof,MTOW=MTOW,g=g,htail_sweep=htail_sweep):
-    htail_area = (x_main_lg-x_cg)/(x_ac_htail-x_main_lg)*MTOW/(0.5*rho_to*(Vlof/np.cos(htail_sweep))**2*Cl_htail)
+
+def req_htail_area(x_main_lg,Cl_htail=Cl_htail,x_ac_htail=x_ac_htail,x_cg = x_cg_fwrd,rho_to=rho_to,Vlof=Vlof,MTOW=MTOW,htail_sweep=htail_sweep):
+
+    
+    htail_area = -((x_main_lg-x_cg)*MTOW - .5*rho_to*(Vlof)**2*S*0*(x_main_lg-sc_shift.aerodynamiccenter) + sc_shift.momentcoefficient*.5*rho_to*(Vlof**2)*S*sc_shift.MAC )  /(0.5*rho_to*(Vlof/np.cos(htail_sweep))**2*Cl_htail)
     return htail_area
 htail_area = req_htail_area(x_main_lg)
-
+"""
 print ('The minimum lateral distance of the landing gear:',np.round(min(y_lg_list),3),'[m]')
 print ('This means the main landing gear stick out',np.round(min(y_lg_list)-z_cg,3),'meters from the fuselage' )
 print ()
@@ -171,10 +181,10 @@ ptire_max = tire_pressure()
 print (np.round(ptire_max,4),'kPa',np.round(ptire_max,4)*0.145037738,'psi')
 #print ('This is actually quite comparable to the CRJ700, according to their airport planning manual')
 mg_x_cg = x_main_lg-x_cg # distance from the main lg to the cg
-ng_x_cg = x_cg-np.round(np.max(dist),4) # distance from the nose_lg to the cg
-mw_nw_d = x_main_lg-np.round(np.max(dist),4)
+ng_x_cg = x_cg-np.round(np.min(dist),4) # distance from the nose_lg to the cg
+mw_nw_d = x_main_lg-np.round(np.min(dist),4)
 
-def static_loads_lg(MTOW=MTOW,N_mw=N_mw,N_struts=N_struts,mg_x_cg=mg_x_cg,ng_x_cg=ng_x_cg,z_cg=z_cg,dist_max=dist_max,mw_nw_d=mw_nw_d):
+def static_loads_lg(MTOW=MTOW,N_mw=N_mw,N_struts=N_struts,mg_x_cg=mg_x_cg,ng_x_cg=ng_x_cg,z_cg=z_cg,dist_max=dist_min,mw_nw_d=mw_nw_d):
     P_mw = (MTOW*ng_x_cg)/(N_struts*mw_nw_d) # [N]
     P_nw = MTOW-P_mw*N_struts                # [N]
     ESWL_n = P_nw/1.33/g                     # [kg] equivalent single wheel load twin dual | NOSE
@@ -218,7 +228,7 @@ def energy_absorption(g=g,w_td=w_td,eta_t=eta_t,eta_s=eta_s,s_t=s_t,N_struts=N_s
 s_s_des, d_s, s_s_des_nose,d_s_n = energy_absorption()
 print ()
 print ('The required stroke length of the shock absorption is:',s_s_des,'and the required diameter equals:',d_s,'Both in meters')
-print ('Shock absorber stroke nose landing gear equals:',s_s_des_nose, 'meters, with a diameter of',d_s_n,'meters')
+print ('Shock absorber stroke nose landing gear equals:',s_s_des_nose, 'meters, with a diameter of',d_s_n,'meters. diameter for main landing gear is taken.')
 print ()
 print ('TODO: estimate volume for storage, and tire selection, material selection')
 
