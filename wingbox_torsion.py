@@ -140,7 +140,7 @@ def boom_moi(moment_cs, chord_length, shear_cs, t_d=t_d, number_booms=number_boo
     shear_flow1.append(shearflow)
 
     for i in range(len(boom_locationx[int(number_booms/ 3):])):
-        shearflow = shearflow + boom_deltashear[int(number_boom / 3) + i]
+        shearflow = shearflow + boom_deltashear[int(number_booms / 3) + i]
         shear_flow1.append(shearflow)
 
     for i in range(len(boom_locationx[:int(number_booms / 3)]) - 1):
