@@ -52,6 +52,7 @@ moment_cs = 450000 #MOMENT OF CROSS SECTION
 
 def boom_moi(moment_cs, chord_length, t_d=t_d, number_booms=number_booms):
 
+#returns moments of inertia and boom normal stresses based on load, chord length and number of booms
 
     number_points = number_booms/2 + 2
     n = 1000 / number_points
@@ -168,11 +169,12 @@ for i, y in enumerate(spanwise_array):
     upper_stress_along_span.append(stress_boom_upper)
     lower_stress_along_span.append(stress_boom_lower)
 
-plt.plot(spanwise_array, moi_boom_along_span)
+#plt.plot(spanwise_array, moi_boom_along_span)
 #plt.plot(spanwise_array, upper_stress_along_span)
 #plt.plot(spanwise_array, lower_stress_along_span)
-plt.show()
+#plt.show()
 
+#-----------------------------------------------------------------------------------------------------------
 
 # Find the shear flows
 
@@ -182,6 +184,9 @@ plt.show()
 
 
 # Finally look at torsion
+
+#M_y_array is torque (moment about y) and can be expressed as function of y (wingspan) or x (longitudinal distance
+#from center of wing root)
 
 LE_sweep = input.LE_sweep
 T_to = input.Tto
@@ -203,14 +208,14 @@ engine_weight = Wingbox_design.w_engine
 z_engine = input.z_engine
 
 
-def reaction_moment_about_y(lift, weight, engine_weight, x_lift, x_weight, x_engine):
-    M = lift*x_lift - weight*x_weight - engine_weight*x_engine - T_to*-z_engine
+def reaction_moment_about_y(lift, weight, engine_weight, x_lift, x_weight, x_engine, z_engine):
+    M = lift*x_lift - weight*x_weight - engine_weight*x_engine + T_to*z_engine
     return M
 
-R_z, M_y = Wingbox_design.R_z, reaction_moment_about_y(lift, weight, engine_weight, x_lift, x_weight, x_engine)
+R_z, M_y = Wingbox_design.R_z, reaction_moment_about_y(lift, weight, engine_weight, x_lift, x_weight, x_engine, z_engine)
 
 def internal_y_bending_moment(x, x_array=x_array, y_array=y_array, lift_array=lift_array_along_y, w_engine=engine_weight,\
-    weight_array=weight_array_along_y, x_engine = x_engine, R_z = R_z, M_y = M_y):
+    weight_array=weight_array_along_y, x_engine = x_engine, R_z = R_z, M_y = M_y, T_to=T_to, z_engine=z_engine):
     #right hand positive with y forward positive
 
     x = min(x_array, key=lambda y:abs(y-x))
@@ -227,13 +232,14 @@ def internal_y_bending_moment(x, x_array=x_array, y_array=y_array, lift_array=li
         engine_distance = x - x_engine
     else:
         engine_distance = 0
-    moment_at_x = M_y + R_z*x + lift*(x-x_lift) - w_engine*engine_distance - weight*(x-x_weight)
+    moment_at_x = M_y + R_z*x + lift*(x-x_lift) - w_engine*engine_distance - weight*(x-x_weight) - T_to*z_engine
     return moment_at_x, lift, weight, x_lift, x_weight
+
 M_y_array=[]
 for x in x_array[2:]:
     M_y_array.append(internal_y_bending_moment(x)[0])
 
 print(lift, weight, engine_weight, x_lift, x_weight, x_engine, M_y, R_z, x_array[-1])
 print(internal_y_bending_moment(x_array[-1]))
-plt.plot(x_array[2:], M_y_array )
-# plt.show()
+plt.plot(y_array[2:], M_y_array )
+#plt.show()
