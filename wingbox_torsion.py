@@ -45,7 +45,7 @@ plt.show()
 
 chord_length = 2  # chord length in meters
 t_d = 0.01 #THICkNESS OF AIRFOIL
-number_booms = 10 #NUMBER OF POINTS (10 POINTS = 16 BOOMS,4p=4b 5p=6b )#  (ON TOP SIDE FOR NOW)
+number_booms = 4 #NUMBER OF POINTS (10 POINTS = 16 BOOMS,4p=4b 5p=6b )#  (ON TOP SIDE FOR NOW)
 moment_cs = 450000 #MOMENT OF CROSS SECTION
 
 #------------------------------------------------------------------------------------------------------------------
@@ -133,24 +133,22 @@ def boom_moi(moment_cs, chord_length, shear_cs, t_d=t_d, number_booms=number_boo
             deltashear_boom = shear_cs * boom_area[i] * boom_locationy[i] / moi_boom_total
             boom_deltashear.append(deltashear_boom)
 
-    print(boom_deltashear)
     shear_flow1 = []
     shear_flow2 = []
 
     shearflow = 0
-    shear_center = 0.4
     shear_flow1.append(shearflow)
 
-    for i in range(len(boom_deltashear)):
-        if boom_locationx[i] > shear_center:
-            shearflow = shearflow + boom_deltashear[i]
-            shear_flow1.append(shearflow)
-        if boom_locationx[i] < shear_center:
-            shearflow = shearflow + boom_deltashear[i]
-            shear_flow2.append(shearflow)
+    for i in range(len(boom_locationx[int(number_booms/ 3):])):
+        shearflow = shearflow + boom_deltashear[int(number_boom / 3) + i]
+        shear_flow1.append(shearflow)
+
+    for i in range(len(boom_locationx[:int(number_booms / 3)]) - 1):
+        shearflow = shearflow + boom_deltashear[i]
+        shear_flow2.append(shearflow)
 
     shear_flow = shear_flow2 + shear_flow1
-    shear_stress_upper = np.array(shear_flow) / t_d
+    shear_stress_upper = np.array(shear_flow) / t_f
     shear_stress_lower = -shear_stress_upper
 
 
@@ -295,8 +293,8 @@ M_y_array=[]
 for x in x_array[2:]:
     M_y_array.append(internal_y_bending_moment(x)[0])
 
-# print(lift, weight, engine_weight, x_lift, x_weight, x_engine, M_y, R_z, x_array[-1])
-# print(internal_y_bending_moment(x_array[-1]))
+print(lift, weight, engine_weight, x_lift, x_weight, x_engine, M_y, R_z, x_array[-1])
+print(internal_y_bending_moment(x_array[-1]))
 #plt.plot(y_array[2:], M_y_array )
 #plt.show()
 
