@@ -50,7 +50,7 @@ moment_cs = 450000 #MOMENT OF CROSS SECTION
 
 #------------------------------------------------------------------------------------------------------------------
 
-def boom_moi(moment_cs, chord_length,shear_cs, t_d=t_d, number_booms=number_booms):
+def boom_moi(moment_cs, chord_length, shear_cs, t_d=t_d, number_booms=number_booms):
 
 #returns moments of inertia and boom normal stresses based on load, chord length and number of booms
 
@@ -175,20 +175,26 @@ def generate_chord_array(y_array, Cr=Cr, Ct=Ct, b=wing_length):
 spanwise_array = Wingbox_design.generate_spanwise_locations(1000)[2:]
 moments_around_x = []
 moments_around_z = []
+shears_y = []
 chords = generate_chord_array(spanwise_array)
 moi_boom_along_span=[]
 upper_stress_along_span=[]
 lower_stress_along_span = []
+shear_stresses_upper = []
+shear_stresses_lower = []
 
 
 for y in spanwise_array:
     moments_around_x.append(Wingbox_design.internal_x_bending_moment(y))
     moments_around_z.append(Wingbox_design.internal_z_bending_moment(y))
+    shears_y.append(Wingbox_design.internal_vertical_shear_force(y))
 
 for i, y in enumerate(spanwise_array):
     moment_around_x = moments_around_x[i-1]
+    shear_y = shears_y[i-1]
     chord = chords[i]
-    moi_boom, stress_boom_upper, stress_boom_lower = boom_moi(moment_around_x, chord)
+    moi_boom, stress_boom_upper, stress_boom_lower, shear_stress_upper, shear_stress_lower = \
+        boom_moi(moment_around_x, chord, shear_y)
     moi_boom_along_span.append(moi_boom)
     upper_stress_along_span.append(stress_boom_upper)
     lower_stress_along_span.append(stress_boom_lower)
