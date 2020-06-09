@@ -12,7 +12,7 @@ from hydrogen_tank_sizing import tank_sizing_fuselage
 from fuselage_weight_estimation import W_fuselage_torenbeek
 import input
 
-def cabin_design(fractioninfus,fractionintail,HYDROGENVOLUME,top_selecter,podlength=5):
+def cabin_design(fractioninfus,fractionintail,HYDROGENVOLUME,top_selecter = 0,podlength=5):
     #PASSENGER SECTION
     #LARGELY BASED ON AIRBUS A220
     
