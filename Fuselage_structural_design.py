@@ -162,7 +162,7 @@ plt.plot(x_array, shears)
 #plt.plot(x_array, bending_stresses_bottom)
 #plt.plot(x_array, moments)
 #plt.plot(x_array, shears)
-plt.show()
+#plt.show()
 
 
 # location of the systems from nose
