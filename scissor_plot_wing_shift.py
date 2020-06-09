@@ -320,3 +320,4 @@ x_ac_h_nose = shift.x_ac[index] + shift.lh_fix
 x_ac_v_nose = shift.x_ac[index] + shift.lv_fix
 print(cg_loaded_nose)
 print("Check that the final cg position after fuel loading is the same as above value for cg_loaded_nose, check with loading diagram after manually changing all input parameters")
+print (x_ac_h_nose)
