@@ -147,10 +147,13 @@ def lat_pos_lg(z_main_lg=z_main_lg,dist=dist,x_main_lg=x_main_lg,x_cg_aft=x_cg_a
                 continue  
     return y_lg_list, b_n_list
 
+
 y_lg_list, b_n_list = lat_pos_lg(z_main_lg)
 """
 def req_htail_area(x_main_lg,Cl_htail=Cl_htail,x_ac_htail=x_ac_htail,x_cg = x_cg,rho_to=rho_to,Vlof=Vlof,MTOW=MTOW,g=g,htail_sweep=htail_sweep):
+
 def req_htail_area(x_main_lg,Cl_htail=Cl_htail,x_ac_htail=x_ac_htail,x_cg = x_cg_fwrd,rho_to=rho_to,Vlof=Vlof,MTOW=MTOW,htail_sweep=htail_sweep):
+
     
     htail_area = -((x_main_lg-x_cg)*MTOW - .5*rho_to*(Vlof)**2*S*0*(x_main_lg-sc_shift.aerodynamiccenter) + sc_shift.momentcoefficient*.5*rho_to*(Vlof**2)*S*sc_shift.MAC )  /(0.5*rho_to*(Vlof/np.cos(htail_sweep))**2*Cl_htail)
     return htail_area
