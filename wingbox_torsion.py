@@ -50,7 +50,7 @@ moment_cs = 450000 #MOMENT OF CROSS SECTION
 
 #------------------------------------------------------------------------------------------------------------------
 
-def boom_moi(moment_cs, chord_length, t_d=t_d, number_booms=number_booms):
+def boom_moi(moment_cs, chord_length,shear_cs, t_d=t_d, number_booms=number_booms):
 
 #returns moments of inertia and boom normal stresses based on load, chord length and number of booms
 
@@ -128,7 +128,7 @@ def boom_moi(moment_cs, chord_length, t_d=t_d, number_booms=number_booms):
             stress_boom_upper.append(boom_stress)
             stress_boom_lower.append(-boom_stress)
 
-    for i in range(len(boom_locationx-1)):
+    for i in range(len(boom_locationx)-1):
         if i > 0:
             deltashear_boom = shear_cs * boom_area[i] * boom_locationy[i] / moi_boom_total
             boom_deltashear.append(deltashear_boom)
@@ -289,6 +289,6 @@ for x in x_array[2:]:
 
 print(lift, weight, engine_weight, x_lift, x_weight, x_engine, M_y, R_z, x_array[-1])
 print(internal_y_bending_moment(x_array[-1]))
-plt.plot(y_array[2:], M_y_array )
+#plt.plot(y_array[2:], M_y_array )
 #plt.show()
 
