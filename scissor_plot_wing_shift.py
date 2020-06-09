@@ -291,23 +291,23 @@ def scissorplot(stabilityplot,controlplot, ShS, frontcg, aftcg, Sh_over_S):
     plt.plot(stabilityplot*100 +5,ShS, color = 'grey', label = 'Neutral stability')
     plt.plot(stabilityplot*100,ShS, color = 'b', label = 'Stability aft limit')
     plt.plot(controlplot*100,ShS, color = 'orange', label = 'Control fwd limit')
-    plt.plot([frontcg*100,aftcg*100], [Sh_over_S, Sh_over_S], color = 'r', marker = '|')
-    plt.ylim(-0.1,1)
-    plt.xlim(-200, 200)
+    plt.plot([frontcg*100,aftcg*100], [Sh_over_S, Sh_over_S], color = 'r', marker = '|', label = 'CG range')
+    plt.ylim(-0.05,0.4)
+    plt.xlim(0, 100)
     plt.grid()
     plt.xlabel("Xcg/MAC [%]")
     plt.ylabel("Sh/S [-]")
-    plt.legend(loc = 'lower left')
-    plt.title('CS100')
+    plt.legend(loc = 'upper right')
+    plt.title('Tail Tank and Drop Tank')
     plt.show()
     
 
 
-print(min_Sh_over_S, 'sh over s')
-print(x_Cr_opt_nose, 'root location')
+
 Sh_min_lst, min_Sh_over_S, x_Cr_opt_nose, cg_stab_lim, cg_aft, cg_cont_lim, cg_fwd, Dtrim, Sh_min, controlplot, stabilityplot, ShS, index = scissor_wing_shift()
 scissorplot(stabilityplot, controlplot, ShS, cg_fwd, cg_aft, min_Sh_over_S)
-
+print(min_Sh_over_S, 'sh over s')
+print(x_Cr_opt_nose, 'root location')
 
 #todo: check capability of horizontal tail for providing negative lift to sufficiently rotate the aircraft at take-off
 

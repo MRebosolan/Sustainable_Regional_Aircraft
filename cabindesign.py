@@ -54,10 +54,10 @@ def cabin_design(fractioninfus,fractionintail,HYDROGENVOLUME,top_selecter,podlen
     R_tank_fus=outer_diameter/2-0.15
     R_tank_tail=1
     
-    #print(totalcabinlength)
+    print(totalcabinlength)
     
         
-    lf=28 # derived from A220, adapt in input file, total length of fuselage
+    lf=input.lf # derived from A220, adapt in input file, total length of fuselage
     
     rho_hydrogen=70
         
@@ -124,7 +124,7 @@ def cabin_design(fractioninfus,fractionintail,HYDROGENVOLUME,top_selecter,podlen
     Cfturb=0.455/((math.log(Reynolds,10))**2.58*(1+0.144*MACH**2)**0.65)
     CDzerofus=Cfturb*FFbody*fuselage_area/70 #ref area CRJ700
     
-    if V_tank_pod!=0:
+    if V_tank_pod>0.01:
         Q_interference=1.3
         lambdaf_pods=(podlength+d_pod)/d_pod #cones
         pylon=2*1*0.5
@@ -153,6 +153,10 @@ def cabin_design(fractioninfus,fractionintail,HYDROGENVOLUME,top_selecter,podlen
     fuselage_weight=W_fuselage_torenbeek(input.V_dive, lh, widthf/0.3048, hf/0.3048, fuselage_area/0.3048/0.3048)    
     
     empennage_length=lf-cockpit_length-totalcabinlength-l_cyl
+    
+    if t_top >0.001 or m_top > 0.001 or tm_top > 0.001 or d_top > 0.001 or l_top > 0.001 or t_pod > 0.001 or m_pod> 0.001 \
+        or tm_pod > 0.001   or V_tank_top > 0.001 or V_tank_pod > 0.001 or poddrag > 0.001:
+            print ("something is going wrong in the cabin design. The tank selection is not done properly. all tanks except tail and cylinder should be 0!!!!!!")
     
     return(t_cyl,m_cyl, tm_cyl, d_cyl,l_cyl,t_tail,m_tail, tm_tail, d_tail,l_tail\
            ,t_top,m_top,tm_top,d_top,l_top,t_pod,m_pod,tm_pod,d_pod,l_pod,totalcabinlength,V_tank_cyl, V_tank_tail, V_tank_top,V_tank_pod,\

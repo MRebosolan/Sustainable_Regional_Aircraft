@@ -74,6 +74,7 @@ import Wing_weight_estimation as wing
 from Class_1_estimation import CLASS1WEIGHTHYBRID
 import input
 
+
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -214,6 +215,7 @@ while abs((OEW_class1_kg - OEWINPUT)*100/OEWINPUT)>= 0.01:
     
     W_engines = engine.engine_weight(T_dry_SL, N_eng)                                       #Verified
     W_fuel_system_kerosene = 0
+    
     W_fuel_system_hydrogen = to_pounds(class1[9])
     W_power_controls = powercontrols.total(lf, b, W_engines, pneumatic = False)
     
