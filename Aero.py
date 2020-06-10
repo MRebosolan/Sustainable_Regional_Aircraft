@@ -261,85 +261,92 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S, v_approach, V_C_TAS):
 
     return wing, geom,cross1, hld, ail, x2, CL_clean_list, CL_landing_list, CL_to_list, alpha_range, CLmax_list
 
+
+def drag(AR):
+    # inputs: AR, sweep_cLE, Df, S, Sh, Sv, L1, L2, L3, Re (cruise), cMAC, cMAC h, cMAC v.
+
+    ####################### Zero lift drag estimation
+
+    # wetted area
+
+    S_wet_wing = 1.07 * 2 * S
+    S_wet_tailh = 1.05 * 2 * Sh
+    S_wet_tailv = 1.05 * 2 * Sv
+    S_wet_fus = (np.pi * Df / 4) * ( 1/(3*L1**2) * ((4 * L1**2 + Df**2/4)**1.5 - Df**3/8) - Df + 4*L2 + 2*np.sqrt(L3**2 + Df**2/4))
+
+    ####### skin friction coeff
+    M = 0.75
+    k = 0.152 * 10**-5         # for polished sheet metal
+
+    # wing
+    Re_wing = min(Re, 44.62 * (c_MAC/k)**1.053 * M*1.16)
+
+    Cf_lam_wing = 1.328 / np.sqrt(Re_wing)
+    Cf_tur_wing = 0.455 / ((np.log10(Re_wing) ** 2.58) * (1 + 0.144 * M ** 2) ** 0.65)
+
+    Cftot_wing = 0.35 * Cf_lam_wing + 0.65 * Cf_tur_wing  # values for smooth metal
+
+    # v tail
+    Re_vtail = min(Re, 44.62 * (c_MACv/k)**1.053 * M*1.16)
+
+    Cf_lam_vtail = 1.328 / np.sqrt(Re_vtail)
+    Cf_tur_vtail = 0.455 / ((np.log10(Re_vtail) ** 2.58) * (1 + 0.144 * M ** 2) ** 0.65)
+
+    Cftot_vtail = 0.35 * Cf_lam_vtail + 0.65 * Cf_tur_vtail  # values for smooth metal
+
+    # h tail
+    Re_htail = min(Re, 44.62 * (c_MACt/k)**1.053 * M*1.16)
+
+    Cf_lam_htail = 1.328/np.sqrt(Re_htail)
+    Cf_tur_htail = 0.455/((np.log10(Re_htail)**2.58) * (1 + 0.144 * M**2)**0.65)
+
+    Cftot_htail = 0.35 * Cf_lam_htail + 0.65 * Cf_tur_htail  # values for smooth metal
+
+    # fus
+    Re_fus = min(Re, 44.62 * ((L1 + L2 + L3) / k) ** 1.053 * M * 1.16)
+
+    Cf_lam_fus = 1.328 / np.sqrt(Re_fus)
+    Cf_tur_fus = 0.455 / ((np.log10(Re_fus) ** 2.58) * (1 + 0.144 * M ** 2) ** 0.65)
+
+    Cftot_fus  = 0.1  * Cf_lam_fus + 0.9  * Cf_tur_fus                # values for smooth metal
+
+
+    ##### Interference factor IF
+
+    IF_wing   = 1.0
+    IF_tailv  = 1.0
+    IF_tailh  = 1.04
+    IF_fus    = 1.0
+
+    ############ FINAL ZERO LIFT DRAG
+
+    CD0 = 1 / S * ((S_wet_wing * Cftot_wing * IF_wing) + (S_wet_tailh * Cftot_tailh * IF_tailh)
+                   + (S_wet_tailv * Cftot_tailv * IF_tailv) + (S_wet_fus * Cftot_fus * IF_fus)
+
+
+    #C_D0 = 1/ S_ref *
+    ####################### Lift induced drag
+    df1 = 0      # flap deflection - clean
+    df2 = 1.047  # flap deflection - Lnd
+    df3 = 0.349  # flap deflection - TO
+
+    oswaldclean = 1.78 * (1 - 0.045 * AR**0.68) - 0.64 + 0.0046 * df1
+    oswaldTO = 1.78 * (1 - 0.045 * AR**0.68) - 0.64 + 0.0046 * df3
+    oswaldLnd = 1.78 * (1 - 0.045 * AR**0.68) - 0.64 + 0.0046 * df2
+
+    d_CD_twist = 0 #0.00004 * (phi_tip - phi_MGC) #effect of twist
+
+    dAR = 0 #effect of wing tips
+    AR_eff = AR + dAR
+
+#    K_ground = (33 * (h/b)**1.5)/ (1 + 33 * (h/b)**1.5) #  ground effect
 #
-# def drag(AR):
-#     # inputs: AR, sweep_cLE, Df, S, Sh, Sv, L1, L2, L3, Re (cruise), cMAC, cMAC h, cMAC v.
-#
-#     ####################### Zero lift drag estimation
-#
-#     # wetted area
-#
-#     S_wet_wing = 1.07 * 2 * S
-#     S_wet_tailh = 1.05 * 2 * Sh
-#     S_wet_tailv = 1.05 * 2 * Sv
-#     S_wet_fus = (np.pi * Df / 4) * ( 1/(3*L1**2) * ((4 * L1**2 + Df**2/4)**1.5 - Df**3/8) - Df + 4*L2 + 2*np.sqrt(L3**2 + Df**2/4))
-#
-#     ####### skin friction coeff
-#     M = 0.75
-#     k = 0.152 * 10**-5         # for polished sheet metal
-#
-#     # wing
-#     Re_wing = min(Re, 44.62 * (c_MAC/k)**1.053 * M*1.16)
-#
-#     Cf_lam_wing = 1.328 / np.sqrt(Re_wing)
-#     Cf_tur_wing = 0.455 / ((np.log10(Re_wing) ** 2.58) * (1 + 0.144 * M ** 2) ** 0.65)
-#
-#     Cftot_wing = 0.35 * Cf_lam_wing + 0.65 * Cf_tur_wing  # values for smooth metal
-#
-#     # v tail
-#     Re_vtail = min(Re, 44.62 * (c_MACv/k)**1.053 * M*1.16)
-#
-#     Cf_lam_vtail = 1.328 / np.sqrt(Re_vtail)
-#     Cf_tur_vtail = 0.455 / ((np.log10(Re_vtail) ** 2.58) * (1 + 0.144 * M ** 2) ** 0.65)
-#
-#     Cftot_vtail = 0.35 * Cf_lam_vtail + 0.65 * Cf_tur_vtail  # values for smooth metal
-#
-#     # h tail
-#     Re_htail = min(Re, 44.62 * (c_MACt/k)**1.053 * M*1.16)
-#
-#     Cf_lam_htail = 1.328/np.sqrt(Re_htail)
-#     Cf_tur_htail = 0.455/((np.log10(Re_htail)**2.58) * (1 + 0.144 * M**2)**0.65)
-#
-#     Cftot_htail = 0.35 * Cf_lam_htail + 0.65 * Cf_tur_htail  # values for smooth metal
-#
-#     # fus
-#     Re_fus = min(Re, 44.62 * ((L1 + L2 + L3) / k) ** 1.053 * M * 1.16)
-#
-#     Cf_lam_fus = 1.328 / np.sqrt(Re_fus)
-#     Cf_tur_fus = 0.455 / ((np.log10(Re_fus) ** 2.58) * (1 + 0.144 * M ** 2) ** 0.65)
-#
-#     Cftot_fus  = 0.1  * Cf_lam_fus + 0.9  * Cf_tur_fus                # values for smooth metal
-#
-#
-#     ############ FINAL ZERO LIFT DRAG
-#
-#     CD0 = 1 / Sref * ((S_wet_wing * Cftot_wing) + (S_wet_tailh * Cftot_tailh)\
-#                       + (S_wet_tailv * Cftot_tailv) + (S_wet_fus * Cftot_fus)
-#
-#
-#     #C_D0 = 1/ S_ref *
-#     ####################### Lift induced drag
-#     df1 = 0      # flap deflection - clean
-#     df2 = 1.047  # flap deflection - Lnd
-#     df3 = 0.349  # flap deflection - TO
-#
-#     oswaldclean = 1.78 * (1 - 0.045 * AR**0.68) - 0.64 + 0.0046 * df1
-#     oswaldTO = 1.78 * (1 - 0.045 * AR**0.68) - 0.64 + 0.0046 * df3
-#     oswaldLnd = 1.78 * (1 - 0.045 * AR**0.68) - 0.64 + 0.0046 * df2
-#
-#     d_CD_twist = 0 #0.00004 * (phi_tip - phi_MGC) #effect of twist
-#
-#     dAR = 0 #effect of wing tips
-#     AR_eff = AR + dAR
-#
-# #    K_ground = (33 * (h/b)**1.5)/ (1 + 33 * (h/b)**1.5) #  ground effect
-# #
-# #    ######################### Total drag polar #######################
-# #    C_D = C_D0 + 1/(np.pi*AR_eff*oswald) * (CL - CL_minD)**2
-#
-#     return oswaldclean, oswaldTO, oswaldLnd
-#
-# osclean,osTO,osLnd = drag(AR)
+#    ######################### Total drag polar #######################
+#    C_D = C_D0 + 1/(np.pi*AR_eff*oswald) * (CL - CL_minD)**2
+
+    return oswaldclean, oswaldTO, oswaldLnd
+
+osclean,osTO,osLnd = drag(AR)
 
 wing, geom, cross1, hld, ail, x2, CL_clean_list, CL_landing_list, CL_to_list, alpha_range, CLmax_list = wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S, v_approach, V_C_TAS)
 
