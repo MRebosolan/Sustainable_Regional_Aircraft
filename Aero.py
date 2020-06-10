@@ -80,7 +80,7 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S, v_approach, V_C_TAS):
 
     #sweep_c4 = 40.535802011 * np.pi / 180 # from airfoil selection
 
-    print("Sweep =", sweep_c4 * 180 / np.pi)
+
 
     taper = 0.2 * (2 - sweep_c4)
 
@@ -157,7 +157,8 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S, v_approach, V_C_TAS):
 
     alpha0L = -3.667/180 * np.pi
 
-    #CL = CLalpha * (alpha - alpha0L)
+    CL = CLalpha * (0 - alpha0L)
+    print("CLalpha=", CLalpha)
 
     alpha_trim = CL_des / CLalpha + alpha0L
 
@@ -167,7 +168,7 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S, v_approach, V_C_TAS):
     dCLmax_land = 0.45
     dCLmax_to   = 0.3
 
-    dClmax_land = 0.9
+    dClmax_land = 1.3
 
     hinge_c     = 75 #percent
     aileron_C   = 75 #percent
@@ -200,6 +201,7 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S, v_approach, V_C_TAS):
             Cl_des, dCLmax_land, dCLmax_to]
 
     print("wing =", wing)
+    print("Sweep =", sweep_cLE * 180 / np.pi)
 
     cross1 = line_intersect(x_fus[0],y_fus[0],x_fus[1],y_fus[1],x_wing[0],y_wing[0],x_wing[1],y_wing[1])
 
@@ -221,7 +223,39 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S, v_approach, V_C_TAS):
     return wing, geom,cross1, hld, ail, x2
 
 
+def drag():
+    # inputs: AR, sweep_cLE
+
+    ####################### Zero lift drag fast estimation
+
+    wing_factor = 0.003
+    fuselage_factor = 0.0024
+    nacelles_factor = 0.006
+    tailplane_factor = 0.0025
+    misc_factor = 1.1           #multiply with CD0
+
+    # S_wet_wing = 1.07 * 2 * S
+
+
+    #C_D0 = 1/ S_ref *
+    ####################### Lift induced drag
+    df = 0 # flap deflection
+    oswald = 4.61 * (1 - 0.045 * AR**0.68) * (np.cos(sweep_cLE))**0.15 - 3.1 + 0.0046 * df
+
+    d_CD_twist = 0 #0.00004 * (phi_tip - phi_MGC) #effect of twist
+
+    dAR = 0 #effect of wing tips
+    AR_eff = AR + dAR
+
+    K_ground = (33 * (h/b)**1.5)/ (1 + 33 * (h/b)**1.5) #  ground effect
+
+    ######################### Total drag polar #######################
+    C_D = C_D0 + 1/(np.pi*AR_eff*oswald) * (CL - CL_minD)**2
+
+    return
+
 wing, geom, cross1, hld, ail, x2 = wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S, v_approach, V_C_TAS)
+
 
 
 #----------------------------- .txt File Airfoil Coordinates
@@ -348,12 +382,12 @@ plt.xlabel('x/c [-]')
 #plt.plot(xcoord2[3],ycoord2[3],color='r')
 #plt.xlim(0,1)
 #plt.ylim(-0.3,0.3)
-#plt.text(0.0,0.0,'LE')
+#plt.text(0.0,0.0,'LE')git pul
 #plt.text(1.0,0.0,'TE')
 #plt.ylabel('y/c [-]')
 #plt.xlabel('x/c [-]')
 #
-#plt.show()
+# plt.show()
 
 
 
