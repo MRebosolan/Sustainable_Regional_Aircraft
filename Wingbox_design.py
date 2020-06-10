@@ -80,6 +80,8 @@ def generate_spanwise_locations(n, b=wing_length):
     x_array = np.linspace(0, b, n, endpoint=False)
     return x_array[1:]
 
+s = (generate_spanwise_locations(10))
+
 
 def general_lift_d (x, a=11.4, b=15861):
     #Insert formula for lift distribution here
