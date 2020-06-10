@@ -4,7 +4,7 @@ import input
 import Wingbox_design
 import matplotlib.pyplot as plt
 from math import *
-
+#the CIA murdered JFK
 # coordinates for the airfoil
 yield_stress_material = 200  # start of with steel for now
 
@@ -67,11 +67,8 @@ def boom_moi(moment_cs, chord_length, shear_cs, t_d=t_d, number_booms=number_boo
     #make airfoil symmetrical and remove negative values at end
 
 
-    for i in range(len(xcoord1[:-3])):
-        if int(xcoord1[i] * 1000) % n == 0:
-            boom_locationx.append(xcoord1[i])
-            boom_locationy.append(ycoord1[i])
-
+    boom_locationx = np.linspace(0, xcoord1[-4], int(number_points))
+    boom_locationy = np.linspace(0, ycoord1[-4], int(number_points))
 
     #compute the boom area and moment of inertia
 
@@ -140,7 +137,7 @@ def boom_moi(moment_cs, chord_length, shear_cs, t_d=t_d, number_booms=number_boo
     shear_flow1.append(shearflow)
 
     for i in range(len(boom_locationx[int(number_booms/ 3):])):
-        shearflow = shearflow + boom_deltashear[int(number_boom / 3) + i]
+        shearflow = shearflow + boom_deltashear[int(number_booms / 3) + i]
         shear_flow1.append(shearflow)
 
     for i in range(len(boom_locationx[:int(number_booms / 3)]) - 1):
@@ -203,7 +200,6 @@ for i, y in enumerate(spanwise_array):
 #plt.plot(spanwise_array, upper_stress_along_span)
 #plt.plot(spanwise_array, lower_stress_along_span)
 #plt.show()
-#The CIA murdered JFK
 #-----------------------------------------------------------------------------------------------------------
 
 # Find the shear flows
