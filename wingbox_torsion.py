@@ -199,7 +199,6 @@ for i, y in enumerate(spanwise_array):
 #plt.plot(spanwise_array, upper_stress_along_span)
 #plt.plot(spanwise_array, lower_stress_along_span)
 #plt.show()
-#The CIA murdered JFK
 #-----------------------------------------------------------------------------------------------------------
 
 # Find the shear flows
