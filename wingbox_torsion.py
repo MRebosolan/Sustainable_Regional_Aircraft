@@ -44,13 +44,13 @@ ycoord2 = ycoord2[::-1]
 #INPUTS
 
 chord_length = 2  # chord length in meters
-t_d = .012 #THICkNESS OF AIRFOIL
-number_booms = 24 #NUMBER OF POINTS (10 POINTS = 16 BOOMS,4p=4b 5p=6b )#  (ON TOP SIDE FOR NOW)
+t_d = .02 #THICkNESS OF AIRFOIL
+number_booms = 120 #NUMBER OF POINTS (10 POINTS = 16 BOOMS,4p=4b 5p=6b )#  (ON TOP SIDE FOR NOW)
 moment_cs = 450000 #MOMENT OF CROSS SECTION
 
 #------------------------------------------------------------------------------------------------------------------
 
-def boom_moi(moment_cs, chord_length, shear_cs, t_d=t_d, number_booms=number_booms, stringer_area = 0.01):
+def boom_moi(moment_cs, chord_length, shear_cs, t_d=t_d, number_booms=number_booms, stringer_area = 0.001):
 
 #returns moments of inertia and boom normal stresses based on load, chord length and number of booms
 
@@ -181,6 +181,7 @@ moi_boom_along_span=[]
 upper_stress_along_span=[]
 lower_stress_along_span = []
 shear_stresses = []
+pitches = []
 
 
 for y in spanwise_array:
@@ -192,19 +193,20 @@ for i, y in enumerate(spanwise_array):
     moment_around_x = moments_around_x[i-1]
     shear_y = shears_y[i-1]
     chord = chords[i]
-    moi_boom, stress_boom_upper, stress_boom_lower, shear_stress_upper, shear_stress_lower = \
+    moi_boom, stress_boom_upper, stress_boom_lower, shear_stress_upper, shear_stress_lower, pitch = \
         boom_moi(moment_around_x, chord, shear_y)
     moi_boom_along_span.append(moi_boom)
     upper_stress_along_span.append(stress_boom_upper)
     lower_stress_along_span.append(stress_boom_lower)
     shear_stress = max(abs(shear_stress_upper), abs(shear_stress_lower))
     shear_stresses.append(shear_stress)
-
+    pitches.append(pitch)
 
 #plt.plot(spanwise_array, moi_boom_along_span)
 plt.plot(spanwise_array, upper_stress_along_span)
 plt.plot(spanwise_array, lower_stress_along_span)
 plt.plot(spanwise_array, shear_stresses)
+#plt.plot(spanwise_array, pitches)
 plt.show()
 print(max(shear_stresses), max(upper_stress_along_span))
 #-----------------------------------------------------------------------------------------------------------
