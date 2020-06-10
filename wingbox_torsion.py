@@ -44,13 +44,13 @@ ycoord2 = ycoord2[::-1]
 #INPUTS
 
 chord_length = 2  # chord length in meters
-t_d = .1 #THICkNESS OF AIRFOIL
-number_booms = 10 #NUMBER OF POINTS (10 POINTS = 16 BOOMS,4p=4b 5p=6b )#  (ON TOP SIDE FOR NOW)
+t_d = .012 #THICkNESS OF AIRFOIL
+number_booms = 24 #NUMBER OF POINTS (10 POINTS = 16 BOOMS,4p=4b 5p=6b )#  (ON TOP SIDE FOR NOW)
 moment_cs = 450000 #MOMENT OF CROSS SECTION
 
 #------------------------------------------------------------------------------------------------------------------
 
-def boom_moi(moment_cs, chord_length, shear_cs, t_d=t_d, number_booms=number_booms):
+def boom_moi(moment_cs, chord_length, shear_cs, t_d=t_d, number_booms=number_booms, stringer_area = 0.01):
 
 #returns moments of inertia and boom normal stresses based on load, chord length and number of booms
 
@@ -68,7 +68,6 @@ def boom_moi(moment_cs, chord_length, shear_cs, t_d=t_d, number_booms=number_boo
     boom_locationy = np.linspace(0, ycoord1[-4], int(number_points))
 
 
-    stringer_area = 0.1
     #compute the boom area and moment of inertia
 
     for i in range(len(boom_locationx)):
@@ -152,7 +151,6 @@ def boom_moi(moment_cs, chord_length, shear_cs, t_d=t_d, number_booms=number_boo
 
     return moi_boom_total, max(stress_boom_upper), min(stress_boom_lower), shear_stress_upper[0], shear_stress_upper[-1]
 
-print(boom_moi(45000, 2, 10000))
 
 #-----------------ITERATE OVER WINGSPAN-----------------
 
@@ -205,6 +203,7 @@ plt.plot(spanwise_array, upper_stress_along_span)
 plt.plot(spanwise_array, lower_stress_along_span)
 plt.plot(spanwise_array, shear_stresses)
 plt.show()
+print(max(shear_stresses), max(upper_stress_along_span))
 #-----------------------------------------------------------------------------------------------------------
 
 # Find the shear flows
