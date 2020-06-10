@@ -67,11 +67,8 @@ def boom_moi(moment_cs, chord_length, shear_cs, t_d=t_d, number_booms=number_boo
     #make airfoil symmetrical and remove negative values at end
 
 
-    for i in range(len(xcoord1[:-3])):
-        if int(xcoord1[i] * 1000) % n == 0:
-            boom_locationx.append(xcoord1[i])
-            boom_locationy.append(ycoord1[i])
-
+    boom_locationx = np.linspace(0, xcoord1[-4], int(number_points))
+    boom_locationy = np.linspace(0, ycoord1[-4], int(number_points))
 
     #compute the boom area and moment of inertia
 
