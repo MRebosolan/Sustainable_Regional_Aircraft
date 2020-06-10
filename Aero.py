@@ -275,7 +275,7 @@ def drag():
 
 wing, geom, cross1, hld, ail, x2 = wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S, v_approach, V_C_TAS)
 
-
+oswald3 = 1.1*(0.09858/8)/(19.5*10**6*(0.09858/8)+(1-19.5*10**6)*np.pi)
 
 #----------------------------- .txt File Airfoil Coordinates
 
