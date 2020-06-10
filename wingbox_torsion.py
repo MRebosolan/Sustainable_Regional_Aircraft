@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from math import *
 #the CIA murdered JFK
 # coordinates for the airfoil
-yield_stress_material = 200  # start of with steel for now
+
 
 # Read from file
 
@@ -26,31 +26,33 @@ xcoord1 = xcoord1[::-1]
 ycoord1 = ycoord1[::-1]
 ycoord2 = ycoord2[::-1]
 
-#plt.figure(1)
-# plt.grid(True, which="major", color="#999999")
-# plt.grid(True, which="minor", color="#DDDDDD", ls="--")
-# plt.minorticks_on()
-# plt.plot(xcoord1, ycoord1, color='r')
-# plt.plot(xcoord1, ycoord2, color='r')
-# plt.xlim(0, 1)
-# plt.ylim(-0.3, 0.3)
-# plt.text(0.0, 0.0, 'LE')
-# plt.text(1.0, 0.0, 'TE')
-# plt.ylabel('y/c [-]')
-# plt.xlabel('x/c [-]')
+plt.figure(1)
+plt.grid(True, which="major", color="#999999")
+plt.grid(True, which="minor", color="#DDDDDD", ls="--")
+plt.minorticks_on()
+plt.plot(xcoord1, ycoord1, color='r')
+plt.plot(xcoord1, ycoord2, color='r')
+plt.xlim(0, 1)
+plt.ylim(-0.3, 0.3)
+plt.text(0.0, 0.0, 'LE')
+plt.text(1.0, 0.0, 'TE')
+plt.ylabel('y/c [-]')
+plt.xlabel('x/c [-]')
 
-#plt.show()
+plt.show()
 #------------------------------------------------------------------------------------------------------------------
 #INPUTS
 
 chord_length = 2  # chord length in meters
-t_d = .1 #THICkNESS OF AIRFOIL
-number_booms = 10 #NUMBER OF POINTS (10 POINTS = 16 BOOMS,4p=4b 5p=6b )#  (ON TOP SIDE FOR NOW)
+t_d = .02 #THICkNESS OF AIRFOIL
+number_booms = 120 #NUMBER OF POINTS (10 POINTS = 16 BOOMS,4p=4b 5p=6b )#  (ON TOP SIDE FOR NOW)
 moment_cs = 450000 #MOMENT OF CROSS SECTION
+Kc, Ks = 6.4, 8.2 #clamping coeeficients
+E = 71.7E9
 
 #------------------------------------------------------------------------------------------------------------------
 
-def boom_moi(moment_cs, chord_length, shear_cs, t_d=t_d, number_booms=number_booms):
+def boom_moi(moment_cs, chord_length, shear_cs, t_d=t_d, number_booms=number_booms, stringer_area = 0.001):
 
 #returns moments of inertia and boom normal stresses based on load, chord length and number of booms
 
@@ -68,7 +70,6 @@ def boom_moi(moment_cs, chord_length, shear_cs, t_d=t_d, number_booms=number_boo
     boom_locationy = np.linspace(0, ycoord1[-4], int(number_points))
 
 
-    stringer_area = 0.1
     #compute the boom area and moment of inertia
 
     for i in range(len(boom_locationx)):
@@ -155,7 +156,6 @@ def boom_moi(moment_cs, chord_length, shear_cs, t_d=t_d, number_booms=number_boo
 
     return moi_boom_total, max(stress_boom_upper), min(stress_boom_lower), shear_stress_upper[0], shear_stress_upper[-1], stringer_pitch
 
-print(boom_moi(45000, 2, 10000))
 
 #-----------------ITERATE OVER WINGSPAN-----------------
 
@@ -183,6 +183,7 @@ moi_boom_along_span=[]
 upper_stress_along_span=[]
 lower_stress_along_span = []
 shear_stresses = []
+pitches = []
 
 
 for y in spanwise_array:
@@ -194,20 +195,26 @@ for i, y in enumerate(spanwise_array):
     moment_around_x = moments_around_x[i-1]
     shear_y = shears_y[i-1]
     chord = chords[i]
-    moi_boom, stress_boom_upper, stress_boom_lower, shear_stress_upper, shear_stress_lower = \
+    moi_boom, stress_boom_upper, stress_boom_lower, shear_stress_upper, shear_stress_lower, pitch = \
         boom_moi(moment_around_x, chord, shear_y)
     moi_boom_along_span.append(moi_boom)
     upper_stress_along_span.append(stress_boom_upper)
     lower_stress_along_span.append(stress_boom_lower)
     shear_stress = max(abs(shear_stress_upper), abs(shear_stress_lower))
     shear_stresses.append(shear_stress)
-
+    pitches.append(pitch)
 
 #plt.plot(spanwise_array, moi_boom_along_span)
 plt.plot(spanwise_array, upper_stress_along_span)
 plt.plot(spanwise_array, lower_stress_along_span)
 plt.plot(spanwise_array, shear_stresses)
-plt.show()
+#plt.plot(spanwise_array, pitches)
+#plt.show()
+print(max(shear_stresses), max(upper_stress_along_span))
+compression_buckling_stress = Kc * E * (t_d/max(pitches))**2
+shear_buckling_stress = Ks * E * (t_d/max(pitches))**2
+print(compression_buckling_stress, shear_buckling_stress)
+
 #-----------------------------------------------------------------------------------------------------------
 
 # Find the shear flows
