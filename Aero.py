@@ -193,7 +193,7 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S, v_approach, V_C_TAS):
 
     alpha0L = -3.936 / 180 * np.pi     # at Re = 19520133
 
-
+    CL = CLalpha * (0 - alpha0L)
     print("CLalpha=", CLalpha * np.pi / 180)
     print("alpha0l_land, alpha0l_to=", (alpha0L + d_alpha0l_land) * 180 / np.pi, (alpha0L + d_alpha0l_to) * 180 / np.pi)
 
@@ -261,7 +261,7 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S, v_approach, V_C_TAS):
     return wing, geom,cross1, hld, ail, x2, CL_clean_list, CL_landing_list, CL_to_list, alpha_range, CLmax_list
 
 
-def drag():
+def drag(AR):
     # inputs: AR, sweep_cLE
 
     ####################### Zero lift drag fast estimation
@@ -277,20 +277,27 @@ def drag():
 
     #C_D0 = 1/ S_ref *
     ####################### Lift induced drag
-    df = 0 # flap deflection
-    oswald = 4.61 * (1 - 0.045 * AR**0.68) * (np.cos(sweep_cLE))**0.15 - 3.1 + 0.0046 * df
+    df1 = 0      # flap deflection - clean
+    df2 = 1.047  # flap deflection - Lnd
+    df3 = 0.349  # flap deflection - TO
+
+    oswaldclean = 1.78 * (1 - 0.045 * AR**0.68) - 0.64 + 0.0046 * df1
+    oswaldTO = 1.78 * (1 - 0.045 * AR**0.68) - 0.64 + 0.0046 * df3
+    oswaldLnd = 1.78 * (1 - 0.045 * AR**0.68) - 0.64 + 0.0046 * df2
 
     d_CD_twist = 0 #0.00004 * (phi_tip - phi_MGC) #effect of twist
 
     dAR = 0 #effect of wing tips
     AR_eff = AR + dAR
 
-    K_ground = (33 * (h/b)**1.5)/ (1 + 33 * (h/b)**1.5) #  ground effect
+#    K_ground = (33 * (h/b)**1.5)/ (1 + 33 * (h/b)**1.5) #  ground effect
+#
+#    ######################### Total drag polar #######################
+#    C_D = C_D0 + 1/(np.pi*AR_eff*oswald) * (CL - CL_minD)**2
 
-    ######################### Total drag polar #######################
-    C_D = C_D0 + 1/(np.pi*AR_eff*oswald) * (CL - CL_minD)**2
+    return oswaldclean, oswaldTO, oswaldLnd
 
-    return
+osclean,osTO,osLnd = drag(AR)
 
 wing, geom, cross1, hld, ail, x2, CL_clean_list, CL_landing_list, CL_to_list, alpha_range, CLmax_list = wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S, v_approach, V_C_TAS)
 
