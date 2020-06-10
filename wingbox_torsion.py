@@ -26,18 +26,18 @@ xcoord1 = xcoord1[::-1]
 ycoord1 = ycoord1[::-1]
 ycoord2 = ycoord2[::-1]
 
-plt.figure(1)
-plt.grid(True, which="major", color="#999999")
-plt.grid(True, which="minor", color="#DDDDDD", ls="--")
-plt.minorticks_on()
-plt.plot(xcoord1, ycoord1, color='r')
-plt.plot(xcoord1, ycoord2, color='r')
-plt.xlim(0, 1)
-plt.ylim(-0.3, 0.3)
-plt.text(0.0, 0.0, 'LE')
-plt.text(1.0, 0.0, 'TE')
-plt.ylabel('y/c [-]')
-plt.xlabel('x/c [-]')
+#plt.figure(1)
+# plt.grid(True, which="major", color="#999999")
+# plt.grid(True, which="minor", color="#DDDDDD", ls="--")
+# plt.minorticks_on()
+# plt.plot(xcoord1, ycoord1, color='r')
+# plt.plot(xcoord1, ycoord2, color='r')
+# plt.xlim(0, 1)
+# plt.ylim(-0.3, 0.3)
+# plt.text(0.0, 0.0, 'LE')
+# plt.text(1.0, 0.0, 'TE')
+# plt.ylabel('y/c [-]')
+# plt.xlabel('x/c [-]')
 
 #plt.show()
 #------------------------------------------------------------------------------------------------------------------
@@ -144,11 +144,12 @@ def boom_moi(moment_cs, chord_length, shear_cs, t_d=t_d, number_booms=number_boo
 
     shear_flow = shear_flow2 + shear_flow1
     shear_stress_upper = np.array(shear_flow) / t_d
-    shear_stress_lower = -shear_stress_upper
+    #shear_stress_lower = -shear_stress_upper
 
 
-    return moi_boom_total, stress_boom_upper, stress_boom_lower, shear_stress_upper, shear_stress_lower
+    return moi_boom_total, max(stress_boom_upper), min(stress_boom_lower), shear_stress_upper[0], shear_stress_upper[-1]
 
+print(boom_moi(45000, 2, 10000))
 
 #-----------------ITERATE OVER WINGSPAN-----------------
 
@@ -195,9 +196,9 @@ for i, y in enumerate(spanwise_array):
     lower_stress_along_span.append(stress_boom_lower)
 
 #plt.plot(spanwise_array, moi_boom_along_span)
-#plt.plot(spanwise_array, upper_stress_along_span)
-#plt.plot(spanwise_array, lower_stress_along_span)
-#plt.show()
+plt.plot(spanwise_array, upper_stress_along_span)
+plt.plot(spanwise_array, lower_stress_along_span)
+plt.show()
 #-----------------------------------------------------------------------------------------------------------
 
 # Find the shear flows
@@ -287,8 +288,7 @@ M_y_array=[]
 for x in x_array[2:]:
     M_y_array.append(internal_y_bending_moment(x)[0])
 
-print(lift, weight, engine_weight, x_lift, x_weight, x_engine, M_y, R_z, x_array[-1])
-print(internal_y_bending_moment(x_array[-1]))
+
 #plt.plot(y_array[2:], M_y_array )
 #plt.show()
 
