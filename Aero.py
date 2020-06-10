@@ -340,10 +340,16 @@ def drag(AR):
     AR_eff = AR + dAR
 
 #    K_ground = (33 * (h/b)**1.5)/ (1 + 33 * (h/b)**1.5) #  ground effect
-#
+#    
 #    ######################### Total drag polar #######################
 #    C_D = C_D0 + 1/(np.pi*AR_eff*oswald) * (CL - CL_minD)**2
 
+
+    f = l/np.sqrt(4*Amax/np.pi)
+    FFw = (1 + 0.6/(x/c)*(t/c) + 100*(t/c)**4)*(1.34*M_cruise**0.18*(np.cos(sweep_m))**0.28)
+    FFf = (1+60/(f**3)+f/400)
+    
+    
     return oswaldclean, oswaldTO, oswaldLnd
 
 osclean,osTO,osLnd = drag(AR)
