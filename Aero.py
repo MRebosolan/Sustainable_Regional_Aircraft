@@ -125,8 +125,8 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S, v_approach, V_C_TAS):
     WS_cr_end = 0.9629656887889539 * MTOW / S
 
     CL_des = 1.1/q * (0.5*(WS_cr_start + WS_cr_end))
-    Cl_des = CL_des / np.cos(sweep_c4)**2
-    Cl_des = Cl_des * np.sqrt(1 - M_cruise**2)
+    Cl_des = CL_des / (np.cos(sweep_c4)**2)
+    #Cl_des = Cl_des * np.sqrt(1 - M_cruise**2)
     print("Cl design =", CL_des, Cl_des)
 
     T_alt = 288 * (1 - 0.0065*inp.Cruise_alt*1000/288)
@@ -141,41 +141,28 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S, v_approach, V_C_TAS):
     Re_sea = (1.225 * 66 * c_mac) / 1.802e-5
 
     M_sea = v_approach / np.sqrt(1.4*287*288)
+    M_to = (1.2 * V_S) / np.sqrt(1.4*287*288)
+    Re_to = (1.225 * 1.2 * V_S * 0.514444 * c_mac) / 1.802e-5
+
     print("M_sea = ", M_sea, M_cruise2)
 
-    print("Re =", Re, Re2, Re_sea)
+    print("Re =", Re, Re2, Re_sea, Re_to)
     # With CL_max = 1.8
     # CLmax = 2.464
     # CLmax take-off: 2.1 , Clmax landing: 2.25
     #     # target for take-off: Delta CLmax = 0.3
     #     # target for landing: Delta CLmax = 0.45
 
-    k = (0.115 * 180 / np.pi) / (2 * np.pi)
+    dCLmax_land = 0.2984
+    dCLmax_to   = 0.16316
 
-    beta = np.sqrt(1 - M_cruise**2)
-    CLalpha = (2*np.pi*AR)/ (2 + np.sqrt(4 + (AR * beta / k) * (1 + (np.tan(sweep_c2)**2/beta**2))))
-
-    alpha0L = -3.667/180 * np.pi
-
-    CL = CLalpha * (0 - alpha0L)
-    print("CLalpha=", CLalpha)
-
-    alpha_trim = CL_des / CLalpha + alpha0L
-
-    CLmax_corrected = 0.74 * 2.432
-    print("CLmax_corrected =", CLmax_corrected)
-
-    dCLmax_land = 0.45
-    dCLmax_to   = 0.3
-
-    dClmax_land = 1.3
+    dClmax_land = 0.9
 
     hinge_c     = 75 #percent
     aileron_C   = 75 #percent
 
     sweep_hinge = np.arctan(np.tan(sweep_c4) - 4/AR * ((hinge_c-25)/100 * (1 - taper)/(1 + taper)))
-    print(sweep_hinge)
-    SwfS = dCLmax_land/ (0.9 * dClmax_land * np.cos(sweep_hinge))
+    SwfS = dCLmax_land / (0.9 * dClmax_land * np.cos(sweep_hinge))
 
     Df = widthf/2 * 1.25 # clearance of 1/8 * fuselage diameter completely arbitrary
 
@@ -190,12 +177,43 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S, v_approach, V_C_TAS):
     print("x2 = ", (x2 + Df))
 
     Sw_check = ((-2 * a * Df + c_root) + (-2 * a * (Df + x2) + c_root)) * x2 / 2 / S   #verified
-    print(SwfS, Sw_check)
+    print("SwfS, Sw_check", SwfS, Sw_check)
 
-    d_alpha_0 = -5 * np.pi / 180
 
-    d_alpha = d_alpha_0 * SwfS * np.cos(sweep_hinge)
+    # NEW LIFT CURVE
 
+    eta = 0.95
+
+    beta = np.sqrt(1 - M_cruise ** 2)
+    CLalpha = (2 * np.pi * AR) / (2 + np.sqrt(4 + (AR * beta / eta)**2 * (1 + (np.tan(sweep_c2) / beta)**2)))
+    d_alpha0l_land = -15 / 180 * np.pi * SwfS * np.cos(sweep_hinge)
+    d_alpha0l_to   = -10 / 180 * np.pi * SwfS * np.cos(sweep_hinge)
+
+    print("d_alpha0l_land, d_alpha0l_to=",d_alpha0l_land * 180 / np.pi, d_alpha0l_to * 180 / np.pi)
+
+    alpha0L = -3.936 / 180 * np.pi     # at Re = 19520133
+
+    CL = CLalpha * (0 - alpha0L)
+    print("CLalpha=", CLalpha * np.pi / 180)
+    print("alpha0l_land, alpha0l_to=", (alpha0L + d_alpha0l_land) * 180 / np.pi, (alpha0L + d_alpha0l_to) * 180 / np.pi)
+
+    alpha_trim = CL_des / CLalpha + alpha0L
+    print("alpha_trim=", alpha_trim * 180 / np.pi)
+
+    # CLmax/Clmax vs sweepLE plot: dy > 2.5, -> CLmax/Clmax = 0.82
+    # Re takeoff = 15071059, Re landing = 16326981
+
+    CLmax_wing_landing = 0.82 * 2.38
+    CLmax_wing_to      = 0.82 * 2.362
+
+    print("CLmax at landing=",CLmax_wing_landing)
+    print("CLmax at takeoff=", CLmax_wing_to)
+
+    d_alpha_CLmax = 2.6
+    alpha_stall_landing = CLmax_wing_landing/(CLalpha * np.pi / 180) + alpha0L + d_alpha_CLmax
+    alpha_stall_to      = CLmax_wing_to/(CLalpha * np.pi / 180) + alpha0L + d_alpha_CLmax
+    print("alpha_stall_landing=", alpha_stall_landing)
+    print("alpha_stall_takeoff=", alpha_stall_to)
 
     wing = [sweep_c4, sweep_c2, sweep_cLE, taper, c_root, c_tip, c_mac, y_mac, t_c, dihedral,
             Cl_des, dCLmax_land, dCLmax_to]
@@ -387,7 +405,7 @@ plt.xlabel('x/c [-]')
 #plt.ylabel('y/c [-]')
 #plt.xlabel('x/c [-]')
 #
-# plt.show()
+plt.show()
 
 
 
