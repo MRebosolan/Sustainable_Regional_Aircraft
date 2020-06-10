@@ -45,7 +45,7 @@ ycoord2 = ycoord2[::-1]
 
 chord_length = 2  # chord length in meters
 t_d = 0.01 #THICkNESS OF AIRFOIL
-number_booms = 4 #NUMBER OF POINTS (10 POINTS = 16 BOOMS,4p=4b 5p=6b )#  (ON TOP SIDE FOR NOW)
+number_booms = 10 #NUMBER OF POINTS (10 POINTS = 16 BOOMS,4p=4b 5p=6b )#  (ON TOP SIDE FOR NOW)
 moment_cs = 450000 #MOMENT OF CROSS SECTION
 
 #------------------------------------------------------------------------------------------------------------------
@@ -137,12 +137,14 @@ def boom_moi(moment_cs, chord_length, shear_cs, t_d=t_d, number_booms=number_boo
         if boom_locationx[i] >= 1/3:
             shearflow = shearflow + boom_deltashear[i]
             shear_flow1.append(shearflow)
+    shearflow = 0
     for i in range(len(boom_deltashear)):
-        if boom_locationx[i] > 1 / 3:
-            shearflow = shearflow + boom_deltashear[i]
+        if boom_locationx[i] < 1 / 3:
+            shearflow = shearflow - boom_deltashear[i]
             shear_flow2.append(shearflow)
 
-    shear_flow = shear_flow2 + shear_flow1
+    shear_flow = shear_flow2[::-1] + shear_flow1
+    print(shear_flow)
     shear_stress_upper = np.array(shear_flow) / t_d
     #shear_stress_lower = -shear_stress_upper
 
@@ -196,9 +198,9 @@ for i, y in enumerate(spanwise_array):
     lower_stress_along_span.append(stress_boom_lower)
 
 #plt.plot(spanwise_array, moi_boom_along_span)
-plt.plot(spanwise_array, upper_stress_along_span)
-plt.plot(spanwise_array, lower_stress_along_span)
-plt.show()
+# plt.plot(spanwise_array, upper_stress_along_span)
+# plt.plot(spanwise_array, lower_stress_along_span)
+# plt.show()
 #-----------------------------------------------------------------------------------------------------------
 
 # Find the shear flows
