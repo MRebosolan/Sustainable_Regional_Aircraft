@@ -40,23 +40,30 @@ MLW = MTOW                   # maximum landing weight [N], same as MTOW because 
 
 #Wing and Empennage parameters
 #------------------------------------------------------------------------------------------------------------------
-t_over_c = 0.134                  # estimate, [] , maximum thickness over chord ratio for main wing
+t_over_c = 0.14                  # estimate, [] , maximum thickness over chord ratio for main wing
 AR = 8                            # estimate, [-], Aspect ratio
+
+half_sweep = 0.3985698252407915         # estimate, [degrees], sweep at half chord for main wing
+LE_sweep = 0.5051251603789663         # Leading egde wing sweepTBD, assumed backward let Rick know if it turns out to be forward sweep, calculate with Adsee formula
+quarter_sweep = 0.45322773323204535
+wingloading = 4375.84             # [N/m2] estimate
+
 wingloading = 4375.84             # [N/m2] estimate 
 AR_h = 4                          #Aspect ratio of the horizontal tail [-], TBD
 AR_v = 1.7                        #AR vtail; 1< AR_v<2
 taper_v = 0.6                     #taper ratio vertical tail
 e_tail = 0.85                     #oswald efficiency factor of tail, TBD
 #------------------------------------------------------------------------------------------------------------------
-half_sweep = 0.663         # estimate, [degrees], sweep at half chord for main wing
-LE_sweep =0.7485         # Leading egde wing sweepTBD, 
-quarter_sweep = 0.707   
+# half_sweep = 0.663         # estimate, [degrees], sweep at half chord for main wing
+# LE_sweep =0.7485         # Leading egde wing sweepTBD,
+# quarter_sweep = 0.707
+
 
 S = MTOW /wingloading             # [m2] wing area
 print('please use S from class 2')
 
-Cr = 4.49                       # Wing root chord [m]
-Ct = 1.16                          # Wing tip chord [m]
+Cr = 4.292998                     # Wing root chord [m]
+Ct = 1.328058                     # Wing tip chord [m]
 taper = Ct / Cr                   # wing taper ratio [-]
 b = (S * AR)**0.5                 # wingspan [m]
 
@@ -211,6 +218,9 @@ MAC =  2 / 3 * Cr * ((1 + taper + taper**2) / (1 + taper)) #length of mean aerod
 y_MAC = b / 6 * ((1 + 2 * taper) / (1 + taper))            #spanwise location of mean aerodynamic chord
 x_lemac_rootchord = y_MAC * np.tan(LE_sweep)               #x position of mac at leading edge [m], measured from the start of the root choord!!!!
 x_LEMAC_nose = x_start_Cr + x_lemac_rootchord
+
+Cla_aileron = 6.48                  #1/rad, sectional lift curve slope at wing section where aileron is located, determine by datcom method or airfoil simulation
+Cd0_aileron = 0.007               #zero drag coefficient [-] at wing section where aileron is located, determine by airfoil simulation
 
 
 # Aerodynamics for scissor plot:

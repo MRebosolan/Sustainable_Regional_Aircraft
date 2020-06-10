@@ -4,7 +4,7 @@ import Class_2_estimation as Cl2
 import scissor_plot_wing_shift as sc_shift
 from CG_excursion_wing_shift import tailcone_length
 """
-Responsible person: Tobias | FOR NOW!!!! run from line 55
+Responsible person: Tobias 
 
 This code requires as inputs:
     MTOW           | Maximum take-off weight
@@ -106,13 +106,13 @@ print ()
 def nose_lg_loc(x_main_lg= x_main_lg, x_cg=x_cg,MTOW=MTOW,g=g):
     dist = []
     d = 0.005
-    for distance in np.arange(0,x_cg,d):
-        F_nose_lg = MTOW*g*(x_main_lg-x_cg)/(x_cg-distance)
+    for distance in np.arange(-5,x_cg,d):
+        F_nose_lg = MTOW*(x_main_lg-x_cg)/(x_cg-distance)
         #Force_on_nose_lg.append(F_nose_lg)
-        if F_nose_lg <= 0.08*MTOW*g or F_nose_lg >= 0.15*MTOW*g:
-            continue
-        else:
+        if 0.08*MTOW <= F_nose_lg <= 0.15*MTOW and 0.08*W_fwrd_cg <= W_fwrd_cg*(x_main_lg-x_cg_fwrd)/(x_cg_fwrd-distance) <= 0.15*W_fwrd_cg and 0.08*W_aft_cg <= W_aft_cg*(x_main_lg-x_cg_aft)/(x_cg_aft-distance) <= 0.15*W_fwrd_cg:
             dist.append(distance)
+        else:
+            continue
     return dist
 dist = nose_lg_loc()
 
@@ -123,8 +123,8 @@ print()
 print('Nose gear: The maximum x-distance from the nose equals', np.round(np.max(dist),4),'[m]')
 print ()
 
-dist = np.round(np.min(dist),4)
-print (dist)
+#dist = np.round(np.min(dist),4)
+#print (dist)
 
 dist_max = np.round(np.max(dist),4) #-1 if it is too much forward; it does not have a large effect on the lateral position; that is to say, the effect is not severe.   #the minimum distance between the nose and nose landing gear
 dist_min = np.round(np.min(dist),4) #the maximum distance between the nose and nose landing gear
@@ -149,16 +149,13 @@ def lat_pos_lg(z_main_lg=z_main_lg,dist=dist,x_main_lg=x_main_lg,x_cg_aft=x_cg_a
 
 
 y_lg_list, b_n_list = lat_pos_lg(z_main_lg)
-"""
-def req_htail_area(x_main_lg,Cl_htail=Cl_htail,x_ac_htail=x_ac_htail,x_cg = x_cg,rho_to=rho_to,Vlof=Vlof,MTOW=MTOW,g=g,htail_sweep=htail_sweep):
 
-def req_htail_area(x_main_lg,Cl_htail=Cl_htail,x_ac_htail=x_ac_htail,x_cg = x_cg_fwrd,rho_to=rho_to,Vlof=Vlof,MTOW=MTOW,htail_sweep=htail_sweep):
-
-    
+def req_htail_area(x_main_lg,Cl_htail=Cl_htail,x_ac_htail=x_ac_htail,x_cg = x_cg_fwrd,rho_to=rho_to,Vlof=Vlof,MTOW=MTOW,htail_sweep=htail_sweep): 
     htail_area = -((x_main_lg-x_cg)*MTOW - .5*rho_to*(Vlof)**2*S*0*(x_main_lg-sc_shift.aerodynamiccenter) + sc_shift.momentcoefficient*.5*rho_to*(Vlof**2)*S*sc_shift.MAC )  /(0.5*rho_to*(Vlof/np.cos(htail_sweep))**2*Cl_htail)
     return htail_area
 htail_area = req_htail_area(x_main_lg)
-"""
+
+print ('The required htail area equals:',htail_area,'[m2]')
 print ('The minimum lateral distance of the landing gear:',np.round(min(y_lg_list),3),'[m]')
 print ('This means the main landing gear stick out',np.round(min(y_lg_list)-z_cg,3),'meters from the fuselage' )
 print ()
@@ -178,8 +175,9 @@ def tire_pressure(LCN=LCN):
     ptire_max = 430*np.log(LCN)-680   # maximum allowable tire pressure
     return ptire_max
 ptire_max = tire_pressure()
+
 print (np.round(ptire_max,4),'kPa',np.round(ptire_max,4)*0.145037738,'psi')
-#print ('This is actually quite comparable to the CRJ700, according to their airport planning manual')
+
 mg_x_cg = x_main_lg-x_cg # distance from the main lg to the cg
 ng_x_cg = x_cg-np.round(np.min(dist),4) # distance from the nose_lg to the cg
 mw_nw_d = x_main_lg-np.round(np.min(dist),4)
@@ -207,11 +205,12 @@ print (1.07*P_mw_stat*0.2248,1.07*max(P_nw_des,P_nw_des_stat)*0.2248,1.07*P_n_dy
 print ()
 print ('ESWL nose and ESWL for main, respectively:', ESWL_n,ESWL_m,'kg')
 
-# DUMMY
+#DUMMY#######################
 D_o = 26         # [in]outside tire diameter, also: Dt
 load_radius = 11.2 # obtain from table section 2.4.5 roskam book IV
 s_t = D_o - 2*(load_radius) #[TBD]
-#
+#############################
+
 w_td = 10 #[fps] touch down rate in feet per second; for FAR 25.723 certified aircraft, otherwiswe take 10
 N_g = 2.0 #1.5-2 Landing gear load factor
 eta_t = 0.47 # tire energy absorption efficiency

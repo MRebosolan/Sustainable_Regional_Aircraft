@@ -50,7 +50,7 @@ moment_cs = 450000 #MOMENT OF CROSS SECTION
 
 #------------------------------------------------------------------------------------------------------------------
 
-def boom_moi(moment_cs, chord_length, t_d=t_d, number_booms=number_booms):
+def boom_moi(moment_cs, chord_length, shear_cs, t_d=t_d, number_booms=number_booms):
 
 #returns moments of inertia and boom normal stresses based on load, chord length and number of booms
 
@@ -90,7 +90,7 @@ def boom_moi(moment_cs, chord_length, t_d=t_d, number_booms=number_booms):
 
             boom_area.append(area_boom)
             boom_moi.append(moi_boom)
-        elif i == len(boom_locationx)-1:
+        if i == len(boom_locationx)-1:
             boom_12dx = (boom_locationx[i - 1] - boom_locationx[i]) * chord_length
             boom_12dy = (boom_locationy[i - 1] - boom_locationy[i]) * chord_length
             boom_23dx = (1 - boom_locationx[i]) * chord_length
@@ -128,7 +128,7 @@ def boom_moi(moment_cs, chord_length, t_d=t_d, number_booms=number_booms):
             stress_boom_upper.append(boom_stress)
             stress_boom_lower.append(-boom_stress)
 
-    for i in range(len(boom_locationx-1)):
+    for i in range(len(boom_locationx)-1):
         if i > 0:
             deltashear_boom = shear_cs * boom_area[i] * boom_locationy[i] / moi_boom_total
             boom_deltashear.append(deltashear_boom)
@@ -175,20 +175,26 @@ def generate_chord_array(y_array, Cr=Cr, Ct=Ct, b=wing_length):
 spanwise_array = Wingbox_design.generate_spanwise_locations(1000)[2:]
 moments_around_x = []
 moments_around_z = []
+shears_y = []
 chords = generate_chord_array(spanwise_array)
 moi_boom_along_span=[]
 upper_stress_along_span=[]
 lower_stress_along_span = []
+shear_stresses_upper = []
+shear_stresses_lower = []
 
 
 for y in spanwise_array:
     moments_around_x.append(Wingbox_design.internal_x_bending_moment(y))
     moments_around_z.append(Wingbox_design.internal_z_bending_moment(y))
+    shears_y.append(Wingbox_design.internal_vertical_shear_force(y))
 
 for i, y in enumerate(spanwise_array):
     moment_around_x = moments_around_x[i-1]
+    shear_y = shears_y[i-1]
     chord = chords[i]
-    moi_boom, stress_boom_upper, stress_boom_lower = boom_moi(moment_around_x, chord)
+    moi_boom, stress_boom_upper, stress_boom_lower, shear_stress_upper, shear_stress_lower = \
+        boom_moi(moment_around_x, chord, shear_y)
     moi_boom_along_span.append(moi_boom)
     upper_stress_along_span.append(stress_boom_upper)
     lower_stress_along_span.append(stress_boom_lower)
@@ -197,7 +203,7 @@ for i, y in enumerate(spanwise_array):
 #plt.plot(spanwise_array, upper_stress_along_span)
 #plt.plot(spanwise_array, lower_stress_along_span)
 #plt.show()
-
+#The CIA murdered JFK
 #-----------------------------------------------------------------------------------------------------------
 
 # Find the shear flows
@@ -289,6 +295,6 @@ for x in x_array[2:]:
 
 print(lift, weight, engine_weight, x_lift, x_weight, x_engine, M_y, R_z, x_array[-1])
 print(internal_y_bending_moment(x_array[-1]))
-plt.plot(y_array[2:], M_y_array )
+#plt.plot(y_array[2:], M_y_array )
 #plt.show()
 
