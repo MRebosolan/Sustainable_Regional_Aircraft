@@ -268,8 +268,11 @@ mach_cruise = V_C_estimate/a       #Cruise mach
 theta = 15                         #Clearance angle [deg]
 #------------------------------------------------------------------------------------------------------------------
 
+d_wheel_main_lg = 1             #Main landing gear diameter [m]
+d_wheel_nose_lg = 0.5
 
-
+strut_length_main_lg = 1        #[m]
+strut_length_nose_lg = 0.75
 #Lift/drag ratios
 #------------------------------------------------------------------------------------------------------------------
 
