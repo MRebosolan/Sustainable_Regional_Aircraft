@@ -259,6 +259,7 @@ def drag():
     ####################### Lift induced drag
     df = 0 # flap deflection
     oswald = 4.61 * (1 - 0.045 * AR**0.68) * (np.cos(sweep_cLE))**0.15 - 3.1 + 0.0046 * df
+    oswald2 = 1.1*(CLa/AR)/(Re*(CLa/AR)+(1-Re)*np.pi)
 
     d_CD_twist = 0 #0.00004 * (phi_tip - phi_MGC) #effect of twist
 
@@ -405,7 +406,7 @@ plt.xlabel('x/c [-]')
 #plt.ylabel('y/c [-]')
 #plt.xlabel('x/c [-]')
 #
-plt.show()
+#plt.show()
 
 
 
