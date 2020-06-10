@@ -193,7 +193,7 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S, v_approach, V_C_TAS):
 
     alpha0L = -3.936 / 180 * np.pi     # at Re = 19520133
 
-    CL = CLalpha * (0 - alpha0L)
+
     print("CLalpha=", CLalpha * np.pi / 180)
     print("alpha0l_land, alpha0l_to=", (alpha0L + d_alpha0l_land) * 180 / np.pi, (alpha0L + d_alpha0l_to) * 180 / np.pi)
 
@@ -214,6 +214,26 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S, v_approach, V_C_TAS):
     alpha_stall_to      = CLmax_wing_to/(CLalpha * np.pi / 180) + alpha0L + d_alpha_CLmax
     print("alpha_stall_landing=", alpha_stall_landing)
     print("alpha_stall_takeoff=", alpha_stall_to)
+
+    alpha_range = [range(-10, 18, 1), range(-10, 12, 1), range(-10, 13, 1)]
+    CL_clean_list = []
+    CL_landing_list = []
+    CL_to_list = []
+
+    # clean
+    for i in alpha_range[0]:
+        CL_clean = CLalpha * np.pi / 180 * (i - alpha0L)
+        CL_clean_list.append(CL_clean)
+    # landing
+    for j in alpha_range[1]:
+        CL_landing = CLalpha * np.pi / 180 * (j - (alpha0L + d_alpha0l_land) * 180 / np.pi)
+        CL_landing_list.append(CL_landing)
+    # take - of
+    for k in alpha_range[2]:
+        CL_to = CLalpha * np.pi / 180 * (k - (alpha0L + d_alpha0l_to) * 180 / np.pi)
+        CL_to_list.append(CL_to)
+
+    CLmax_list = np.array([[1.9516, 2.25, 2.1], [22.32, 16.795, 18.4946]])
 
     wing = [sweep_c4, sweep_c2, sweep_cLE, taper, c_root, c_tip, c_mac, y_mac, t_c, dihedral,
             Cl_des, dCLmax_land, dCLmax_to]
@@ -238,7 +258,7 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S, v_approach, V_C_TAS):
     ail   = [x_ail,y_ail]
     hld   = [x_hld, y_hld]
 
-    return wing, geom,cross1, hld, ail, x2
+    return wing, geom,cross1, hld, ail, x2, CL_clean_list, CL_landing_list, CL_to_list, alpha_range, CLmax_list
 
 
 def drag():
@@ -272,7 +292,7 @@ def drag():
 
     return
 
-wing, geom, cross1, hld, ail, x2 = wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S, v_approach, V_C_TAS)
+wing, geom, cross1, hld, ail, x2, CL_clean_list, CL_landing_list, CL_to_list, alpha_range, CLmax_list = wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S, v_approach, V_C_TAS)
 
 
 
@@ -282,86 +302,86 @@ wing, geom, cross1, hld, ail, x2 = wing_geometry(M_cruise, S, AR, MTOW, V_C, wid
 
 #Create empty lists
 
-lines  = [[],[],[],[]]
-xcoord1= [[],[],[],[]]
-xcoord2= [[],[],[],[]]
-ycoord1= [[],[],[],[]]
-ycoord2= [[],[],[],[]]
-camline= [[],[],[],[]]
-
-#Read from file
-f0=open('airfoil1.txt','r')
-f1=open('airfoil2.txt','r')
-f2=open('airfoil3.txt','r')
-f3=open('airfoil4.txt','r')
-
-lines0=f0.readlines()
-lines1=f1.readlines()
-lines2=f2.readlines()
-lines3=f3.readlines()
-
-for i in range(0,103):
-    xcoord1[0].append(float(lines0[i].split()[0]))
-    xcoord1[1].append(float(lines1[i].split()[0]))
-    xcoord1[2].append(float(lines2[i].split()[0]))
-    ycoord1[0].append(float(lines0[i].split()[1]))
-    ycoord1[1].append(float(lines1[i].split()[1]))
-    ycoord1[2].append(float(lines2[i].split()[1]))        
-for i in range(0,70):
-    xcoord1[3].append(float(lines3[i].split()[0]))
-    ycoord1[3].append(float(lines3[i].split()[1]))
-    
-for i in range(103,205):
-    xcoord2[0].append(float(lines0[i].split()[0]))
-    xcoord2[1].append(float(lines1[i].split()[0]))
-    xcoord2[2].append(float(lines2[i].split()[0]))
-    ycoord2[0].append(float(lines0[i].split()[1]))
-    ycoord2[1].append(float(lines1[i].split()[1]))
-    ycoord2[2].append(float(lines2[i].split()[1]))        
-for i in range(70,139):
-    xcoord2[3].append(float(lines3[i].split()[0]))
-    ycoord2[3].append(float(lines3[i].split()[1]))
-
-for i in range(0,4):
-    xcoord2[i].insert(-1,1.0)
-    ycoord2[i].insert(-1,0.0)
-    xcoord1[i]=xcoord1[i][::-1]
-    ycoord1[i]=ycoord1[i][::-1]
-
-##Camber Line
-for i in range(0,len(xcoord1[0])):
-    camline[0].append((ycoord1[0][i]+ycoord2[0][i])/2)
-    camline[1].append((ycoord1[1][i]+ycoord2[1][i])/2)
-    camline[2].append((ycoord1[1][i]+ycoord2[1][i])/2)
-for i in range(0,len(xcoord1[3])):
-    camline[3].append((ycoord1[3][i]+ycoord2[3][i])/2)
-
-
-#----------------------------- Plotting
-
-plt.figure(0)
-plt.plot(geom[0], geom[1], geom[2], geom[3], hld[0], hld[1],ail[0],ail[1])
-plt.text(cross1[0],cross1[1],'Fuselage Wall Line')
-plt.grid(True,which="major",color="#999999")
-plt.grid(True,which="minor",color="#DDDDDD",ls="--")
-plt.minorticks_on()
-plt.ylim(-12.0,2.0)
-plt.ylabel('x [m]')
-plt.xlabel('y [m]')
+# lines  = [[],[],[],[]]
+# xcoord1= [[],[],[],[]]
+# xcoord2= [[],[],[],[]]
+# ycoord1= [[],[],[],[]]
+# ycoord2= [[],[],[],[]]
+# camline= [[],[],[],[]]
 #
-plt.figure(1)
-plt.grid(True,which="major",color="#999999")
-plt.grid(True,which="minor",color="#DDDDDD",ls="--")
-plt.minorticks_on()
-plt.plot(xcoord1[0],ycoord1[0],color='r')
-plt.plot(xcoord2[0],camline[0],'--',color='r')
-plt.plot(xcoord2[0],ycoord2[0],color='r')
-plt.xlim(0,1)
-plt.ylim(-0.4,0.4)
-plt.text(0.0,0.0,'LE')
-plt.text(1.0,0.0,'TE')
-plt.ylabel('y/c [-]')
-plt.xlabel('x/c [-]')
+# #Read from file
+# f0=open('airfoil1.txt','r')
+# f1=open('airfoil2.txt','r')
+# f2=open('airfoil3.txt','r')
+# f3=open('airfoil4.txt','r')
+#
+# lines0=f0.readlines()
+# lines1=f1.readlines()
+# lines2=f2.readlines()
+# lines3=f3.readlines()
+#
+# for i in range(0,103):
+#     xcoord1[0].append(float(lines0[i].split()[0]))
+#     xcoord1[1].append(float(lines1[i].split()[0]))
+#     xcoord1[2].append(float(lines2[i].split()[0]))
+#     ycoord1[0].append(float(lines0[i].split()[1]))
+#     ycoord1[1].append(float(lines1[i].split()[1]))
+#     ycoord1[2].append(float(lines2[i].split()[1]))
+# for i in range(0,70):
+#     xcoord1[3].append(float(lines3[i].split()[0]))
+#     ycoord1[3].append(float(lines3[i].split()[1]))
+#
+# for i in range(103,205):
+#     xcoord2[0].append(float(lines0[i].split()[0]))
+#     xcoord2[1].append(float(lines1[i].split()[0]))
+#     xcoord2[2].append(float(lines2[i].split()[0]))
+#     ycoord2[0].append(float(lines0[i].split()[1]))
+#     ycoord2[1].append(float(lines1[i].split()[1]))
+#     ycoord2[2].append(float(lines2[i].split()[1]))
+# for i in range(70,139):
+#     xcoord2[3].append(float(lines3[i].split()[0]))
+#     ycoord2[3].append(float(lines3[i].split()[1]))
+#
+# for i in range(0,4):
+#     xcoord2[i].insert(-1,1.0)
+#     ycoord2[i].insert(-1,0.0)
+#     xcoord1[i]=xcoord1[i][::-1]
+#     ycoord1[i]=ycoord1[i][::-1]
+#
+# ##Camber Line
+# for i in range(0,len(xcoord1[0])):
+#     camline[0].append((ycoord1[0][i]+ycoord2[0][i])/2)
+#     camline[1].append((ycoord1[1][i]+ycoord2[1][i])/2)
+#     camline[2].append((ycoord1[1][i]+ycoord2[1][i])/2)
+# for i in range(0,len(xcoord1[3])):
+#     camline[3].append((ycoord1[3][i]+ycoord2[3][i])/2)
+#
+#
+# #----------------------------- Plotting
+#
+# plt.figure(0)
+# plt.plot(geom[0], geom[1], geom[2], geom[3], hld[0], hld[1],ail[0],ail[1])
+# plt.text(cross1[0],cross1[1],'Fuselage Wall Line')
+# plt.grid(True,which="major",color="#999999")
+# plt.grid(True,which="minor",color="#DDDDDD",ls="--")
+# plt.minorticks_on()
+# plt.ylim(-12.0,2.0)
+# plt.ylabel('x [m]')
+# plt.xlabel('y [m]')
+# #
+# plt.figure(1)
+# plt.grid(True,which="major",color="#999999")
+# plt.grid(True,which="minor",color="#DDDDDD",ls="--")
+# plt.minorticks_on()
+# plt.plot(xcoord1[0],ycoord1[0],color='r')
+# plt.plot(xcoord2[0],camline[0],'--',color='r')
+# plt.plot(xcoord2[0],ycoord2[0],color='r')
+# plt.xlim(0,1)
+# plt.ylim(-0.4,0.4)
+# plt.text(0.0,0.0,'LE')
+# plt.text(1.0,0.0,'TE')
+# plt.ylabel('y/c [-]')
+# plt.xlabel('x/c [-]')
 
 #plt.figure(2)
 #plt.grid(True,which="major",color="#999999")
@@ -405,6 +425,22 @@ plt.xlabel('x/c [-]')
 #plt.ylabel('y/c [-]')
 #plt.xlabel('x/c [-]')
 #
+
+
+
+plt.figure(5)
+plt.grid("minor")
+plt.plot(alpha_range[0], CL_clean_list)
+plt.plot(alpha_range[2], CL_to_list)
+plt.plot(alpha_range[1], CL_landing_list)
+plt.plot(CLmax_list[1][0], CLmax_list[0][0], marker=".", color="blue")
+plt.plot(CLmax_list[1][2], CLmax_list[0][2], marker=".", color="orange")
+plt.plot(CLmax_list[1][1], CLmax_list[0][1], marker=".", color="green")
+plt.ylim(0, 2.5)
+plt.xlim(-5, 25)
+plt.xlabel(r"$\alpha$ [deg]")
+plt.ylabel(r"$C_L$ [-]")
+plt.legend(["clean", "take-off", "landing",  "stall clean", "stall take-off", "stall landing"], loc="upper left")
 plt.show()
 
 
