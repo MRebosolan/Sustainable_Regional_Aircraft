@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from math import *
 #the CIA murdered JFK
 # coordinates for the airfoil
-yield_stress_material = 200  # start of with steel for now
+
 
 # Read from file
 
@@ -26,20 +26,20 @@ xcoord1 = xcoord1[::-1]
 ycoord1 = ycoord1[::-1]
 ycoord2 = ycoord2[::-1]
 
-#plt.figure(1)
-# plt.grid(True, which="major", color="#999999")
-# plt.grid(True, which="minor", color="#DDDDDD", ls="--")
-# plt.minorticks_on()
-# plt.plot(xcoord1, ycoord1, color='r')
-# plt.plot(xcoord1, ycoord2, color='r')
-# plt.xlim(0, 1)
-# plt.ylim(-0.3, 0.3)
-# plt.text(0.0, 0.0, 'LE')
-# plt.text(1.0, 0.0, 'TE')
-# plt.ylabel('y/c [-]')
-# plt.xlabel('x/c [-]')
+plt.figure(1)
+plt.grid(True, which="major", color="#999999")
+plt.grid(True, which="minor", color="#DDDDDD", ls="--")
+plt.minorticks_on()
+plt.plot(xcoord1, ycoord1, color='r')
+plt.plot(xcoord1, ycoord2, color='r')
+plt.xlim(0, 1)
+plt.ylim(-0.3, 0.3)
+plt.text(0.0, 0.0, 'LE')
+plt.text(1.0, 0.0, 'TE')
+plt.ylabel('y/c [-]')
+plt.xlabel('x/c [-]')
 
-#plt.show()
+plt.show()
 #------------------------------------------------------------------------------------------------------------------
 #INPUTS
 
@@ -47,6 +47,8 @@ chord_length = 2  # chord length in meters
 t_d = .02 #THICkNESS OF AIRFOIL
 number_booms = 120 #NUMBER OF POINTS (10 POINTS = 16 BOOMS,4p=4b 5p=6b )#  (ON TOP SIDE FOR NOW)
 moment_cs = 450000 #MOMENT OF CROSS SECTION
+Kc, Ks = 6.4, 8.2 #clamping coeeficients
+E = 71.7E9
 
 #------------------------------------------------------------------------------------------------------------------
 
@@ -207,8 +209,12 @@ plt.plot(spanwise_array, upper_stress_along_span)
 plt.plot(spanwise_array, lower_stress_along_span)
 plt.plot(spanwise_array, shear_stresses)
 #plt.plot(spanwise_array, pitches)
-plt.show()
+#plt.show()
 print(max(shear_stresses), max(upper_stress_along_span))
+compression_buckling_stress = Kc * E * (t_d/max(pitches))**2
+shear_buckling_stress = Ks * E * (t_d/max(pitches))**2
+print(compression_buckling_stress, shear_buckling_stress)
+
 #-----------------------------------------------------------------------------------------------------------
 
 # Find the shear flows
