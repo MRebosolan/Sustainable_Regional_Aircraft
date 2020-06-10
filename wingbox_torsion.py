@@ -39,7 +39,7 @@ plt.text(1.0, 0.0, 'TE')
 plt.ylabel('y/c [-]')
 plt.xlabel('x/c [-]')
 
-plt.show()
+#plt.show()
 #------------------------------------------------------------------------------------------------------------------
 #INPUTS
 
@@ -54,10 +54,7 @@ def boom_moi(moment_cs, chord_length, shear_cs, t_d=t_d, number_booms=number_boo
 
 #returns moments of inertia and boom normal stresses based on load, chord length and number of booms
 
-    number_points = number_booms/2 + 2
-    n = 1000 / number_points
-    boom_locationx = []
-    boom_locationy = []
+    number_points = number_booms
     boom_area = []
     boom_moi = []
     stress_boom_upper = []
@@ -67,11 +64,8 @@ def boom_moi(moment_cs, chord_length, shear_cs, t_d=t_d, number_booms=number_boo
     #make airfoil symmetrical and remove negative values at end
 
 
-    for i in range(len(xcoord1[:-3])):
-        if int(xcoord1[i] * 1000) % n == 0:
-            boom_locationx.append(xcoord1[i])
-            boom_locationy.append(ycoord1[i])
-
+    boom_locationx = np.linspace(0, xcoord1[-4], int(number_points))
+    boom_locationy = np.linspace(0, ycoord1[-4], int(number_points))
 
     #compute the boom area and moment of inertia
 
@@ -139,16 +133,17 @@ def boom_moi(moment_cs, chord_length, shear_cs, t_d=t_d, number_booms=number_boo
     shearflow = 0
     shear_flow1.append(shearflow)
 
-    for i in range(len(boom_locationx[int(number_booms/ 3):])):
-        shearflow = shearflow + boom_deltashear[int(number_booms / 3) + i]
-        shear_flow1.append(shearflow)
-
-    for i in range(len(boom_locationx[:int(number_booms / 3)]) - 1):
-        shearflow = shearflow + boom_deltashear[i]
-        shear_flow2.append(shearflow)
+    for i in range(len(boom_deltashear)):
+        if boom_locationx[i] >= 1/3:
+            shearflow = shearflow + boom_deltashear[i]
+            shear_flow1.append(shearflow)
+    for i in range(len(boom_deltashear)):
+        if boom_locationx[i] > 1 / 3:
+            shearflow = shearflow + boom_deltashear[i]
+            shear_flow2.append(shearflow)
 
     shear_flow = shear_flow2 + shear_flow1
-    shear_stress_upper = np.array(shear_flow) / t_f
+    shear_stress_upper = np.array(shear_flow) / t_d
     shear_stress_lower = -shear_stress_upper
 
 
