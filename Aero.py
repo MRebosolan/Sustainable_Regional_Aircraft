@@ -382,7 +382,7 @@ plt.xlabel('x/c [-]')
 #plt.plot(xcoord2[3],ycoord2[3],color='r')
 #plt.xlim(0,1)
 #plt.ylim(-0.3,0.3)
-#plt.text(0.0,0.0,'LE')
+#plt.text(0.0,0.0,'LE')git pul
 #plt.text(1.0,0.0,'TE')
 #plt.ylabel('y/c [-]')
 #plt.xlabel('x/c [-]')
