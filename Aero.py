@@ -263,7 +263,7 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S, v_approach, V_C_TAS):
 
 
 def drag(AR):
-    # inputs: AR, sweep_cLE, Df, S, Sh, Sv, L1, L2, L3, Re (cruise), cMAC, cMAC h, cMAC v.
+    # inputs: AR, sweep_cLE, Df, S, Sh, Sv, L1, L2, L3, Re (cruise), cMAC, cMAC h, cMAC v, sweep_c4, SwfS
 
     ####################### Zero lift drag estimation
 
@@ -318,13 +318,33 @@ def drag(AR):
     IF_tailh  = 1.04
     IF_fus    = 1.0
 
+    ######## Miscellaneous drag
+    # Wave drag
+    Mdd = 0.935/cos(sweep_c4) - 0.14 /(cos(sweep_c4)**2) - CL_des/ (10*(cos(sweep_c4)**3))
+    if Mdd > M:
+        wavedrag = 0.002 * (1 + 2.5 * (Mdd - M)/0.05)**(-1)
+    else:
+        wavedrag = 0.002 * (1 + 2.5 * (M - Mdd)/0.05)**(2.5)
+    # Fuselage base drag  -> look this up
+    drag_fusbase = 0
+
+    # Drag due to fuselage upsweep (upsweep in rad, Amax is max cross-sectional area)
+    dragupsweep = 3.83 * upsweep**2.5 * Amax           # (not delta_cd but D/q  ??)
+
+    # landing gear drag (add this from ADSEE)
+
+    # flap drag
+    dflap = 0                                     # 20 for takeoff and 60 for landing
+    drag_flap = 0.0144 * SwfS * (dflap - 10)
+
+    drag_misc = wavedrag + drag_fusbase + dragupsweep + drag_flap
+    leakage   = 1.05                                     # 2-5 % of total CDO
     ############ FINAL ZERO LIFT DRAG
 
-    CD0 = 1 / S * ((S_wet_wing * Cftot_wing * IF_wing) + (S_wet_tailh * Cftot_tailh * IF_tailh)
-                   + (S_wet_tailv * Cftot_tailv * IF_tailv) + (S_wet_fus * Cftot_fus * IF_fus)
+    CD0 = (1 / S * ((S_wet_wing * Cftot_wing * IF_wing) + (S_wet_tailh * Cftot_tailh * IF_tailh)
+                   + (S_wet_tailv * Cftot_tailv * IF_tailv) + (S_wet_fus * Cftot_fus * IF_fus) + drag_misc) * leakage
 
 
-    #C_D0 = 1/ S_ref *
     ####################### Lift induced drag
     df1 = 0      # flap deflection - clean
     df2 = 1.047  # flap deflection - Lnd
@@ -340,10 +360,16 @@ def drag(AR):
     AR_eff = AR + dAR
 
 #    K_ground = (33 * (h/b)**1.5)/ (1 + 33 * (h/b)**1.5) #  ground effect
-#
+#    
 #    ######################### Total drag polar #######################
 #    C_D = C_D0 + 1/(np.pi*AR_eff*oswald) * (CL - CL_minD)**2
 
+
+    f = l/np.sqrt(4*Amax/np.pi)
+    FFw = (1 + 0.6/(x/c)*(t/c) + 100*(t/c)**4)*(1.34*M_cruise**0.18*(np.cos(sweep_m))**0.28)
+    FFf = (1+60/(f**3)+f/400)
+    
+    
     return oswaldclean, oswaldTO, oswaldLnd
 
 osclean,osTO,osLnd = drag(AR)
