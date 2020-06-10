@@ -149,8 +149,11 @@ def boom_moi(moment_cs, chord_length, shear_cs, t_d=t_d, number_booms=number_boo
     shear_stress_upper = np.array(shear_flow) / t_d
     #shear_stress_lower = -shear_stress_upper
 
+    #stringer pitch
 
-    return moi_boom_total, max(stress_boom_upper), min(stress_boom_lower), shear_stress_upper[0], shear_stress_upper[-1]
+    stringer_pitch = (boom_locationx[2]-boom_locationx[1])*chord_length
+
+    return moi_boom_total, max(stress_boom_upper), min(stress_boom_lower), shear_stress_upper[0], shear_stress_upper[-1], stringer_pitch
 
 print(boom_moi(45000, 2, 10000))
 
