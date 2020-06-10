@@ -44,7 +44,7 @@ plt.show()
 #INPUTS
 
 chord_length = 2  # chord length in meters
-t_d = 0.01 #THICKNESS OF AIRFOIL
+t_d = 0.01 #THICkNESS OF AIRFOIL
 number_booms = 4 #NUMBER OF POINTS (10 POINTS = 16 BOOMS,4p=4b 5p=6b )#  (ON TOP SIDE FOR NOW)
 moment_cs = 450000 #MOMENT OF CROSS SECTION
 
@@ -55,6 +55,9 @@ def boom_moi(moment_cs, chord_length, shear_cs, t_d=t_d, number_booms=number_boo
 #returns moments of inertia and boom normal stresses based on load, chord length and number of booms
 
     number_points = number_booms/2 + 2
+    n = 1000 / number_points
+    boom_locationx = []
+    boom_locationy = []
     boom_area = []
     boom_moi = []
     stress_boom_upper = []
@@ -64,9 +67,10 @@ def boom_moi(moment_cs, chord_length, shear_cs, t_d=t_d, number_booms=number_boo
     #make airfoil symmetrical and remove negative values at end
 
 
-
-    boom_locationx = np.linspace(0, xcoord1[-4], number_points)
-    boom_locationy = np.linspace(0, ycoord1[-4], number_points)
+    for i in range(len(xcoord1[:-3])):
+        if int(xcoord1[i] * 1000) % n == 0:
+            boom_locationx.append(xcoord1[i])
+            boom_locationy.append(ycoord1[i])
 
 
     #compute the boom area and moment of inertia
