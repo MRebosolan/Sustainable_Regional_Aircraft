@@ -210,7 +210,7 @@ for i in x_array[2:]:
 plt.xlabel("spanwise coordinate")
 plt.ylabel("loads in N/moments in N/m")
 
-# plt.show()
+#plt.show()
 
 #-----------------------------------------------------------------------------------------------------
 
