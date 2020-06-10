@@ -15,6 +15,7 @@ PI_nlg = nose landing gear noise accoustic power
 PI_s_nlg = landing gear strut noise accoustic power
 PI_mlg = main landing gear noise accoustic power
 """
+print('my program')
 import numpy as np
 import matplotlib.pyplot as plt
 import Class_2_estimation as cl2
@@ -121,6 +122,7 @@ for i in range(len(frequency)):
 P2_nlg_tot_lst = [P2_nlg_lst[i] + P2_s_nlg_lst[i] for i in range(len(frequency))]
 P2_mlg_tot_lst = [P2_mlg_lst[i] + P2_s_mlg_lst[i] for i in range(len(frequency))]
 P2_airframe_lst = [P2_w_lst[i] + P2_h_lst[i] + P2_v_lst[i] + P2_f_lst[i] + P2_nlg_tot_lst[i] + P2_mlg_tot_lst[i] for i in range(len(frequency))]
+P2_airframe_lst = [P2_w_lst[i] + P2_h_lst[i] + P2_v_lst[i] + P2_nlg_tot_lst for i in range(len(frequency))]
 
 
 
@@ -136,6 +138,14 @@ SPL_s_mlg_lst = [10 * np.log10(P2) + 20 * np.log10(rho * c**2 / Pref) for P2 in 
 SPL_nlg_tot_lst = [10 * np.log10(P2) + 20 * np.log10(rho * c**2 / Pref) for P2 in P2_nlg_tot_lst] 
 SPL_mlg_tot_lst = [10 * np.log10(P2) + 20 * np.log10(rho * c**2 / Pref) for P2 in P2_mlg_tot_lst]
 SPL_airframe_lst = [10 * np.log10(P2) + 20 * np.log10(rho * c**2 / Pref) for P2 in P2_airframe_lst]
+
+k = 425
+l = 426
+print(P2_w_lst[k], P2_h_lst[k], P2_v_lst[k], P2_f_lst[k], P2_nlg_tot_lst[k], P2_mlg_tot_lst[k])
+print(P2_w_lst[l], P2_h_lst[l], P2_v_lst[l], P2_f_lst[l], P2_nlg_tot_lst[l], P2_mlg_tot_lst[l])
+
+
+
 
 SPL_w_lst = np.ma.masked_where(np.array(SPL_w_lst) < 0, np.array(SPL_w_lst))
 SPL_h_lst = np.ma.masked_where(np.array(SPL_h_lst) < 0, np.array(SPL_h_lst))
@@ -154,14 +164,16 @@ plt.figure()
 plt.plot(frequency, SPL_w_lst, label='Wing TE noise')
 plt.plot(frequency, SPL_h_lst, label='Horizontal tail noise')
 plt.plot(frequency, SPL_v_lst, label='Vertical tail noise')
+
+plt.plot(frequency, SPL_nlg_tot_lst, label='Nose landing gear noise')
+#plt.plot(frequency, SPL_mlg_tot_lst, label='Main landing gear noise')
+plt.plot(frequency, SPL_airframe_lst, label='Total airframe noise')
+plt.xscale('log')
+
 #plt.plot(frequency, SPL_nlg_lst, label='Nose landing gear wheel noise')
 #plt.plot(frequency, SPL_mlg_lst, label='Main landing gear wheel noise')
 #plt.plot(frequency, SPL_s_nlg_lst, label='Nose landing gear strut noise')
 #plt.plot(frequency, SPL_s_mlg_lst, label='Main landing gear strut noise')
-plt.plot(frequency, SPL_nlg_tot_lst, label='Nose landing gear noise')
-plt.plot(frequency, SPL_mlg_tot_lst, label='Main landing gear noise')
-plt.plot(frequency, SPL_airframe_lst, label='Total airframe noise')
-plt.xscale('log')
 
 plt.legend()
 plt.show

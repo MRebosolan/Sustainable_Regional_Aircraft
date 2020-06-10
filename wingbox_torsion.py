@@ -4,7 +4,7 @@ import input
 import Wingbox_design
 import matplotlib.pyplot as plt
 from math import *
-
+#the CIA murdered JFK
 # coordinates for the airfoil
 yield_stress_material = 200  # start of with steel for now
 
@@ -26,26 +26,26 @@ xcoord1 = xcoord1[::-1]
 ycoord1 = ycoord1[::-1]
 ycoord2 = ycoord2[::-1]
 
-plt.figure(1)
-plt.grid(True, which="major", color="#999999")
-plt.grid(True, which="minor", color="#DDDDDD", ls="--")
-plt.minorticks_on()
-plt.plot(xcoord1, ycoord1, color='r')
-plt.plot(xcoord1, ycoord2, color='r')
-plt.xlim(0, 1)
-plt.ylim(-0.3, 0.3)
-plt.text(0.0, 0.0, 'LE')
-plt.text(1.0, 0.0, 'TE')
-plt.ylabel('y/c [-]')
-plt.xlabel('x/c [-]')
+#plt.figure(1)
+# plt.grid(True, which="major", color="#999999")
+# plt.grid(True, which="minor", color="#DDDDDD", ls="--")
+# plt.minorticks_on()
+# plt.plot(xcoord1, ycoord1, color='r')
+# plt.plot(xcoord1, ycoord2, color='r')
+# plt.xlim(0, 1)
+# plt.ylim(-0.3, 0.3)
+# plt.text(0.0, 0.0, 'LE')
+# plt.text(1.0, 0.0, 'TE')
+# plt.ylabel('y/c [-]')
+# plt.xlabel('x/c [-]')
 
-plt.show()
+#plt.show()
 #------------------------------------------------------------------------------------------------------------------
 #INPUTS
 
 chord_length = 2  # chord length in meters
-t_d = 0.01 #THICkNESS OF AIRFOIL
-number_booms = 4 #NUMBER OF POINTS (10 POINTS = 16 BOOMS,4p=4b 5p=6b )#  (ON TOP SIDE FOR NOW)
+t_d = .1 #THICkNESS OF AIRFOIL
+number_booms = 10 #NUMBER OF POINTS (10 POINTS = 16 BOOMS,4p=4b 5p=6b )#  (ON TOP SIDE FOR NOW)
 moment_cs = 450000 #MOMENT OF CROSS SECTION
 
 #------------------------------------------------------------------------------------------------------------------
@@ -54,10 +54,7 @@ def boom_moi(moment_cs, chord_length, shear_cs, t_d=t_d, number_booms=number_boo
 
 #returns moments of inertia and boom normal stresses based on load, chord length and number of booms
 
-    number_points = number_booms/2 + 2
-    n = 1000 / number_points
-    boom_locationx = []
-    boom_locationy = []
+    number_points = number_booms
     boom_area = []
     boom_moi = []
     stress_boom_upper = []
@@ -67,12 +64,11 @@ def boom_moi(moment_cs, chord_length, shear_cs, t_d=t_d, number_booms=number_boo
     #make airfoil symmetrical and remove negative values at end
 
 
-    for i in range(len(xcoord1[:-3])):
-        if int(xcoord1[i] * 1000) % n == 0:
-            boom_locationx.append(xcoord1[i])
-            boom_locationy.append(ycoord1[i])
+    boom_locationx = np.linspace(0, xcoord1[-4], int(number_points))
+    boom_locationy = np.linspace(0, ycoord1[-4], int(number_points))
 
 
+    stringer_area = 0.1
     #compute the boom area and moment of inertia
 
     for i in range(len(boom_locationx)):
@@ -85,7 +81,7 @@ def boom_moi(moment_cs, chord_length, shear_cs, t_d=t_d, number_booms=number_boo
             b_1 = 2*np.sqrt((boom_12dx) ** 2 + (boom_12dy) ** 2)
             b_2 = np.sqrt((boom_23dx) ** 2 + (boom_23dy) ** 2)
 
-            area_boom = t_d * b_1 / 6 + t_d * b_2 * (2 + boom_locationy[i + 1] / boom_locationy[i]) / 6
+            area_boom = stringer_area + t_d * b_1 / 6 + t_d * b_2 * (2 + boom_locationy[i + 1] / boom_locationy[i]) / 6
             moi_boom = area_boom * (boom_locationy[i] * chord_length) ** 2
 
             boom_area.append(area_boom)
@@ -99,7 +95,7 @@ def boom_moi(moment_cs, chord_length, shear_cs, t_d=t_d, number_booms=number_boo
             b_1 = np.sqrt((boom_12dx) ** 2 + (boom_12dy) ** 2)
             b_2 = 2* np.sqrt((boom_23dx) ** 2 + (boom_23dy) ** 2)
 
-            area_boom = t_d * b_1 * (2 + boom_locationy[i - 1] / boom_locationy[i]) / 6 + t_d * b_2 / 6
+            area_boom = stringer_area + t_d * b_1 * (2 + boom_locationy[i - 1] / boom_locationy[i]) / 6 + t_d * b_2 / 6
             moi_boom = area_boom * (boom_locationy[i] * chord_length) ** 2
 
             boom_area.append(area_boom)
@@ -113,7 +109,7 @@ def boom_moi(moment_cs, chord_length, shear_cs, t_d=t_d, number_booms=number_boo
             b_1 = np.sqrt((boom_12dx)**2+(boom_12dy)**2)
             b_2 = np.sqrt((boom_23dx)**2+(boom_23dy)**2)
 
-            area_boom = t_d*b_1*(2+boom_locationy[i-1]/boom_locationy[i])/6+t_d*b_2*(2+boom_locationy[i+1]/boom_locationy[i])/6
+            area_boom = stringer_area + t_d*b_1*(2+boom_locationy[i-1]/boom_locationy[i])/6+t_d*b_2*(2+boom_locationy[i+1]/boom_locationy[i])/6
             moi_boom = area_boom*(boom_locationy[i]*chord_length)**2
 
             boom_area.append(area_boom)
@@ -139,21 +135,24 @@ def boom_moi(moment_cs, chord_length, shear_cs, t_d=t_d, number_booms=number_boo
     shearflow = 0
     shear_flow1.append(shearflow)
 
-    for i in range(len(boom_locationx[int(number_booms/ 3):])):
-        shearflow = shearflow + boom_deltashear[int(number_booms / 3) + i]
-        shear_flow1.append(shearflow)
+    for i in range(len(boom_deltashear)):
+        if boom_locationx[i] >= 1/3:
+            shearflow = shearflow + boom_deltashear[i]
+            shear_flow1.append(shearflow)
+    shearflow = 0
+    for i in range(len(boom_deltashear)):
+        if boom_locationx[i] < 1 / 3:
+            shearflow = shearflow - boom_deltashear[i]
+            shear_flow2.append(shearflow)
 
-    for i in range(len(boom_locationx[:int(number_booms / 3)]) - 1):
-        shearflow = shearflow + boom_deltashear[i]
-        shear_flow2.append(shearflow)
-
-    shear_flow = shear_flow2 + shear_flow1
-    shear_stress_upper = np.array(shear_flow) / t_f
-    shear_stress_lower = -shear_stress_upper
+    shear_flow = shear_flow2[::-1] + shear_flow1
+    shear_stress_upper = np.array(shear_flow) / t_d
+    #shear_stress_lower = -shear_stress_upper
 
 
-    return moi_boom_total, stress_boom_upper, stress_boom_lower, shear_stress_upper, shear_stress_lower
+    return moi_boom_total, max(stress_boom_upper), min(stress_boom_lower), shear_stress_upper[0], shear_stress_upper[-1]
 
+print(boom_moi(45000, 2, 10000))
 
 #-----------------ITERATE OVER WINGSPAN-----------------
 
@@ -180,8 +179,7 @@ chords = generate_chord_array(spanwise_array)
 moi_boom_along_span=[]
 upper_stress_along_span=[]
 lower_stress_along_span = []
-shear_stresses_upper = []
-shear_stresses_lower = []
+shear_stresses = []
 
 
 for y in spanwise_array:
@@ -198,12 +196,15 @@ for i, y in enumerate(spanwise_array):
     moi_boom_along_span.append(moi_boom)
     upper_stress_along_span.append(stress_boom_upper)
     lower_stress_along_span.append(stress_boom_lower)
+    shear_stress = max(abs(shear_stress_upper), abs(shear_stress_lower))
+    shear_stresses.append(shear_stress)
+
 
 #plt.plot(spanwise_array, moi_boom_along_span)
-#plt.plot(spanwise_array, upper_stress_along_span)
-#plt.plot(spanwise_array, lower_stress_along_span)
-#plt.show()
-#The CIA murdered JFK
+plt.plot(spanwise_array, upper_stress_along_span)
+plt.plot(spanwise_array, lower_stress_along_span)
+plt.plot(spanwise_array, shear_stresses)
+plt.show()
 #-----------------------------------------------------------------------------------------------------------
 
 # Find the shear flows
@@ -293,8 +294,7 @@ M_y_array=[]
 for x in x_array[2:]:
     M_y_array.append(internal_y_bending_moment(x)[0])
 
-print(lift, weight, engine_weight, x_lift, x_weight, x_engine, M_y, R_z, x_array[-1])
-print(internal_y_bending_moment(x_array[-1]))
+
 #plt.plot(y_array[2:], M_y_array )
 #plt.show()
 
