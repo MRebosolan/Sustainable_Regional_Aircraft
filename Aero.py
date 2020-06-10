@@ -241,7 +241,7 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S, v_approach, V_C_TAS):
     return wing, geom,cross1, hld, ail, x2
 
 
-def drag():
+def drag(AR):
     # inputs: AR, sweep_cLE
 
     ####################### Zero lift drag fast estimation
@@ -257,25 +257,31 @@ def drag():
 
     #C_D0 = 1/ S_ref *
     ####################### Lift induced drag
-    df = 0 # flap deflection
-    oswald = 4.61 * (1 - 0.045 * AR**0.68) * (np.cos(sweep_cLE))**0.15 - 3.1 + 0.0046 * df
-    oswald2 = 1.1*(CLa/AR)/(Re*(CLa/AR)+(1-Re)*np.pi)
-
+    df1 = 0      # flap deflection - clean
+    df2 = 1.047  # flap deflection - Lnd
+    df3 = 0.349  # flap deflection - TO
+    
+    oswaldclean = 1.78 * (1 - 0.045 * AR**0.68) - 0.64 + 0.0046 * df1
+    oswaldTO = 1.78 * (1 - 0.045 * AR**0.68) - 0.64 + 0.0046 * df3
+    oswaldLnd = 1.78 * (1 - 0.045 * AR**0.68) - 0.64 + 0.0046 * df2
+    
     d_CD_twist = 0 #0.00004 * (phi_tip - phi_MGC) #effect of twist
 
     dAR = 0 #effect of wing tips
     AR_eff = AR + dAR
 
-    K_ground = (33 * (h/b)**1.5)/ (1 + 33 * (h/b)**1.5) #  ground effect
+#    K_ground = (33 * (h/b)**1.5)/ (1 + 33 * (h/b)**1.5) #  ground effect
+#
+#    ######################### Total drag polar #######################
+#    C_D = C_D0 + 1/(np.pi*AR_eff*oswald) * (CL - CL_minD)**2
 
-    ######################### Total drag polar #######################
-    C_D = C_D0 + 1/(np.pi*AR_eff*oswald) * (CL - CL_minD)**2
+    return oswaldclean, oswaldTO, oswaldLnd
 
-    return
+osclean,osTO,osLnd = drag(AR)
 
 wing, geom, cross1, hld, ail, x2 = wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S, v_approach, V_C_TAS)
 
-oswald3 = 1.1*(0.09858/8)/(19.5*10**6*(0.09858/8)+(1-19.5*10**6)*np.pi)
+
 
 #----------------------------- .txt File Airfoil Coordinates
 
