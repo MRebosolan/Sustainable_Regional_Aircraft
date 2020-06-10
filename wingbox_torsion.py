@@ -67,6 +67,8 @@ def boom_moi(moment_cs, chord_length, shear_cs, t_d=t_d, number_booms=number_boo
     boom_locationx = np.linspace(0, xcoord1[-4], int(number_points))
     boom_locationy = np.linspace(0, ycoord1[-4], int(number_points))
 
+
+    stringer_area = 0.1
     #compute the boom area and moment of inertia
 
     for i in range(len(boom_locationx)):
@@ -79,7 +81,7 @@ def boom_moi(moment_cs, chord_length, shear_cs, t_d=t_d, number_booms=number_boo
             b_1 = 2*np.sqrt((boom_12dx) ** 2 + (boom_12dy) ** 2)
             b_2 = np.sqrt((boom_23dx) ** 2 + (boom_23dy) ** 2)
 
-            area_boom = t_d * b_1 / 6 + t_d * b_2 * (2 + boom_locationy[i + 1] / boom_locationy[i]) / 6
+            area_boom = stringer_area + t_d * b_1 / 6 + t_d * b_2 * (2 + boom_locationy[i + 1] / boom_locationy[i]) / 6
             moi_boom = area_boom * (boom_locationy[i] * chord_length) ** 2
 
             boom_area.append(area_boom)
@@ -93,7 +95,7 @@ def boom_moi(moment_cs, chord_length, shear_cs, t_d=t_d, number_booms=number_boo
             b_1 = np.sqrt((boom_12dx) ** 2 + (boom_12dy) ** 2)
             b_2 = 2* np.sqrt((boom_23dx) ** 2 + (boom_23dy) ** 2)
 
-            area_boom = t_d * b_1 * (2 + boom_locationy[i - 1] / boom_locationy[i]) / 6 + t_d * b_2 / 6
+            area_boom = stringer_area + t_d * b_1 * (2 + boom_locationy[i - 1] / boom_locationy[i]) / 6 + t_d * b_2 / 6
             moi_boom = area_boom * (boom_locationy[i] * chord_length) ** 2
 
             boom_area.append(area_boom)
@@ -107,7 +109,7 @@ def boom_moi(moment_cs, chord_length, shear_cs, t_d=t_d, number_booms=number_boo
             b_1 = np.sqrt((boom_12dx)**2+(boom_12dy)**2)
             b_2 = np.sqrt((boom_23dx)**2+(boom_23dy)**2)
 
-            area_boom = t_d*b_1*(2+boom_locationy[i-1]/boom_locationy[i])/6+t_d*b_2*(2+boom_locationy[i+1]/boom_locationy[i])/6
+            area_boom = stringer_area + t_d*b_1*(2+boom_locationy[i-1]/boom_locationy[i])/6+t_d*b_2*(2+boom_locationy[i+1]/boom_locationy[i])/6
             moi_boom = area_boom*(boom_locationy[i]*chord_length)**2
 
             boom_area.append(area_boom)
