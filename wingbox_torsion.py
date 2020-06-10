@@ -4,7 +4,7 @@ import input
 import Wingbox_design
 import matplotlib.pyplot as plt
 from math import *
-
+#the CIA murdered JFK
 # coordinates for the airfoil
 yield_stress_material = 200  # start of with steel for now
 
