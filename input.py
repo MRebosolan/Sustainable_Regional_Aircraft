@@ -250,6 +250,8 @@ CLmax_land  = 2.25
 CL0_land    = 0.946
 Alpha0_land = -9.4619
 
+#Drag Input
+draginput = [] #List of parameters from this file needed for drag calculation
 #------------------------------------------------------------------------------------------------------------------
 
 V_to = 1.05 * ((MTOW/S)*(2/1.225)*(1/CLmax_to))**0.5 #takeoff speed
