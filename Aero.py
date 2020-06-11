@@ -57,6 +57,7 @@ IF_nacelle = inp.IF_nacelle
 cds_nose   = inp.cds_nose
 
 #### TAIL INPUTS
+# Vertical tail: Tobias,     horizontal tail: jorn
 Sh = 1       # horizontal tail area
 Sv = 1       # vertical tail area
 taperh = 1   # taper h tail
