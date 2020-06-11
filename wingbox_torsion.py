@@ -26,33 +26,38 @@ xcoord1 = xcoord1[::-1]
 ycoord1 = ycoord1[::-1]
 ycoord2 = ycoord2[::-1]
 
-plt.figure(1)
-plt.grid(True, which="major", color="#999999")
-plt.grid(True, which="minor", color="#DDDDDD", ls="--")
-plt.minorticks_on()
-plt.plot(xcoord1, ycoord1, color='r')
-plt.plot(xcoord1, ycoord2, color='r')
-plt.xlim(0, 1)
-plt.ylim(-0.3, 0.3)
-plt.text(0.0, 0.0, 'LE')
-plt.text(1.0, 0.0, 'TE')
-plt.ylabel('y/c [-]')
-plt.xlabel('x/c [-]')
-
-plt.show()
+# plt.figure(1)
+# plt.grid(True, which="major", color="#999999")
+# plt.grid(True, which="minor", color="#DDDDDD", ls="--")
+# plt.minorticks_on()
+# plt.plot(xcoord1, ycoord1, color='r')
+# plt.plot(xcoord1, ycoord2, color='r')
+# plt.xlim(0, 1)
+# plt.ylim(-0.3, 0.3)
+# plt.text(0.0, 0.0, 'LE')
+# plt.text(1.0, 0.0, 'TE')
+# plt.ylabel('y/c [-]')
+# plt.xlabel('x/c [-]')
+#
+# plt.show()
 #------------------------------------------------------------------------------------------------------------------
 #INPUTS
 
 chord_length = 2  # chord length in meters
+<<<<<<< HEAD
+t_d = 0.01 #THICkNESS OF AIRFOIL
+number_booms = 10 #NUMBER OF POINTS (10 POINTS = 16 BOOMS,4p=4b 5p=6b )#  (ON TOP SIDE FOR NOW)
+=======
 t_d = .02 #THICkNESS OF AIRFOIL
-number_booms = 120 #NUMBER OF POINTS (10 POINTS = 16 BOOMS,4p=4b 5p=6b )#  (ON TOP SIDE FOR NOW)
+number_booms = 20 #NUMBER OF POINTS (10 POINTS = 16 BOOMS,4p=4b 5p=6b )#  (ON TOP SIDE FOR NOW)
+>>>>>>> d12cbb86a0c909806e7021594cb7780993542bf9
 moment_cs = 450000 #MOMENT OF CROSS SECTION
 Kc, Ks = 6.4, 8.2 #clamping coeeficients
 E = 71.7E9
 
 #------------------------------------------------------------------------------------------------------------------
 
-def boom_moi(moment_cs, chord_length, shear_cs, t_d=t_d, number_booms=number_booms, stringer_area = 0.001):
+def boom_moi(moment_cs, chord_length, shear_cs, t_d=t_d, number_booms=number_booms, stringer_area = 0):
 
 #returns moments of inertia and boom normal stresses based on load, chord length and number of booms
 
@@ -67,7 +72,13 @@ def boom_moi(moment_cs, chord_length, shear_cs, t_d=t_d, number_booms=number_boo
 
 
     boom_locationx = np.linspace(0, xcoord1[-4], int(number_points))
-    boom_locationy = np.linspace(0, ycoord1[-4], int(number_points))
+    boom_locationy = []
+
+    for x in boom_locationx:
+        x = min(xcoord1, key=lambda z: abs(z - x))
+        x_index = xcoord1.index(x)
+        y1 = ycoord1[x_index]
+        boom_locationy.append(y1)
 
 
     #compute the boom area and moment of inertia
@@ -130,13 +141,27 @@ def boom_moi(moment_cs, chord_length, shear_cs, t_d=t_d, number_booms=number_boo
             deltashear_boom = shear_cs * boom_area[i] * boom_locationy[i] / moi_boom_total
             boom_deltashear.append(deltashear_boom)
 
+    print(boom_deltashear)
     shear_flow1 = []
     shear_flow2 = []
 
     shearflow = 0
+    shear_center = 0.4
     shear_flow1.append(shearflow)
 
     for i in range(len(boom_deltashear)):
+<<<<<<< HEAD
+        if boom_locationx[i] > shear_center:
+            shearflow = shearflow + boom_deltashear[i]
+            shear_flow1.append(shearflow)
+        if boom_locationx[i] < shear_center:
+            shearflow = shearflow + boom_deltashear[i]
+            shear_flow2.append(shearflow)
+
+    shear_flow = shear_flow2 + shear_flow1
+    shear_stress_upper = np.array(shear_flow) / t_d
+    shear_stress_lower = -shear_stress_upper
+=======
         if boom_locationx[i] >= 1/3:
             shearflow = shearflow + boom_deltashear[i]
             shear_flow1.append(shearflow)
@@ -151,6 +176,7 @@ def boom_moi(moment_cs, chord_length, shear_cs, t_d=t_d, number_booms=number_boo
     #shear_stress_lower = -shear_stress_upper
 
     #stringer pitch
+>>>>>>> d12cbb86a0c909806e7021594cb7780993542bf9
 
     stringer_pitch = (boom_locationx[2]-boom_locationx[1])*chord_length
 
@@ -185,11 +211,11 @@ lower_stress_along_span = []
 shear_stresses = []
 pitches = []
 
-
 for y in spanwise_array:
     moments_around_x.append(Wingbox_design.internal_x_bending_moment(y))
     moments_around_z.append(Wingbox_design.internal_z_bending_moment(y))
     shears_y.append(Wingbox_design.internal_vertical_shear_force(y))
+
 
 for i, y in enumerate(spanwise_array):
     moment_around_x = moments_around_x[i-1]
@@ -204,16 +230,22 @@ for i, y in enumerate(spanwise_array):
     shear_stresses.append(shear_stress)
     pitches.append(pitch)
 
-#plt.plot(spanwise_array, moi_boom_along_span)
+# plt.plot(spanwise_array, moments_around_x)
+# plt.plot(spanwise_array, shears_y)
+
+# plt.plot(spanwise_array, moi_boom_along_span)
 plt.plot(spanwise_array, upper_stress_along_span)
 plt.plot(spanwise_array, lower_stress_along_span)
 plt.plot(spanwise_array, shear_stresses)
 #plt.plot(spanwise_array, pitches)
 #plt.show()
-print(max(shear_stresses), max(upper_stress_along_span))
-compression_buckling_stress = Kc * E * (t_d/max(pitches))**2
-shear_buckling_stress = Ks * E * (t_d/max(pitches))**2
-print(compression_buckling_stress, shear_buckling_stress)
+
+print(chords[0] * max(ycoord1))
+
+# compression_buckling_stress = Kc * E * (t_d/max(pitches))**2
+# shear_buckling_stress = Ks * E * (t_d/max(pitches))**2
+# print(compression_buckling_stress, shear_buckling_stress)
+# print(pitches)
 
 #-----------------------------------------------------------------------------------------------------------
 
@@ -304,7 +336,12 @@ M_y_array=[]
 for x in x_array[2:]:
     M_y_array.append(internal_y_bending_moment(x)[0])
 
+<<<<<<< HEAD
+# print(lift, weight, engine_weight, x_lift, x_weight, x_engine, M_y, R_z, x_array[-1])
+# print(internal_y_bending_moment(x_array[-1]))
+=======
 
+>>>>>>> d12cbb86a0c909806e7021594cb7780993542bf9
 #plt.plot(y_array[2:], M_y_array )
 #plt.show()
 
