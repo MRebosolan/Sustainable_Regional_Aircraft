@@ -26,20 +26,20 @@ xcoord1 = xcoord1[::-1]
 ycoord1 = ycoord1[::-1]
 ycoord2 = ycoord2[::-1]
 
-plt.figure(1)
-plt.grid(True, which="major", color="#999999")
-plt.grid(True, which="minor", color="#DDDDDD", ls="--")
-plt.minorticks_on()
-plt.plot(xcoord1, ycoord1, color='r')
-plt.plot(xcoord1, ycoord2, color='r')
-plt.xlim(0, 1)
-plt.ylim(-0.3, 0.3)
-plt.text(0.0, 0.0, 'LE')
-plt.text(1.0, 0.0, 'TE')
-plt.ylabel('y/c [-]')
-plt.xlabel('x/c [-]')
-
-plt.show()
+# plt.figure(1)
+# plt.grid(True, which="major", color="#999999")
+# plt.grid(True, which="minor", color="#DDDDDD", ls="--")
+# plt.minorticks_on()
+# plt.plot(xcoord1, ycoord1, color='r')
+# plt.plot(xcoord1, ycoord2, color='r')
+# plt.xlim(0, 1)
+# plt.ylim(-0.3, 0.3)
+# plt.text(0.0, 0.0, 'LE')
+# plt.text(1.0, 0.0, 'TE')
+# plt.ylabel('y/c [-]')
+# plt.xlabel('x/c [-]')
+#
+# plt.show()
 #------------------------------------------------------------------------------------------------------------------
 #INPUTS
 
@@ -52,7 +52,7 @@ E = 71.7E9
 
 #------------------------------------------------------------------------------------------------------------------
 
-def boom_moi(moment_cs, chord_length, shear_cs, t_d=t_d, number_booms=number_booms, stringer_area = 0.001):
+def boom_moi(moment_cs, chord_length, shear_cs, t_d=t_d, number_booms=number_booms, stringer_area = 0):
 
 #returns moments of inertia and boom normal stresses based on load, chord length and number of booms
 
@@ -185,11 +185,14 @@ lower_stress_along_span = []
 shear_stresses = []
 pitches = []
 
-
 for y in spanwise_array:
     moments_around_x.append(Wingbox_design.internal_x_bending_moment(y))
     moments_around_z.append(Wingbox_design.internal_z_bending_moment(y))
     shears_y.append(Wingbox_design.internal_vertical_shear_force(y))
+
+print(moments_around_x[0])
+print(chords[0])
+
 
 for i, y in enumerate(spanwise_array):
     moment_around_x = moments_around_x[i-1]
@@ -204,16 +207,19 @@ for i, y in enumerate(spanwise_array):
     shear_stresses.append(shear_stress)
     pitches.append(pitch)
 
+print(moi_boom_along_span[0])
+
 #plt.plot(spanwise_array, moi_boom_along_span)
-plt.plot(spanwise_array, upper_stress_along_span)
-plt.plot(spanwise_array, lower_stress_along_span)
-plt.plot(spanwise_array, shear_stresses)
+# plt.plot(spanwise_array, upper_stress_along_span)
+# plt.plot(spanwise_array, lower_stress_along_span)
+# plt.plot(spanwise_array, shear_stresses)
 #plt.plot(spanwise_array, pitches)
 #plt.show()
 print(max(shear_stresses), max(upper_stress_along_span))
-compression_buckling_stress = Kc * E * (t_d/max(pitches))**2
-shear_buckling_stress = Ks * E * (t_d/max(pitches))**2
-print(compression_buckling_stress, shear_buckling_stress)
+# compression_buckling_stress = Kc * E * (t_d/max(pitches))**2
+# shear_buckling_stress = Ks * E * (t_d/max(pitches))**2
+# print(compression_buckling_stress, shear_buckling_stress)
+# print(pitches)
 
 #-----------------------------------------------------------------------------------------------------------
 
