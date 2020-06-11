@@ -9,9 +9,10 @@ rho0 = rho                        # kg/m^3
 Cruise_alt = 10                   # Max operating altitude in km
 g = 9.80665                       # [m/s^2]
 Design_range = 2000               # [km]
+mach_h = 0.5                      # estimate, [] #max Mach at sea-level
 #------------------------------------------------------------------------------------------------------------------
 
-mach_h = 0.5                      # estimate, [] #max Mach at sea-level
+
 
               
 def atmosphere_calculator(h):
@@ -53,29 +54,29 @@ AR_h = 4                          #Aspect ratio of the horizontal tail [-], TBD
 AR_v = 1.7                        #AR vtail; 1< AR_v<2
 taper_v = 0.6                     #taper ratio vertical tail
 e_tail = 0.85                     #oswald efficiency factor of tail, TBD
+S = 62.248    #MTOW /wingloading             # [m2] wing area
 
+Cr = 4.2608                     # Wing root chord [m]
+Ct = 1.3181                     # Wing tip chord [m]
+taper = Ct / Cr                   # wing taper ratio [-]
+b = (S * AR)**0.5                 # wingspan [m]
+half_chord_sweep_vert = np.radians(35)  # deg, sweep at half chord of vertical tail
+half_chord_sweep_hor = np.radians(20)   # deg, sweep at half chord of horizontal tail
 #------------------------------------------------------------------------------------------------------------------
 # half_sweep = 0.663         # estimate, [degrees], sweep at half chord for main wing
 # LE_sweep =0.7485         # Leading egde wing sweepTBD,
 # quarter_sweep = 0.707
 
 
-S = MTOW /wingloading             # [m2] wing area
 
-Cr = 4.292998                     # Wing root chord [m]
-Ct = 1.328058                     # Wing tip chord [m]
-taper = Ct / Cr                   # wing taper ratio [-]
-b = (S * AR)**0.5                 # wingspan [m]
 
-Sv = 13.36                        # [m2] CRJ700 | Obtain realistic value from Vtail area sizing
-bv = 7.57                         # [m] vertical tail span CRJ700
-                   # [m] Horizontal tail span 
-half_chord_sweep_vert = np.radians(35)  # deg, sweep at half chord of vertical tail
+Sv = 15                        # [m2] CRJ700 | Obtain realistic value from Vtail area sizing
+bv = 5                         # [m] vertical tail span CRJ700 # [m] Horizontal tail span
 zh = bv * 0.95                    # Height of horizontal stabilizer measured from the bottom of the vertical tail [m]
+
 Sh_over_S = 0.3725
 Sh = Sh_over_S * S                        # m2 crj700 shizzle yo, horizontal tail area
-half_chord_sweep_hor = np.radians(20)   # deg, sweep at half chord of horizontal tail
-bh = (AR_h*Sh)   **0.5  
+bh = (AR_h*Sh)**0.5  
 
 
 
@@ -107,7 +108,6 @@ W_payload = Npax * W_pax + W_cargo
 cockpit_length=3.6                #Bit smaller than A220
 A_fuselage = np.pi*widthf*0.5*hf*0.5 # Area of the fuselage in m^2
 ellipse_fuselage = 2*np.pi * (((widthf/2)**2 + (hf/2)**2)/2)**0.5  #circumference of the fuselage [m]
-#------------------------------------------------------------------------------------------------------------------
 lf = 28                           # length of fuselage m estimate, lil shorter than CRJ as 5 seat rows are used, ADD TANK CYLINDER LENGTH
 S_fgs = ellipse_fuselage * lf * 0.9  # fuselage gross shell area, APPROXIMATION
 
@@ -116,7 +116,7 @@ cargo_fwd_fraction = 1/3          # estimate, amount of cargo in fwd hold
 cargo_aft_fraction = 2./3         # estimate, amount of cargo in aft hold
 x_cg_fwd_cargo = 6                # cg of forward cargo compartment, measured from the aircraft nose [m]
 x_cg_aft_cargo = 22               # cg of aft cargo compartment, measured from the aircraft nose [m]
-
+#------------------------------------------------------------------------------------------------------------------
 
 #Propulsion related parameters
 #------------------------------------------------------------------------------------------------------------------
@@ -126,15 +126,15 @@ rho_hydrogen = 70                 # g/l
 K_fsp = 0.820                     # kg/l, jet A, jet fuel density
 N_t = 0                           # number of kerosene fuel tanks
 H_to_ker_ratio = 1                # hydrogen to kerosene ratio
-
+powerloading = 0.44               # thrust over weight from loading diagram, update based on flight performance take off length
+Tto = 121300                    #thrust at takeoff in newtons 121300, powerloading*MTOW
+A_inlet = 4.1                    # m2, engine inlet area
+ln = 4.5                       # m 1/4 of CRJ engine length, length of nacelle
+bn = 2.49                          #maximum width of engine [m]
+z_engine = -bn/2 - 0.5             # vertical placement of engine w.r.t. wing root
 #------------------------------------------------------------------------------------------------------------------
 
-powerloading = 0.44               # thrust over weight from loading diagram, update based on flight performance take off length
-Tto = powerloading * MTOW         #thrust at takeoff in newtons
-A_inlet = 1.58                    # m2, engine inlet area
-ln = 0.8129                       # m 1/4 of CRJ engine length, length of nacelle
-bn = 1.2                          #maximum width of engine [m]
-z_engine = -bn/2 - 0.5             # vertical placement of engine w.r.t. wing root
+
 
 
 #Parameters related to emissions and cost
@@ -171,6 +171,7 @@ Pax_CRJ = 78                       # Number of passengers
 Fuel_use_CRJ = 4740                # Fuel mass at design range
 Cruise_alt_max_CRJ = 12497         # Max operating altitude
 #------------------------------------------------------------------------------------------------------------------
+
 A = 14                             # Correlation constant for emission index based on Jet-A fuel (advanced LDI tech as reference)
 eq = 0.4                           # equivalence ratio (fuel/air // fuel/air stoichiometric)
 fa_st = 1. / 34.33                 # stoichiometric fuel/air ratio for H2
@@ -201,9 +202,9 @@ CD0_landGD = CD0 + .02 + .065      # [-], to be refined as this comes from roska
 Trev = 50000                       # [N], maximum thrust reverse force applied during braking
 c_t = 0.0002                       # [1/s] specific fuel consumption, to be refined
 
+
 v_approach = 81.13                # m/s, update from flight performance
 mach_app = v_approach/340.3        # 
-
 
 
 
@@ -233,7 +234,7 @@ CLmax_clean  = 1.8
 CL0_clean    = 0.405
 Alpha0_clean = -3.936
 CLdes_clean  = 0.44888
-CD0_clean    = 0 
+CD0_clean    = 0                                    ######NOT FIXED########           
 CLa_clean    = 0.09858
 
 #Take-off Configuration             
@@ -247,8 +248,6 @@ CL0_land    = 0.946
 Alpha0_land = -9.4619
 
 #HLD
-TE-HLD         = True
-LE-HLD         = False
 DeltaCLmaxTO   = 0.16316
 DeltaCLmaxLnd  = 0.2984
 defTO          = 20  #deg
@@ -262,15 +261,17 @@ V_to = 1.05 * ((MTOW/S)*(2/1.225)*(1/CLmax_to))**0.5 #takeoff speed
 t_r = t_over_c * Cr                          # maximum thickness at root [m] #bullshit estimation
 Cla_aileron = 6.48                 #1/rad, sectional lift curve slope at wing section where aileron is located, determine by datcom method or airfoil simulation
 Cd0_aileron = 0.007               #zero drag coefficient [-] at wing section where aileron is located, determine by airfoil simulation
-#------------------------------------------------------------------------------------------------------------------
 x_start_Cr = 10.7                    # x-location where root chord starts, measured from the nose of the aircraft [m], TBD
 MAC =  2 / 3 * Cr * ((1 + taper + taper**2) / (1 + taper)) #length of mean aerodynamic chord, formula taken from Adsee II
 y_MAC = b / 6 * ((1 + 2 * taper) / (1 + taper))            #spanwise location of mean aerodynamic chord
 x_lemac_rootchord = y_MAC * np.tan(LE_sweep)               #x position of mac at leading edge [m], measured from the start of the root choord!!!!
 x_LEMAC_nose = x_start_Cr + x_lemac_rootchord
-
 Cla_aileron = 6.48                  #1/rad, sectional lift curve slope at wing section where aileron is located, determine by datcom method or airfoil simulation
 Cd0_aileron = 0.007               #zero drag coefficient [-] at wing section where aileron is located, determine by airfoil simulation
+
+#------------------------------------------------------------------------------------------------------------------
+
+
 
 
 # Aerodynamics for scissor plot:
@@ -283,12 +284,10 @@ cm0 = -0.119                    # preliminary estimate, TBD from airfoil analysi
 zero_lift_angle = np.radians(-3.941)# degrees, PRELIMINARY estimate, TBD from airfoil analysis
 cl_htail_max  = -0.8                #estimate coming from sead: maximum lift coefficient of tail
 horizontal_margin = 0.15
-#------------------------------------------------------------------------------------------------------------------
-
 z_position_wing = hf - 0.6         # m, PRELIMINARY, still requires thought, for downwash calc
 z_position_horizontal = zh + hf    # where tail is positioned, for downwash calc
 
-z_cg = 0.5*hf  
+z_cg = 0.5*hf 
 
 taper_h = 0.5                   #approximation of taper ratio of horizontal tail
 sweep_LE_H = np.arctan(np.tan(half_chord_sweep_hor) - 4 / AR_h * ((0 - 25) / 100 * (1 - taper_h) / (1 + taper_h)))
@@ -299,6 +298,10 @@ c_root_h = 2*Sh / ((1 + taper_h)*bh)
 c_tip_h = taper_h * c_root_h
 c_mac_h = 2/3 * c_root_h * (1 + taper_h + taper_h**2)/(1 + taper_h)
 x_rootchord_h = lf -c_root_h - 0.4
+#------------------------------------------------------------------------------------------------------------------
+
+
+
 
 
 
@@ -360,7 +363,7 @@ LD_loiter = 17                     # L/D Loiter, determine after wing sizing and
 
 #Relevant distances for aerodynamic calculations, tail sizing, landing gear sizing
 #------------------------------------------------------------------------------------------------------------------
-
+x_engine_start = - 1.5             #m, RANDOM, begin of engine measured from the lemac, negative means ... [m] closer to the nose
 #------------------------------------------------------------------------------------------------------------------
 
 
@@ -370,8 +373,6 @@ x_apu = lf-0.8                        # cg location of the apu measured from the
 
 x_engine = 13                      # cg location of engines, measured from the nose of the aircraft [m], TBD
 x_nacelle = 13                     # cg location of engine nacelles, measured from the nose of the aircraft [m], TBD
-
-x_engine_start = - 1.5             #m, RANDOM, begin of engine measured from the lemac, negative means ... [m] closer to the nose
 
 #Drag parameters
 k = 0.152 * 10**-5         # Surface factor for skin friction coefficient, for polished sheet metal (need to reconsider if composites are used)
