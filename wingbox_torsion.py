@@ -75,8 +75,6 @@ def boom_moi(moment_cs, chord_length, shear_cs, t_d=t_d, number_booms=number_boo
         y1 = ycoord1[x_index]
         boom_locationy.append(y1)
 
-    print(boom_locationx)
-    print(boom_locationy)
 
     #compute the boom area and moment of inertia
 
@@ -213,11 +211,11 @@ for i, y in enumerate(spanwise_array):
     pitches.append(pitch)
 
 # plt.plot(spanwise_array, moi_boom_along_span)
-# plt.plot(spanwise_array, upper_stress_along_span)
-# plt.plot(spanwise_array, lower_stress_along_span)
-# plt.plot(spanwise_array, shear_stresses)
+plt.plot(spanwise_array, upper_stress_along_span)
+plt.plot(spanwise_array, lower_stress_along_span)
+plt.plot(spanwise_array, shear_stresses)
 #plt.plot(spanwise_array, pitches)
-#plt.show()
+plt.show()
 
 # compression_buckling_stress = Kc * E * (t_d/max(pitches))**2
 # shear_buckling_stress = Ks * E * (t_d/max(pitches))**2
