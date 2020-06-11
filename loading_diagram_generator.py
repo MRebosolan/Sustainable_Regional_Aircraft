@@ -10,7 +10,7 @@ from cabindesign import cabin_design
 
 t_cyl,m_cyl, tm_cyl, d_cyl,l_cyl,t_tail,m_tail, tm_tail, d_tail,l_tail\
            ,t_top,m_top,tm_top,d_top,l_top,t_pod,m_pod,tm_pod,d_pod,l_pod,totalcabinlength,V_tank_cyl, V_tank_tail, V_tank_top,V_tank_pod,\
-           tm_tanksystem,CGtank,CGfuelfull,CGcomb,totdrag,fuselage_weight,CDzerofus,FFbody,Cfturb,fuselage_area,CDzeropods,fusdrag,poddrag,tailcone_length=cabin_design(1,0.35,26,0)
+           tm_tanksystem,CGtank,CGfuelfull,CGcomb,totdrag,fuselage_weight,CDzerofus,FFbody,Cfturb,fuselage_area,CDzeropods,fusdrag,poddrag,tailcone_length=cabin_design(0.5,1,26,0)
 
 #Raw inputs
 MTOW = cl2.MTOM                 #kg
@@ -86,7 +86,7 @@ w_tail_fuel=V_tank_tail*input.rho_hydrogen
 w_cyl_fuel=V_tank_cyl*input.rho_hydrogen
 # x_fuel = x_tank                 #fuel cg measured from nose, assumed same as tank cg as most likely the tank will be symmetrical
 
-x_fuel_fuselage = (w_tail_fuel *x_tail_tank + w_cyl_fuel * x_cyl_tank)/(w_tail_fuel + w_cyl_fuel)
+x_fuel_fuselage = 0.5*input.lf #(w_tail_fuel *x_tail_tank + w_cyl_fuel * x_cyl_tank)/(w_tail_fuel + w_cyl_fuel)
 w_fuel_fuselage = w_tail_fuel + w_cyl_fuel
 
 w_lg_main = cl2.df['SRA']['Main LG']    #kg
@@ -193,7 +193,7 @@ def loading():
     # plt.close()
     plt.figure()
     
-    onlyfuel = loadingcg(OEW, cg_oew_nose, w_fuel_fuselage, x_fuel_fuselage)
+    onlyfuel = loadingcg(OEW, cg_oew_nose, 0*w_fuel_fuselage, x_fuel_fuselage)
     plt.plot(100 * (np.array([cg_oew_nose, onlyfuel[0]]) - x_lemac) / MAC,
                       [OEW, onlyfuel[1]], label='Fuel only', marker='3', color='magenta')
     
@@ -243,7 +243,7 @@ def loading():
     plt.xlabel('xcg [% of MAC]')
     plt.title('Tail Tank')
     plt.show()
-    cg_excursion = np.array([[onlyfwdcargo[0]], [onlyaftcargo[0]], [bothcargo[0]], [window[0]], window_back[0], 
+    cg_excursion = np.array([ [onlyaftcargo[0]], [bothcargo[0]], [window[0]], window_back[0], 
                          middle[0], middle_back[0], aisle[0], aisle_back[0], onlyfuselagefuel[0], onlypodfuel[0], bothfuel[0], bothfuel[0]]) 
     cgmin_lst = []
     cgmax_lst = []

@@ -68,7 +68,8 @@ x_lemac_Cr = input.x_lemac_rootchord         #x location of leading edge mac mea
 
 x_start_Cr = shift.x_start_Cr
 lemac = shift.x_lemac
-lh = [lh_fix - (i - input.x_start_Cr) for i in x_start_Cr]
+xh = input.x_lemac_rootchord_h + input.x_rootchord_h + 0.25*input.c_mac_h
+lh = [xh - i  for i in x_start_Cr]
 
 
 #Functions
@@ -81,16 +82,22 @@ def swf(widthf, outboard_flap):
     swf = 2 * b_imag * (chord_along_span(cr, ct, b, widthf) + chord_along_span(cr, ct, b, outboard_flap)) / 2
     return swf
 
-def trimdrag(cm_ac, tail_armh, horizontal_area):
-    Moment_ac = 0.5* rho_cruise *v_cruise**2 * cm_ac * MAC *S
+def trimdrag(cm_ac, tail_armh, horizontal_area, CL, xcg, xac, MAC):
+    # Moment_ac = 0.5* rho_cruise *v_cruise**2 * cm_ac * MAC *S
     
-    Lift_tail = Moment_ac/tail_armh
-    CL_h = Lift_tail/(0.5* rho_cruise *v_cruise**2  * horizontal_area)
+    # Lift_tail = Moment_ac/tail_armh
+    # CL_h = Lift_tail/(0.5* rho_cruise *v_cruise**2  * horizontal_area)
+    
+    
+    CL_h = ( cm_ac + ((xcg - xac)*CL))* S * MAC/ (horizontal_area*tail_armh)
+    
     k = 1 / (np.pi*AR_tail *e_tail)
     
-    Dtrim = abs(0.5* rho_cruise *v_cruise**2 *speedratio * horizontal_area * CL_h**2 * k)
     
-    return Dtrim
+    
+    Dtrim = 0.5* rho_cruise *v_cruise**2 *speedratio * horizontal_area * CL_h**2 * k
+    
+    return Dtrim, CL_h
 #Import cg ranges loading diagram due to wing shifting
 cg_fwd_lst = shift.cg_fwd_excursion_lst
 cg_aft_lst = shift.cg_aft_excursion_lst
@@ -104,8 +111,8 @@ def main_lg_loc(x_cg_aft, theta=15, z_cg=input.z_cg,safetymargin_theta=1, x_tail
     for z_fus_ground in np.arange(0,5,d):
         
         z_main_lg1 = z_fus_ground + z_cg
-        x_main_lg1 = x_cg_aft + z_main_lg1*np.tan(theta+safetymargin_theta)
-        if np.tan(z_fus_ground/(x_tailcone-x_main_lg1)) >= np.radians(15):
+        x_main_lg1 = x_cg_aft + z_main_lg1*np.tan(np.radians(theta+safetymargin_theta))
+        if np.arctan(z_fus_ground/(x_tailcone-x_main_lg1)) >= np.radians(15):
             z_main_lg = np.round(z_main_lg1,4)
             x_main_lg = np.round(x_main_lg1,4)
             z_f_ground = z_fus_ground
@@ -114,10 +121,10 @@ def main_lg_loc(x_cg_aft, theta=15, z_cg=input.z_cg,safetymargin_theta=1, x_tail
             x_main_lg = 999
             continue
 
-    return x_main_lg #,z_main_lg, z_f_ground    
+    return x_main_lg ,z_main_lg, z_f_ground    
 
 def req_htail_area(x_cg_aft,x_ac_htail, x_cg_front, front_weight,x_ac, momentcoefficient, Cl_htail = input.cl_htail_max,rho_to=rho, Vlof=59.1, MAC = MAC): 
-    x_main_LG = main_lg_loc(x_cg_aft)
+    x_main_LG ,z_main_lg, z_f_ground= main_lg_loc(x_cg_aft)
     
     CL_ground = input.CL0takeoff 
     cg_contribution = (x_main_LG-x_cg_front)*front_weight*9.81
@@ -257,32 +264,7 @@ def scissor_wing_shift():
         cg_cont = controlxcg[::-1]
         ShS = ShS[::-1]
         for j in range(len(ShS)):
-#            if cg_stab[-1] >= cg_cont[-1]:
-#                Sh_min_lst.append([10,0,0,0,0,0, 0, 0])         #append a zero if this condition is not met
-#                print('At a root chord position of', x_start_Cr[i],' [m], the scissor plot shows no intersection')
-#                break 
-#            if cg_fwd_lst[i] < cg_cont[j] or cg_aft_lst[i] > cg_stab[j]:   #in this case, the cg range does not meet the stability or contorllability requirements
-#                Sh_min = ShS[j-1]*S
-#                Sh_min_lst.append([ShS[j-1],x_start_Cr[i], cg_stab[j-1], cg_aft_lst[i-1], cg_cont[j-1], cg_fwd_lst[i-1], trimdrag(cm_ac, tail_armh, Sh_min), cg_cont, cg_stab])
-#                break
-#            else:
-#                continue
-#            if cg_cont[-1] - cg_stab[-1] < 0:
-#                Sh_min_lst.append([10,0,0,0,0,0, 0, 0])         #append a zero if this condition is not met
-#                print('At a root chord position of', x_start_Cr[i],' [m], the scissor plot shows no intersection')
-#                break
-#            if cg_fwd_lst[i] < min(cg_cont) or cg_aft_lst[i] > max(cg_stab[j]):
-#                Sh_min_lst.append([10,0,0,0,0,0, 0, 0])         #append a zero if this condition is not met
-#                print('No solution exists')
-#                break
-#            if cg_fwd_lst[i] > 0:
-#                if cg_fwd_lst[i] < cg_cont[j] or cg_aft_lst[i] > cg_stab[j]:   #in this case, the cg range does not meet the stability or contorllability requirements
-#                    Sh_min = ShS[j-1]*S
-#                    Sh_min_lst.append([ShS[j-1],x_start_Cr[i], cg_stab[j-1], cg_aft_lst[i-1], cg_cont[j-1], cg_fwd_lst[i-1], trimdrag(cm_ac, tail_armh, Sh_min), cg_cont, cg_stab])
-#                    break
-#                else:
-#                    continue
-              
+
               if cg_cont[-1] - cg_stab[-1] < 0:
                 Sh_min_lst.append([10,0,0,0,0,0, 0, 0])         #append a zero if this condition is not met
                 print('At a root chord position of', x_start_Cr[i],' [m], the scissor plot shows no intersection')
@@ -290,17 +272,17 @@ def scissor_wing_shift():
               if cg_cont[j] - cg_fwd_lst[i] > 0 or cg_stab[j] - cg_aft_lst[i] < 0:   #in this case, the cg range does not meet the stability or contorllability requirements
                 if j==0: 
                     Sh_min = ShS[j]*S
-                    Sh_min_lst.append([ShS[j],x_start_Cr[i], cg_stab[j], cg_aft_lst[i], cg_cont[j], cg_fwd_lst[i], trimdrag(cm_cruise, tail_armh, Sh_min), cg_cont, cg_stab])
+                    Sh_min_lst.append([ShS[j],x_start_Cr[i], cg_stab[j], cg_aft_lst[i], cg_cont[j], cg_fwd_lst[i], 0, cg_cont, cg_stab,i, cm_ac_takeoff, xac, cm_cruise , xac_cruise, CL])
                     print(cg_fwd_lst[i])
                     break
                 else:
                     Sh_min = ShS[j-1]*S
-                    Sh_min_lst.append([ShS[j-1],x_start_Cr[i], cg_stab[j-1], cg_aft_lst[i], cg_cont[j-1], cg_fwd_lst[i], trimdrag(cm_cruise, tail_armh, Sh_min), cg_cont, cg_stab,i, cm_ac_takeoff, xac])
+                    Sh_min_lst.append([ShS[j-1],x_start_Cr[i], cg_stab[j-1], cg_aft_lst[i], cg_cont[j-1], cg_fwd_lst[i], 0, cg_cont, cg_stab,i, cm_ac_takeoff, xac, cm_cruise , xac_cruise, CL])
                     break
               else:
                 continue
         xlemac = input.x_lemac_rootchord + x_start_Cr[i]
-        rotationshs = req_htail_area(cg_aft_lst[i]*MAC + xlemac , shift.x_ac[i] + shift.lh_fix, cg_fwd_lst[i]*MAC + xlemac, MTOW-1750, shift.x_ac[i], cm_ac_takeoff)
+        rotationshs = req_htail_area(cg_aft_lst[i]*MAC + xlemac , xh, cg_fwd_lst[i]*MAC + xlemac, MTOW-1750, shift.x_ac[i], cm_ac_takeoff)
         rotation.append([rotationshs[0], rotationshs[1],cg_aft_lst[i]*MAC + xlemac,shift.x_ac[i] + shift.lh_fix, cg_fwd_lst[i]*MAC + xlemac,  MTOW, shift.x_ac[i], cm_ac_takeoff])
     
     
@@ -310,8 +292,9 @@ def scissor_wing_shift():
         combi.append(max([np.array(rotation)[i,0], np.array(Sh_min_lst)[i,0]]))
             
     lowest = combi.index(min(combi))#+Sh_min_lst.index(min(Sh_min_lst)))/2)
-    minimum = Sh_min_lst[lowest]
-    min_Sh_over_S = minimum[0] * (1+input.horizontal_margin)
+    x = 0
+    minimum = Sh_min_lst[lowest + x ]
+    min_Sh_over_S = combi[lowest + x] * (1+input.horizontal_margin)
     Sh_min = min_Sh_over_S * S
     x_Cr_opt_nose = minimum[1]
     cg_stab_lim = minimum[2] 
@@ -319,17 +302,21 @@ def scissor_wing_shift():
     cg_cont_lim = minimum[4] 
     cg_fwd = minimum[5] 
     print(cg_fwd)
-    Dtrim = minimum[6]
     controlplot = minimum[7] 
     stabilityplot = minimum[8]
     index = minimum[9]
     momentcoefficient = minimum[10]
     aerodynamiccenter = minimum[11]
+    cm_cruise = minimum[12]
+    xac_cruise = minimum[13]
+    CLalpha_Ah = minimum[14]
     
+    tailarm = lh[index] + MAC * (0.25-xac_cruise)
+    
+    Dtrim = trimdrag(cm_cruise, tail_armh, Sh_min,  CL, cg_aft, xac_cruise, MAC)
+
     
 
-    # alternative_index = combi.index(min(combi))
-    # rotation.append(alternative_index)
     rotation = np.array(rotation)
 
     
@@ -347,7 +334,7 @@ def scissorplot(stabilityplot,controlplot, ShS, frontcg, aftcg, Sh_over_S):
     plt.plot(controlplot*100 -5,ShS, color = 'grey', label = 'Control fwd limit')
 
     plt.plot([frontcg*100,aftcg*100], [Sh_over_S, Sh_over_S], color = 'r', marker = '|', label = 'CG range')
-    plt.ylim(-0.05,0.4)
+    plt.ylim(-0.05,0.5)
     plt.xlim(0, 150)
     plt.grid()
     plt.xlabel("Xcg/MAC [%]")
