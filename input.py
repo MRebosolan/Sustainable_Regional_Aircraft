@@ -30,9 +30,9 @@ T, P, rho_c, a = atmosphere_calculator(Cruise_alt*1000)
 
 #------------------------------------------------------------------------------------------------------------------
 MTOM = 28083                      # [kg]  #maximum takeoff mass calculated in class 2
-print('please use MTOM from class 2')
+# print('please use MTOM from class 2')
 OEW = 18332                # kg calculated in class 2
-print('please use OEW from class 2')
+# print('please use OEW from class 2')
 MTOW = MTOM * g                   # [N] Make sure it is in Newtons!
 MLW = MTOW                   # maximum landing weight [N], same as MTOW because we burn low fuel
 
@@ -53,6 +53,7 @@ AR_h = 4                          #Aspect ratio of the horizontal tail [-], TBD
 AR_v = 1.7                        #AR vtail; 1< AR_v<2
 taper_v = 0.6                     #taper ratio vertical tail
 e_tail = 0.85                     #oswald efficiency factor of tail, TBD
+
 #------------------------------------------------------------------------------------------------------------------
 # half_sweep = 0.663         # estimate, [degrees], sweep at half chord for main wing
 # LE_sweep =0.7485         # Leading egde wing sweepTBD,
@@ -60,25 +61,21 @@ e_tail = 0.85                     #oswald efficiency factor of tail, TBD
 
 
 S = MTOW /wingloading             # [m2] wing area
-print('please use S from class 2')
 
 Cr = 4.292998                     # Wing root chord [m]
 Ct = 1.328058                     # Wing tip chord [m]
 taper = Ct / Cr                   # wing taper ratio [-]
 b = (S * AR)**0.5                 # wingspan [m]
 
-print('please use b from class 2')
-
 Sv = 13.36                        # [m2] CRJ700 | Obtain realistic value from Vtail area sizing
 bv = 7.57                         # [m] vertical tail span CRJ700
+                   # [m] Horizontal tail span 
+half_chord_sweep_vert = np.radians(35)  # deg, sweep at half chord of vertical tail
 zh = bv * 0.95                    # Height of horizontal stabilizer measured from the bottom of the vertical tail [m]
 Sh_over_S = 0.3725
 Sh = Sh_over_S * S                        # m2 crj700 shizzle yo, horizontal tail area
 half_chord_sweep_hor = np.radians(20)   # deg, sweep at half chord of horizontal tail
-
-bh = (AR_h*Sh)   **0.5                     # [m] Horizontal tail span 
-half_chord_sweep_vert = np.radians(35)  # deg, sweep at half chord of vertical tail
-
+bh = (AR_h*Sh)   **0.5  
 
 
 
@@ -134,7 +131,6 @@ H_to_ker_ratio = 1                # hydrogen to kerosene ratio
 
 powerloading = 0.44               # thrust over weight from loading diagram, update based on flight performance take off length
 Tto = powerloading * MTOW         #thrust at takeoff in newtons
-print('please use Tto from class 2')
 A_inlet = 1.58                    # m2, engine inlet area
 ln = 0.8129                       # m 1/4 of CRJ engine length, length of nacelle
 bn = 1.2                          #maximum width of engine [m]

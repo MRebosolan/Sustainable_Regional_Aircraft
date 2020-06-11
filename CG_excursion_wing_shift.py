@@ -158,8 +158,8 @@ def cg_excursion_wing_shift():
             cgmin_lst.append(cgmin)
             cgmax_lst.append(cgmax)
         
-        cg_fwd = (np.min(cgmin_lst) - x_lemac[i]) / MAC * 0.98      #subtract 2% margin, assuming most forward cg is after lemac
-        cg_aft = (np.max(cgmax_lst) - x_lemac[i]) / MAC * 1.02      #add 2% margin
+        cg_fwd = (np.min(cgmin_lst) - x_lemac[i]) / MAC * 0.97      #subtract 2% margin, assuming most forward cg is after lemac
+        cg_aft = (np.max(cgmax_lst) - x_lemac[i]) / MAC * 1.03      #add 2% margin
         cg_fwd_excursion_lst.append(cg_fwd)
         cg_aft_excursion_lst.append(cg_aft)
         
