@@ -210,12 +210,17 @@ for i, y in enumerate(spanwise_array):
     shear_stresses.append(shear_stress)
     pitches.append(pitch)
 
+# plt.plot(spanwise_array, moments_around_x)
+# plt.plot(spanwise_array, shears_y)
+
 # plt.plot(spanwise_array, moi_boom_along_span)
 plt.plot(spanwise_array, upper_stress_along_span)
 plt.plot(spanwise_array, lower_stress_along_span)
 plt.plot(spanwise_array, shear_stresses)
 #plt.plot(spanwise_array, pitches)
-plt.show()
+#plt.show()
+
+print(chords[0] * max(ycoord1))
 
 # compression_buckling_stress = Kc * E * (t_d/max(pitches))**2
 # shear_buckling_stress = Ks * E * (t_d/max(pitches))**2

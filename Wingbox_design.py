@@ -22,6 +22,7 @@ T_to = input.Tto
 
 print(wingloading*S*0.5)
 print(wing_length)
+print(input.MTOW / 2)
 
 total_lift = wingloading/wing_length
 total_lift_half = total_lift/2
@@ -87,6 +88,7 @@ def general_lift_d (x, a=11.4, b=15861):
     #Insert formula for lift distribution here
     #current obtained by fitting elliptical distribution to given wing loading, a=half wing span - half fuselage width
     loading_at_x = np.sqrt((1-(x**2/a**2))*b**2)
+    loading_at_x *= 3
     return loading_at_x
 
 
@@ -202,8 +204,8 @@ for i in x_array[2:]:
     moment_array2.append(internal_z_bending_moment(i))
     shear_array2.append(internal_longitudinal_shear_force(i))
 
-#plt.plot(x_array[2:], moment_array)
-#plt.plot(x_array[2:], shear_array)
+plt.plot(x_array[2:], moment_array)
+plt.plot(x_array[2:], shear_array)
 #plt.plot(x_array[2:], moment_array2)
 #plt.plot(x_array[2:], shear_array2)
 
