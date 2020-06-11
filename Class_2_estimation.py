@@ -320,8 +320,8 @@ except:
     
     
     
-S = tom2(S)
-b = tom(b)
+S = input.S
+b = input.b
 MTOM = to_kg(MTOW)
 MTOW = 9.81*MTOM
 OEM = OEWINPUT

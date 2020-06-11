@@ -247,8 +247,8 @@ CL0_land    = 0.946
 Alpha0_land = -9.4619
 
 #HLD
-TE-HLD         = True
-LE-HLD         = False
+TE_HLD         = True
+LE_HLD         = False
 DeltaCLmaxTO   = 0.16316
 DeltaCLmaxLnd  = 0.2984
 defTO          = 20  #deg
