@@ -103,7 +103,6 @@ print ()
 print ('The Clearance angle is:',np.round(np.tan((z_f_ground)/(x_tailcone-x_main_lg))*180/np.pi,3),'[deg]')
 print ()
 print ((x_main_lg-x_cg)/.08-x_cg)
-print (x_main_lg)
 print ((x_main_lg-x_cg_fwrd))
 print ((x_main_lg-x_cg_aft))
 def nose_lg_loc(x_main_lg= x_main_lg, x_cg=x_cg,MTOW=MTOW,g=g):
