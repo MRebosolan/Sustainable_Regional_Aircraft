@@ -71,11 +71,16 @@ print('please use b from class 2')
 
 Sv = 13.36                        # [m2] CRJ700 | Obtain realistic value from Vtail area sizing
 bv = 7.57                         # [m] vertical tail span CRJ700
-bh = 8.54                         # [m] Horizontal tail span 
 zh = bv * 0.95                    # Height of horizontal stabilizer measured from the bottom of the vertical tail [m]
-Sh = 20.75                        # m2 crj700 shizzle yo, horizontal tail area
+Sh = 20.4                        # m2 crj700 shizzle yo, horizontal tail area
 half_chord_sweep_hor = np.radians(20)   # deg, sweep at half chord of horizontal tail
+
+bh = (AR_h*Sh)   **0.5                     # [m] Horizontal tail span 
 half_chord_sweep_vert = np.radians(35)  # deg, sweep at half chord of vertical tail
+
+
+
+
 
 
 
@@ -95,7 +100,8 @@ P_c = 74682.5                     # Pa, design cabin pressure, [N/m^2]
 P_cruise = 22632.1                # Pa, outside pressure at cruise
 Sff = 7.6                         # freight floor area estimate
 W_pax = 93                        # total weight per passenger, includes luggage kg
-x_first_pax = 6.9                 # x-location measured from the nose [m] where first passenger row is located
+seatlength = 21 * 0.0254 *0.5      #cg of first row of people
+x_first_pax = 6.9+ seatlength            # x-location measured from the nose [m] where first passenger row is located
 n_rows = 15                       # Number of passenger rows [-] (=n_pax/n_seatsabreast)
 W_cargo = 1000                    # kg #Extra cargo weight
 n_crew = N_fdc + N_cc             # Total amount of crew
@@ -107,7 +113,7 @@ ellipse_fuselage = 2*np.pi * (((widthf/2)**2 + (hf/2)**2)/2)**0.5  #circumferenc
 lf = 28                           # length of fuselage m estimate, lil shorter than CRJ as 5 seat rows are used, ADD TANK CYLINDER LENGTH
 S_fgs = ellipse_fuselage * lf * 0.9  # fuselage gross shell area, APPROXIMATION
 
-V_pax = 282.391                   # m^3, cabin volume, can be estimated with a small calculation
+V_pax = A_fuselage*lpax                 # m^3, cabin volume, can be estimated with a small calculation
 cargo_fwd_fraction = 1/3          # estimate, amount of cargo in fwd hold
 cargo_aft_fraction = 2./3         # estimate, amount of cargo in aft hold
 x_cg_fwd_cargo = 6                # cg of forward cargo compartment, measured from the aircraft nose [m]
@@ -227,13 +233,29 @@ Cd0_aileron = 0.007               #zero drag coefficient [-] at wing section whe
 #------------------------------------------------------------------------------------------------------------------
 tail_speedratio = 1**0.5           # SEAD, T tail
 cl0 = 0.488                   # preliminary estimate, TBD from airfoil analysis
+CL0takeoff = 0.8                #zero angle lift at takeoff condition
+CL0land = 0.95
 cm0 = -0.119                    # preliminary estimate, TBD from airfoil analysis
 zero_lift_angle = np.radians(-3.941)# degrees, PRELIMINARY estimate, TBD from airfoil analysis
 cl_htail_max  = -0.8                #estimate coming from sead: maximum lift coefficient of tail
+horizontal_margin = 0.15
 #------------------------------------------------------------------------------------------------------------------
 
 z_position_wing = hf - 0.6         # m, PRELIMINARY, still requires thought, for downwash calc
 z_position_horizontal = zh + hf    # where tail is positioned, for downwash calc
+
+z_cg = 0.5*hf  
+
+taper_h = 0.5                   #approximation of taper ratio of horizontal tail
+sweep_LE_H = np.arctan(np.tan(half_chord_sweep_hor) - 4 / AR_h * ((0 - 25) / 100 * (1 - taper_h) / (1 + taper_h)))
+
+y_MAC_h = bh / 6 * ((1 + 2 * taper_h) / (1 + taper_h))            #spanwise location of mean aerodynamic chord
+x_lemac_rootchord_h = y_MAC_h * np.tan(sweep_LE_H)               #x position of mac at leading edge [m], measured from the start of the root choord!!!!
+c_root_h = 2*Sh / ((1 + taper_h)*bh)
+c_tip_h = taper_h * c_root_h
+c_mac_h = 2/3 * c_root_h * (1 + taper_h + taper_h**2)/(1 + taper_h)
+x_rootchord_h = lf -c_root_h - 0.4
+
 
 
 #Parameters regarding Class I      # Parameters about class 1 weight estimation, ask Jari
@@ -278,8 +300,11 @@ mach_cruise = V_C_estimate/a       #Cruise mach
 theta = 15                         #Clearance angle [deg]
 #------------------------------------------------------------------------------------------------------------------
 
+d_wheel_main_lg = 1             #Main landing gear diameter [m]
+d_wheel_nose_lg = 0.5
 
-
+strut_length_main_lg = 1        #[m]
+strut_length_nose_lg = 0.75
 #Lift/drag ratios
 #------------------------------------------------------------------------------------------------------------------
 
