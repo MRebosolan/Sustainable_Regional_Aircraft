@@ -28,7 +28,7 @@ Remark(s):
 
 """
 #Variables that still need to be properly coupled to other code:
-z_cg  =  0.5*input.hf               # z loc cg. WRT fuselage!
+z_cg  =  input.z_cg             # z loc cg. WRT fuselage!
 #tailcone_length    # x-location where fuselage diameter 
 x_tailcone = input.lf - tailcone_length                                    # starts decreasing (clearance angle), wrt c.g. OR wrt nose
                                     # If it is wrt the the c.g. change x_empennage; [Start of the aft cone]
@@ -150,8 +150,18 @@ def lat_pos_lg(z_main_lg=z_main_lg,dist=dist,x_main_lg=x_main_lg,x_cg_aft=x_cg_a
 
 y_lg_list, b_n_list = lat_pos_lg(z_main_lg)
 
-def req_htail_area(x_main_lg,Cl_htail=Cl_htail,x_ac_htail=x_ac_htail,x_cg = x_cg_fwrd,rho_to=rho_to,Vlof=Vlof,MTOW=MTOW,htail_sweep=htail_sweep): 
-    htail_area = -((x_main_lg-x_cg)*MTOW - .5*rho_to*(Vlof)**2*S*0*(x_main_lg-sc_shift.aerodynamiccenter) + sc_shift.momentcoefficient*.5*rho_to*(Vlof**2)*S*sc_shift.MAC )  /(0.5*rho_to*(Vlof/np.cos(htail_sweep))**2*Cl_htail)
+
+def req_htail_area(x_main_lg,Cl_htail=Cl_htail,x_ac_htail=x_ac_htail,x_cg = x_cg_fwrd,rho_to=rho_to,Vlof=Vlof,MTOW=MTOW -1750*9.81): 
+    CL_ground =  input.CL0takeoff 
+    cg_contribution = (x_main_lg-x_cg)*MTOW
+    lift_con = (- 0.5 *rho_to * Vlof * Vlof * S * CL_ground)*(x_main_lg - sc_shift.x_ac_wing_approx)
+    moment_con = - sc_shift.momentcoefficient*.5*rho_to*(Vlof**2)*S*sc_shift.MAC
+    
+    htail_moment =  -(0.5*rho_to*(Vlof**2)*Cl_htail*(x_ac_htail-x_main_lg))
+    
+    htail_area = (cg_contribution + lift_con + moment_con)/htail_moment
+    sh_over_s = htail_area/S
+
     return htail_area
 htail_area = req_htail_area(x_main_lg)
 
