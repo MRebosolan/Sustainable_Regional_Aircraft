@@ -70,7 +70,7 @@ L1 = 0.2 * lf               # nosecone length L1,  guesss
 L2 = 0.6 * lf               # cabin length    L2,  guesss
 L3 = 0.2 * lf               # tail length     L3,  guesss
 Amax_fus = np.pi / 4 * Df**2                      # estimate
-upsweep = 15 * np.pi / 180                       # estimate TBD
+upsweep = inp.theta * np.pi / 180                       # Clearance angel [deg]
 #### ENGINE
 l_nacelle = 1     # nacelle length l_nacelle
 Amax_nacelle = 1   # max area nacelle Amax_nacelle
@@ -78,9 +78,9 @@ B = 12                # Bypass ratio, take from inp
 Tto = 125e3           # take-off thrust take from inp
 
 #### LANDING GEAR
-d_nose = 1                                             # length nose gear
+d_nose = inp.d_wheel_nose_lg + inp.strut_length_nose_lg    # length nose gear
 w_nose = 1                                              # total width nose gear
-d_main = 1                                                # length main gear
+d_main = inp.d_wheel_main_lg + inp.strut_length_main_lg         # length main gear
 w_main = 1                                              # total width main gear
 main_amount = 2                                         # Main landing gear amount
 S_mlg = d_main * w_main                                 # reference frontal area main landing gear
@@ -221,7 +221,8 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S, v_approach, V_C_TAS):
     Sw_check = ((-2 * a * Df + c_root) + (-2 * a * (Df + x2) + c_root)) * x2 / 2 / S   #verified
     print("SwfS, Sw_check", SwfS, Sw_check)
 
-
+    Swf_actual = (0.25 * (-2 * a * Df + c_root) + 0.25 * (-2 * a * (Df + x2) + c_root)) * x2 / 2
+    print("Swf_actual=", Swf_actual)
     # NEW LIFT CURVE
 
     eta = 0.95
@@ -403,7 +404,6 @@ def drag():
 
     # Drag due to fuselage upsweep (upsweep in rad, Amax is max cross-sectional area)
 
-
     dragupsweep = 3.83 * upsweep**2.5 * Amax_fus           # (not delta_cd but D/q  ??)
 
     # landing gear drag (add this from ADSEE)
@@ -435,7 +435,7 @@ def drag():
                     + (S_wet_nacelle * Cftot_nacelle * IF_nacelle * FF_nacelle)
                     + drag_misc) * leakage
 
-    print(CD0)
+    print("CD0=",CD0)
     ####################### Lift induced drag
     df1 = 0      # flap deflection - clean
     df2 = 1.047  # flap deflection - Lnd
@@ -531,16 +531,16 @@ osclean,osTO,osLnd, Draglist, clrange = drag()
 #
 # #----------------------------- Plotting
 #
-# plt.figure(0)
-# plt.plot(geom[0], geom[1], geom[2], geom[3], hld[0], hld[1],ail[0],ail[1])
-# plt.text(cross1[0],cross1[1],'Fuselage Wall Line')
-# plt.grid(True,which="major",color="#999999")
-# plt.grid(True,which="minor",color="#DDDDDD",ls="--")
-# plt.minorticks_on()
-# plt.ylim(-12.0,2.0)
-# plt.ylabel('x [m]')
-# plt.xlabel('y [m]')
-# #
+plt.figure(0)
+plt.plot(geom[0], geom[1], geom[2], geom[3], hld[0], hld[1],ail[0],ail[1])
+plt.text(cross1[0],cross1[1],'Fuselage Wall Line')
+plt.grid(True,which="major",color="#999999")
+plt.grid(True,which="minor",color="#DDDDDD",ls="--")
+plt.minorticks_on()
+plt.ylim(-12.0,2.0)
+plt.ylabel('x [m]')
+plt.xlabel('y [m]')
+#
 # plt.figure(1)
 # plt.grid(True,which="major",color="#999999")
 # plt.grid(True,which="minor",color="#DDDDDD",ls="--")
@@ -600,19 +600,19 @@ osclean,osTO,osLnd, Draglist, clrange = drag()
 
 
 
-# plt.figure(5)
-# plt.grid("minor")
-# plt.plot(alpha_range[0], CL_clean_list)
-# plt.plot(alpha_range[2], CL_to_list)
-# plt.plot(alpha_range[1], CL_landing_list)
-# plt.plot(CLmax_list[1][0], CLmax_list[0][0], marker=".", color="blue")
-# plt.plot(CLmax_list[1][2], CLmax_list[0][2], marker=".", color="orange")
-# plt.plot(CLmax_list[1][1], CLmax_list[0][1], marker=".", color="green")
-# plt.ylim(0, 2.5)
-# plt.xlim(-5, 25)
-# plt.xlabel(r"$\alpha$ [deg]")
-# plt.ylabel(r"$C_L$ [-]")
-# plt.legend(["clean", "take-off", "landing",  "stall clean", "stall take-off", "stall landing"], loc="upper left")
+plt.figure(5)
+plt.grid("minor")
+plt.plot(alpha_range[0], CL_clean_list)
+plt.plot(alpha_range[2], CL_to_list)
+plt.plot(alpha_range[1], CL_landing_list)
+plt.plot(CLmax_list[1][0], CLmax_list[0][0], marker=".", color="blue")
+plt.plot(CLmax_list[1][2], CLmax_list[0][2], marker=".", color="orange")
+plt.plot(CLmax_list[1][1], CLmax_list[0][1], marker=".", color="green")
+plt.ylim(0, 2.5)
+plt.xlim(-5, 25)
+plt.xlabel(r"$\alpha$ [deg]")
+plt.ylabel(r"$C_L$ [-]")
+plt.legend(["clean", "take-off", "landing",  "stall clean", "stall take-off", "stall landing"], loc="upper left")
 
 plt.figure(6)
 plt.grid()
