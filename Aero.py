@@ -80,7 +80,7 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S, v_approach, V_C_TAS):
 
     #sweep_c4 = 40.535802011 * np.pi / 180 # from airfoil selection
 
-    print("Sweep =", sweep_c4 * 180 / np.pi)
+
 
     taper = 0.2 * (2 - sweep_c4)
 
@@ -125,8 +125,8 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S, v_approach, V_C_TAS):
     WS_cr_end = 0.9629656887889539 * MTOW / S
 
     CL_des = 1.1/q * (0.5*(WS_cr_start + WS_cr_end))
-    Cl_des = CL_des / np.cos(sweep_c4)**2
-    Cl_des = Cl_des * np.sqrt(1 - M_cruise**2)
+    Cl_des = CL_des / (np.cos(sweep_c4)**2)
+    #Cl_des = Cl_des * np.sqrt(1 - M_cruise**2)
     print("Cl design =", CL_des, Cl_des)
 
     T_alt = 288 * (1 - 0.0065*inp.Cruise_alt*1000/288)
@@ -141,31 +141,20 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S, v_approach, V_C_TAS):
     Re_sea = (1.225 * 66 * c_mac) / 1.802e-5
 
     M_sea = v_approach / np.sqrt(1.4*287*288)
+    M_to = (1.2 * V_S) / np.sqrt(1.4*287*288)
+    Re_to = (1.225 * 1.2 * V_S * 0.514444 * c_mac) / 1.802e-5
+
     print("M_sea = ", M_sea, M_cruise2)
 
-    print("Re =", Re, Re2, Re_sea)
+    print("Re =", Re, Re2, Re_sea, Re_to)
     # With CL_max = 1.8
     # CLmax = 2.464
     # CLmax take-off: 2.1 , Clmax landing: 2.25
     #     # target for take-off: Delta CLmax = 0.3
     #     # target for landing: Delta CLmax = 0.45
 
-    k = (0.115 * 180 / np.pi) / (2 * np.pi)
-
-    beta = np.sqrt(1 - M_cruise**2)
-    CLalpha = (2*np.pi*AR)/ (2 + np.sqrt(4 + (AR * beta / k) * (1 + (np.tan(sweep_c2)**2/beta**2))))
-
-    alpha0L = -3.667/180 * np.pi
-
-    #CL = CLalpha * (alpha - alpha0L)
-
-    alpha_trim = CL_des / CLalpha + alpha0L
-
-    CLmax_corrected = 0.74 * 2.432
-    print("CLmax_corrected =", CLmax_corrected)
-
-    dCLmax_land = 0.45
-    dCLmax_to   = 0.3
+    dCLmax_land = 0.2984
+    dCLmax_to   = 0.16316
 
     dClmax_land = 0.9
 
@@ -173,8 +162,7 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S, v_approach, V_C_TAS):
     aileron_C   = 75 #percent
 
     sweep_hinge = np.arctan(np.tan(sweep_c4) - 4/AR * ((hinge_c-25)/100 * (1 - taper)/(1 + taper)))
-    print(sweep_hinge)
-    SwfS = dCLmax_land/ (0.9 * dClmax_land * np.cos(sweep_hinge))
+    SwfS = dCLmax_land / (0.9 * dClmax_land * np.cos(sweep_hinge))
 
     Df = widthf/2 * 1.25 # clearance of 1/8 * fuselage diameter completely arbitrary
 
@@ -189,17 +177,70 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S, v_approach, V_C_TAS):
     print("x2 = ", (x2 + Df))
 
     Sw_check = ((-2 * a * Df + c_root) + (-2 * a * (Df + x2) + c_root)) * x2 / 2 / S   #verified
-    print(SwfS, Sw_check)
+    print("SwfS, Sw_check", SwfS, Sw_check)
 
-    d_alpha_0 = -5 * np.pi / 180
 
-    d_alpha = d_alpha_0 * SwfS * np.cos(sweep_hinge)
+    # NEW LIFT CURVE
 
+    eta = 0.95
+
+    beta = np.sqrt(1 - M_cruise ** 2)
+    CLalpha = (2 * np.pi * AR) / (2 + np.sqrt(4 + (AR * beta / eta)**2 * (1 + (np.tan(sweep_c2) / beta)**2)))
+    d_alpha0l_land = -15 / 180 * np.pi * SwfS * np.cos(sweep_hinge)
+    d_alpha0l_to   = -10 / 180 * np.pi * SwfS * np.cos(sweep_hinge)
+
+    print("d_alpha0l_land, d_alpha0l_to=",d_alpha0l_land * 180 / np.pi, d_alpha0l_to * 180 / np.pi)
+
+    alpha0L = -3.936 / 180 * np.pi     # at Re = 19520133
+
+    CL = CLalpha * (0 - alpha0L)
+    print("CLalpha=", CLalpha * np.pi / 180)
+    print("alpha0l_land, alpha0l_to=", (alpha0L + d_alpha0l_land) * 180 / np.pi, (alpha0L + d_alpha0l_to) * 180 / np.pi)
+
+    alpha_trim = CL_des / CLalpha + alpha0L
+    print("alpha_trim=", alpha_trim * 180 / np.pi)
+
+    # CLmax/Clmax vs sweepLE plot: dy > 2.5, -> CLmax/Clmax = 0.82
+    # Re takeoff = 15071059, Re landing = 16326981
+
+    CLmax_wing_landing = 0.82 * 2.38
+    CLmax_wing_to      = 0.82 * 2.362
+
+    print("CLmax at landing=",CLmax_wing_landing)
+    print("CLmax at takeoff=", CLmax_wing_to)
+
+    d_alpha_CLmax = 2.6
+    alpha_stall_landing = CLmax_wing_landing/(CLalpha * np.pi / 180) + alpha0L + d_alpha_CLmax
+    alpha_stall_to      = CLmax_wing_to/(CLalpha * np.pi / 180) + alpha0L + d_alpha_CLmax
+    print("alpha_stall_landing=", alpha_stall_landing)
+    print("alpha_stall_takeoff=", alpha_stall_to)
+
+    alpha_range = [range(-10, 17, 1), range(-10, 14, 1), range(-10, 15, 1)]
+    CL_clean_list = []
+    CL_landing_list = []
+    CL_to_list = []
+
+    r = 0.9      # random factor to take into account viscosity (not done by xflr5), such that slope moves towards stall point better
+    # clean
+    for i in alpha_range[0]:
+        CL_clean = r * CLalpha * np.pi / 180 * (i - alpha0L * 180 / np.pi)
+        CL_clean_list.append(CL_clean)
+    # landing
+    for j in alpha_range[1]:
+        CL_landing = r * CLalpha * np.pi / 180 * (j - (alpha0L + d_alpha0l_land) * 180 / np.pi)
+        CL_landing_list.append(CL_landing)
+    # take - of
+    for k in alpha_range[2]:
+        CL_to = r * CLalpha * np.pi / 180 * (k - (alpha0L + d_alpha0l_to) * 180 / np.pi)
+        CL_to_list.append(CL_to)
+
+    CLmax_list = np.array([[1.9516, 2.25, 2.1], [20.32, 16.795, 18.4946]])
 
     wing = [sweep_c4, sweep_c2, sweep_cLE, taper, c_root, c_tip, c_mac, y_mac, t_c, dihedral,
             Cl_des, dCLmax_land, dCLmax_to]
 
     print("wing =", wing)
+    print("Sweep =", sweep_cLE * 180 / np.pi)
 
     cross1 = line_intersect(x_fus[0],y_fus[0],x_fus[1],y_fus[1],x_wing[0],y_wing[0],x_wing[1],y_wing[1])
 
@@ -218,10 +259,124 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S, v_approach, V_C_TAS):
     ail   = [x_ail,y_ail]
     hld   = [x_hld, y_hld]
 
-    return wing, geom,cross1, hld, ail, x2
+    return wing, geom,cross1, hld, ail, x2, CL_clean_list, CL_landing_list, CL_to_list, alpha_range, CLmax_list
 
 
-wing, geom, cross1, hld, ail, x2 = wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S, v_approach, V_C_TAS)
+# def drag(AR):
+#     # inputs: AR, sweep_cLE, Df, S, Sh, Sv, L1, L2, L3, Re (cruise), cMAC, cMAC h, cMAC v, sweep_c4, SwfS
+#
+#     ####################### Zero lift drag estimation
+#
+#     # wetted area
+#
+#     S_wet_wing = 1.07 * 2 * S
+#     S_wet_tailh = 1.05 * 2 * Sh
+#     S_wet_tailv = 1.05 * 2 * Sv
+#     S_wet_fus = (np.pi * Df / 4) * ( 1/(3*L1**2) * ((4 * L1**2 + Df**2/4)**1.5 - Df**3/8) - Df + 4*L2 + 2*np.sqrt(L3**2 + Df**2/4))
+#
+#     ####### skin friction coeff
+#     M = 0.75
+#     k = 0.152 * 10**-5         # for polished sheet metal
+#
+#     # wing
+#     Re_wing = min(Re, 44.62 * (c_MAC/k)**1.053 * M*1.16)
+#
+#     Cf_lam_wing = 1.328 / np.sqrt(Re_wing)
+#     Cf_tur_wing = 0.455 / ((np.log10(Re_wing) ** 2.58) * (1 + 0.144 * M ** 2) ** 0.65)
+#
+#     Cftot_wing = 0.35 * Cf_lam_wing + 0.65 * Cf_tur_wing  # values for smooth metal
+#
+#     # v tail
+#     Re_vtail = min(Re, 44.62 * (c_MACv/k)**1.053 * M*1.16)
+#
+#     Cf_lam_vtail = 1.328 / np.sqrt(Re_vtail)
+#     Cf_tur_vtail = 0.455 / ((np.log10(Re_vtail) ** 2.58) * (1 + 0.144 * M ** 2) ** 0.65)
+#
+#     Cftot_vtail = 0.35 * Cf_lam_vtail + 0.65 * Cf_tur_vtail  # values for smooth metal
+#
+#     # h tail
+#     Re_htail = min(Re, 44.62 * (c_MACt/k)**1.053 * M*1.16)
+#
+#     Cf_lam_htail = 1.328/np.sqrt(Re_htail)
+#     Cf_tur_htail = 0.455/((np.log10(Re_htail)**2.58) * (1 + 0.144 * M**2)**0.65)
+#
+#     Cftot_htail = 0.35 * Cf_lam_htail + 0.65 * Cf_tur_htail  # values for smooth metal
+#
+#     # fus
+#     Re_fus = min(Re, 44.62 * ((L1 + L2 + L3) / k) ** 1.053 * M * 1.16)
+#
+#     Cf_lam_fus = 1.328 / np.sqrt(Re_fus)
+#     Cf_tur_fus = 0.455 / ((np.log10(Re_fus) ** 2.58) * (1 + 0.144 * M ** 2) ** 0.65)
+#
+#     Cftot_fus  = 0.1  * Cf_lam_fus + 0.9  * Cf_tur_fus                # values for smooth metal
+#
+#
+#     ##### Interference factor IF
+#
+#     IF_wing   = 1.0
+#     IF_tailv  = 1.0
+#     IF_tailh  = 1.04
+#     IF_fus    = 1.0
+#
+#     ######## Miscellaneous drag
+#     # Wave drag
+#     Mdd = 0.935/cos(sweep_c4) - 0.14 /(cos(sweep_c4)**2) - CL_des/ (10*(cos(sweep_c4)**3))
+#     if Mdd > M:
+#         wavedrag = 0.002 * (1 + 2.5 * (Mdd - M)/0.05)**(-1)
+#     else:
+#         wavedrag = 0.002 * (1 + 2.5 * (M - Mdd)/0.05)**(2.5)
+#     # Fuselage base drag  -> look this up
+#     drag_fusbase = 0
+#
+#     # Drag due to fuselage upsweep (upsweep in rad, Amax is max cross-sectional area)
+#     dragupsweep = 3.83 * upsweep**2.5 * Amax           # (not delta_cd but D/q  ??)
+#
+#     # landing gear drag (add this from ADSEE)
+#
+#
+#     # flap drag
+#     dflap = 0                                     # 20 for takeoff and 60 for landing
+#     drag_flap = 0.0144 * SwfS * (dflap - 10)
+#
+#     drag_misc = wavedrag + drag_fusbase + dragupsweep + drag_flap
+#     leakage   = 1.05                                     # 2-5 % of total CDO
+#     ############ FINAL ZERO LIFT DRAG
+#
+#     CD0 = (1 / S * ((S_wet_wing * Cftot_wing * IF_wing) + (S_wet_tailh * Cftot_tailh * IF_tailh)
+#                    + (S_wet_tailv * Cftot_tailv * IF_tailv) + (S_wet_fus * Cftot_fus * IF_fus) + drag_misc) * leakage
+#
+#
+#     ####################### Lift induced drag
+#     df1 = 0      # flap deflection - clean
+#     df2 = 1.047  # flap deflection - Lnd
+#     df3 = 0.349  # flap deflection - TO
+#
+#     oswaldclean = 1.78 * (1 - 0.045 * AR**0.68) - 0.64 + 0.0046 * df1
+#     oswaldTO = 1.78 * (1 - 0.045 * AR**0.68) - 0.64 + 0.0046 * df3
+#     oswaldLnd = 1.78 * (1 - 0.045 * AR**0.68) - 0.64 + 0.0046 * df2
+#
+#     d_CD_twist = 0 #0.00004 * (phi_tip - phi_MGC) #effect of twist
+#
+#     dAR = 0 #effect of wing tips
+#     AR_eff = AR + dAR
+#
+# #    K_ground = (33 * (h/b)**1.5)/ (1 + 33 * (h/b)**1.5) #  ground effect
+# #
+# #    ######################### Total drag polar #######################
+# #    C_D = C_D0 + 1/(np.pi*AR_eff*oswald) * (CL - CL_minD)**2
+#
+#
+#     f = l/np.sqrt(4*Amax/np.pi)
+#     FFw = (1 + 0.6/(x/c)*(t/c) + 100*(t/c)**4)*(1.34*M_cruise**0.18*(np.cos(sweep_m))**0.28)
+#     FFf = (1+60/(f**3)+f/400)
+#
+#
+#     return oswaldclean, oswaldTO, oswaldLnd
+#
+# osclean,osTO,osLnd = drag(AR)
+
+wing, geom, cross1, hld, ail, x2, CL_clean_list, CL_landing_list, CL_to_list, alpha_range, CLmax_list = wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S, v_approach, V_C_TAS)
+
 
 
 #----------------------------- .txt File Airfoil Coordinates
@@ -230,86 +385,86 @@ wing, geom, cross1, hld, ail, x2 = wing_geometry(M_cruise, S, AR, MTOW, V_C, wid
 
 #Create empty lists
 
-lines  = [[],[],[],[]]
-xcoord1= [[],[],[],[]]
-xcoord2= [[],[],[],[]]
-ycoord1= [[],[],[],[]]
-ycoord2= [[],[],[],[]]
-camline= [[],[],[],[]]
-
-#Read from file
-f0=open('airfoil1.txt','r')
-f1=open('airfoil2.txt','r')
-f2=open('airfoil3.txt','r')
-f3=open('airfoil4.txt','r')
-
-lines0=f0.readlines()
-lines1=f1.readlines()
-lines2=f2.readlines()
-lines3=f3.readlines()
-
-for i in range(0,103):
-    xcoord1[0].append(float(lines0[i].split()[0]))
-    xcoord1[1].append(float(lines1[i].split()[0]))
-    xcoord1[2].append(float(lines2[i].split()[0]))
-    ycoord1[0].append(float(lines0[i].split()[1]))
-    ycoord1[1].append(float(lines1[i].split()[1]))
-    ycoord1[2].append(float(lines2[i].split()[1]))        
-for i in range(0,70):
-    xcoord1[3].append(float(lines3[i].split()[0]))
-    ycoord1[3].append(float(lines3[i].split()[1]))
-    
-for i in range(103,205):
-    xcoord2[0].append(float(lines0[i].split()[0]))
-    xcoord2[1].append(float(lines1[i].split()[0]))
-    xcoord2[2].append(float(lines2[i].split()[0]))
-    ycoord2[0].append(float(lines0[i].split()[1]))
-    ycoord2[1].append(float(lines1[i].split()[1]))
-    ycoord2[2].append(float(lines2[i].split()[1]))        
-for i in range(70,139):
-    xcoord2[3].append(float(lines3[i].split()[0]))
-    ycoord2[3].append(float(lines3[i].split()[1]))
-
-for i in range(0,4):
-    xcoord2[i].insert(-1,1.0)
-    ycoord2[i].insert(-1,0.0)
-    xcoord1[i]=xcoord1[i][::-1]
-    ycoord1[i]=ycoord1[i][::-1]
-
-##Camber Line
-for i in range(0,len(xcoord1[0])):
-    camline[0].append((ycoord1[0][i]+ycoord2[0][i])/2)
-    camline[1].append((ycoord1[1][i]+ycoord2[1][i])/2)
-    camline[2].append((ycoord1[1][i]+ycoord2[1][i])/2)
-for i in range(0,len(xcoord1[3])):
-    camline[3].append((ycoord1[3][i]+ycoord2[3][i])/2)
-
-
-#----------------------------- Plotting
-
-plt.figure(0)
-plt.plot(geom[0], geom[1], geom[2], geom[3], hld[0], hld[1],ail[0],ail[1])
-plt.text(cross1[0],cross1[1],'Fuselage Wall Line')
-plt.grid(True,which="major",color="#999999")
-plt.grid(True,which="minor",color="#DDDDDD",ls="--")
-plt.minorticks_on()
-plt.ylim(-12.0,2.0)
-plt.ylabel('x [m]')
-plt.xlabel('y [m]')
+# lines  = [[],[],[],[]]
+# xcoord1= [[],[],[],[]]
+# xcoord2= [[],[],[],[]]
+# ycoord1= [[],[],[],[]]
+# ycoord2= [[],[],[],[]]
+# camline= [[],[],[],[]]
 #
-plt.figure(1)
-plt.grid(True,which="major",color="#999999")
-plt.grid(True,which="minor",color="#DDDDDD",ls="--")
-plt.minorticks_on()
-plt.plot(xcoord1[0],ycoord1[0],color='r')
-plt.plot(xcoord2[0],camline[0],'--',color='r')
-plt.plot(xcoord2[0],ycoord2[0],color='r')
-plt.xlim(0,1)
-plt.ylim(-0.4,0.4)
-plt.text(0.0,0.0,'LE')
-plt.text(1.0,0.0,'TE')
-plt.ylabel('y/c [-]')
-plt.xlabel('x/c [-]')
+# #Read from file
+# f0=open('airfoil1.txt','r')
+# f1=open('airfoil2.txt','r')
+# f2=open('airfoil3.txt','r')
+# f3=open('airfoil4.txt','r')
+#
+# lines0=f0.readlines()
+# lines1=f1.readlines()
+# lines2=f2.readlines()
+# lines3=f3.readlines()
+#
+# for i in range(0,103):
+#     xcoord1[0].append(float(lines0[i].split()[0]))
+#     xcoord1[1].append(float(lines1[i].split()[0]))
+#     xcoord1[2].append(float(lines2[i].split()[0]))
+#     ycoord1[0].append(float(lines0[i].split()[1]))
+#     ycoord1[1].append(float(lines1[i].split()[1]))
+#     ycoord1[2].append(float(lines2[i].split()[1]))
+# for i in range(0,70):
+#     xcoord1[3].append(float(lines3[i].split()[0]))
+#     ycoord1[3].append(float(lines3[i].split()[1]))
+#
+# for i in range(103,205):
+#     xcoord2[0].append(float(lines0[i].split()[0]))
+#     xcoord2[1].append(float(lines1[i].split()[0]))
+#     xcoord2[2].append(float(lines2[i].split()[0]))
+#     ycoord2[0].append(float(lines0[i].split()[1]))
+#     ycoord2[1].append(float(lines1[i].split()[1]))
+#     ycoord2[2].append(float(lines2[i].split()[1]))
+# for i in range(70,139):
+#     xcoord2[3].append(float(lines3[i].split()[0]))
+#     ycoord2[3].append(float(lines3[i].split()[1]))
+#
+# for i in range(0,4):
+#     xcoord2[i].insert(-1,1.0)
+#     ycoord2[i].insert(-1,0.0)
+#     xcoord1[i]=xcoord1[i][::-1]
+#     ycoord1[i]=ycoord1[i][::-1]
+#
+# ##Camber Line
+# for i in range(0,len(xcoord1[0])):
+#     camline[0].append((ycoord1[0][i]+ycoord2[0][i])/2)
+#     camline[1].append((ycoord1[1][i]+ycoord2[1][i])/2)
+#     camline[2].append((ycoord1[1][i]+ycoord2[1][i])/2)
+# for i in range(0,len(xcoord1[3])):
+#     camline[3].append((ycoord1[3][i]+ycoord2[3][i])/2)
+#
+#
+# #----------------------------- Plotting
+#
+# plt.figure(0)
+# plt.plot(geom[0], geom[1], geom[2], geom[3], hld[0], hld[1],ail[0],ail[1])
+# plt.text(cross1[0],cross1[1],'Fuselage Wall Line')
+# plt.grid(True,which="major",color="#999999")
+# plt.grid(True,which="minor",color="#DDDDDD",ls="--")
+# plt.minorticks_on()
+# plt.ylim(-12.0,2.0)
+# plt.ylabel('x [m]')
+# plt.xlabel('y [m]')
+# #
+# plt.figure(1)
+# plt.grid(True,which="major",color="#999999")
+# plt.grid(True,which="minor",color="#DDDDDD",ls="--")
+# plt.minorticks_on()
+# plt.plot(xcoord1[0],ycoord1[0],color='r')
+# plt.plot(xcoord2[0],camline[0],'--',color='r')
+# plt.plot(xcoord2[0],ycoord2[0],color='r')
+# plt.xlim(0,1)
+# plt.ylim(-0.4,0.4)
+# plt.text(0.0,0.0,'LE')
+# plt.text(1.0,0.0,'TE')
+# plt.ylabel('y/c [-]')
+# plt.xlabel('x/c [-]')
 
 #plt.figure(2)
 #plt.grid(True,which="major",color="#999999")
@@ -348,12 +503,28 @@ plt.xlabel('x/c [-]')
 #plt.plot(xcoord2[3],ycoord2[3],color='r')
 #plt.xlim(0,1)
 #plt.ylim(-0.3,0.3)
-#plt.text(0.0,0.0,'LE')
+#plt.text(0.0,0.0,'LE')git pul
 #plt.text(1.0,0.0,'TE')
 #plt.ylabel('y/c [-]')
 #plt.xlabel('x/c [-]')
 #
-#plt.show()
+
+
+
+plt.figure(5)
+plt.grid("minor")
+plt.plot(alpha_range[0], CL_clean_list)
+plt.plot(alpha_range[2], CL_to_list)
+plt.plot(alpha_range[1], CL_landing_list)
+plt.plot(CLmax_list[1][0], CLmax_list[0][0], marker=".", color="blue")
+plt.plot(CLmax_list[1][2], CLmax_list[0][2], marker=".", color="orange")
+plt.plot(CLmax_list[1][1], CLmax_list[0][1], marker=".", color="green")
+plt.ylim(0, 2.5)
+plt.xlim(-5, 25)
+plt.xlabel(r"$\alpha$ [deg]")
+plt.ylabel(r"$C_L$ [-]")
+plt.legend(["clean", "take-off", "landing",  "stall clean", "stall take-off", "stall landing"], loc="upper left")
+plt.show()
 
 
 

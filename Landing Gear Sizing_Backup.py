@@ -103,19 +103,18 @@ print ()
 print ('The Clearance angle is:',np.round(np.tan((z_f_ground)/(x_tailcone-x_main_lg))*180/np.pi,3),'[deg]')
 print ()
 
-def nose_lg_loc(x_main_lg= x_main_lg, x_cg=x_cg,MTOW=MTOW):
+def nose_lg_loc(x_main_lg= x_main_lg, x_cg=x_cg,MTOW=MTOW,g=g):
     dist = []
-    relative_nose_force = []
-    d = 0.1
+    d = 0.005
     for distance in np.arange(-5,x_cg,d):
-        F_nose_lg = (x_main_lg-x_cg)/(x_cg-distance)
+        F_nose_lg = MTOW*(x_main_lg-x_cg)/(x_cg-distance)
         #Force_on_nose_lg.append(F_nose_lg)
-        if 0.08 <= F_nose_lg <= 0.15 and 0.08 <= (x_main_lg-x_cg_fwrd)/(x_cg_fwrd-distance) <= 0.15 and 0.08 <= (x_main_lg-x_cg_aft)/(x_cg_aft-distance) <= 0.15:
+        if 0.08*MTOW <= F_nose_lg <= 0.15*MTOW and 0.08*W_fwrd_cg <= W_fwrd_cg*(x_main_lg-x_cg_fwrd)/(x_cg_fwrd-distance) <= 0.15*W_fwrd_cg and 0.08*W_aft_cg <= W_aft_cg*(x_main_lg-x_cg_aft)/(x_cg_aft-distance) <= 0.15*W_fwrd_cg:
             dist.append(distance)
         else:
-            relative_nose_force.append([F_nose_lg, (x_main_lg-x_cg_fwrd)/(x_cg_fwrd-distance), (x_main_lg-x_cg_aft)/(x_cg_aft-distance)])
-    return dist, relative_nose_force
-dist, relative_nose_force = nose_lg_loc()
+            continue
+    return dist
+dist = nose_lg_loc()
 
 print('Nose gear: The minimum x-distance from the nose equals', np.round(np.min(dist),4),'[m]')
 print ()
@@ -151,6 +150,7 @@ def lat_pos_lg(z_main_lg=z_main_lg,dist=dist,x_main_lg=x_main_lg,x_cg_aft=x_cg_a
 
 y_lg_list, b_n_list = lat_pos_lg(z_main_lg)
 
+
 def req_htail_area(x_main_lg,Cl_htail=Cl_htail,x_ac_htail=x_ac_htail,x_cg = x_cg_fwrd,rho_to=rho_to,Vlof=Vlof,MTOW=MTOW -1750*9.81): 
     CL_ground =  input.CL0takeoff 
     cg_contribution = (x_main_lg-x_cg)*MTOW
@@ -161,6 +161,7 @@ def req_htail_area(x_main_lg,Cl_htail=Cl_htail,x_ac_htail=x_ac_htail,x_cg = x_cg
     
     htail_area = (cg_contribution + lift_con + moment_con)/htail_moment
     sh_over_s = htail_area/S
+
     return htail_area
 htail_area = req_htail_area(x_main_lg)
 

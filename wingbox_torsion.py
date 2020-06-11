@@ -4,9 +4,9 @@ import input
 import Wingbox_design
 import matplotlib.pyplot as plt
 from math import *
-
+#the CIA murdered JFK
 # coordinates for the airfoil
-yield_stress_material = 200  # start of with steel for now
+
 
 # Read from file
 
@@ -44,20 +44,19 @@ plt.show()
 #INPUTS
 
 chord_length = 2  # chord length in meters
-t_d = 0.01 #THICkNESS OF AIRFOIL
-number_booms = 10 #NUMBER OF POINTS (10 POINTS = 16 BOOMS,4p=4b 5p=6b )#  (ON TOP SIDE FOR NOW)
+t_d = .02 #THICkNESS OF AIRFOIL
+number_booms = 120 #NUMBER OF POINTS (10 POINTS = 16 BOOMS,4p=4b 5p=6b )#  (ON TOP SIDE FOR NOW)
 moment_cs = 450000 #MOMENT OF CROSS SECTION
+Kc, Ks = 6.4, 8.2 #clamping coeeficients
+E = 71.7E9
 
 #------------------------------------------------------------------------------------------------------------------
 
-def boom_moi(moment_cs, chord_length, shear_cs, t_d=t_d, number_booms=number_booms):
+def boom_moi(moment_cs, chord_length, shear_cs, t_d=t_d, number_booms=number_booms, stringer_area = 0.001):
 
 #returns moments of inertia and boom normal stresses based on load, chord length and number of booms
 
-    number_points = number_booms/2 + 2
-    n = 1000 / number_points
-    boom_locationx = []
-    boom_locationy = []
+    number_points = number_booms
     boom_area = []
     boom_moi = []
     stress_boom_upper = []
@@ -67,10 +66,8 @@ def boom_moi(moment_cs, chord_length, shear_cs, t_d=t_d, number_booms=number_boo
     #make airfoil symmetrical and remove negative values at end
 
 
-    for i in range(len(xcoord1[:-3])):
-        if int(xcoord1[i] * 1000) % n == 0:
-            boom_locationx.append(xcoord1[i])
-            boom_locationy.append(ycoord1[i])
+    boom_locationx = np.linspace(0, xcoord1[-4], int(number_points))
+    boom_locationy = np.linspace(0, ycoord1[-4], int(number_points))
 
 
     #compute the boom area and moment of inertia
@@ -85,12 +82,12 @@ def boom_moi(moment_cs, chord_length, shear_cs, t_d=t_d, number_booms=number_boo
             b_1 = 2*np.sqrt((boom_12dx) ** 2 + (boom_12dy) ** 2)
             b_2 = np.sqrt((boom_23dx) ** 2 + (boom_23dy) ** 2)
 
-            area_boom = t_d * b_1 / 6 + t_d * b_2 * (2 + boom_locationy[i + 1] / boom_locationy[i]) / 6
+            area_boom = stringer_area + t_d * b_1 / 6 + t_d * b_2 * (2 + boom_locationy[i + 1] / boom_locationy[i]) / 6
             moi_boom = area_boom * (boom_locationy[i] * chord_length) ** 2
 
             boom_area.append(area_boom)
             boom_moi.append(moi_boom)
-        elif i == len(boom_locationx)-1:
+        if i == len(boom_locationx)-1:
             boom_12dx = (boom_locationx[i - 1] - boom_locationx[i]) * chord_length
             boom_12dy = (boom_locationy[i - 1] - boom_locationy[i]) * chord_length
             boom_23dx = (1 - boom_locationx[i]) * chord_length
@@ -99,7 +96,7 @@ def boom_moi(moment_cs, chord_length, shear_cs, t_d=t_d, number_booms=number_boo
             b_1 = np.sqrt((boom_12dx) ** 2 + (boom_12dy) ** 2)
             b_2 = 2* np.sqrt((boom_23dx) ** 2 + (boom_23dy) ** 2)
 
-            area_boom = t_d * b_1 * (2 + boom_locationy[i - 1] / boom_locationy[i]) / 6 + t_d * b_2 / 6
+            area_boom = stringer_area + t_d * b_1 * (2 + boom_locationy[i - 1] / boom_locationy[i]) / 6 + t_d * b_2 / 6
             moi_boom = area_boom * (boom_locationy[i] * chord_length) ** 2
 
             boom_area.append(area_boom)
@@ -113,7 +110,7 @@ def boom_moi(moment_cs, chord_length, shear_cs, t_d=t_d, number_booms=number_boo
             b_1 = np.sqrt((boom_12dx)**2+(boom_12dy)**2)
             b_2 = np.sqrt((boom_23dx)**2+(boom_23dy)**2)
 
-            area_boom = t_d*b_1*(2+boom_locationy[i-1]/boom_locationy[i])/6+t_d*b_2*(2+boom_locationy[i+1]/boom_locationy[i])/6
+            area_boom = stringer_area + t_d*b_1*(2+boom_locationy[i-1]/boom_locationy[i])/6+t_d*b_2*(2+boom_locationy[i+1]/boom_locationy[i])/6
             moi_boom = area_boom*(boom_locationy[i]*chord_length)**2
 
             boom_area.append(area_boom)
@@ -133,28 +130,31 @@ def boom_moi(moment_cs, chord_length, shear_cs, t_d=t_d, number_booms=number_boo
             deltashear_boom = shear_cs * boom_area[i] * boom_locationy[i] / moi_boom_total
             boom_deltashear.append(deltashear_boom)
 
-    print(boom_deltashear)
     shear_flow1 = []
     shear_flow2 = []
 
     shearflow = 0
-    shear_center = 0.4
     shear_flow1.append(shearflow)
 
     for i in range(len(boom_deltashear)):
-        if boom_locationx[i] > shear_center:
+        if boom_locationx[i] >= 1/3:
             shearflow = shearflow + boom_deltashear[i]
             shear_flow1.append(shearflow)
-        if boom_locationx[i] < shear_center:
-            shearflow = shearflow + boom_deltashear[i]
+    shearflow = 0
+    for i in range(len(boom_deltashear)):
+        if boom_locationx[i] < 1 / 3:
+            shearflow = shearflow - boom_deltashear[i]
             shear_flow2.append(shearflow)
 
-    shear_flow = shear_flow2 + shear_flow1
+    shear_flow = shear_flow2[::-1] + shear_flow1
     shear_stress_upper = np.array(shear_flow) / t_d
-    shear_stress_lower = -shear_stress_upper
+    #shear_stress_lower = -shear_stress_upper
 
+    #stringer pitch
 
-    return moi_boom_total, stress_boom_upper, stress_boom_lower, shear_stress_upper, shear_stress_lower
+    stringer_pitch = (boom_locationx[2]-boom_locationx[1])*chord_length
+
+    return moi_boom_total, max(stress_boom_upper), min(stress_boom_lower), shear_stress_upper[0], shear_stress_upper[-1], stringer_pitch
 
 
 #-----------------ITERATE OVER WINGSPAN-----------------
@@ -182,8 +182,8 @@ chords = generate_chord_array(spanwise_array)
 moi_boom_along_span=[]
 upper_stress_along_span=[]
 lower_stress_along_span = []
-shear_stresses_upper = []
-shear_stresses_lower = []
+shear_stresses = []
+pitches = []
 
 
 for y in spanwise_array:
@@ -195,17 +195,26 @@ for i, y in enumerate(spanwise_array):
     moment_around_x = moments_around_x[i-1]
     shear_y = shears_y[i-1]
     chord = chords[i]
-    moi_boom, stress_boom_upper, stress_boom_lower, shear_stress_upper, shear_stress_lower = \
+    moi_boom, stress_boom_upper, stress_boom_lower, shear_stress_upper, shear_stress_lower, pitch = \
         boom_moi(moment_around_x, chord, shear_y)
     moi_boom_along_span.append(moi_boom)
     upper_stress_along_span.append(stress_boom_upper)
     lower_stress_along_span.append(stress_boom_lower)
+    shear_stress = max(abs(shear_stress_upper), abs(shear_stress_lower))
+    shear_stresses.append(shear_stress)
+    pitches.append(pitch)
 
 #plt.plot(spanwise_array, moi_boom_along_span)
-#plt.plot(spanwise_array, upper_stress_along_span)
-#plt.plot(spanwise_array, lower_stress_along_span)
+plt.plot(spanwise_array, upper_stress_along_span)
+plt.plot(spanwise_array, lower_stress_along_span)
+plt.plot(spanwise_array, shear_stresses)
+#plt.plot(spanwise_array, pitches)
 #plt.show()
-#The CIA murdered JFK
+print(max(shear_stresses), max(upper_stress_along_span))
+compression_buckling_stress = Kc * E * (t_d/max(pitches))**2
+shear_buckling_stress = Ks * E * (t_d/max(pitches))**2
+print(compression_buckling_stress, shear_buckling_stress)
+
 #-----------------------------------------------------------------------------------------------------------
 
 # Find the shear flows
@@ -295,8 +304,7 @@ M_y_array=[]
 for x in x_array[2:]:
     M_y_array.append(internal_y_bending_moment(x)[0])
 
-# print(lift, weight, engine_weight, x_lift, x_weight, x_engine, M_y, R_z, x_array[-1])
-# print(internal_y_bending_moment(x_array[-1]))
+
 #plt.plot(y_array[2:], M_y_array )
 #plt.show()
 
