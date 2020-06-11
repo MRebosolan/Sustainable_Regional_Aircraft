@@ -193,10 +193,7 @@ NOx_H2 = A * P3 ** 0.594 * np.exp(T3 / 350) * fa ** 1.6876 * (100 * dPP) ** -0.5
 gamma_ap = np.radians(3)           # approach angle (glide slope) [rad]
 gamma_cl = np.radians(7)           # climb angle right after rotation, to be refined [rad]
 H = 120E6                          # Heating value of hydrogen, or 141.7E6 (higher value of hydrogen)
-rho_c = 0.4135                     # [kg/m^3], cruise density (this is the one for 10 km cruise altitude)
-CLmax_land = 2.25                  # TBD
-CLmax_clean = 1.8                  # TBD
-CLmax_to = 2.1                     # TBD
+rho_c = 0.4135                     # [kg/m^3], cruise density (this is the one for 10 km cruise altitude)                   # TBD
 mu = 0.04                          # runway friction coefficient at take-off, to be reconsidered
 mu_br = 0.3                        # braking coefficient during landing, to be reconsidered
 h_sc = 50 * 0.3048                 # screen height equal to 50 ft [m]
@@ -210,12 +207,52 @@ c_t = 0.0002                       # [1/s] specific fuel consumption, to be refi
 
 v_approach = 81.13                # m/s, update from flight performance
 mach_app = v_approach/340.3        # 
-V_to = 1.05 * ((MTOW/S)*(2/1.225)*(1/CLmax_to))**0.5 #takeoff speed
+
 
 
 
 #Parameters regarding aerodynamics
 #------------------------------------------------------------------------------------------------------------------
+#Airfoil
+#CleanConfiguration
+Clmax_clean   = 2.38
+Cl0_clean     = 0.5
+alpha0_clean  = -3.936
+Cldes_clean   = 0.555368
+Cd0_clean 	  = 0.007
+Cla_clean 	  = 6.28
+Re_clean	  = 19500000
+
+#Take-off Configuration
+Clmax_TO  = 2.38
+Re_TO	  = 15071059
+
+#Landing Configuration
+Clmax_Lnd  = 2.38
+Re_Lnd     = 15071059
+
+#Wing 
+#Clean Configuration
+CLmax_clean  = 1.8
+CL0_clean    = 0.405
+Alpha0_clean = -3.936
+CLdes_clean  = 0.44888
+CD0_clean    = 0 
+CLa_clean    = 0.09858
+
+#Take-off Configuration             
+CLmax_to  = 2.1
+CL0_to    = 0.763
+Alpha0_to = -7.61995                
+
+#Landing Configuration
+CLmax_land  = 2.25
+CL0_land    = 0.946
+Alpha0_land = -9.4619
+
+#------------------------------------------------------------------------------------------------------------------
+
+V_to = 1.05 * ((MTOW/S)*(2/1.225)*(1/CLmax_to))**0.5 #takeoff speed
 t_r = t_over_c * Cr                          # maximum thickness at root [m] #bullshit estimation
 Cla_aileron = 6.48                 #1/rad, sectional lift curve slope at wing section where aileron is located, determine by datcom method or airfoil simulation
 Cd0_aileron = 0.007               #zero drag coefficient [-] at wing section where aileron is located, determine by airfoil simulation
