@@ -62,11 +62,17 @@ pax_cabin = Npax * w_person
 fwd_cargo_max = cargo * input.cargo_fwd_fraction
 aft_cargo_max = cargo * input.cargo_aft_fraction
 
+
 seatloc = []
 rows = Npax/pax_abreast
 for j in range(int(rows)):
-    row = seat_start + j * pitch * 0.0254  # convert to meters
+    if j > 7:
+        emergency_exit = 10 * 0.0254
+    else:
+        emergency_exit = 0
+    row = seat_start + j * pitch * 0.0254 + emergency_exit  # convert to meters
     seatloc.append(row)
+
 
 
 
@@ -140,8 +146,8 @@ def cg_excursion_wing_shift():
         #                   [MZF, onlypodfuel[1], bothfuel2[1]], marker='^', color='brown', label = 'Hydrogen fwd first')
         
         
-        cg_excursion = np.array([[onlyfuel[0]],[onlyfwdcargo[0]], [onlyaftcargo[0]], [bothcargo[0]], [window[0]], window_back[0], 
-                             middle[0], middle_back[0], aisle[0], aisle_back[0], onlyfuselagefuel[0], onlypodfuel[0], bothfuel[0], bothfuel[0]]) 
+        cg_excursion = np.array([[onlyfuel[0]], [onlyaftcargo[0]], [bothcargo[0]], [window[0]], window_back[0], 
+                             middle[0], middle_back[0], aisle[0], aisle_back[0], onlyfuselagefuel[0], onlypodfuel[0], bothfuel[0], onlyfuel[0]]) 
 
         cg_loaded_lst.append(bothfuel[0])
         cgmin_lst = []
