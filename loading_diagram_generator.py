@@ -86,7 +86,7 @@ w_tail_fuel=V_tank_tail*input.rho_hydrogen
 w_cyl_fuel=V_tank_cyl*input.rho_hydrogen
 # x_fuel = x_tank                 #fuel cg measured from nose, assumed same as tank cg as most likely the tank will be symmetrical
 
-x_fuel_fuselage = 0.5*input.lf #(w_tail_fuel *x_tail_tank + w_cyl_fuel * x_cyl_tank)/(w_tail_fuel + w_cyl_fuel)
+x_fuel_fuselage = (w_tail_fuel *x_tail_tank + w_cyl_fuel * x_cyl_tank)/(w_tail_fuel + w_cyl_fuel)
 w_fuel_fuselage = w_tail_fuel + w_cyl_fuel
 
 w_lg_main = cl2.df['SRA']['Main LG']    #kg

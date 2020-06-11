@@ -126,8 +126,10 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S, v_approach, V_C_TAS):
     WS_cr_start = 0.9843800695598843 * MTOW / S
 
     WS_cr_end = 0.9629656887889539 * MTOW / S
-
+    
+    global CL_des
     CL_des = 1.1/q * (0.5*(WS_cr_start + WS_cr_end))
+    
     Cl_des = CL_des / (np.cos(sweep_c4)**2)
     #Cl_des = Cl_des * np.sqrt(1 - M_cruise**2)
     print("Cl design =", CL_des, Cl_des)
@@ -265,13 +267,13 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S, v_approach, V_C_TAS):
     return wing, geom,cross1, hld, ail, x2, CL_clean_list, CL_landing_list, CL_to_list, alpha_range, CLmax_list
 
 
-def drag():
+def drag(AR):
     # inputs: AR, sweep_cLE, Df, S, Sh, Sv, L1, L2, L3, Re (cruise), cMAC, cMAC h, cMAC v, sweep_c4, SwfS
     sweep_c4 = wing[0]
     sweep_cLE = wing[2]
     Df = widthf
     Re = wing[14]
-    SwfS = [13]
+    SwfS = wing[13]
 
     L1 = 0.2*lf
     L2 = 0.6*lf
@@ -286,8 +288,8 @@ def drag():
     # wetted area
 
     S_wet_wing = 1.07 * 2 * S
-    S_wet_tailh = 1.05 * 2 * Sh
-    S_wet_tailv = 1.05 * 2 * Sv
+    S_wet_tailh = 1.05 * 2 * inp.Sh
+    S_wet_tailv = 1.05 * 2 * inp.Sv
     S_wet_fus = (np.pi * Df / 4) * ( 1/(3*L1**2) * ((4 * L1**2 + Df**2/4)**1.5 - Df**3/8) - Df + 4*L2 + 2*np.sqrt(L3**2 + Df**2/4))
 
     ####### skin friction coeff
@@ -303,6 +305,8 @@ def drag():
     Cftot_wing = 0.35 * Cf_lam_wing + 0.65 * Cf_tur_wing  # values for smooth metal
 
     # v tail
+    c_MACv = 999
+    c_MACt = 999
     Re_vtail = min(Re, 44.62 * (c_MACv/k)**1.053 * M*1.16)
 
     Cf_lam_vtail = 1.328 / np.sqrt(Re_vtail)
@@ -336,7 +340,7 @@ def drag():
 
     ######## Miscellaneous drag
     # Wave drag
-    Mdd = 0.935/cos(sweep_c4) - 0.14 /(cos(sweep_c4)**2) - CL_des/ (10*(cos(sweep_c4)**3))
+    Mdd = 0.935/np.cos(sweep_c4) - 0.14 /(np.cos(sweep_c4)**2) - CL_des/ (10*(np.cos(sweep_c4)**3))
     if Mdd > M:
         wavedrag = 0.002 * (1 + 2.5 * (Mdd - M)/0.05)**(-1)
     else:
@@ -373,8 +377,10 @@ def drag():
     leakage   = 1.05                                     # 2-5 % of total CDO
     ############ FINAL ZERO LIFT DRAG
 
+    Cftot_tailh = 999
+    Cftot_tailv = 999
     CD0 = (1 / S * ((S_wet_wing * Cftot_wing * IF_wing) + (S_wet_tailh * Cftot_tailh * IF_tailh)
-                   + (S_wet_tailv * Cftot_tailv * IF_tailv) + (S_wet_fus * Cftot_fus * IF_fus) + drag_misc) * leakage
+                   + (S_wet_tailv * Cftot_tailv * IF_tailv) + (S_wet_fus * Cftot_fus * IF_fus) + drag_misc)) * leakage
 
 
     ####################### Lift induced drag
@@ -396,7 +402,12 @@ def drag():
 #    ######################### Total drag polar #######################
 #    C_D = C_D0 + 1/(np.pi*AR_eff*oswald) * (CL - CL_minD)**2
 
-
+    l = 999
+    x = 999
+    c = 999
+    t = 999
+    sweep_m = 999
+    
     f = l/np.sqrt(4*Amax/np.pi)
     FFw = (1 + 0.6/(x/c)*(t/c) + 100*(t/c)**4)*(1.34*M_cruise**0.18*(np.cos(sweep_m))**0.28)
     FFf = (1+60/(f**3)+f/400)

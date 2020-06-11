@@ -106,7 +106,7 @@ cg_aft_lst = shift.cg_aft_excursion_lst
 #cg_aft_lst = [1.9]
 
 
-def main_lg_loc(x_cg_aft, theta=15, z_cg=input.z_cg,safetymargin_theta=1, x_tailcone=input.lf - shift.tailcone_length):
+def main_lg_loc(x_cg_aft, theta=15, z_cg=input.z_cg,safetymargin_theta=0.01, x_tailcone=input.lf - shift.tailcone_length):
     d = 0.01
     for z_fus_ground in np.arange(0,5,d):
         
@@ -292,9 +292,9 @@ def scissor_wing_shift():
         combi.append(max([np.array(rotation)[i,0], np.array(Sh_min_lst)[i,0]]))
             
     lowest = combi.index(min(combi))#+Sh_min_lst.index(min(Sh_min_lst)))/2)
-    x = 0
-    minimum = Sh_min_lst[lowest + x ]
-    min_Sh_over_S = combi[lowest + x] * (1+input.horizontal_margin)
+    x = 19
+    minimum = Sh_min_lst[51 ]
+    min_Sh_over_S = combi[51] * 1# (1+input.horizontal_margin)
     Sh_min = min_Sh_over_S * S
     x_Cr_opt_nose = minimum[1]
     cg_stab_lim = minimum[2] 
@@ -313,7 +313,7 @@ def scissor_wing_shift():
     
     tailarm = lh[index] + MAC * (0.25-xac_cruise)
     
-    Dtrim = trimdrag(cm_cruise, tail_armh, Sh_min,  CL, cg_aft, xac_cruise, MAC)
+    Dtrim = trimdrag(cm_cruise, tail_armh, Sh_min,  CL, cg_aft, xac_cruise, MAC), trimdrag(cm_cruise, tail_armh, Sh_min,  CL, cg_fwd, xac_cruise, MAC)
 
     
 
