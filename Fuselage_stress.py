@@ -5,7 +5,7 @@ import numpy as np
 
 R_f = 2 # Fuselage radius
 t_f = 0.002 #THICkNESS OF FUSELAGE
-number_boom = 8 #NUMBER OF BOOMS
+number_boom = 10 #NUMBER OF BOOMS
 moment_cs = 1100000 #MOMENT OF FUSELAGE CROSS SECTION
 shear_cs = 150000 #SHEAR FORCE OF THE CROSS SECTION
 
@@ -82,4 +82,4 @@ for i in range(len(boom_locationx[:int(number_boom/4)])-1):
 shear_flow = shear_flow2+shear_flow1
 shear_stress = np.array(shear_flow)/t_f
 
-# print(shear_stress)
+

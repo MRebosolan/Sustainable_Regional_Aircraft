@@ -10,7 +10,7 @@ from cabindesign import cabin_design
 
 t_cyl,m_cyl, tm_cyl, d_cyl,l_cyl,t_tail,m_tail, tm_tail, d_tail,l_tail\
            ,t_top,m_top,tm_top,d_top,l_top,t_pod,m_pod,tm_pod,d_pod,l_pod,totalcabinlength,V_tank_cyl, V_tank_tail, V_tank_top,V_tank_pod,\
-           tm_tanksystem,CGtank,CGfuelfull,CGcomb,totdrag,fuselage_weight,CDzerofus,FFbody,Cfturb,fuselage_area,CDzeropods,fusdrag,poddrag,tailcone_length=cabin_design(1,0.35,26,0)
+           tm_tanksystem,CGtank,CGfuelfull,CGcomb,totdrag,fuselage_weight,CDzerofus,FFbody,Cfturb,fuselage_area,CDzeropods,fusdrag,poddrag,tailcone_length=cabin_design(0.5,1,26,0)
 
 #Raw inputs
 MTOW = cl2.MTOM                 #kg
@@ -27,13 +27,13 @@ x_lemac_Cr = input.x_lemac_rootchord #x location of leading edge mac measured fr
 x_lemac = input.x_LEMAC_nose    #x lemac measured from the nose of the aircraft
 x_start_Cr = input.x_start_Cr   #x-location measured from the nose where root chord starts
 seat_start = input.x_first_pax  #x-location measured from the nose where first passenger row is located
-pitch = input.seat_pitch        #seat pitch [inch]
+pitch = input.seat_pitch             #seat pitch [inch]
 rows = input.n_rows             #number of passegner rows [-]
 lh = input.lh                   #distance between wing and horizontal tail aerodynamic centers
 lv = input.lv                   #distance between wing and vertical tail aerodynamic centers
 x_ac = x_lemac + MAC / 4               #x location of wing aerodynamic center measured from the nose of the aircraft
 x_apu = input.x_apu             #cg location of the apu measured from the nose of the aircraft [m]
-x_engine = input.x_engine       #cg location of engines, measured from the nose of the aircraft [m]
+x_engine = input.x_LEMAC_nose       #cg location of engines, measured from the nose of the aircraft [m]
 x_nacelle = input.x_nacelle     #cg location of engine nacelles, measured from the nose of the aircraft [m]
 Cr = input.Cr                   #wing root chord length [m]
 Ct = input.Ct                   #wing tip chord length [m]
@@ -52,15 +52,14 @@ aft_cargo_max = cargo * input.cargo_aft_fraction
 seatloc = []
 rows = Npax/pax_abreast
 for j in range(int(rows)):
-    row = seat_start + j * pitch * 0.0254  # convert to meters
+    if j > 7:
+        emergency_exit = 10 * 0.0254
+    else:
+        emergency_exit = 0
+    row = seat_start + j * pitch * 0.0254 + emergency_exit  # convert to meters
     seatloc.append(row)
 
 
-seatloc = []
-rows = Npax/pax_abreast
-for j in range(int(rows)):
-    row = seat_start + j * pitch * 0.0254  # convert to meters
-    seatloc.append(row)
 
 
 #Calculate x_cg & OEW
@@ -191,10 +190,10 @@ def passenger_loading(current_weight, current_cg, multiplication=1, seatloc=seat
 
 def loading():
 
-    plt.close()
+    # plt.close()
     plt.figure()
     
-    onlyfuel = loadingcg(OEW, cg_oew_nose, w_fuel_fuselage, x_fuel_fuselage)
+    onlyfuel = loadingcg(OEW, cg_oew_nose, 0*w_fuel_fuselage, x_fuel_fuselage)
     plt.plot(100 * (np.array([cg_oew_nose, onlyfuel[0]]) - x_lemac) / MAC,
                       [OEW, onlyfuel[1]], label='Fuel only', marker='3', color='magenta')
     
@@ -244,7 +243,7 @@ def loading():
     plt.xlabel('xcg [% of MAC]')
     plt.title('Tail Tank')
     plt.show()
-    cg_excursion = np.array([[onlyfwdcargo[0]], [onlyaftcargo[0]], [bothcargo[0]], [window[0]], window_back[0], 
+    cg_excursion = np.array([ [onlyaftcargo[0]], [bothcargo[0]], [window[0]], window_back[0], 
                          middle[0], middle_back[0], aisle[0], aisle_back[0], onlyfuselagefuel[0], onlypodfuel[0], bothfuel[0], bothfuel[0]]) 
     cgmin_lst = []
     cgmax_lst = []

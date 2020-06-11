@@ -21,7 +21,7 @@ r = input.widthf/2
 z_vl = input.bv/2 #point of action of vertical tail lift, estimated at half vert.tail height
 t_options = np.linspace(0, 0.30, 1000)[1:]
 W_cruise = 0.985 * input.MTOW
-ac_length = 30 #dummy value
+ac_length = input.lf #dummy value
 x_ac = 12 #estimate
 lh = input.lh
 widthf = input.widthf
@@ -33,15 +33,15 @@ x_array = np.linspace(0, ac_length, 1000)
 
 
 
-def internal_shear_and_moment_longitudinal(x, W= 322111, lf=ac_length, x_ac=x_ac, xh=ac_length):
+def internal_shear_and_moment_longitudinal(x, W= W_cruise, lf=ac_length, x_ac=x_ac, xh=ac_length):
     w_dist = W/lf
     L = ((0.5*lf)/(lf-x_ac))*W
     Lh = W-L
-    if x>x_ac:
+    if x > x_ac:
         d1, d2= 1,x-x_ac
     else:
         d1, d2=0,0
-    if x>=xh:
+    if x >= xh:
         d3,d4 = 1, x-xh
     else:
         d3,d4=0,0
@@ -89,17 +89,12 @@ def max_internal_bending_stress(R, Iyy, My):
     along_z = (My/Iyy)*R    #positive on top of fuselage
     return along_z
 
-bending_stresses_bottom = []
-bending_stresses_top = []
-for m in moments:
-    Iyy = area_moments_of_inertia(2.12, 0.10)
-    bending_stresses_bottom.append(max_internal_bending_stress(2.12, Iyy, m))
-    bending_stresses_top.append(-max_internal_bending_stress(2.12, Iyy, m))
-
-
-
-
-
+# bending_stresses_bottom = []
+# bending_stresses_top = []
+# for m in moments:
+#     Iyy = area_moments_of_inertia(2.12, 0.10)
+#     bending_stresses_bottom.append(max_internal_bending_stress(2.12, Iyy, m))
+#     bending_stresses_top.append(-max_internal_bending_stress(2.12, Iyy, m))
 
 
 def max_internal_vertical_shear(Iyy, Vz, R, t):
@@ -155,14 +150,16 @@ def max_fuselage_stresses(t, R, x_array, P_c, P_cruise, z_vl, rudder_load, momen
 
 bmb, bmt, sh1 =(max_fuselage_stresses(0.1, widthf/2, x_array, P_c, P_cruise, z_vl, 0, moments, shears))
 
+idx = moments.index(min(moments))
+
+
 plt.plot(x_array, bmb)
 plt.plot(x_array, bmt)
-plt.plot(x_array, shears)
-#plt.plot(x_array, bending_stresses_top)
-#plt.plot(x_array, bending_stresses_bottom)
+# plt.plot(x_array, sh1)
+
 #plt.plot(x_array, moments)
 #plt.plot(x_array, shears)
-#plt.show()
+plt.show()
 
 
 # location of the systems from nose

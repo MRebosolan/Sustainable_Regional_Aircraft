@@ -42,7 +42,7 @@ x_cg  = sc_shift.cg_loaded_nose     # x location of the cg
 x_cg_fwrd = sc_shift.cg_fwd*sc_shift.MAC + sc_shift.xlemac      # x location of most forward cg
 x_cg_aft = sc_shift.cg_aft*sc_shift.MAC + sc_shift.xlemac        # x-location of most aft cg
 x_ac_htail = sc_shift.x_ac_h_nose   # distance from aerodynamic centre to nose of htail airfoil
-print (x_ac_htail,x_cg_fwrd)
+
 S = Cl2.S
 b = Cl2.b
 rho_0 = input.rho0
@@ -102,14 +102,16 @@ print ('The distance from the ground to c.g. equals:', z_main_lg,'[m]')
 print ()
 print ('The Clearance angle is:',np.round(np.tan((z_f_ground)/(x_tailcone-x_main_lg))*180/np.pi,3),'[deg]')
 print ()
-
+print ((x_main_lg-x_cg)/.08-x_cg)
+print ((x_main_lg-x_cg_fwrd))
+print ((x_main_lg-x_cg_aft))
 def nose_lg_loc(x_main_lg= x_main_lg, x_cg=x_cg,MTOW=MTOW,g=g):
     dist = []
     d = 0.005
-    for distance in np.arange(-5,x_cg,d):
-        F_nose_lg = MTOW*(x_main_lg-x_cg)/(x_cg-distance)
+    for distance in np.arange(0,x_cg,d):
+        F_nose_lg = (x_main_lg-x_cg)/(x_cg-distance)
         #Force_on_nose_lg.append(F_nose_lg)
-        if 0.08*MTOW <= F_nose_lg <= 0.15*MTOW and 0.08*W_fwrd_cg <= W_fwrd_cg*(x_main_lg-x_cg_fwrd)/(x_cg_fwrd-distance) <= 0.15*W_fwrd_cg and 0.08*W_aft_cg <= W_aft_cg*(x_main_lg-x_cg_aft)/(x_cg_aft-distance) <= 0.15*W_fwrd_cg:
+        if 0.08 <= F_nose_lg <= 0.15 and 0.08 <= (x_main_lg-x_cg_fwrd)/(x_cg_fwrd-distance) <= 0.15 and 0.08 <= (x_main_lg-x_cg_aft)/(x_cg_aft-distance) <= 0.15:
             dist.append(distance)
         else:
             continue
@@ -151,9 +153,10 @@ def lat_pos_lg(z_main_lg=z_main_lg,dist=dist,x_main_lg=x_main_lg,x_cg_aft=x_cg_a
 y_lg_list, b_n_list = lat_pos_lg(z_main_lg)
 
 def req_htail_area(x_main_lg,Cl_htail=Cl_htail,x_ac_htail=x_ac_htail,x_cg = x_cg_fwrd,rho_to=rho_to,Vlof=Vlof,MTOW=MTOW,htail_sweep=htail_sweep): 
-    htail_area = -((x_main_lg-x_cg)*MTOW - .5*rho_to*(Vlof)**2*S*0*(x_main_lg-sc_shift.aerodynamiccenter) + sc_shift.momentcoefficient*.5*rho_to*(Vlof**2)*S*sc_shift.MAC )  /(0.5*rho_to*(Vlof/np.cos(htail_sweep))**2*Cl_htail)
+    htail_area = -((x_main_lg-x_cg)*MTOW  - sc_shift.momentcoefficient*.5*rho_to*(Vlof**2)*S*sc_shift.MAC )  /(0.5*rho_to*(Vlof)**2*Cl_htail)/(x_ac_htail-x_main_lg)
     return htail_area
 htail_area = req_htail_area(x_main_lg)
+print (htail_area)
 
 print ('The required htail area equals:',htail_area,'[m2]')
 print ('The minimum lateral distance of the landing gear:',np.round(min(y_lg_list),3),'[m]')
@@ -206,7 +209,7 @@ print ()
 print ('ESWL nose and ESWL for main, respectively:', ESWL_n,ESWL_m,'kg')
 
 #DUMMY#######################
-D_o = 26         # [in]outside tire diameter, also: Dt
+D_o = 26         # [in] outside tire diameter, also: Dt
 load_radius = 11.2 # obtain from table section 2.4.5 roskam book IV
 s_t = D_o - 2*(load_radius) #[TBD]
 #############################
