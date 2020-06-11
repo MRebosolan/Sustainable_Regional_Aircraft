@@ -367,8 +367,11 @@ x_nacelle = 13                     # cg location of engine nacelles, measured fr
 
 x_engine_start = - 1.5             #m, RANDOM, begin of engine measured from the lemac, negative means ... [m] closer to the nose
 
-
-
-
-
+#Drag parameters
+k = 0.152 * 10**-5         # Surface factor for skin friction coefficient, for polished sheet metal (need to reconsider if composites are used)
+IF_wing   = 1.0         # Interference factors
+IF_tailv  = 1.0
+IF_tailh  = 1.04
+IF_fus    = 1.0
+IF_nacelle = 1.0
 
