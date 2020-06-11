@@ -37,12 +37,12 @@ Cl_htail = input.cl_htail_max                     # tbd
 #Variables that will not change
 g = input.g
 MTOW = g*Cl2.MTOM
-theta = np.radians(input.theta)                 # tip-back angle ~15 degrees
-x_cg  = sc_shift.cg_loaded_nose     # x location of the cg
+theta = np.radians(input.theta)                                 # tip-back angle ~15 degrees
+x_cg  = sc_shift.cg_loaded_nose                                 # x location of the cg
 x_cg_fwrd = sc_shift.cg_fwd*sc_shift.MAC + sc_shift.xlemac      # x location of most forward cg
-x_cg_aft = sc_shift.cg_aft*sc_shift.MAC + sc_shift.xlemac        # x-location of most aft cg
-x_ac_htail = sc_shift.x_ac_h_nose   # distance from aerodynamic centre to nose of htail airfoil
-
+x_cg_aft = sc_shift.cg_aft*sc_shift.MAC + sc_shift.xlemac       # x-location of most aft cg
+x_ac_htail = sc_shift.x_ac_h_nose                               # distance from aerodynamic centre to nose of htail airfoil
+print (x_cg,x_cg_fwrd,x_cg_aft,x_ac_htail)
 S = Cl2.S
 b = Cl2.b
 rho_0 = input.rho0
@@ -50,7 +50,7 @@ rho_to = rho_0
 CLmax = input.CLmax_land 
 Vmin = np.sqrt(MTOW * 2 /(S * rho_to * CLmax))
 Vlof = 1.05*Vmin
-safetymargin_theta = np.radians(1)
+safetymargin_theta = np.radians(0.01)
 htail_sweep = input.half_chord_sweep_hor      # Sweep of the horizontal tail
 
 # ######## Dummy variables to test the program, as some have not yet
@@ -84,7 +84,7 @@ def main_lg_loc(x_tailcone=x_tailcone,theta=theta,z_cg=z_cg,x_cg_aft=x_cg_aft,sa
         
         z_main_lg1 = z_fus_ground + z_cg
         x_main_lg1 = x_cg_aft + z_main_lg1*np.tan(theta+safetymargin_theta)
-        if np.tan(z_fus_ground/(x_tailcone-x_main_lg1)) >= np.radians(15):
+        if np.tan(z_fus_ground/(x_tailcone-x_main_lg1)) >= np.radians(15) and np.arctan2(x_main_lg1-x_cg_aft,z_main_lg1):
             z_main_lg = np.round(z_main_lg1,4)
             x_main_lg = np.round(x_main_lg1,4)
             z_f_ground = z_fus_ground
@@ -102,9 +102,7 @@ print ('The distance from the ground to c.g. equals:', z_main_lg,'[m]')
 print ()
 print ('The Clearance angle is:',np.round(np.tan((z_f_ground)/(x_tailcone-x_main_lg))*180/np.pi,3),'[deg]')
 print ()
-print ((x_main_lg-x_cg)/.08-x_cg)
-print ((x_main_lg-x_cg_fwrd))
-print ((x_main_lg-x_cg_aft))
+
 def nose_lg_loc(x_main_lg= x_main_lg, x_cg=x_cg,MTOW=MTOW,g=g):
     dist = []
     d = 0.005
@@ -120,16 +118,14 @@ dist = nose_lg_loc()
 
 print('Nose gear: The minimum x-distance from the nose equals', np.round(np.min(dist),4),'[m]')
 print ()
-print ('In case the min distance (or both) is negative, it is not an error. It simply calculates the lower and upper limits to comply with the requirements')
-print()
 print('Nose gear: The maximum x-distance from the nose equals', np.round(np.max(dist),4),'[m]')
 print ()
 
 #dist = np.round(np.min(dist),4)
 #print (dist)
 
-dist_max = np.round(np.max(dist),4) #-1 if it is too much forward; it does not have a large effect on the lateral position; that is to say, the effect is not severe.   #the minimum distance between the nose and nose landing gear
-dist_min = np.round(np.min(dist),4) #the maximum distance between the nose and nose landing gear
+#dist_max = np.round(np.max(dist),4) #-1 if it is too much forward; it does not have a large effect on the lateral position; that is to say, the effect is not severe.   #the minimum distance between the nose and nose landing gear
+dist = np.round(np.min(dist),4) #the maximum distance between the nose and nose landing gear
 #dist_lg =  # this will be the actual value of the distance, above values are used to model the ranges of lateral positions of the main landing gear
 
 def lat_pos_lg(z_main_lg=z_main_lg,dist=dist,x_main_lg=x_main_lg,x_cg_aft=x_cg_aft):
@@ -137,28 +133,27 @@ def lat_pos_lg(z_main_lg=z_main_lg,dist=dist,x_main_lg=x_main_lg,x_cg_aft=x_cg_a
     b_n_list = []
     d = 0.005
     for y_lg in np.arange(d,4+d,d):
-        b_n = [x_cg_aft-dist_min,x_cg_aft-dist_max]   #distance from most forward nose lg to aft cg.
+        b_n = [x_cg_aft-dist]   #distance from most forward nose lg to aft cg.
         for i in range(len(b_n)):
             alpha = np.arctan2(y_lg,b_n[i])
             c = b_n[i]*np.sin(alpha)
             psi = np.arctan2(z_main_lg,c)
-            if psi < 55/180*np.pi and b_n[i] <= 10:
+            if psi < np.radians(55) and b_n[i] < x_cg_aft:
                 y_lg_list.append(y_lg)
                 b_n_list.append(b_n[i])
             else:
                 continue  
     return y_lg_list, b_n_list
 
-
 y_lg_list, b_n_list = lat_pos_lg(z_main_lg)
 
-def req_htail_area(x_main_lg,Cl_htail=Cl_htail,x_ac_htail=x_ac_htail,x_cg = x_cg_fwrd,rho_to=rho_to,Vlof=Vlof,MTOW=MTOW,htail_sweep=htail_sweep): 
-    htail_area = -((x_main_lg-x_cg)*MTOW  - sc_shift.momentcoefficient*.5*rho_to*(Vlof**2)*S*sc_shift.MAC )  /(0.5*rho_to*(Vlof)**2*Cl_htail)/(x_ac_htail-x_main_lg)
-    return htail_area
-htail_area = req_htail_area(x_main_lg)
-print (htail_area)
+#def req_htail_area(x_main_lg,Cl_htail=Cl_htail,x_ac_htail=x_ac_htail,x_cg = x_cg_fwrd,rho_to=rho_to,Vlof=Vlof,MTOW=MTOW,htail_sweep=htail_sweep): 
+    #htail_area = -((x_main_lg-x_cg)*MTOW  - sc_shift.momentcoefficient*.5*rho_to*(Vlof**2)*S*sc_shift.MAC )  /(0.5*rho_to*(Vlof)**2*Cl_htail)/(x_ac_htail-x_main_lg)
+    #return htail_area
+#htail_area = req_htail_area(x_main_lg)
+#print (htail_area)
+#print ('The required htail area equals:',htail_area,'[m2]')
 
-print ('The required htail area equals:',htail_area,'[m2]')
 print ('The minimum lateral distance of the landing gear:',np.round(min(y_lg_list),3),'[m]')
 print ('This means the main landing gear stick out',np.round(min(y_lg_list)-z_cg,3),'meters from the fuselage' )
 print ()
@@ -182,12 +177,12 @@ ptire_max = tire_pressure()
 print (np.round(ptire_max,4),'kPa',np.round(ptire_max,4)*0.145037738,'psi')
 
 mg_x_cg = x_main_lg-x_cg # distance from the main lg to the cg
-ng_x_cg = x_cg-np.round(np.min(dist),4) # distance from the nose_lg to the cg
-mw_nw_d = x_main_lg-np.round(np.min(dist),4)
+ng_x_cg = x_cg_aft-dist # distance from the nose_lg to the cg
+mw_nw_d = x_main_lg-dist
 
-def static_loads_lg(MTOW=MTOW,N_mw=N_mw,N_struts=N_struts,mg_x_cg=mg_x_cg,ng_x_cg=ng_x_cg,z_cg=z_cg,dist_max=dist_min,mw_nw_d=mw_nw_d):
+def static_loads_lg(MTOW=MTOW,N_mw=N_mw,N_struts=N_struts,mg_x_cg=mg_x_cg,ng_x_cg=ng_x_cg,z_cg=z_cg,dist=dist,mw_nw_d=mw_nw_d):
     P_mw = (MTOW*ng_x_cg)/(N_struts*mw_nw_d) # [N]
-    P_nw = MTOW-P_mw*N_struts                # [N]
+    P_nw = (MTOW*(x_main_lg-x_cg_fwrd)/(x_main_lg-dist))                # [N]
     ESWL_n = P_nw/1.33/g                     # [kg] equivalent single wheel load twin dual | NOSE
     ESWL_m = P_mw/1.33/g                     # [kg] equivalent single wheel load twin dual | MAIN
     P_mw_stat = 1.07*P_mw/2                  # [N] maximum static load on main gear per wheel (2 wheels 2 struts = 4 wheels)
