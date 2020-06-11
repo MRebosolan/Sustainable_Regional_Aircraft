@@ -46,8 +46,15 @@ b1 = 7.6               #aileron inside y position , starts where flap ends
 b2 = b1 + 2.707943    # The roll rate requirement is met with a difference of 9.196882743367496e-06 [deg/s]
 
 ############ for Drag #############
-k = 0.152 * 10**-5         # for polished sheet metal
-CL_minD = 0.007
+
+k = inp.k
+CL_minD = inp.Cd0_clean   # Cd0 of the airfoil
+IF_wing   = inp.IF_wing
+IF_tailv  = inp.IF_tailv
+IF_tailh  = inp.IF_tailh
+IF_fus    = inp.IF_fus
+IF_nacelle = inp.IF_nacelle
+cds_nose   = inp.cds_nose
 
 #### TAIL INPUTS
 Sh = 1       # horizontal tail area
@@ -384,14 +391,6 @@ def drag():
     f_nacelle = l_nacelle / np.sqrt(4 * Amax_nacelle / np.pi)
     FF_nacelle = 1 + 0.35 / f_nacelle
 
-    ##### Interference factor IF
-
-    IF_wing   = 1.0
-    IF_tailv  = 1.0
-    IF_tailh  = 1.04
-    IF_fus    = 1.0
-    IF_nacelle = 1.0
-
     ######## Miscellaneous drag
     # Wave drag
     Mdd = 0.935/np.cos(sweep_c4) - 0.14 /(np.cos(sweep_c4)**2) - CL_des/ (10*(np.cos(sweep_c4)**3))
@@ -412,8 +411,6 @@ def drag():
 
     S_nlg = d_nose * w_nose
 
-    #a/d = 3.6, e/d = 2
-    cds_nose = 0.64                                     # obtain from adsee graph
     cds_main = main_amount * 0.04955 * np.exp(5.615 * Sa_main / S_mlg)
     drag_lg = (cds_nose + cds_main) * (S_nlg + main_amount * S_mlg) / S
 
