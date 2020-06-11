@@ -228,8 +228,8 @@ Clmax_TO  = 2.38
 Re_TO	  = 15071059
 
 #Landing Configuration
-Clmax_Lnd  = 2.38
-Re_Lnd     = 15071059
+Clmax_Lnd  = 2.362
+Re_Lnd     = 16326981
 
 #Wing 
 #Clean Configuration
@@ -249,6 +249,14 @@ Alpha0_to = -7.61995
 CLmax_land  = 2.25
 CL0_land    = 0.946
 Alpha0_land = -9.4619
+
+#HLD
+TE-HLD         = True
+LE-HLD         = False
+DeltaCLmaxTO   = 0.16316
+DeltaCLmaxLnd  = 0.2984
+defTO          = 20  #deg
+defLand        = 60  #deg
 
 #Drag Input
 draginput = [] #List of parameters from this file needed for drag calculation
