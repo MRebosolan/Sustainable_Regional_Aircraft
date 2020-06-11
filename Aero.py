@@ -54,6 +54,7 @@ IF_tailv  = inp.IF_tailv
 IF_tailh  = inp.IF_tailh
 IF_fus    = inp.IF_fus
 IF_nacelle = inp.IF_nacelle
+cds_nose   = inp.cds_nose
 
 #### TAIL INPUTS
 Sh = 1       # horizontal tail area
@@ -410,8 +411,6 @@ def drag():
 
     S_nlg = d_nose * w_nose
 
-    #a/d = 3.6, e/d = 2
-    cds_nose = 0.64                                     # obtain from adsee graph
     cds_main = main_amount * 0.04955 * np.exp(5.615 * Sa_main / S_mlg)
     drag_lg = (cds_nose + cds_main) * (S_nlg + main_amount * S_mlg) / S
 

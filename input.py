@@ -374,4 +374,4 @@ IF_tailv  = 1.0
 IF_tailh  = 1.04
 IF_fus    = 1.0
 IF_nacelle = 1.0
-
+cds_nose = 0.64                                     # obtain from adsee graph, this one is for a/d = 3.6, e/d = 2
