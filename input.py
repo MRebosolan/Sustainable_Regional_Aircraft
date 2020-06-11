@@ -72,7 +72,8 @@ print('please use b from class 2')
 Sv = 13.36                        # [m2] CRJ700 | Obtain realistic value from Vtail area sizing
 bv = 7.57                         # [m] vertical tail span CRJ700
 zh = bv * 0.95                    # Height of horizontal stabilizer measured from the bottom of the vertical tail [m]
-Sh = 20.4                        # m2 crj700 shizzle yo, horizontal tail area
+Sh_over_S = 0.3725
+Sh = Sh_over_S * S                        # m2 crj700 shizzle yo, horizontal tail area
 half_chord_sweep_hor = np.radians(20)   # deg, sweep at half chord of horizontal tail
 
 bh = (AR_h*Sh)   **0.5                     # [m] Horizontal tail span 
@@ -219,7 +220,7 @@ t_r = t_over_c * Cr                          # maximum thickness at root [m] #bu
 Cla_aileron = 6.48                 #1/rad, sectional lift curve slope at wing section where aileron is located, determine by datcom method or airfoil simulation
 Cd0_aileron = 0.007               #zero drag coefficient [-] at wing section where aileron is located, determine by airfoil simulation
 #------------------------------------------------------------------------------------------------------------------
-x_start_Cr = 11                    # x-location where root chord starts, measured from the nose of the aircraft [m], TBD
+x_start_Cr = 10.7                    # x-location where root chord starts, measured from the nose of the aircraft [m], TBD
 MAC =  2 / 3 * Cr * ((1 + taper + taper**2) / (1 + taper)) #length of mean aerodynamic chord, formula taken from Adsee II
 y_MAC = b / 6 * ((1 + 2 * taper) / (1 + taper))            #spanwise location of mean aerodynamic chord
 x_lemac_rootchord = y_MAC * np.tan(LE_sweep)               #x position of mac at leading edge [m], measured from the start of the root choord!!!!

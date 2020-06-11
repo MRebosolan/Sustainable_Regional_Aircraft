@@ -147,8 +147,7 @@ def cg_excursion_wing_shift():
         #                   [MZF, onlypodfuel[1], bothfuel2[1]], marker='^', color='brown', label = 'Hydrogen fwd first')
         
         
-        cg_excursion = np.array([[onlyfuel[0]], [bothcargo[0]], [window[0]], window_back[0], 
-                             middle[0], middle_back[0], aisle[0], aisle_back[0], onlyfuselagefuel[0], onlypodfuel[0], bothfuel[0], onlyfuel[0]]) 
+        cg_excursion = np.array([ onlyfuselagefuel[0], onlypodfuel[0], bothfuel[0]]) 
 
         cg_loaded_lst.append(bothfuel[0])
         cgmin_lst = []
