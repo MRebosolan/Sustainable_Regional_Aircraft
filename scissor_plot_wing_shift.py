@@ -121,10 +121,10 @@ def main_lg_loc(x_cg_aft, theta=15, z_cg=input.z_cg,safetymargin_theta=0.01, x_t
             x_main_lg = 999
             continue
 
-    return x_main_lg ,z_main_lg, z_f_ground    
+    return x_main_lg     
 
 def req_htail_area(x_cg_aft,x_ac_htail, x_cg_front, front_weight,x_ac, momentcoefficient, Cl_htail = input.cl_htail_max,rho_to=rho, Vlof=59.1, MAC = MAC): 
-    x_main_LG ,z_main_lg, z_f_ground= main_lg_loc(x_cg_aft)
+    x_main_LG = main_lg_loc(x_cg_aft)
     
     CL_ground = input.CL0takeoff 
     cg_contribution = (x_main_LG-x_cg_front)*front_weight*9.81
