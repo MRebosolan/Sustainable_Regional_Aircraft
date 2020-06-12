@@ -46,10 +46,11 @@ AR_vtail = input.AR_v
 taper_v = input.taper_v
 x_cg  = sc_shift.cg_loaded_nose  
 
-print('make sure to check that the critical mach number of the vtail and htail are higher than that of the wing! use Roskam book II, page 150')
-print ('Furthermore, check whether the take-off thrust is properly linked')
+#print('make sure to check that the critical mach number of the vtail and htail are higher than that of the wing! use Roskam book II, page 150')
+#print ('Furthermore, check whether the take-off thrust is properly linked')
 print ()
-
+print ()
+print ()
 #Calculatetes preliminary area of the vertical tail surface and rudder
 def S_v(Vbar_v,S,b,x_v):
     S_v = Vbar_v*S*b/x_v             # Vtail area
@@ -136,6 +137,7 @@ def rudder_design(y_engine,T_OEI,S,b,vtail_sweep,taper_v,AR_vtail,x_cg,rho_to,Vm
             #print ('The deflection angle equals:',delta_r_calc,'[deg]')
             #print ('The required surface area for the vertical tail equals:',S_vlist[-1])
             #print ('The required rudder area for the vertical tail equals:',Sr_over_Sv*S_vlist[-1])
+            print (b_v_c1)
             running = False
     
     return S_vlist,S_vlist1,delta_r_calc,S_vfinal,delta_r_calc_list,Cn_delta_r_list
