@@ -38,10 +38,11 @@ def cabin_design(fractioninfus,fractionintail,HYDROGENVOLUME,top_selecter = 0,po
     wfloor=round(total-0.18,3)
     
     
+    seat_length=22
     
     #two types I exits
     #two types III exits
-    paxsectionlength=round(16*seat_pitch+emergency_clearance,3)
+    paxsectionlength=round(15*seat_pitch+seat_length+emergency_clearance,3)
     aft_galley_length=1.2 #BIT SMALLER THAN A220
     front_galley_length=2.5 #BIT SMALLER THAN A220
     front_aisle=0.8 #A220
@@ -67,7 +68,7 @@ def cabin_design(fractioninfus,fractionintail,HYDROGENVOLUME,top_selecter = 0,po
     V_tank_pod=(V_tank-V_tank_cyl-V_tank_tail)*(1-top_selecter)
         
     #CYLINDER STORAGE
-    t_cyl,m_cyl, tm_cyl, d_cyl,l_cyl=tank_sizing_fuselage(V_tank_cyl,R_tank_fus,1)
+    t_cyl,m_cyl, tm_cyl, d_cyl,l_cyl,exceed=tank_sizing_fuselage(V_tank_cyl,R_tank_fus,1)
     if V_tank_cyl==0:
         t_cyl,m_cyl, tm_cyl, d_cyl,l_cyl=0,0,0,0,0
         
@@ -87,7 +88,7 @@ def cabin_design(fractioninfus,fractionintail,HYDROGENVOLUME,top_selecter = 0,po
 
     #POD STORAGE
     print(V_tank_pod)
-    t_pod,m_pod,tm_pod,d_pod,l_pod=tank_sizing(V_tank_pod,podlength*2,2)
+    t_pod,m_pod,tm_pod,d_pod,l_pod,exceed=tank_sizing(V_tank_pod,podlength*2,2)
     if V_tank_pod==0:
         t_pod,m_pod, tm_pod, d_pod,l_pod=0,0,0,0,0
     print('POD TANK (for each): ','| mass: ',tm_pod/2,'| diameter: ',d_pod,'| tank length: ',l_pod/2)
@@ -157,7 +158,7 @@ def cabin_design(fractioninfus,fractionintail,HYDROGENVOLUME,top_selecter = 0,po
     if t_top >0.001 or m_top > 0.001 or tm_top > 0.001 or d_top > 0.001 or l_top > 0.001 or t_pod > 0.001 or m_pod> 0.001 \
         or tm_pod > 0.001   or V_tank_top > 0.001 or V_tank_pod > 0.001 or poddrag > 0.001:
             print ("something is going wrong in the cabin design. The tank selection is not done properly. all tanks except tail and cylinder should be 0!!!!!!")
-    
+
     return(t_cyl,m_cyl, tm_cyl, d_cyl,l_cyl,t_tail,m_tail, tm_tail, d_tail,l_tail\
            ,t_top,m_top,tm_top,d_top,l_top,t_pod,m_pod,tm_pod,d_pod,l_pod,totalcabinlength,V_tank_cyl, V_tank_tail, V_tank_top,V_tank_pod,\
            tm_tanksystem,CGtank,CGfuelfull,CGcomb,totdrag,fuselage_weight,CDzerofus,FFbody,Cfturb,fuselage_area,CDzeropods,fusdrag,poddrag,tailcone_length)

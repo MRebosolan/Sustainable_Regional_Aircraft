@@ -106,6 +106,7 @@ W_cargo = 1000                    # kg #Extra cargo weight
 n_crew = N_fdc + N_cc             # Total amount of crew
 W_payload = Npax * W_pax + W_cargo
 cockpit_length=3.6                #Bit smaller than A220
+cabin_length = 17.5              # cabin length
 A_fuselage = np.pi*widthf*0.5*hf*0.5 # Area of the fuselage in m^2
 ellipse_fuselage = 2*np.pi * (((widthf/2)**2 + (hf/2)**2)/2)**0.5  #circumference of the fuselage [m]
 lf = 28                           # length of fuselage m estimate, lil shorter than CRJ as 5 seat rows are used, ADD TANK CYLINDER LENGTH
@@ -383,7 +384,7 @@ IF_tailh  = 1.04
 IF_fus    = 1.0
 IF_nacelle = 1.0
 cds_nose = 0.64                                     # obtain from adsee graph, this one is for a/d = 3.6, e/d = 2
-dflap = 0                                     # 20 deg for takeoff and 60 deg for landing
+dflap = 20                                     # 20 deg for takeoff and 60 deg for landing
 
-# inputs still needed for drag: Sh, Sv, c_MACh, x/c max t/c horizontal, t/c max horizontal, nosecone and tailcone length, upsweep,
-# bypass ratio, width nose gear, width main gear, actual frontal area main gear.
+# inputs still needed for drag: Sh, Sv, c_MACh, nosecone (assume cockpit) and tailcone length, upsweep,
+# bypass ratio (10), width nose gear, width main gear, actual frontal area main gear.

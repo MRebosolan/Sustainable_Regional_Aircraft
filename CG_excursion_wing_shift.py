@@ -107,6 +107,24 @@ w_fuel_fuselage = w_tail_fuel + w_cyl_fuel
 
 w_lg_main = cl2.df['SRA']['Main LG']    #kg
 w_lg_front = cl2.df['SRA']['Nose LG']    #kg
+w_fuselage = cl2.df['SRA']['Fuselage']
+x_fuselage = l_f/2 
+w_powercontrols = cl2.df['SRA']['Power controls']
+x_powercontrols = x_engine
+w_electrical = cl2.df['SRA']['Electrical systems']
+x_electrical = input.x_LEMAC_nose
+w_instruments = cl2.df['SRA']['Instruments']
+x_instruments = input.x_first_pax /3
+w_flightcontrols = cl2.df['SRA']['Flight controls']
+x_flightcontrols = x_start_Cr+Cr
+w_airconditioning = cl2.df['SRA']['Air conditioning']
+x_airconditioning = l_f/2
+w_furnishing = cl2.df['SRA']['Furnishing']
+x_furnishing = l_f/2
+w_cargohandling = cl2.df['SRA']['Cargo handling']
+x_cargohandling = x_cargo_aft *input.cargo_aft_fraction + x_cargo_fwd *input.cargo_fwd_fraction 
+w_paint = cl2.df['SRA']['Miscellanous/paint']
+x_paint = l_f/2
 
 
 x_empennage = [x_ac[i] + (lh[i] + lv[i]) / 2 for i in range(len(x_start_Cr))] #Assume cg of empennage is in the middle of the aerodynamic center of horizontal and vertical tail, measured from the nose
@@ -133,18 +151,10 @@ def cg_excursion_wing_shift():
         middle_back = passenger_loading(window[1][-1], window[0][-1], multiplication=2, seatloc=seatloc[::-1])
         aisle = passenger_loading(middle[1][-1], middle[0][-1])
         aisle_back = passenger_loading(middle[1][-1], middle[0][-1], seatloc=seatloc[::-1])
-        # fully_loaded = loadingcg(aisle[1][-1], aisle[0][1], fuel_weight, x_fuel)
         
         onlyfuselagefuel = loadingcg(aisle[1][-1], aisle[0][-1], w_fuel_fuselage, x_fuel_fuselage)
         onlypodfuel = loadingcg(aisle[1][-1], aisle[0][-1], w_pod_fuel, x_pod_tank[i])
-
         bothfuel = loadingcg(onlyfuselagefuel[1], onlyfuselagefuel[0], w_pod_fuel, x_pod_tank[i])
-        # plt.plot(100 * (np.array([aisle[0][-1], onlyfuselagefuel[0], bothfuel[0]]) - x_lemac) / MAC,
-        #                   [MZF, onlyfuselagefuel[1], bothfuel[1]], marker='^', color='cyan', label = 'Hydrogen')
-        
-        # bothfuel2 = loadingcg(onlypodfuel[1], onlypodfuel[0], w_fuel_fuselage, x_fuel_fuselage)
-        # plt.plot(100 * (np.array([aisle[0][-1], onlypodfuel[0], bothfuel2[0]]) - x_lemac) / MAC,
-        #                   [MZF, onlypodfuel[1], bothfuel2[1]], marker='^', color='brown', label = 'Hydrogen fwd first')
         
         
         cg_excursion = np.array([ onlyfuselagefuel[0], onlypodfuel[0], bothfuel[0]]) 
@@ -167,6 +177,11 @@ def cg_excursion_wing_shift():
     plt.xlabel('x_cg / MAC [-]')
     plt.ylabel('x_lemac / l_fus [-]')
     plt.show()
+    
+    
+    
+    
+    
     
 
     

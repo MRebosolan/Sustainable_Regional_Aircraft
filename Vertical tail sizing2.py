@@ -57,7 +57,7 @@ def S_v(Vbar_v,S,b,x_v):
 S_v,S_r = S_v(Vbar_v,S,b,x_v)
 
 def rudder_design(y_engine,T_OEI,S,b,vtail_sweep,taper_v,AR_vtail,x_cg,rho_to,Vmin):
-    stepsize = 0.001
+    stepsize = 0.0025
     running= True
     S_vlist=[S_v]
 
@@ -122,7 +122,7 @@ def rudder_design(y_engine,T_OEI,S,b,vtail_sweep,taper_v,AR_vtail,x_cg,rho_to,Vm
             print ('The deflection angle equals:',delta_r_calc,'[deg]')
             print ('The required surface area for the vertical tail equals:',S_vlist[-1])
             print ('The required rudder area for the vertical tail equals:',Sr_over_Sv*S_vlist[-1])
-
+            #print (MAC_v_cl1)
             running = False
 
     return S_vlist,delta_r_calc
