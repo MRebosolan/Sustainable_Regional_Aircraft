@@ -182,7 +182,7 @@ mw_nw_d = x_main_lg-dist
 
 def static_loads_lg(MTOW=MTOW,N_mw=N_mw,N_struts=N_struts,mg_x_cg=mg_x_cg,ng_x_cg=ng_x_cg,z_cg=z_cg,dist=dist,mw_nw_d=mw_nw_d):
     P_mw = (MTOW*ng_x_cg)/(N_struts*mw_nw_d) # [N]
-    P_nw = (MTOW*(x_main_lg-x_cg_fwrd)/(x_main_lg-dist))                # [N]
+    P_nw = ((MTOW-1700)*(x_main_lg-x_cg_fwrd)/(x_main_lg-dist))   # [N]
     ESWL_n = P_nw/1.33/g                     # [kg] equivalent single wheel load twin dual | NOSE
     ESWL_m = P_mw/1.33/g                     # [kg] equivalent single wheel load twin dual | MAIN
     P_mw_stat = 1.07*P_mw/2                  # [N] maximum static load on main gear per wheel (2 wheels 2 struts = 4 wheels)
