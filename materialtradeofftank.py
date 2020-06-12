@@ -43,7 +43,7 @@ print('####################################')
 massbest=99999999
 #TITANIUM http://asm.matweb.com/search/SpecificMaterial.asp?bassnum=MTA520
 print('#########TITANIUM##########')
-for TS0 in range(0,310,5):
+for TS0 in range(0,10,5):
     
     EMOD=120*10**9
     THERMALEXP=9.4*10**(-6)
@@ -67,7 +67,7 @@ print('####################################')
 
 
 print('#########CFRP##########')
-for TS0 in range(0,310,5):
+for TS0 in range(0,10,5):
 
     #COMPOSITE https://www.hexcel.com/user_area/content_media/raw/IM7_HexTow_DataSheet.pdf
     MAX_ALLOWABLE_STRESS=5516000000
