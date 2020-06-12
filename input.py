@@ -388,3 +388,4 @@ IF_fus    = 1.0
 IF_nacelle = 1.0
 IF_fusnacelle = 1.3     # Nacelle for the main landing gear
 cds_nose = 0.64                                     # obtain from adsee graph, this one is for a/d = 3.6, e/d = 2
+dflap = 0                                     # 20 deg for takeoff and 60 deg for landing

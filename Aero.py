@@ -394,12 +394,13 @@ def drag():
     ######## Miscellaneous drag
     # Wave drag
     Mdd = 0.935/np.cos(sweep_c4) - 0.14 /(np.cos(sweep_c4)**2) - CL_des/ (10*(np.cos(sweep_c4)**3))
+    print("Mdd=", Mdd)
     if Mdd > M_cruise:
         wavedrag = 0.002 * (1 + 2.5 * (Mdd - M_cruise)/0.05)**(-1)
     else:
         wavedrag = 0.002 * (1 + 2.5 * (M_cruise - Mdd)/0.05)**(2.5)
     # Fuselage base drag  -> look this up
-    drag_fusbase = 0
+    drag_fusbase = (0.139 + 0.419 * (M_cruise - 0.161)**2) * Amax_fus
 
     # Drag due to fuselage upsweep (upsweep in rad, Amax is max cross-sectional area)
 
@@ -415,8 +416,11 @@ def drag():
     drag_lg = (cds_nose + cds_main) * (S_nlg + main_amount * S_mlg) / S
 
     # flap drag
-    dflap = 0                                     # 20 for takeoff and 60 for landing
-    drag_flap = 0.0144 * SwfS * (dflap - 10)
+
+    if dflap > 10:
+        drag_flap = 0.0144 * SwfS * (dflap - 10)
+    else:
+        drag_flap = 0
 
     drag_misc = wavedrag + drag_fusbase + dragupsweep + drag_flap + drag_lg
     leakage   = 1.05                                     # 2-5 % of total CDO
