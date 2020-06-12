@@ -123,6 +123,7 @@ def rudder_design(y_engine,T_OEI,S,b,vtail_sweep,taper_v,AR_vtail,x_cg,rho_to,Vm
             print ('The required surface area for the vertical tail equals:',S_vlist[-1])
             print ('The required rudder area for the vertical tail equals:',Sr_over_Sv*S_vlist[-1])
             #print (MAC_v_cl1)
+            print (b_v_c1)
             running = False
 
     return S_vlist,delta_r_calc

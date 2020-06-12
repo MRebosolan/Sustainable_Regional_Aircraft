@@ -121,10 +121,10 @@ def main_lg_loc(x_cg_aft, theta=15, z_cg=input.z_cg,safetymargin_theta=0.01, x_t
             x_main_lg = 999
             continue
 
-    return x_main_lg ,z_main_lg, z_f_ground    
+    return x_main_lg     
 
 def req_htail_area(x_cg_aft,x_ac_htail, x_cg_front, front_weight,x_ac, momentcoefficient, Cl_htail = input.cl_htail_max,rho_to=rho, Vlof=59.1, MAC = MAC): 
-    x_main_LG ,z_main_lg, z_f_ground= main_lg_loc(x_cg_aft)
+    x_main_LG = main_lg_loc(x_cg_aft)
     
     CL_ground = input.CL0takeoff 
     cg_contribution = (x_main_LG-x_cg_front)*front_weight*9.81
@@ -148,7 +148,7 @@ def scissor_wing_shift():
     #for i in range(len(cg_fwd_lst)):
         
         #Minor calculations with input parameters
-        CL = 2*mass*9.81/(rho*(v_approach**2)*S)            #approach CL
+        CL = input.Clmax_Lnd            #approach CL
         #CL_cruise = 2*MTOW*9.81/(rho_cruise*(v_cruise**2)*S) #approach CL
         l_fn = x_start_Cr[i] + widthf * np.tan(sweep_LE)
         beta = (1-(mach**2))**0.5
