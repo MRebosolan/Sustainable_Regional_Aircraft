@@ -384,7 +384,7 @@ IF_tailh  = 1.04
 IF_fus    = 1.0
 IF_nacelle = 1.0
 cds_nose = 0.64                                     # obtain from adsee graph, this one is for a/d = 3.6, e/d = 2
-dflap = 0                                     # 20 deg for takeoff and 60 deg for landing
+dflap = 20                                     # 20 deg for takeoff and 60 deg for landing
 
 # inputs still needed for drag: Sh, Sv, c_MACh, nosecone (assume cockpit) and tailcone length, upsweep,
 # bypass ratio (10), width nose gear, width main gear, actual frontal area main gear.
