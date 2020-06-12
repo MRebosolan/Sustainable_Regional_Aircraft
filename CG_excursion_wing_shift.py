@@ -17,7 +17,7 @@ from cabindesign import cabin_design
 
 t_cyl,m_cyl, tm_cyl, d_cyl,l_cyl,t_tail,m_tail, tm_tail, d_tail,l_tail\
            ,t_top,m_top,tm_top,d_top,l_top,t_pod,m_pod,tm_pod,d_pod,l_pod,totalcabinlength,V_tank_cyl, V_tank_tail, V_tank_top,V_tank_pod,\
-           tm_tanksystem,CGtank,CGfuelfull,CGcomb,totdrag,fuselage_weight,CDzerofus,FFbody,Cfturb,fuselage_area,CDzeropods,fusdrag,poddrag,tailcone_length=cabin_design(1,0.35,26,0)
+           tm_tanksystem,CGtank,CGfuelfull,CGcomb,totdrag,fuselage_weight,CDzerofus,FFbody,Cfturb,fuselage_area,CDzeropods,fusdrag,poddrag,tailcone_length=cabin_design(0.5,1,26,0)
            
            
 #Raw inputs
@@ -53,8 +53,9 @@ x_nacelle = x_engine     #assume nacelle cg is at engine cg
 x_ac = [i + 0.25 * MAC for i in x_lemac]            #assume ac at quarter chord point
 lh_fix = input.lh                   #distance between wing and horizontal tail aerodynamic centers
 lv_fix = input.lv                   #distance between wing and vertical tail aerodynamic centers
-lh = [lh_fix - (i - input.x_start_Cr) for i in x_start_Cr]
-lv = [lh_fix - (i - input.x_start_Cr) for i in x_start_Cr]
+xh = input.x_lemac_rootchord_h + input.x_rootchord_h + 0.25*input.c_mac_h
+lh = [xh - i - 0.25*MAC for i in x_start_Cr]
+lv = [lv_fix - (i - input.x_start_Cr) for i in x_start_Cr]
 
 
 #Small calculations with raw inputs
@@ -106,11 +107,29 @@ w_fuel_fuselage = w_tail_fuel + w_cyl_fuel
 
 w_lg_main = cl2.df['SRA']['Main LG']    #kg
 w_lg_front = cl2.df['SRA']['Nose LG']    #kg
+w_fuselage = cl2.df['SRA']['Fuselage']
+x_fuselage = l_f/2 
+w_powercontrols = cl2.df['SRA']['Power controls']
+x_powercontrols = x_engine
+w_electrical = cl2.df['SRA']['Electrical systems']
+x_electrical = input.x_LEMAC_nose
+w_instruments = cl2.df['SRA']['Instruments']
+x_instruments = input.x_first_pax /3
+w_flightcontrols = cl2.df['SRA']['Flight controls']
+x_flightcontrols = x_start_Cr+Cr
+w_airconditioning = cl2.df['SRA']['Air conditioning']
+x_airconditioning = l_f/2
+w_furnishing = cl2.df['SRA']['Furnishing']
+x_furnishing = l_f/2
+w_cargohandling = cl2.df['SRA']['Cargo handling']
+x_cargohandling = x_cargo_aft *input.cargo_aft_fraction + x_cargo_fwd *input.cargo_fwd_fraction 
+w_paint = cl2.df['SRA']['Miscellanous/paint']
+x_paint = l_f/2
 
 
 x_empennage = [x_ac[i] + (lh[i] + lv[i]) / 2 for i in range(len(x_start_Cr))] #Assume cg of empennage is in the middle of the aerodynamic center of horizontal and vertical tail, measured from the nose
-x_lg_front = 3     #cg location of front landing gear [m], measured from the nose, assumed to be 3 m (used for calculating cg at oew, not to be changed per se)
-x_lg_main = [i + 2 * Cr / 3 for i in x_start_Cr]     #cg location of main landing gear [m], assumed 2/3 root chord length further than start of root chord (used for calculating cg at oew, not to be changed per se)
+x_lg_front = input.x_lg_front    #cg location of front landing gear [m], measured from the nose, assumed to be 3 m (used for calculating cg at oew, not to be changed per se)
+x_lg_main = [i + 4.7 for i in x_start_Cr]     #cg location of main landing gear [m], assumed 2/3 root chord length further than start of root chord (used for calculating cg at oew, not to be changed per se)
 print("In calculation of cg @ OEW, take into account the exact tank placement and cg location once agreed on a specific configuration")
 
 def cg_excursion_wing_shift():
@@ -122,7 +141,7 @@ def cg_excursion_wing_shift():
         x_cg_wing_nose, x_cg_wing_mac = wing_cg(sweep, b, Cr, Ct, MAC, x_lemac_Cr, x_lemac[i])
         cg_oew_wrt_lemac, cg_oew_nose = cg_OEW_wrt_lemac(x_engine[i], w_engine, x_nacelle[i], w_nacelle, x_empennage[i], w_empennage, x_apu, w_apu, x_tank[i], w_tank, x_cg_wing_nose, w_wing, x_lg_front, w_lg_front, x_lg_main[i], w_lg_main, OEW, x_lemac[i], MAC)
        
-        onlyfuel = loadingcg(OEW, cg_oew_nose, w_fuel_fuselage, x_fuel_fuselage)
+        onlyfuel = loadingcg(OEW, cg_oew_nose, 0* w_fuel_fuselage, x_fuel_fuselage)
         onlyfwdcargo = loadingcg(OEW, cg_oew_nose, fwd_cargo_max, x_cargo_fwd)
         onlyaftcargo = loadingcg(OEW, cg_oew_nose, aft_cargo_max, x_cargo_aft)
         bothcargo = loadingcg(onlyfwdcargo[1], onlyfwdcargo[0], aft_cargo_max, x_cargo_aft)
@@ -132,22 +151,13 @@ def cg_excursion_wing_shift():
         middle_back = passenger_loading(window[1][-1], window[0][-1], multiplication=2, seatloc=seatloc[::-1])
         aisle = passenger_loading(middle[1][-1], middle[0][-1])
         aisle_back = passenger_loading(middle[1][-1], middle[0][-1], seatloc=seatloc[::-1])
-        # fully_loaded = loadingcg(aisle[1][-1], aisle[0][1], fuel_weight, x_fuel)
         
         onlyfuselagefuel = loadingcg(aisle[1][-1], aisle[0][-1], w_fuel_fuselage, x_fuel_fuselage)
         onlypodfuel = loadingcg(aisle[1][-1], aisle[0][-1], w_pod_fuel, x_pod_tank[i])
-
         bothfuel = loadingcg(onlyfuselagefuel[1], onlyfuselagefuel[0], w_pod_fuel, x_pod_tank[i])
-        # plt.plot(100 * (np.array([aisle[0][-1], onlyfuselagefuel[0], bothfuel[0]]) - x_lemac) / MAC,
-        #                   [MZF, onlyfuselagefuel[1], bothfuel[1]], marker='^', color='cyan', label = 'Hydrogen')
-        
-        # bothfuel2 = loadingcg(onlypodfuel[1], onlypodfuel[0], w_fuel_fuselage, x_fuel_fuselage)
-        # plt.plot(100 * (np.array([aisle[0][-1], onlypodfuel[0], bothfuel2[0]]) - x_lemac) / MAC,
-        #                   [MZF, onlypodfuel[1], bothfuel2[1]], marker='^', color='brown', label = 'Hydrogen fwd first')
         
         
-        cg_excursion = np.array([[onlyfuel[0]], [onlyaftcargo[0]], [bothcargo[0]], [window[0]], window_back[0], 
-                             middle[0], middle_back[0], aisle[0], aisle_back[0], onlyfuselagefuel[0], onlypodfuel[0], bothfuel[0], onlyfuel[0]]) 
+        cg_excursion = np.array([ onlyfuselagefuel[0], onlypodfuel[0], bothfuel[0]]) 
 
         cg_loaded_lst.append(bothfuel[0])
         cgmin_lst = []
@@ -158,8 +168,8 @@ def cg_excursion_wing_shift():
             cgmin_lst.append(cgmin)
             cgmax_lst.append(cgmax)
         
-        cg_fwd = (np.min(cgmin_lst) - x_lemac[i]) / MAC * 0.98      #subtract 2% margin, assuming most forward cg is after lemac
-        cg_aft = (np.max(cgmax_lst) - x_lemac[i]) / MAC * 1.02      #add 2% margin
+        cg_fwd = (np.min(cgmin_lst) - x_lemac[i]) / MAC * 0.97      #subtract 2% margin, assuming most forward cg is after lemac
+        cg_aft = (np.max(cgmax_lst) - x_lemac[i]) / MAC * 1.03      #add 2% margin
         cg_fwd_excursion_lst.append(cg_fwd)
         cg_aft_excursion_lst.append(cg_aft)
         
@@ -167,6 +177,11 @@ def cg_excursion_wing_shift():
     plt.xlabel('x_cg / MAC [-]')
     plt.ylabel('x_lemac / l_fus [-]')
     plt.show()
+    
+    
+    
+    
+    
     
 
     

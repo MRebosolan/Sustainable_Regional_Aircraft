@@ -528,17 +528,190 @@ SPL_combustion = np.array([10 * np.log10(P2) + 20 * np.log10(rho * c**2 / Pref) 
 #===================================================================================
 """
 delta_e = angle between flight vector and engine inlet axis [rad]
+Aj = fully expanded jet area [m^2]
+rhoj = jet density [kg/m^3]
+Tj = jet total temperature [K]
+
 
 w = density exponent
 P = power deviation factor (deviation of accoustic power from V^8 law)
 ksi = strouhal number correction factor
 """
 
+Aj = 10
+rhoj = 0.08
+Vj = 505.26
+delta_e = np.radians(3)
+Tj = 399
 
-P2_star_jet = PI_star_jet * Aj_star / (4 * np.pi * r_s_star**2) * D * F / (1 - M * np.cos(theta-delta_e)) * ((Vj_star - M) / Vj_star)**m_theta 
+Tj_star = Tj / T_amb
+Aj_star = Aj / A_e
+rhoj_star = rhoj / rho
+Vj_star = Vj / c
+dj_star = np.sqrt(4 * Aj_star / np.pi) 
+m_theta = 1
+f_star = [f * np.sqrt(A_e) / c for f in frequency]
+
+w = 1.85
+P = 10**0.365
+D = 10**-0.805
+ksi = 1
+
+S_c_jet = [f * dj_star / (ksi * (Vj_star - M)) for f in f_star]
+F_jet = []
+for i_s in S_c_jet:
+    i = np.log10(i_s)
+    if i <= -2:
+        F_jet.append(10**(38.2/-10))
+    elif -2 < i <= -1.6:
+        F_jet.append(10**(29.8/-10))
+    elif -1.6 < i <= -1.3:
+        F_jet.append(10**(23.5/-10))
+    elif -1.3 < i <= -1.15:
+        F_jet.append(10**(20.5/-10))
+    elif -1.15 < i <= -1:
+        F_jet.append(10**(17.8/-10))
+    elif -1 < i <= -0.824:
+        F_jet.append(10**(15.3/-10))
+    elif -0.824 < i <= -0.699:
+        F_jet.append(10**(13.5/-10))
+    elif -0.699 < i <= -0.602:
+        F_jet.append(10**(12.3/-10))
+    elif -0.602 < i <= -0.5:
+        F_jet.append(10**(11.5/-10))
+    elif -0.5 < i <= -0.398:
+        F_jet.append(10**(11/-10))
+    elif -0.398 < i <= -0.301:
+        F_jet.append(10**(10.7/-10))
+    elif -0.301 < i <= -0.222:
+        F_jet.append(10**(10.7/-10))
+    elif -0.222 < i <= 0:
+        F_jet.append(10**(11.1/-10))
+    elif 0 < i <= 0.477:
+        F_jet.append(10**(14.3/-10))
+    elif 0.477 < i <= 1:
+        F_jet.append(10**(19.5/-10))
+    elif 1 < i <= 1.6:
+        F_jet.append(10**(27/-10))
+    else:
+        F_jet.append(10**(28.25/-10))
+      
+        
+    
+PI_star_jet = 6.67E-5 * rhoj_star**w * Vj_star**8*P
+
+P2_star_jet = [PI_star_jet * Aj_star / (4 * np.pi * r_s_star**2) * D * S_eta / (1 - M * np.cos(theta-delta_e)) * ((Vj_star - M) / Vj_star)**m_theta for S_eta in F_jet]
+
+SPL_jet = np.array([10 * np.log10(P2) + 10 * np.log10(rho **2 * c**4 / Pref**2) for P2 in P2_star_jet])
+#===================================================================================
+#Engine turbine noise
+#===================================================================================
+"""
+A_t = turbine inlet corss-sectional area [m^2]
+hti = turbine entrance total enthalpy
+hsj = turbine exit static enthalpy
+
+""" 
+
+A_t = 6
+hti = 1
+hsj = 0.9
+
+A_t_star = A_t / A_e
+Ut_star = np.pi * N_star
+R_air = 287
+hti_star = hti / (R_air * T_amb)
+hsj_star = hsj / (R_air * T_amb)
+
+#Turbine braodband noise
+K = 8.589E-5
+a = 1.27
+b = -1.27
+D = 10**0.071
+
+S_turbine_broadband = []
+for node in eta:
+    no = np.log10(node)
+    if no <= -0.903:
+        S_turbine_broadband.append(10**-1.884)
+    elif -0.903 < no < -0.796:
+        S_turbine_broadband.append(10**-1.604)
+    elif -0.796 < no < -0.699:
+        S_turbine_broadband.append(10**-1.444)
+    elif -0.699 < no < -0.602:
+        S_turbine_broadband.append(10**-1.304)
+    elif -0.602 < no < -0.502:
+        S_turbine_broadband.append(10**-1.184)
+    elif -0.502 < no < -0.398:
+        S_turbine_broadband.append(10**-1.084)
+    elif -0.398 < no < -0.301:
+        S_turbine_broadband.append(10**-1.004)
+    elif -0.301 < no < -0.201:
+        S_turbine_broadband.append(10**-0.924)
+    elif -0.201 < no < -0.097:
+        S_turbine_broadband.append(10**-0.844)
+    elif -0.097 < no < 0:
+        S_turbine_broadband.append(10**-0.784)
+    elif 0 < no < 0.097:
+        S_turbine_broadband.append(10**-1.004)
+    elif 0.097 < no < 0.204:
+        S_turbine_broadband.append(10**-1.204)
+    elif 0.204 < no < 0.301:
+        S_turbine_broadband.append(10**-1.384)
+    else:
+        S_turbine_broadband.append(10**-1.924)
+    
+PI_star_turbine_broadband = K * ((hti_star - hsj_star) / hti_star)**a * Ut_star**b
+
+P2_turbine_broadband = [PI_star_turbine_broadband * A_t_star / (4 * np.pi * r_s_star**2) * D * S_eta / (1 - M * np.cos(theta))**4 for S_eta in S_turbine_broadband]
+
+SPL_turbine_broadband = np.array([10 * np.log10(P2) + 20 * np.log10(rho * c**2 / Pref) for P2 in P2_turbine_broadband])        
+
+#Turbine pure tone noise
+K = 1.162E-4
+a = 1.46
+b = -4.02
+D = 10**-0.021
+
+S_turbine_tone = []
+count = 0
+for y in range(len(frequency)):
+    for z in range(len(n[y])):
+        if n[y][z] == 0:
+            continue
+        else:
+            tones = np.arange(n[y][0], n[y][1] + 1, 1)
+            for x in tones:
+                count += 0.6838*10**(-1*(x-1)/2)
+    S_turbine_tone.append(count)
+    count = 0         
+
+PI_star_turbine_tone = K * ((hti_star - hsj_star) / hti_star)**a * Ut_star**b
+
+P2_turbine_tone = [PI_star_turbine_tone * A_t_star / (4 * np.pi * r_s_star**2) * D * S_eta / (1 - M * np.cos(theta))**4 for S_eta in S_turbine_tone]
+
+SPL_turbine_tone = np.array([10 * np.log10(P2) + 20 * np.log10(rho * c**2 / Pref) for P2 in P2_turbine_broadband])  
 
 
-  
+P2_turbine = [P2_turbine_broadband[i] + P2_turbine_tone[i] for i in range(len(frequency))]     
+
+SPL_turbine = np.array([10 * np.log10(P2) + 20 * np.log10(rho * c**2 / Pref) for P2 in P2_turbine])  
+
+
+#===================================================================================
+#Total engine noise
+#===================================================================================
+
+SPL_single_engine = []
+count = 0
+for i in range(len(frequency)):
+    count = 10**(SPL_fan[i]/10) + 10**(SPL_combustion[i]/10) + 10**(SPL_jet[i]/10) + 10**(SPL_turbine[i]/10)
+    SPL_single_engine.append(10*np.log10(count))
+    count = 0
+    
+    
+
+
 plt.close()
 plt.figure()
 #plt.plot(frequency, SPL_w_lst, label='Wing TE noise')
@@ -559,6 +732,14 @@ plt.figure()
 
 #plt.plot(frequency, SPL_combustion, label='Combustion noise')
 
+#plt.plot(frequency, SPL_jet, label='Jet noise')
+
+plt.plot(frequency, SPL_single_engine, label='Total engine noise')
+
+#plt.plot(frequency, SPL_turbine_broadband, label='Turbine broadband noise')
+#plt.plot(frequency, SPL_turbine_tone, label='Turbine tone noise')
+#plt.plot(frequency, SPL_turbine, label='Total turbine noise')
+
 plt.xscale('log')
 plt.ylim([0,120])
 
@@ -567,12 +748,13 @@ plt.ylim([0,120])
 #plt.plot(frequency, SPL_s_nlg_lst, label='Nose landing gear strut noise')
 #plt.plot(frequency, SPL_s_mlg_lst, label='Main landing gear strut noise')
 
+
 plt.legend()
 plt.show()
 
 
 print('Combination tone noise is excluded in fan noise module (recommendation)')  
-print('Assumption: polar directivity angle $\theta$ of 90 degrees') 
+print('Assumption: polar directivity angle theta of 90 degrees') 
 print('Possibly change Ae reference engine area to obtain lower noise values')
 print('If noise levels allow, add main landing gear contribution twice')
-print('Skipped Turbine noise module, as jet noise is most dominant in most flight conditions')
+print('Skipped shock noise module due to lack of information (recommendation)')

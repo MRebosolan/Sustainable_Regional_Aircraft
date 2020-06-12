@@ -1,4 +1,3 @@
-import matplotlib.pyplot as plt
 import numpy as np
 import Class_2_estimation as Cl2
 import input
@@ -61,11 +60,8 @@ def rudder_design(y_engine,T_OEI,S,b,vtail_sweep,taper_v,AR_vtail,x_cg,rho_to,Vm
     stepsize = 0.0025
     running= True
     S_vlist=[S_v]
-    S_vlist1=[S_v]
-    S_vfinal = [S_v]
-    delta_r_calc_list = []
-    Cn_delta_r_list = []
-    
+
+
     while running:  
         b_v_c1 = np.sqrt(AR_vtail*S_vlist[-1])
         chord_r_c1 = 2*S_vlist[-1]/((1+taper_v)*b_v_c1)
@@ -113,55 +109,28 @@ def rudder_design(y_engine,T_OEI,S,b,vtail_sweep,taper_v,AR_vtail,x_cg,rho_to,Vm
         #print ('-z_H/b_v = ',-z_v/b_v_c1)
 
         Cn_delta_r = min(Cn_delta_r,key=abs) # On point, -0.0012 [1/rad] is a good value CHECK whether you need min or max; largest req tail area is what you need
-        Cn_delta_r_list.append(Cn_delta_r)
 
         delta_r_calc = np.degrees(((N_D+1)*Nt_crit)/(q_mc*S*b*Cn_delta_r))    #[rad] rudder deflection, 25 degrees max Roskam book VI p 494
-        delta_r_calc_list.append(delta_r_calc)
 
         if abs(delta_r_calc) > 25:
             S_new = S_vlist[-1]+stepsize
             S_vlist.append(S_new)
-            S_vlist1.append(S_new)
-            S_vfinal[0] = S_new+stepsize
             running = True
-       
-        elif abs(delta_r_calc) <= 25 and abs(delta_r_calc) > 15 and len(S_vlist1)<20000:
-            S_new = S_vlist1[-1]+stepsize
-            S_vlist1.append(S_new)
-            S_vlist[-1]=S_new
-            running = True
-        
         else:
-            S_vlist[-1] = S_vlist[-1] + stepsize
+            S_vlist.append(S_vlist[-1]+stepsize)
+            #print ('Done in',len(S_vlist),'iterations.')
             print ('The deflection angle equals:',delta_r_calc,'[deg]')
             print ('The required surface area for the vertical tail equals:',S_vlist[-1])
             print ('The required rudder area for the vertical tail equals:',Sr_over_Sv*S_vlist[-1])
+            #print (MAC_v_cl1)
             running = False
-    
-    return S_vlist,S_vlist1,delta_r_calc,S_vfinal,delta_r_calc_list,Cn_delta_r_list
 
-S_vlist,S_vlist1,delta_r_calc,S_vfinal,delta_r_calc_list,Cn_delta_r_list = rudder_design(y_engine, T_OEI, S, b, vtail_sweep, taper_v, AR_vtail, x_cg, rho_to, Vmin)
+    return S_vlist,delta_r_calc
 
-fig = plt.figure(10)
-plt.subplot(121)
-plt.plot(S_vlist1,delta_r_calc_list)#,[S_vlist1[0],S_vlist1[-1]],[-25,-25])
-plt.xlabel('Surface area [m2]')
-plt.ylabel('Rudder deflection [deg]')
-plt.grid(b=True, which='major', color='#666666', linestyle='-')
-plt.minorticks_on()
-plt.grid(b=True, which='minor', color='#999999', linestyle='-', alpha=0.2)
+S_vlist,delta_r_calc = rudder_design(y_engine, T_OEI, S, b, vtail_sweep, taper_v, AR_vtail, x_cg, rho_to, Vmin)
 
+Vtail_area = S_vlist[-1]
+Rudder_def = delta_r_calc
 
-plt.subplot(122)
-plt.plot(Cn_delta_r_list,delta_r_calc_list)#,[S_vlist1[0],S_vlist1[-1]],[-25,-25])
-plt.xlabel('Cn_delta_r [-]')
-plt.ylabel('Rudder deflection [deg]')
-plt.grid(b=True, which='major', color='#666666', linestyle='-')
-plt.minorticks_on()
-plt.grid(b=True, which='minor', color='#999999', linestyle='-', alpha=0.2)
-
-plt.show()
-
-print (S_vfinal[0])
 #print ('make sure that K_vh and A_vhf_over_Avf, cl_alpha_v and Cl_cl_delta_theory have the correct values; it needs to be adjusted by hand')
 #print ('CRJ700 has 11.07 [m2] vtail area, if we were to take the relative same thrust, we would have ~15 [m2] ')
