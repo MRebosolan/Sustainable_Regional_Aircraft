@@ -29,12 +29,13 @@ x_start_Cr = input.x_start_Cr   #x-location measured from the nose where root ch
 seat_start = input.x_first_pax  #x-location measured from the nose where first passenger row is located
 pitch = input.seat_pitch             #seat pitch [inch]
 rows = input.n_rows             #number of passegner rows [-]
-lh = input.lh                   #distance between wing and horizontal tail aerodynamic centers
-lv = input.lv                   #distance between wing and vertical tail aerodynamic centers
+xh = input.x_lemac_rootchord_h + input.x_rootchord_h + 0.25*input.c_mac_h
+lh = 14.509248628717762                  #distance between wing and horizontal tail aerodynamic centers
+lv = input.lv                 #distance between wing and vertical tail aerodynamic centers
 x_ac = x_lemac + MAC / 4               #x location of wing aerodynamic center measured from the nose of the aircraft
 x_apu = input.x_apu             #cg location of the apu measured from the nose of the aircraft [m]
 x_engine = input.x_LEMAC_nose       #cg location of engines, measured from the nose of the aircraft [m]
-x_nacelle = input.x_nacelle     #cg location of engine nacelles, measured from the nose of the aircraft [m]
+x_nacelle = x_engine    #cg location of engine nacelles, measured from the nose of the aircraft [m]
 Cr = input.Cr                   #wing root chord length [m]
 Ct = input.Ct                   #wing tip chord length [m]
 b = cl2.b                       #wing span [m]
@@ -112,8 +113,8 @@ x_paint = l_f/2
 
 
 x_empennage = x_ac + (lh + lv) / 2 #Assume cg of empennage is in the middle of the aerodynamic center of horizontal and vertical tail, measured from the nose
-x_lg_front = 3     #cg location of front landing gear [m], measured from the nose, assumed to be 3 m (used for calculating cg at oew, not to be changed per se)
-x_lg_main = x_start_Cr + 2 * Cr / 3      #cg location of main landing gear [m], assumed 2/3 root chord length further than start of root chord (used for calculating cg at oew, not to be changed per se)
+x_lg_front = input.x_lg_front    #cg location of front landing gear [m], measured from the nose, assumed to be 3 m (used for calculating cg at oew, not to be changed per se)
+x_lg_main = x_start_Cr + 4.7     #cg location of main landing gear [m], assumed 2/3 root chord length further than start of root chord (used for calculating cg at oew, not to be changed per se)
 print("In calculation of cg @ OEW, take into account the exact tank placement and cg location once agreed on a specific configuration")
 
 
@@ -237,6 +238,7 @@ def loading():
     plt.plot(100 * (np.array([aisle[0][-1], onlypodfuel[0], bothfuel2[0]]) - x_lemac) / MAC,
                        [MZF, onlypodfuel[1], bothfuel2[1]], marker='^', color='black', )
     
+    plt.axvline(maccie(15.4636-0.5, x_lemac, MAC), label = 'Main landing gear limit', color = 'r')
     plt.legend()
     plt.grid()
     plt.ylabel('mass [kg]')
@@ -257,7 +259,7 @@ def loading():
     cg_fwd = (np.min(cgmin_lst) - x_lemac) / MAC * 0.98      #subtract 2% margin, assuming most forward cg is after lemac
     cg_aft = (np.max(cgmax_lst) - x_lemac) / MAC *1.02      #add 2% margin
     print("most forward cg should be positive")
-   
+    print(bothfuel)
     
     return cg_fwd, cg_aft
 

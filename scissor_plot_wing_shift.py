@@ -69,7 +69,7 @@ x_lemac_Cr = input.x_lemac_rootchord         #x location of leading edge mac mea
 x_start_Cr = shift.x_start_Cr
 lemac = shift.x_lemac
 xh = input.x_lemac_rootchord_h + input.x_rootchord_h + 0.25*input.c_mac_h
-lh = [xh - i  for i in x_start_Cr]
+lh = [xh - i - 0.25*MAC for i in x_start_Cr]
 
 
 #Functions
