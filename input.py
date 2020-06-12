@@ -233,9 +233,9 @@ Re_Lnd     = 16326981
 CLmax_clean  = 1.8
 CL0_clean    = 0.405
 Alpha0_clean = -3.936
-CLdes_clean  = 0.44888
+CLdes_clean  = 0.44888                              ######NOT FIXED########
 CD0_clean    = 0                                    ######NOT FIXED########           
-CLa_clean    = 0.09858
+CLa_clean    = 0.09858                              ######NOT FIXED########
 
 #Take-off Configuration             
 CLmax_to  = 2.1
