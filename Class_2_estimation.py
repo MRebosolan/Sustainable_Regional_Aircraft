@@ -237,13 +237,13 @@ while abs((OEW_class1_kg - OEWINPUT)*100/OEWINPUT)>= 0.01:
     OEWINPUT = to_kg(OEW_class2)
     OEW_plot_class2.append(OEWINPUT)
 
-plt.close()
-plt.figure()
-plt.plot(np.arange(0, len(OEW_plot_class1)), OEW_plot_class1, label = 'class 1')
-plt.plot(np.arange(0, len(OEW_plot_class2)), OEW_plot_class2, label = 'class 2')
-plt.xlabel("iterations")
-plt.ylabel("OEW in kg")
-plt.legend()
+# plt.close()
+# plt.figure()
+# plt.plot(np.arange(0, len(OEW_plot_class1)), OEW_plot_class1, label = 'class 1')
+# plt.plot(np.arange(0, len(OEW_plot_class2)), OEW_plot_class2, label = 'class 2')
+# plt.xlabel("iterations")
+# plt.ylabel("OEW in kg")
+# plt.legend()
 #plt.show()
 
 df = pd.DataFrame({'data': ['MTOW','OEW'],
@@ -326,4 +326,4 @@ MTOM = to_kg(MTOW)
 MTOW = 9.81*MTOM
 OEM = OEWINPUT
 Tto = T_TO_newton
-print (S,b**2/8)
+# print (S,b**2/8)

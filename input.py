@@ -233,9 +233,9 @@ Re_Lnd     = 16326981
 CLmax_clean  = 1.8
 CL0_clean    = 0.405
 Alpha0_clean = -3.936
-CLdes_clean  = 0.44888
+CLdes_clean  = 0.44888                              ######NOT FIXED########
 CD0_clean    = 0                                    ######NOT FIXED########           
-CLa_clean    = 0.09858
+CLa_clean    = 0.09858                              ######NOT FIXED########
 
 #Take-off Configuration             
 CLmax_to  = 2.1
@@ -248,10 +248,6 @@ CL0_land    = 0.946
 Alpha0_land = -9.4619
 
 #HLD
-
-TE_HLD         = True
-LE_HLD         = False
-
 DeltaCLmaxTO   = 0.16316
 DeltaCLmaxLnd  = 0.2984
 defTO          = 20  #deg
@@ -356,6 +352,7 @@ d_wheel_nose_lg = 0.5
 
 strut_length_main_lg = 1        #[m]
 strut_length_nose_lg = 0.75
+x_lg_front = 3.55 
 #Lift/drag ratios
 #------------------------------------------------------------------------------------------------------------------
 
