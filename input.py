@@ -74,7 +74,7 @@ Sv = 14.65                       # [m2] CRJ700 | Obtain realistic value from Vta
 bv = 4.99                        # [m] vertical tail span CRJ700 # [m] Horizontal tail span
 zh = bv * 0.95                    # Height of horizontal stabilizer measured from the bottom of the vertical tail [m]
 
-Sh_over_S = 0.3725
+Sh_over_S = 0.3788
 Sh = Sh_over_S * S                        # m2 crj700 shizzle yo, horizontal tail area
 bh = (AR_h*Sh)**0.5  
 
