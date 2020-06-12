@@ -285,7 +285,8 @@ z_position_horizontal = zh + hf    # where tail is positioned, for downwash calc
 z_cg = 0.5*hf  
 
 taper_h = 0.5                   #approximation of taper ratio of horizontal tail
-sweep_LE_H = np.arctan(np.tan(half_chord_sweep_hor) - 4 / AR_h * ((0 - 25) / 100 * (1 - taper_h) / (1 + taper_h)))
+sweep_LE_H = np.arctan(np.tan(half_chord_sweep_hor) - 4 / AR_h * ((0 - 25) / 100 * (1 - taper_h) / (1 + taper_h)))       # Isn''t this wrong? Now it converts from quarter chord to LE
+sweep_c4h  = np.arctan(np.tan(half_chord_sweep_hor) - 4 / AR_h * ((25 - 50) / 100 * (1 - taper_h) / (1 + taper_h)))
 
 y_MAC_h = bh / 6 * ((1 + 2 * taper_h) / (1 + taper_h))            #spanwise location of mean aerodynamic chord
 x_lemac_rootchord_h = y_MAC_h * np.tan(sweep_LE_H)               #x position of mac at leading edge [m], measured from the start of the root choord!!!!
@@ -374,4 +375,5 @@ IF_tailv  = 1.0
 IF_tailh  = 1.04
 IF_fus    = 1.0
 IF_nacelle = 1.0
+IF_fusnacelle = 1.3     # Nacelle for the main landing gear
 cds_nose = 0.64                                     # obtain from adsee graph, this one is for a/d = 3.6, e/d = 2

@@ -29,8 +29,9 @@ description
 
 # ---------------------------- Import Parameters
 
-M_cruise = 0.75
+M_cruise = inp.mach_cruise
 S = CL2.S
+print(S)
 AR = inp.AR
 MTOW = inp.MTOW
 widthf = inp.widthf
@@ -59,17 +60,21 @@ cds_nose   = inp.cds_nose
 #### TAIL INPUTS
 # Vertical tail: Tobias,     horizontal tail: jorn
 Sh = 1       # horizontal tail area
-Sv = 1       # vertical tail area
-taperh = 1   # taper h tail
-taperv = 1   # taper v tail
-c_MACh = 1   # MAC length horizontal tail
-c_MACv = 1   # MAC length vertical tail
+Sv = 15       # vertical tail area                                        # WILL CHANGE
+taperh = inp.taper_h   # taper h tail
+taperv = inp.taper_v   # taper v tail
+AR_h   = inp.AR_h
+AR_v   = inp.AR_v
+sweep_c4h = np.arctan(np.tan(inp.half_chord_sweep_hor) - 4 / AR_h * ((25 - 50) / 100 * (1 - taperh) / (1 + taperh)))
+sweep_c4v = np.arctan(np.tan(inp.half_chord_sweep_vert) - 4 / AR_v * ((25 - 50) / 100 * (1 - taperv) / (1 + taperv)))
+c_MACh = inp.c_mac_h   # MAC length horizontal tail
+c_MACv = 3            # MAC length vertical tail                          # THIS IS GONNA CHANGE
 x_cm_wing = 0.36       #x/c max thickness
-x_cm_tailv = 1         #x/c max thickness vertical tail
-x_cm_tailh = 1         #x/c max thickness horizontal tail
+x_cm_tailv = 0.30         #x/c max thickness vertical tail
+x_cm_tailh = 0.30         #x/c max thickness horizontal tail               # Check
 t_c_wing = 0.14        #t/c wing airfoil
-t_c_tailv = 1           #t/c vertical tail airfoil
-t_c_tailh = 1           #t/c horizontal tail airfoil
+t_c_tailv = 0.12           #t/c vertical tail airfoil
+t_c_tailh = 0.12           #t/c horizontal tail airfoil                   # Check
 
 #### FUSELAGE INPUTS
 Df = widthf
@@ -77,13 +82,13 @@ lf = inp.lf          # length fuselage
 L1 = 0.2 * lf               # nosecone length L1,  guesss
 L2 = 0.6 * lf               # cabin length    L2,  guesss
 L3 = 0.2 * lf               # tail length     L3,  guesss
-Amax_fus = np.pi / 4 * Df**2                      # estimate
+Amax_fus = inp.A_fuselage                    # estimate
 upsweep = inp.theta * np.pi / 180                       # Clearance angel [deg]
 #### ENGINE
-l_nacelle = 1     # nacelle length l_nacelle
-Amax_nacelle = 1   # max area nacelle Amax_nacelle
+l_nacelle = inp.ln     # nacelle length l_nacelle
+Amax_nacelle = np.pi / 4 * inp.bn**2   # max area nacelle Amax_nacelle
 B = 12                # Bypass ratio, take from inp
-Tto = 125e3           # take-off thrust take from inp
+Tto = inp.Tto          # take-off thrust take from inp
 
 #### LANDING GEAR
 d_nose = inp.d_wheel_nose_lg + inp.strut_length_nose_lg    # length nose gear
@@ -121,16 +126,10 @@ def chord_length(c_root, c_tip, x, b):
 # --------------------------------- Wing Geometry
 
 def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S, v_approach, V_C_TAS):
-
-    # Wing sweep, also consider M_crit?
     if M_cruise >= 0.7:
         sweep_c4 = np.arccos(0.75*(0.935/(0.03 + M_cruise)))
     else:
         sweep_c4 = np.arccos(1)
-
-    #sweep_c4 = 40.535802011 * np.pi / 180 # from airfoil selection
-
-
 
     taper = 0.2 * (2 - sweep_c4)
 
@@ -377,8 +376,8 @@ def drag():
     ## Form Factor
 
     sweep_m_wing = np.arctan(np.tan(sweep_c4) - 4 / AR * ((x_cm_wing * 100 - 25) / 100 * (1 - taper) / (1 + taper)))
-    sweep_m_tailv = np.arctan(np.tan(sweep_c4) - 4 / AR * ((x_cm_tailv * 100 - 25) / 100 * (1 - taperv) / (1 + taperv)))
-    sweep_m_tailh = np.arctan(np.tan(sweep_c4) - 4 / AR * ((x_cm_tailh * 100 - 25) / 100 * (1 - taperh) / (1 + taperh)))
+    sweep_m_tailv = np.arctan(np.tan(sweep_c4v) - 4 / AR * ((x_cm_tailv * 100 - 25) / 100 * (1 - taperv) / (1 + taperv)))
+    sweep_m_tailh = np.arctan(np.tan(sweep_c4h) - 4 / AR * ((x_cm_tailh * 100 - 25) / 100 * (1 - taperh) / (1 + taperh)))
 
     FF_wing = (1 + 0.6 / x_cm_wing * t_c_wing + 100 * t_c_wing ** 4) * (
                 1.34 * M_cruise ** 0.18 * (np.cos(sweep_m_wing)) ** 0.28)
