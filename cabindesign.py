@@ -75,13 +75,13 @@ def cabin_design(fractioninfus,fractionintail,HYDROGENVOLUME,top_selecter = 0,po
     print('CYLINDER TANK: ','| mass: ',tm_cyl,'| diameter: ',d_cyl,'| length: ',l_cyl)
     
     #TAIL STORAGE
-    t_tail,m_tail, tm_tail, d_tail,l_tail=tank_sizing_fuselage(V_tank_tail,R_tank_tail,1)
+    t_tail,m_tail, tm_tail, d_tail,l_tail,exceed=tank_sizing_fuselage(V_tank_tail,R_tank_tail,1)
     if V_tank_tail==0:
         t_tail,m_tail, tm_tail, d_tail,l_tail=0,0,0,0,0
     print('TAIL TANK: ','| mass: ',tm_tail,'| diameter: ',d_tail,'| length: ',l_tail)
     
     #TOP STORAGE
-    t_top,m_top,tm_top,d_top,l_top=tank_sizing(V_tank_top,totalcabinlength+l_cyl,2)
+    t_top,m_top,tm_top,d_top,l_top,exceed=tank_sizing(V_tank_top,totalcabinlength+l_cyl,2)
     if V_tank_top==0:
         t_top,m_top, tm_top, d_top,l_top=0,0,0,0,0
     print('TOP TANK: ','| mass: ',tm_top,'| diameter: ',d_top,'| length: ',l_top)
