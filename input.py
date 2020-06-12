@@ -70,7 +70,7 @@ half_chord_sweep_hor = np.radians(20)   # deg, sweep at half chord of horizontal
 
 
 
-Sv = 14.65                       # [m2] CRJ700 | Obtain realistic value from Vtail area sizing
+Sv = 14.63                       # [m2] CRJ700 | Obtain realistic value from Vtail area sizing
 bv = 4.99                        # [m] vertical tail span CRJ700 # [m] Horizontal tail span
 zh = bv * 0.95                    # Height of horizontal stabilizer measured from the bottom of the vertical tail [m]
 

@@ -163,7 +163,6 @@ plt.minorticks_on()
 plt.grid(b=True, which='minor', color='#999999', linestyle='-', alpha=0.2)
 
 plt.show()
-print (MTOW/g)
 print (S_vfinal[0],S_vfinal[0]*Sr_over_Sv,np.sqrt(S_vfinal[0]*1.7))
 #print ('make sure that K_vh and A_vhf_over_Avf, cl_alpha_v and Cl_cl_delta_theory have the correct values; it needs to be adjusted by hand')
 #print ('CRJ700 has 11.07 [m2] vtail area, if we were to take the relative same thrust, we would have ~15 [m2] ')
