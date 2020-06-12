@@ -186,9 +186,9 @@ def static_loads_lg(MTOW=MTOW,N_mw=N_mw,N_struts=N_struts,mg_x_cg=mg_x_cg,ng_x_c
     ESWL_n = P_nw/1.33/g                     # [kg] equivalent single wheel load twin dual | NOSE
     ESWL_m = P_mw/1.33/g                     # [kg] equivalent single wheel load twin dual | MAIN
     P_mw_stat = 1.07*P_mw/2                  # [N] maximum static load on main gear per wheel (2 wheels 2 struts = 4 wheels)
-    P_nw_des = 1.07*P_nw/2                   # [N] maximum static load on nose gear per wheel (2 wheels 1 strut = 2 wheels)
+    P_nw_des = 1.07*P_nw/2               # [N] maximum static load on nose gear per wheel (2 wheels 1 strut = 2 wheels)
     ax_over_g = 0.35                         # 0.45 for advanced anti-sid brakes
-    P_n_dyn_t = MTOW*(mg_x_cg+ax_over_g/z_cg)/((N_nw)*(mw_nw_d))  # [N] Maximum dynamic load per nose gear tire
+    P_n_dyn_t = MTOW*((x_main_lg-x_cg_fwrd)+ax_over_g/z_cg)/((N_nw)*(mw_nw_d))  # [N] Maximum dynamic load per nose gear tire
     P_nw_des_stat = P_n_dyn_t/1.5            #[lbs]
     V_tire_max_to = 1.1*Vlof
     V_bar = 1.3*Vlof/1.05/np.sqrt(2)
@@ -215,25 +215,17 @@ eta_t = 0.47 # tire energy absorption efficiency
 eta_s = 0.8 # show absorption efficiency; OLEO-pneumatic
 
 def energy_absorption(g=g,w_td=w_td,eta_t=eta_t,eta_s=eta_s,s_t=s_t,N_struts=N_struts,P_mw=1.07*0.2248*P_mw/np.arctan2(z_main_lg,min(y_lg_list)),N_g=N_g,P_nw=1.07*0.2248*P_nw,P_n_dyn_t=1.07*0.2248*P_n_dyn_t):
-    E_t_max = 0.5*P_mw*N_struts*w_td**2/g                   # [ft*lbs] maximum kinetic energy which needs to be absorbed #all touchdown energy absorbed by main landing gear
+    E_t_max = 0.5*P_mw*N_struts*w_td**2/g                 # [ft*lbs] maximum kinetic energy which needs to be absorbed #all touchdown energy absorbed by main landing gear
     s_s = ((E_t_max/(N_struts*P_mw*N_g))-eta_t*s_t)/eta_s # [ft] #Note that the gear loads are now converted from [N] to [lbs]
-    s_s_des = (s_s + 1/12)*0.3048                # [meters] Design shock absorber length
+    s_s_des = (s_s + 1/12)*0.3048                         # [m] Design shock absorber length
     d_s = (0.041 + 0.0025*(P_mw)**0.5)*0.3048 # meters
-    s_s_des_nose = (((0.5*P_nw/g*w_td**2/(P_n_dyn_t*2*N_g))-eta_t*s_t)/eta_s +1/12)*0.3048 #Stroke length nose landing gear, converted to meters
-    d_s_n = (0.041 + 0.0025*(P_nw)**0.5)*0.3048 # meters
+    s_s_des_nose = (((0.5*P_nw/g*w_td**2/(P_n_dyn_t*2*N_g))-eta_t*s_t)/eta_s +1/12)*0.3048 # [m] Stroke length nose landing gear, converted to meters
+    d_s_n = (0.041 + 0.0025*(P_nw)**0.5)*0.3048           # [m]
     return s_s_des, d_s, s_s_des_nose,d_s_n
 s_s_des, d_s, s_s_des_nose,d_s_n = energy_absorption()
 print ()
 print ('The required stroke length of the shock absorption is:',s_s_des,'and the required diameter equals:',d_s,'Both in meters')
 print ('Shock absorber stroke nose landing gear equals:',s_s_des_nose, 'meters, with a diameter of',d_s_n,'meters. diameter for main landing gear is taken.')
-print ()
-print ('TODO: estimate volume for storage, and tire selection, material selection')
 
-
-# Strength of landing gear: take the shock of landing into account
-# Size strut(s)
-# Oleo-pneumatic shock absorbers, for their high energy absorption efficiency (tires 0.47, olea 0.8)
-# Touchdown rate w_touchd = 12 feet per second (transports FAR 25.723 certified )
 # Roskam source 2 page 94: OLEO-pneumatic shock absorber explanation
 # same source: linearly decrease in tire presure and loadpage 51
-# Just make an assumption on what tire is good enough, I have absolutely no clue what the linear relationship is...
