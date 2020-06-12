@@ -233,9 +233,9 @@ Re_Lnd     = 16326981
 CLmax_clean  = 1.8
 CL0_clean    = 0.405
 Alpha0_clean = -3.936
-CLdes_clean  = 0.44888
+CLdes_clean  = 0.44888                              ######NOT FIXED########
 CD0_clean    = 0                                    ######NOT FIXED########           
-CLa_clean    = 0.09858
+CLa_clean    = 0.09858                              ######NOT FIXED########
 
 #Take-off Configuration             
 CLmax_to  = 2.1
@@ -248,10 +248,6 @@ CL0_land    = 0.946
 Alpha0_land = -9.4619
 
 #HLD
-
-TE_HLD         = True
-LE_HLD         = False
-
 DeltaCLmaxTO   = 0.16316
 DeltaCLmaxLnd  = 0.2984
 defTO          = 20  #deg
@@ -356,6 +352,7 @@ d_wheel_nose_lg = 0.5
 
 strut_length_main_lg = 1        #[m]
 strut_length_nose_lg = 0.75
+x_lg_front = 3.55 
 #Lift/drag ratios
 #------------------------------------------------------------------------------------------------------------------
 
@@ -379,7 +376,7 @@ x_engine = 13                      # cg location of engines, measured from the n
 x_nacelle = 13                     # cg location of engine nacelles, measured from the nose of the aircraft [m], TBD
 
 #Drag parameters
-k = 0.152 * 10**-5         # Surface factor for skin friction coefficient, for polished sheet metal (need to reconsider if composites are used)
+k = 0.634 * 10**-5         # Surface factor for skin friction coefficient, for smooth paint (need to reconsider if composites are used)
 IF_wing   = 1.0         # Interference factors
 IF_tailv  = 1.0
 IF_tailh  = 1.04
@@ -387,3 +384,6 @@ IF_fus    = 1.0
 IF_nacelle = 1.0
 cds_nose = 0.64                                     # obtain from adsee graph, this one is for a/d = 3.6, e/d = 2
 dflap = 0                                     # 20 deg for takeoff and 60 deg for landing
+
+# inputs still needed for drag: Sh, Sv, c_MACh, x/c max t/c horizontal, t/c max horizontal, nosecone and tailcone length, upsweep,
+# bypass ratio, width nose gear, width main gear, actual frontal area main gear.
