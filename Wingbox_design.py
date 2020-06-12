@@ -203,15 +203,15 @@ for i in x_array[2:]:
     shear_array.append(internal_vertical_shear_force(i))
     moment_array2.append(internal_z_bending_moment(i))
     shear_array2.append(internal_longitudinal_shear_force(i))
-
-plt.plot(x_array[2:], moment_array)
-plt.plot(x_array[2:], shear_array)
+#
+# plt.plot(x_array[2:], moment_array)
+# plt.plot(x_array[2:], shear_array)
 #plt.plot(x_array[2:], moment_array2)
 #plt.plot(x_array[2:], shear_array2)
 
 plt.xlabel("spanwise coordinate")
-plt.ylabel("loads in N/moments in N/m")
-
+#plt.ylabel("loads in N/moments in N/m")
+plt.ylabel("stresses in MPa")
 #plt.show()
 
 #-----------------------------------------------------------------------------------------------------

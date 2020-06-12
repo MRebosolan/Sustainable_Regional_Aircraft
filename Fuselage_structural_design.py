@@ -25,7 +25,7 @@ ac_length = input.lf #dummy value
 x_ac = 12 #estimate
 lh = input.lh
 widthf = input.widthf
-
+n_ult = input.n_ult
 
 x_array = np.linspace(0, ac_length, 1000)
 
@@ -53,8 +53,8 @@ def internal_shear_and_moment_longitudinal(x, W= W_cruise, lf=ac_length, x_ac=x_
 moments=[]
 shears=[]
 for x in x_array:
-    moments.append(internal_shear_and_moment_longitudinal(x)[1])
-    shears.append(internal_shear_and_moment_longitudinal(x)[0])
+    moments.append(internal_shear_and_moment_longitudinal(x)[1] * n_ult)
+    shears.append(internal_shear_and_moment_longitudinal(x)[0] * n_ult)
 
 
 
@@ -148,17 +148,29 @@ def max_fuselage_stresses(t, R, x_array, P_c, P_cruise, z_vl, rudder_load, momen
 
     return bending_stresses_bottom, bending_stresses_top, shear_stresses
 
-bmb, bmt, sh1 =(max_fuselage_stresses(0.1, widthf/2, x_array, P_c, P_cruise, z_vl, 0, moments, shears))
+bmb, bmt, sh1 =(max_fuselage_stresses(0.001, widthf/2, x_array, P_c, P_cruise, z_vl, 0, moments, shears))
 
 idx = moments.index(min(moments))
 
-
-plt.plot(x_array, bmb)
-plt.plot(x_array, bmt)
+#
+# plt.plot(x_array, bmb)
+# plt.plot(x_array, bmt)
 # plt.plot(x_array, sh1)
 
-#plt.plot(x_array, moments)
-#plt.plot(x_array, shears)
+plt.plot(x_array, moments)
+plt.plot(x_array, shears)
+
+x = 8
+y = 16
+x = min(x_array, key=lambda y:abs(y-x))
+y = min(x_array, key=lambda z:abs(z-y))
+x_index = np.where(x_array == x)[0][0]
+y_index = np.where(x_array == y)[0][0]
+print(moments[x_index], moments[y_index])
+print(shears[x_index], shears[y_index])
+print(x_array[x_index], x_array[y_index])
+
+
 plt.show()
 
 

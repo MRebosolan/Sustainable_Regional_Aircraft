@@ -45,8 +45,8 @@ ycoord2 = ycoord2[::-1]
 
 chord_length = 2  # chord length in meters
 
-t_d = .015 #THICkNESS OF AIRFOIL
-number_booms = 5 #NUMBER OF POINTS (10 POINTS = 16 BOOMS,4p=4b 5p=6b )#  (ON TOP SIDE FOR NOW)
+t_d = .005 #THICkNESS OF AIRFOIL
+number_booms = 25 #NUMBER OF POINTS (10 POINTS = 16 BOOMS,4p=4b 5p=6b )#  (ON TOP SIDE FOR NOW)
 
 moment_cs = 450000 #MOMENT OF CROSS SECTION
 Kc, Ks = 6.4, 8.2 #clamping coeficients
@@ -54,7 +54,7 @@ E = 71.7E9
 
 #------------------------------------------------------------------------------------------------------------------
 
-def boom_moi(moment_cs, chord_length, shear_cs, t_d=t_d, number_booms=number_booms, stringer_area = 0.003):
+def boom_moi(moment_cs, chord_length, shear_cs, t_d=t_d, number_booms=number_booms, stringer_area = 0.0015):
 
 #returns moments of inertia and boom normal stresses based on load, chord length and number of booms
 

@@ -69,7 +69,7 @@ x_lemac_Cr = input.x_lemac_rootchord         #x location of leading edge mac mea
 x_start_Cr = shift.x_start_Cr
 lemac = shift.x_lemac
 xh = input.x_lemac_rootchord_h + input.x_rootchord_h + 0.25*input.c_mac_h
-lh = [xh - i  for i in x_start_Cr]
+lh = [xh - i - 0.25*MAC for i in x_start_Cr]
 
 
 #Functions
@@ -78,7 +78,7 @@ def chord_along_span(Cr, Ct, b, y):
     return c
 
 def swf(widthf, outboard_flap):
-    b_imag = outboard_flap - widthf
+    b_imag = outboard_flap - widthf 
     swf = 2 * b_imag * (chord_along_span(cr, ct, b, widthf) + chord_along_span(cr, ct, b, outboard_flap)) / 2
     return swf
 
@@ -148,7 +148,7 @@ def scissor_wing_shift():
     #for i in range(len(cg_fwd_lst)):
         
         #Minor calculations with input parameters
-        CL = 2*mass*9.81/(rho*(v_approach**2)*S)            #approach CL
+        CL = input.Clmax_Lnd            #approach CL
         #CL_cruise = 2*MTOW*9.81/(rho_cruise*(v_cruise**2)*S) #approach CL
         l_fn = x_start_Cr[i] + widthf * np.tan(sweep_LE)
         beta = (1-(mach**2))**0.5
