@@ -78,7 +78,7 @@ def chord_along_span(Cr, Ct, b, y):
     return c
 
 def swf(widthf, outboard_flap):
-    b_imag = outboard_flap - widthf
+    b_imag = outboard_flap - widthf 
     swf = 2 * b_imag * (chord_along_span(cr, ct, b, widthf) + chord_along_span(cr, ct, b, outboard_flap)) / 2
     return swf
 
