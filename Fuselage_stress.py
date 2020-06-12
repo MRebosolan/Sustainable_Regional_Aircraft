@@ -74,21 +74,27 @@ shear_stress = []
 shearflow = 0
 shear_flow1.append(shearflow)
 
+boom_locationx1 = []
+boom_locationx2 = []
+boom_deltashear1 = []
+boom_deltashear2 = []
+
 for i in range(len(boom_locationx)):
-    if boom_locationx[i] < 0:
+    if boom_locationx[i]>0 and i<len(boom_locationx)/2:
+        boom_locationx1.append(boom_locationx[i])
+        boom_deltashear1.append(boom_deltashear[i])
+    else:
+        boom_locationx2.append(boom_locationx[i])
+        boom_deltashear2.append(boom_deltashear[i])
+
+boom_locationx = boom_locationx2 + boom_locationx1
+boom_deltashear = boom_deltashear2 + boom_deltashear1
+
+shear_flow = []
+
+for i in range(len(boom_locationx)):
         shearflow = shearflow + boom_deltashear[i]
-        shear_flow2.append(shearflow)
-    if i<len(boom_locationx)/2 and boom_locationx[i] > 0:
-     print(boom_locationx)
-#     print(i)
-#     [int(number_boom/4)+i]
-#     shear_flow1.append(shearflow)
-#
-# for i in range(len(boom_locationx[:int(number_boom/4)])-1):
-#     shearflow = shearflow + boom_deltashear[i]
-#     shear_flow2.append(shearflow)
-#
-# shear_flow = shear_flow2+shear_flow1
-# shear_stress = np.array(shear_flow)/t_f
-#
-# #print(shear_stress)
+        shear_flow.append(shearflow)
+
+shear_stress = np.array(shear_flow)/t_f
+

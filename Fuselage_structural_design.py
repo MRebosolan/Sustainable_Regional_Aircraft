@@ -156,7 +156,7 @@ idx = moments.index(min(moments))
 plt.plot(x_array, bmb)
 plt.plot(x_array, bmt)
 plt.plot(x_array, sh1)
-
+print(min(moments))
 # plt.plot(x_array, moments)
 # plt.plot(x_array, shears)
 plt.show()
