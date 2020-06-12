@@ -56,6 +56,7 @@ IF_tailh  = inp.IF_tailh
 IF_fus    = inp.IF_fus
 IF_nacelle = inp.IF_nacelle
 cds_nose   = inp.cds_nose
+dflap = inp.dflap
 
 #### TAIL INPUTS
 # Vertical tail: Tobias,     horizontal tail: jorn
@@ -314,7 +315,6 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S, v_approach, V_C_TAS):
 
 def drag():
     sweep_c4 = wing[0]
-    sweep_cLE = wing[2]
     Re = wing[14]
     SwfS = wing[13]
     c_MAC = wing[6]
@@ -323,16 +323,15 @@ def drag():
 
     ####################### Zero lift drag estimation
 
-    # wetted area
+    # wetted area, verified with https://onlinelibrary.wiley.com/doi/pdf/10.1002/9781118568101.app1
 
     S_wet_wing = 1.07 * 2 * S
     S_wet_tailh = 1.05 * 2 * Sh
     S_wet_tailv = 1.05 * 2 * Sv
     S_wet_fus = (np.pi * Df / 4) * ( 1/(3*L1**2) * ((4 * L1**2 + Df**2/4)**1.5 - Df**3/8) - Df + 4*L2 + 2*np.sqrt(L3**2 + Df**2/4))
-    S_wet_nacelle = 25 * (1 + B)**0.2 * (Tto/ 100e3)**0.8
+    S_wet_nacelle = (25 * (1 + B)**0.2 * (Tto/ 100e3)**0.8) * 2
 
     ####### skin friction coeff
-
 
     # wing
     Re_wing = min(Re, 44.62 * (c_MAC/k)**1.053 * M_cruise*1.16)
@@ -373,6 +372,8 @@ def drag():
     Cf_tur_nacelle = 0.455 / ((np.log10(Re_nacelle) ** 2.58) * (1 + 0.144 * M_cruise ** 2) ** 0.65)
 
     Cftot_nacelle = 0.1 * Cf_lam_nacelle + 0.9 * Cf_tur_nacelle  # values for smooth metal
+
+    print("Cf = ", Cftot_wing, Cftot_tailv, Cftot_tailh, Cftot_fus, Cftot_nacelle)
     ## Form Factor
 
     sweep_m_wing = np.arctan(np.tan(sweep_c4) - 4 / AR * ((x_cm_wing * 100 - 25) / 100 * (1 - taper) / (1 + taper)))
@@ -450,20 +451,19 @@ def drag():
 
     dAR = 0                 #effect of wing tips
     AR_eff = AR + dAR
+    print("AReff=", AR_eff)
 
 #    K_ground = (33 * (h/b)**1.5)/ (1 + 33 * (h/b)**1.5) #  ground effect
 #
 #    ######################### Total drag polar #######################
-    clrange = np.arange(-2.5, 2.5, 0.1)
+    clrange = np.arange(-1.0, 2.5, 0.1)
     Draglist = []
 
-    for i in range(len(clrange)):
-        C_D = CD0 + 1/(np.pi*AR_eff*oswaldclean) * (i - CL_minD)**2
+    for i in clrange:
+        C_D = CD0 + (i - CL_des)**2/(np.pi*AR_eff*oswaldclean)
         Draglist.append(C_D)
 
     return oswaldclean, oswaldTO, oswaldLnd, Draglist, clrange
-
-
 
 wing, geom, cross1, hld, ail, x2, CL_clean_list, CL_landing_list, CL_to_list, alpha_range, CLmax_list = wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S, v_approach, V_C_TAS)
 
@@ -617,7 +617,7 @@ plt.legend(["clean", "take-off", "landing",  "stall clean", "stall take-off", "s
 
 plt.figure(6)
 plt.grid()
-plt.plot(Draglist, clrange)
+plt.plot(clrange, Draglist)
 plt.show()
 
 
