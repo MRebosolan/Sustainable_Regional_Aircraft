@@ -106,6 +106,7 @@ W_cargo = 1000                    # kg #Extra cargo weight
 n_crew = N_fdc + N_cc             # Total amount of crew
 W_payload = Npax * W_pax + W_cargo
 cockpit_length=3.6                #Bit smaller than A220
+cabin_length = 17.5              # cabin length
 A_fuselage = np.pi*widthf*0.5*hf*0.5 # Area of the fuselage in m^2
 ellipse_fuselage = 2*np.pi * (((widthf/2)**2 + (hf/2)**2)/2)**0.5  #circumference of the fuselage [m]
 lf = 28                           # length of fuselage m estimate, lil shorter than CRJ as 5 seat rows are used, ADD TANK CYLINDER LENGTH
