@@ -45,8 +45,8 @@ ycoord2 = ycoord2[::-1]
 
 chord_length = 2  # chord length in meters
 
-t_d = .015 #THICkNESS OF AIRFOIL
-number_booms = 5 #NUMBER OF POINTS (10 POINTS = 16 BOOMS,4p=4b 5p=6b )#  (ON TOP SIDE FOR NOW)
+t_d = .005 #THICkNESS OF AIRFOIL
+number_booms = 25 #NUMBER OF POINTS (10 POINTS = 16 BOOMS,4p=4b 5p=6b )#  (ON TOP SIDE FOR NOW)
 
 moment_cs = 450000 #MOMENT OF CROSS SECTION
 Kc, Ks = 6.4, 8.2 #clamping coeficients
