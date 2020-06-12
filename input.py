@@ -194,7 +194,7 @@ rho_c = 0.4135                     # [kg/m^3], cruise density (this is the one f
 mu = 0.04                          # runway friction coefficient at take-off, to be reconsidered
 mu_br = 0.3                        # braking coefficient during landing, to be reconsidered
 h_sc = 50 * 0.3048                 # screen height equal to 50 ft [m]
-e = 0.85                           # [-], Oswald effiency factor, to be refined as this comes from roskam statistics
+e = 0.81                           # [-], Oswald effiency factor, to be refined as this comes from roskam statistics
 #------------------------------------------------------------------------------------------------------------------
 CD0 = 0.01277                      # [-], to be refined (roskam) DONE IN MIDTERM, TALK TO JORN
 CD0_togd = 0.01277 + .015 + .02    # [-], to be refined as this comes from roskam statistics
@@ -258,7 +258,7 @@ defTO          = 20  #deg
 defLand        = 60  #deg
 
 #Drag Input
-draginput = [] #List of parameters from this file needed for drag calculation
+draginput = [AR,AR_h,AR_v,S,Sh,Sv,e,e_tail] #List of parameters from this file needed for drag calculation
 #------------------------------------------------------------------------------------------------------------------
 
 V_to = 1.05 * ((MTOW/S)*(2/1.225)*(1/CLmax_to))**0.5 #takeoff speed
@@ -294,8 +294,7 @@ z_position_horizontal = zh + hf    # where tail is positioned, for downwash calc
 z_cg = 0.5*hf 
 
 taper_h = 0.5                   #approximation of taper ratio of horizontal tail
-sweep_LE_H = np.arctan(np.tan(half_chord_sweep_hor) - 4 / AR_h * ((0 - 25) / 100 * (1 - taper_h) / (1 + taper_h)))       # Isn''t this wrong? Now it converts from quarter chord to LE
-sweep_c4h  = np.arctan(np.tan(half_chord_sweep_hor) - 4 / AR_h * ((25 - 50) / 100 * (1 - taper_h) / (1 + taper_h)))
+sweep_LE_H = np.arctan(np.tan(half_chord_sweep_hor) - 4 / AR_h * ((0 - 25) / 100 * (1 - taper_h) / (1 + taper_h)))
 
 y_MAC_h = bh / 6 * ((1 + 2 * taper_h) / (1 + taper_h))            #spanwise location of mean aerodynamic chord
 x_lemac_rootchord_h = y_MAC_h * np.tan(sweep_LE_H)               #x position of mac at leading edge [m], measured from the start of the root choord!!!!
@@ -386,5 +385,4 @@ IF_tailv  = 1.0
 IF_tailh  = 1.04
 IF_fus    = 1.0
 IF_nacelle = 1.0
-IF_fusnacelle = 1.3     # Nacelle for the main landing gear
 cds_nose = 0.64                                     # obtain from adsee graph, this one is for a/d = 3.6, e/d = 2
