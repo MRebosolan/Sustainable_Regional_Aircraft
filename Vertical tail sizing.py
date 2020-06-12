@@ -1,9 +1,10 @@
+import matplotlib.pyplot as plt
 import numpy as np
 import Class_2_estimation as Cl2
 import input
 import scissor_plot_wing_shift as sc_shift
 """
-Responsible person: Tobias  | For now: Start from line 47
+Responsible person: Tobias
 
 This code requires as inputs:
     S          | Wing area
@@ -45,8 +46,10 @@ AR_vtail = input.AR_v
 taper_v = input.taper_v
 x_cg  = sc_shift.cg_loaded_nose  
 
-print('make sure to check that the critical mach number of the vtail and htail are higher than that of the wing! use Roskam book II, page 150')
-print ('Furthermore, check whether the take-off thrust is properly linked')
+#print('make sure to check that the critical mach number of the vtail and htail are higher than that of the wing! use Roskam book II, page 150')
+#print ('Furthermore, check whether the take-off thrust is properly linked')
+print ()
+print ()
 print ()
 #Calculatetes preliminary area of the vertical tail surface and rudder
 def S_v(Vbar_v,S,b,x_v):
@@ -56,10 +59,15 @@ def S_v(Vbar_v,S,b,x_v):
 S_v,S_r = S_v(Vbar_v,S,b,x_v)
 
 def rudder_design(y_engine,T_OEI,S,b,vtail_sweep,taper_v,AR_vtail,x_cg,rho_to,Vmin):
-    running=0
+    stepsize = 0.0025
+    running= True
     S_vlist=[S_v]
-
-    while running < 1:  
+    S_vlist1=[S_v]
+    S_vfinal = [S_v]
+    delta_r_calc_list = []
+    Cn_delta_r_list = []
+    
+    while running:  
         b_v_c1 = np.sqrt(AR_vtail*S_vlist[-1])
         chord_r_c1 = 2*S_vlist[-1]/((1+taper_v)*b_v_c1)
         #chord_t_c1 = taper_v*chord_r_c1
@@ -67,29 +75,30 @@ def rudder_design(y_engine,T_OEI,S,b,vtail_sweep,taper_v,AR_vtail,x_cg,rho_to,Vm
         z_v = MAC_v_cl1/chord_r_c1*taper_v*b_v_c1 #vertical distance from AC_vtail to AC_aircraft
         lv = sc_shift.x_ac_v_nose-x_cg
 
-        Nt_crit = y_engine*T_OEI      #Critical engine-out yawing moment
-        N_D = 0.25                     #For jet driven aircraft with high by-pass ratio 0.15 for low b.p.r.
+        Nt_crit = y_engine*T_OEI      # Critical engine-out yawing moment
+        N_D = 0.25                    # For jet driven aircraft with high by-pass ratio 0.15 for low b.p.r.
         Vmc = 1.2*Vmin                # minimum control speed
-        q_mc = 0.5*rho_to*(Vmc)**2    #Dynamic pressure at Vmc
+        q_mc = 0.5*rho_to*(Vmc)**2    # Dynamic pressure at Vmc
        
         #Keep in mind that we need the max. value, so alpha (which would be the beta, can be roughly between 0 and 30 degrees)
         
        # cf_over_c = 0.3              # Rudder chord/vtail chord
-        k_acc = 0.61                  # Obtained from F. 8.14 Roskam VI
-        K_b = 0.97                    # Obtained from F. 8.51 and 8.52 Roskam VI
-        #a_delta_cl = 0.67            # Obtained from F. 8.53 Roskam VI
-        a_delta_CL_cl=  (0.55+0.78)/2 # between 0.5-0.78 Alpha_delta_CL/Alpha_delta_cl F. 8.53 Roskam VI
-        cl_delta_theory =  5.05       # [1/rad] 4.85 for Joukovsky t/c .09, 5.05 for NACA 0012 Obtained from F. 8.14 Roskam VI
+        k_acc = 0.67                  # S Obtained from F. 8.14 Roskam VI
+        K_b = 0.97                    # [TODO] Obtained from F. 8.51 and 8.52 Roskam VI
+        #a_delta_cl = 0.66            # Obtained from F. 8.53 Roskam VI
+        a_delta_CL_cl=    1.10 #1.1   # S (0.55+0.78)/2 # between 0.5-0.78 Alpha_delta_CL/Alpha_delta_cl F. 8.53 Roskam VI
+        cl_delta_theory = 4.55        # [1/rad] 4.85 for Joukovsky t/c .09, 5.05 for NACA 0012 Obtained from F. 8.14 Roskam VI
          
-        Mach_to = Vmc/np.sqrt(288.15*1.4*287) # 0.1987 Mach number at sealevel
-        beta  = (1-(Mach_to**2))**0.5 # Compressibility effect Prandtl
-        cl_alpha_v = (0.10625*180/np.pi)  # [1/rad] Obtained from literature NACA0012 (Martijn Source)
-        Cl_cl_delta_theory = .955     # Obtained from F 8.15 Roskam VI, with cl_alpha_v of the NACA0012 of 0.10625 [1/deg]      
+        Mach_to = Vmc/np.sqrt(288.15*1.4*287) # S 0.1987 Mach number at sealevel
+        beta  = (1-(Mach_to**2))**0.5 # S Compressibility effect Prandtl
+        cl_alpha_v = (0.10625*180/np.pi)  # S [1/rad] Obtained from literature NACA0012 (Martijn Source)
+        Cl_cl_delta_theory = .945     # S Obtained from F 8.15 Roskam VI, with cl_alpha_v of the NACA0012 of 0.10625 [1/deg]      
     
         A_v = AR_vtail
-        A_vf_over_A_v =  1.35         # constant value Vtail AR in prsence of fuselage to isolated vtail F 10.14 Roskam VI
-        A_vhf_over_Avf = 1.04         # [TODO] ratio Vtail AR in prsence of fuselage AND htail to fuselage alone F 10.15 Roskam VI
-        K_vh = .8                     # [TODO] dependent on Sh/Sv F 10.16 Roskam VI p422
+        A_vf_over_A_v =  1.15         # [TODO] constant value Vtail AR in prsence of fuselage to isolated vtail F 10.14 Roskam VI
+        #[TODO] ac_htail/b_v_c1
+        A_vhf_over_Avf = 0.84 #1.10   # [TODO] ratio Vtail AR in prsence of fuselage AND htail to fuselage alone F 10.15 Roskam VI
+        K_vh = 1.09 #1.04 at Sh =20,1.06 at Sh=22   # [TODO] dependent on Sh/Sv F 10.16 Roskam VI p422
         
         Av_eff = (A_vf_over_A_v)*A_v*(1+K_vh*(A_vhf_over_Avf-1))  #Effective aspect ratio
         delta_c2 = np.radians(25)     # [CHECK for correct sweep angle] semi-chord sweep angle Roskam VI p284                          
@@ -99,51 +108,61 @@ def rudder_design(y_engine,T_OEI,S,b,vtail_sweep,taper_v,AR_vtail,x_cg,rho_to,Vm
         Cy_delta_r = (Cl_alpha_v/cl_alpha_v)*(k_acc*K_b)*(a_delta_CL_cl)*(Cl_cl_delta_theory)*cl_delta_theory*(S_vlist[-1]/S)
 
         Cn_delta_r = []
-        for alpha in np.arange(0,25+1,1):  #CHECK this Roskam II
+        for alpha in np.arange(0,25+1,1): # CHECK this Roskam II
             Cn_delta_r1 = -Cy_delta_r * (lv*np.cos(np.radians(alpha))+z_v*np.sin(np.radians(alpha)))/b
             Cn_delta_r.append(Cn_delta_r1)
         #print ('-z_H/b_v = ',-z_v/b_v_c1)
 
-        Cn_delta_r = min(Cn_delta_r,key=abs) #CHECK whether you need min or max; largest req tail area is what you need
-        delta_r_calc = ((N_D+1)*Nt_crit)/(q_mc*S*b*Cn_delta_r)    #[rad] rudder deflection, 25 degrees max Roskam book VI p 494
-        Sv_req = abs(((N_D+1)*Nt_crit)/(np.radians(25)*q_mc*b*Cn_delta_r))
-        if running < 1:
-            running = running +1
-            S_vlist.append(Sv_req)
+        Cn_delta_r = min(Cn_delta_r,key=abs) # On point, -0.0012 [1/rad] is a good value CHECK whether you need min or max; largest req tail area is what you need
+        Cn_delta_r_list.append(Cn_delta_r)
+
+        delta_r_calc = np.degrees(((N_D+1)*Nt_crit)/(q_mc*S*b*Cn_delta_r))    #[rad] rudder deflection, 25 degrees max Roskam book VI p 494
+        delta_r_calc_list.append(delta_r_calc)
+
+        if abs(delta_r_calc) > 25:
+            S_new = S_vlist[-1]+stepsize
+            S_vlist.append(S_new)
+            S_vlist1.append(S_new)
+            S_vfinal[0] = S_new+2*stepsize #Added 1 additional setpsize for safety
+            running = True
+       
+        elif abs(delta_r_calc) <= 25 and abs(delta_r_calc) > 15 and len(S_vlist1)<20000:
+            S_new = S_vlist1[-1]+stepsize
+            S_vlist1.append(S_new)
+            S_vlist[-1]=S_new
+            running = True
         
         else:
-            running = running +1
-            
-    return Sv_req,S_vlist,delta_r_calc,Cn_delta_r
-Sv_req, S_vlist,delta_r_calc,Cn_delta_r = rudder_design(y_engine, T_OEI, S, b, vtail_sweep, taper_v, AR_vtail, x_cg, rho_to, Vmin)
-print (S_vlist)
-print ()
-print ('make sure that K_vh and A_vhf_over_Avf, cl_alpha_v and Cl_cl_delta_theory have the correct values; it needs to be adjusted by hand')
-
-
-"""
-if abs(1-Sv_req/S_v) <= 0.01:
+            S_vlist[-1] = S_vlist[-1] + stepsize
+            #print ('The deflection angle equals:',delta_r_calc,'[deg]')
+            #print ('The required surface area for the vertical tail equals:',S_vlist[-1])
+            #print ('The required rudder area for the vertical tail equals:',Sr_over_Sv*S_vlist[-1])
+            print (b_v_c1)
             running = False
-            print ('The required deflection of the rudder equals:',np.degrees(delta_r_calc))
-            print ('The required vtail area equals',Sv_req,'[m]')
-            print ('The actual vtail area equals',S_v,'[m]')
-            print ('The required rudder area equals',Sv_req*Sr_over_Sv,'[m]')
-            print ('The required rudder area equals',S_v*Sr_over_Sv,'[m]')
-            print ('-z_H/b_v = ',-z_v/b_v_c1)
-        else:
-            S_v = Sv_req
-            running = True
+    
+    return S_vlist,S_vlist1,delta_r_calc,S_vfinal,delta_r_calc_list,Cn_delta_r_list
 
-print ('The required vertical tail area equals:',Sv_req)
-print ('The actual vertical tail area equals:',S_vlist)
+S_vlist,S_vlist1,delta_r_calc,S_vfinal,delta_r_calc_list,Cn_delta_r_list = rudder_design(y_engine, T_OEI, S, b, vtail_sweep, taper_v, AR_vtail, x_cg, rho_to, Vmin)
+
+fig = plt.figure(10)
+plt.subplot(121)
+plt.plot(S_vlist1,delta_r_calc_list)#,[S_vlist1[0],S_vlist1[-1]],[-25,-25])
+plt.xlabel('Surface area [m2]')
+plt.ylabel('Rudder deflection [deg]')
+plt.grid(b=True, which='major', color='#666666', linestyle='-')
+plt.minorticks_on()
+plt.grid(b=True, which='minor', color='#999999', linestyle='-', alpha=0.2)
 
 
-        if abs(1-S_vlist[-1]/Sv_req) < 0.01 :
-            running = False            
-            print ('Converged in', len(S_vlist),'iterations.')
-            print ('The actual vertical tail area equals:',np.round(S_vlist[-1],4),'[m2]')
-        else:
-            S_vlist.append(Sv_req)
-            running = False
+plt.subplot(122)
+plt.plot(Cn_delta_r_list,delta_r_calc_list)#,[S_vlist1[0],S_vlist1[-1]],[-25,-25])
+plt.xlabel('Cn_delta_r [-]')
+plt.ylabel('Rudder deflection [deg]')
+plt.grid(b=True, which='major', color='#666666', linestyle='-')
+plt.minorticks_on()
+plt.grid(b=True, which='minor', color='#999999', linestyle='-', alpha=0.2)
 
-""" 
+plt.show()
+print (S_vfinal[0],S_vfinal[0]*Sr_over_Sv,np.sqrt(S_vfinal[0]*1.7))
+#print ('make sure that K_vh and A_vhf_over_Avf, cl_alpha_v and Cl_cl_delta_theory have the correct values; it needs to be adjusted by hand')
+#print ('CRJ700 has 11.07 [m2] vtail area, if we were to take the relative same thrust, we would have ~15 [m2] ')

@@ -238,15 +238,10 @@ def loading():
     plt.plot(100 * (np.array([aisle[0][-1], onlypodfuel[0], bothfuel2[0]]) - x_lemac) / MAC,
                        [MZF, onlypodfuel[1], bothfuel2[1]], marker='^', color='black', )
     
-    plt.axvline(maccie(15.4636-0.5, x_lemac, MAC), label = 'Main landing gear limit', color = 'r')
-    plt.legend()
-    plt.grid()
-    plt.ylabel('mass [kg]')
-    plt.xlabel('xcg [% of MAC]')
-    plt.title('Tail Tank')
-    plt.show()
-    cg_excursion = np.array([ [onlyaftcargo[0]], [bothcargo[0]], [window[0]], window_back[0], 
-                         middle[0], middle_back[0], aisle[0], aisle_back[0], onlyfuselagefuel[0], onlypodfuel[0], bothfuel[0], bothfuel[0]]) 
+    # plt.axvline(maccie(15.4636-0.5, x_lemac, MAC), label = 'Main landing gear limit', color = 'r')
+
+    cg_excursion = np.array([ onlyfuselagefuel[0], onlypodfuel[0], bothfuel[0]]) 
+    
     cgmin_lst = []
     cgmax_lst = []
     for i in range(len(cg_excursion)):
@@ -256,11 +251,23 @@ def loading():
         cgmax_lst.append(cgmax)
      
         
-    cg_fwd = (np.min(cgmin_lst) - x_lemac) / MAC * 0.98      #subtract 2% margin, assuming most forward cg is after lemac
-    cg_aft = (np.max(cgmax_lst) - x_lemac) / MAC *1.02      #add 2% margin
+    cg_fwd = (np.min(cgmin_lst) - x_lemac) / MAC * 0.97      #subtract 2% margin, assuming most forward cg is after lemac
+    cg_aft = (np.max(cgmax_lst) - x_lemac) / MAC *1.03      #add 2% margin
+    
+    plt.axvline(cg_fwd*100, color = (0,0.8,0), label = "Forward CG limit")
+    plt.axvline(cg_aft*100, color = (1,0.5,0.5), label = "Aft CG limit")
+    
+    plt.legend()
+    plt.grid()
+    plt.ylabel('mass [kg]')
+    plt.xlabel('xcg [% of MAC]')
+    # plt.title('')
+    plt.show()
+    
     print("most forward cg should be positive")
     print(bothfuel)
-    
+
+
     return cg_fwd, cg_aft
 
 

@@ -152,13 +152,25 @@ bmb, bmt, sh1 =(max_fuselage_stresses(0.001, widthf/2, x_array, P_c, P_cruise, z
 
 idx = moments.index(min(moments))
 
+#
+# plt.plot(x_array, bmb)
+# plt.plot(x_array, bmt)
+# plt.plot(x_array, sh1)
 
-plt.plot(x_array, bmb)
-plt.plot(x_array, bmt)
-plt.plot(x_array, sh1)
+plt.plot(x_array, moments)
+plt.plot(x_array, shears)
 
-# plt.plot(x_array, moments)
-# plt.plot(x_array, shears)
+x = 8
+y = 16
+x = min(x_array, key=lambda y:abs(y-x))
+y = min(x_array, key=lambda z:abs(z-y))
+x_index = np.where(x_array == x)[0][0]
+y_index = np.where(x_array == y)[0][0]
+print(moments[x_index], moments[y_index])
+print(shears[x_index], shears[y_index])
+print(x_array[x_index], x_array[y_index])
+
+
 plt.show()
 
 
