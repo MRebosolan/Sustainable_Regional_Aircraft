@@ -110,24 +110,27 @@ def rudder_design(y_engine,T_OEI,S,b,vtail_sweep,taper_v,AR_vtail,x_cg,rho_to,Vm
 
         Cn_delta_r = min(Cn_delta_r,key=abs) # On point, -0.0012 [1/rad] is a good value CHECK whether you need min or max; largest req tail area is what you need
 
-        delta_r_calc = ((N_D+1)*Nt_crit)/(q_mc*S*b*Cn_delta_r)    #[rad] rudder deflection, 25 degrees max Roskam book VI p 494
+        delta_r_calc = np.degrees(((N_D+1)*Nt_crit)/(q_mc*S*b*Cn_delta_r))    #[rad] rudder deflection, 25 degrees max Roskam book VI p 494
 
-        if abs(delta_r_calc*180/np.pi) > 25:
+        if abs(delta_r_calc) > 25:
             S_new = S_vlist[-1]+stepsize
             S_vlist.append(S_new)
             running = True
         else:
             S_vlist.append(S_vlist[-1]+stepsize)
             #print ('Done in',len(S_vlist),'iterations.')
-            print ('The deflection angle equals:',delta_r_calc*180/np.pi,'[deg]')
+            print ('The deflection angle equals:',delta_r_calc,'[deg]')
             print ('The required surface area for the vertical tail equals:',S_vlist[-1])
             print ('The required rudder area for the vertical tail equals:',Sr_over_Sv*S_vlist[-1])
 
             running = False
 
-    return S_vlist,delta_r_calc,Cn_delta_r
+    return S_vlist,delta_r_calc
 
-S_vlist,delta_r_calc,Cn_delta_r = rudder_design(y_engine, T_OEI, S, b, vtail_sweep, taper_v, AR_vtail, x_cg, rho_to, Vmin)
+S_vlist,delta_r_calc = rudder_design(y_engine, T_OEI, S, b, vtail_sweep, taper_v, AR_vtail, x_cg, rho_to, Vmin)
+
+Vtail_area = S_vlist[-1]
+Rudder_def = delta_r_calc
 
 #print ('make sure that K_vh and A_vhf_over_Avf, cl_alpha_v and Cl_cl_delta_theory have the correct values; it needs to be adjusted by hand')
 #print ('CRJ700 has 11.07 [m2] vtail area, if we were to take the relative same thrust, we would have ~15 [m2] ')
