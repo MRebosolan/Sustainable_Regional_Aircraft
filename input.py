@@ -77,7 +77,7 @@ zh = bv * 0.95                    # Height of horizontal stabilizer measured fro
 Sh_over_S = 0.3788
 Sh = Sh_over_S * S                        # m2 crj700 shizzle yo, horizontal tail area
 bh = (AR_h*Sh)**0.5  
-
+bv = (AR_v*Sv)**0.5
 
 
 
