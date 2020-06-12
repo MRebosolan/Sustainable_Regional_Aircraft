@@ -85,8 +85,8 @@ def rudder_design(y_engine,T_OEI,S,b,vtail_sweep,taper_v,AR_vtail,x_cg,rho_to,Vm
         k_acc = 0.67                  # S Obtained from F. 8.14 Roskam VI
         K_b = 0.97                    # [TODO] Obtained from F. 8.51 and 8.52 Roskam VI
         #a_delta_cl = 0.66            # Obtained from F. 8.53 Roskam VI
-        a_delta_CL_cl=    1.10 #1.1    # S (0.55+0.78)/2 # between 0.5-0.78 Alpha_delta_CL/Alpha_delta_cl F. 8.53 Roskam VI
-        cl_delta_theory =  4.55       # [1/rad] 4.85 for Joukovsky t/c .09, 5.05 for NACA 0012 Obtained from F. 8.14 Roskam VI
+        a_delta_CL_cl=    1.10 #1.1   # S (0.55+0.78)/2 # between 0.5-0.78 Alpha_delta_CL/Alpha_delta_cl F. 8.53 Roskam VI
+        cl_delta_theory = 4.55        # [1/rad] 4.85 for Joukovsky t/c .09, 5.05 for NACA 0012 Obtained from F. 8.14 Roskam VI
          
         Mach_to = Vmc/np.sqrt(288.15*1.4*287) # S 0.1987 Mach number at sealevel
         beta  = (1-(Mach_to**2))**0.5 # S Compressibility effect Prandtl
@@ -97,7 +97,7 @@ def rudder_design(y_engine,T_OEI,S,b,vtail_sweep,taper_v,AR_vtail,x_cg,rho_to,Vm
         A_vf_over_A_v =  1.15         # [TODO] constant value Vtail AR in prsence of fuselage to isolated vtail F 10.14 Roskam VI
         #[TODO] ac_htail/b_v_c1
         A_vhf_over_Avf = 0.84 #1.10   # [TODO] ratio Vtail AR in prsence of fuselage AND htail to fuselage alone F 10.15 Roskam VI
-        K_vh = 1.04 #1.04 at Sh =20,1.06 at Sh=22   # [TODO] dependent on Sh/Sv F 10.16 Roskam VI p422
+        K_vh = 1.09 #1.04 at Sh =20,1.06 at Sh=22   # [TODO] dependent on Sh/Sv F 10.16 Roskam VI p422
         
         Av_eff = (A_vf_over_A_v)*A_v*(1+K_vh*(A_vhf_over_Avf-1))  #Effective aspect ratio
         delta_c2 = np.radians(25)     # [CHECK for correct sweep angle] semi-chord sweep angle Roskam VI p284                          
@@ -122,7 +122,7 @@ def rudder_design(y_engine,T_OEI,S,b,vtail_sweep,taper_v,AR_vtail,x_cg,rho_to,Vm
             S_new = S_vlist[-1]+stepsize
             S_vlist.append(S_new)
             S_vlist1.append(S_new)
-            S_vfinal[0] = S_new+stepsize
+            S_vfinal[0] = S_new+2*stepsize #Added 1 additional setpsize for safety
             running = True
        
         elif abs(delta_r_calc) <= 25 and abs(delta_r_calc) > 15 and len(S_vlist1)<20000:
@@ -133,9 +133,9 @@ def rudder_design(y_engine,T_OEI,S,b,vtail_sweep,taper_v,AR_vtail,x_cg,rho_to,Vm
         
         else:
             S_vlist[-1] = S_vlist[-1] + stepsize
-            print ('The deflection angle equals:',delta_r_calc,'[deg]')
-            print ('The required surface area for the vertical tail equals:',S_vlist[-1])
-            print ('The required rudder area for the vertical tail equals:',Sr_over_Sv*S_vlist[-1])
+            #print ('The deflection angle equals:',delta_r_calc,'[deg]')
+            #print ('The required surface area for the vertical tail equals:',S_vlist[-1])
+            #print ('The required rudder area for the vertical tail equals:',Sr_over_Sv*S_vlist[-1])
             running = False
     
     return S_vlist,S_vlist1,delta_r_calc,S_vfinal,delta_r_calc_list,Cn_delta_r_list
@@ -162,6 +162,6 @@ plt.grid(b=True, which='minor', color='#999999', linestyle='-', alpha=0.2)
 
 plt.show()
 
-print (S_vfinal[0])
+print (S_vfinal[0],S_vfinal[0]*Sr_over_Sv)
 #print ('make sure that K_vh and A_vhf_over_Avf, cl_alpha_v and Cl_cl_delta_theory have the correct values; it needs to be adjusted by hand')
 #print ('CRJ700 has 11.07 [m2] vtail area, if we were to take the relative same thrust, we would have ~15 [m2] ')
