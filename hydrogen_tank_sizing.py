@@ -151,13 +151,13 @@ def tank_sizing(HYDROGENVOLUME,LENGTH,N,TS0=155,TANK_MATERIAL_DENSITY=1780,EMOD=
             if boiloff<0.01*HYDROGENVOLUME/1.072*DENSITY_LH:
                 #print('boiloff ',boiloff)
                 INSULATION_THICKNESS=xilist[counter]
-                #print('insulation thickness ',INSULATION_THICKNESS)
+                print('insulation thickness ',INSULATION_THICKNESS)
 
                 break
             
             counter+=1
     else:
-        INSULATION_THICKNESS=0.03
+        INSULATION_THICKNESS=0.034
             
     INSULATION_MASS=INSULATION_THICKNESS*TANK_SURFACE_AREA*N*INSULATION_DENSITY
     #print('INSULATION MASS POD: ', INSULATION_MASS)
@@ -288,6 +288,7 @@ def tank_sizing_fuselage(HYDROGENVOLUME, R,N,TS0=155,TANK_MATERIAL_DENSITY=1780,
             
             if boiloff<0.01*HYDROGENVOLUME/1.072*DENSITY_LH:
                 INSULATION_THICKNESS=xilist[counter]
+                print(INSULATION_THICKNESS)
                 break
             
             counter+=1
