@@ -69,7 +69,7 @@ x_lemac_Cr = input.x_lemac_rootchord         #x location of leading edge mac mea
 x_start_Cr = shift.x_start_Cr
 lemac = shift.x_lemac
 xh = input.x_lemac_rootchord_h + input.x_rootchord_h + 0.25*input.c_mac_h
-lh = [xh - i  for i in x_start_Cr]
+lh = [xh - i - 0.25*MAC for i in x_start_Cr]
 
 
 #Functions
@@ -78,7 +78,7 @@ def chord_along_span(Cr, Ct, b, y):
     return c
 
 def swf(widthf, outboard_flap):
-    b_imag = outboard_flap - widthf
+    b_imag = outboard_flap - widthf 
     swf = 2 * b_imag * (chord_along_span(cr, ct, b, widthf) + chord_along_span(cr, ct, b, outboard_flap)) / 2
     return swf
 

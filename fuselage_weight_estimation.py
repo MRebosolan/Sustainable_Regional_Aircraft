@@ -25,3 +25,4 @@ def W_fuselage_torenbeek(V_d, lh, wf, hf, S_fgs): #v_dive in keas, lh = distance
     return 0.021*kf * sqrt((V_d*lh /(wf+hf))) * S_fgs**1.2
 
 #fuckthepolice
+
