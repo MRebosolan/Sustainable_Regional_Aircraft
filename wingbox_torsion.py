@@ -54,7 +54,7 @@ E = 71.7E9
 
 #------------------------------------------------------------------------------------------------------------------
 
-def boom_moi(moment_cs, chord_length, shear_cs, t_d=t_d, number_booms=number_booms, stringer_area = 0.003):
+def boom_moi(moment_cs, chord_length, shear_cs, t_d=t_d, number_booms=number_booms, stringer_area = 0.0015):
 
 #returns moments of inertia and boom normal stresses based on load, chord length and number of booms
 
