@@ -68,18 +68,18 @@ Sh = inp.Sh       # horizontal tail area
 Sv = inp.Sv      # vertical tail area                                        # WILL CHANGE
 taperh = inp.taper_h   # taper h tail
 taperv = inp.taper_v   # taper v tail
-AR_h   = inp.AR_h
-AR_v   = inp.AR_v
-sweep_c4h = np.arctan(np.tan(inp.half_chord_sweep_hor) - 4 / AR_h * ((25 - 50) / 100 * (1 - taperh) / (1 + taperh)))
-sweep_c4v = np.arctan(np.tan(inp.half_chord_sweep_vert) - 4 / AR_v * ((25 - 50) / 100 * (1 - taperv) / (1 + taperv)))
+AR_h   = inp.AR_h        #  AR horizontal tail
+AR_v   = inp.AR_v         # AR vertical tail
+sweep_c4h = np.arctan(np.tan(inp.half_chord_sweep_hor) - 4 / AR_h * ((25 - 50) / 100 * (1 - taperh) / (1 + taperh)))   # quarter chord sweep h tail
+sweep_c4v = np.arctan(np.tan(inp.half_chord_sweep_vert) - 4 / AR_v * ((25 - 50) / 100 * (1 - taperv) / (1 + taperv)))     #quarter chord sweep v tail
 c_MACh = inp.c_mac_h   # MAC length horizontal tail
-c_MACv = 3            # MAC length vertical tail                          # THIS IS GONNA CHANGE
-x_cm_wing = 0.36       #x/c max thickness
-x_cm_tailv = 0.30         #x/c max thickness vertical tail
-x_cm_tailh = 0.30         #x/c max thickness horizontal tail               # Check
-t_c_wing = 0.14        #t/c wing airfoil
-t_c_tailv = 0.12           #t/c vertical tail airfoil
-t_c_tailh = 0.12           #t/c horizontal tail airfoil                   # Check
+c_MACv = inp.c_MACv            # MAC length vertical tail                          # THIS IS GONNA CHANGE
+x_cm_wing = inp.x_cm_wing      #x/c max thickness
+x_cm_tailv = inp.x_cm_tailv        #x/c max thickness vertical tail
+x_cm_tailh = inp.x_cm_tailh        #x/c max thickness horizontal tail
+t_c_wing = inp.t_c_wing        #t/c wing airfoil
+t_c_tailv = inp.t_c_tailv           #t/c vertical tail airfoil
+t_c_tailh = inp.t_c_tailh           #t/c horizontal tail airfoil
 
 #### FUSELAGE INPUTS
 Df = widthf
@@ -433,44 +433,39 @@ def drag():
 
     CD0 = (1 / S * (CD0wing + CD0tailh + CD0tailv + CD0nacelle) + CD0fus + CD0pods + drag_misc) * leakage
 
-    print("CD0=", CD0)
-    print("Wing fraction = ", CD0wing/CD0/S)
-    print("Horizontal tail fraction = ", CD0tailh / CD0/S)
-    print("Vertical tail  fraction = ", CD0tailv / CD0/S)
-    print("Engine nacelle fraction = ", CD0nacelle / CD0/S)
-    print("Fuselage fraction = ", CD0fus / CD0)
-    print("Pods fraction = ", CD0pods / CD0)
-    print("Miscellaneous = ", drag_misc / CD0)
+    print("CD0=", CD0, )
+    print("CD0 Wing fraction = ", CD0wing/CD0/S)
+    print("CD0 Horizontal tail fraction = ", CD0tailh / CD0/S)
+    print("CD0 Vertical tail  fraction = ", CD0tailv / CD0/S)
+    print("CD0 Engine nacelle fraction = ", CD0nacelle / CD0/S)
+    print("CD0 Fuselage fraction = ", CD0fus / CD0)
+    print("CD0 Pods fraction = ", CD0pods / CD0)
+    print("CD0 Miscellaneous fraction= ", drag_misc / CD0)
+
     ####################### Lift induced drag
     df1 = 0      # flap deflection - clean
     df2 = 1.047  # flap deflection - Lnd
     df3 = 0.349  # flap deflection - TO
-
     oswaldclean = 1.78 * (1 - 0.045 * AR**0.68) - 0.64 + 0.0046 * df1
     oswaldTO = 1.78 * (1 - 0.045 * AR**0.68) - 0.64 + 0.0046 * df3
     oswaldLnd = 1.78 * (1 - 0.045 * AR**0.68) - 0.64 + 0.0046 * df2
-
     d_CD_twist = 0          #0.00004 * (phi_tip - phi_MGC) #effect of twist
-
     dAR = 0                 #effect of wing tips
     AR_eff = AR + dAR
-    print("AReff=", AR_eff)
-
 #    K_ground = (33 * (h/b)**1.5)/ (1 + 33 * (h/b)**1.5) #  ground effect
 #
-#    ######################### Total drag polar #######################
+    ######################### Total drag polar #######################
     clrange = np.arange(-1.0, 2.5, 0.1)
     Draglist = []
-
     for i in clrange:
         C_D = CD0 + (i - CL_des)**2/(np.pi*AR_eff*oswaldclean)
         Draglist.append(C_D)
 
-    return oswaldclean, oswaldTO, oswaldLnd, Draglist, clrange
+    return Draglist, clrange
 
 wing, geom, cross1, hld, ail, x2, CL_clean_list, CL_landing_list, CL_to_list, alpha_range, CLmax_list = wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S, v_approach, V_C_TAS)
 
-osclean,osTO,osLnd, Draglist, clrange = drag()
+Draglist, clrange = drag()
 
 #----------------------------- .txt File Airfoil Coordinates
 
@@ -601,9 +596,6 @@ plt.xlabel('y [m]')
 #plt.ylabel('y/c [-]')
 #plt.xlabel('x/c [-]')
 #
-
-
-
 plt.figure(5)
 plt.grid("minor")
 plt.plot(alpha_range[0], CL_clean_list)
@@ -620,10 +612,14 @@ plt.legend(["clean", "take-off", "landing",  "stall clean", "stall take-off", "s
 
 plt.figure(6)
 plt.grid()
+plt.xlabel(r"$C_L$ [-]")
+plt.ylabel(r"$C_D$ [-]")
 plt.plot(clrange, Draglist)
 
 plt.figure(7)
 plt.grid()
+plt.xlabel(r"$C_L$ [-]")
+plt.ylabel(r"$L/D$ [-]")
 plt.plot(clrange, clrange/Draglist)
 plt.show()
 
