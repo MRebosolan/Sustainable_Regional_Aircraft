@@ -29,15 +29,18 @@ import numpy as np
 import matplotlib.pyplot as plt
 import Class_2_estimation as cl2
 import input 
+
+rs = 104.815
+
 bw = cl2.b
 Aw = cl2.S
-Ah = 30
-Av = 15
-Af = 20
-flap_defl = np.radians(30)
-bh = 11
-bv = 6
-bf = 10
+Ah = 4
+Av = 1.7
+Af = 2 * 5.97
+flap_defl = np.radians(60)
+bh = 9
+bv = 5
+bf = 6
 mu_inf = 1.84E-5
 frequency = np.arange(10,100010,10)
 U = input.v_approach
@@ -45,7 +48,7 @@ M = input.mach_app
 c = U / M
 rho = input.rho0
 theta = np.radians(90)
-phi = np.radians(1)
+phi = np.radians(10)
 n_nlg = 2
 d_nlg = input.d_wheel_nose_lg
 l_nlg = input.strut_length_nose_lg
@@ -54,7 +57,7 @@ d_mlg = input.d_wheel_main_lg
 l_mlg = input.strut_length_main_lg
 
 Pref = 2E-5
-rs = 100 
+
 rs_star = rs / bw
 #===================================================================================
 #Airframe noise
@@ -203,17 +206,17 @@ n = all harmonic tones contained in the 1/3 Octave Band at center frequencies f
 
 
 #Input parameters
-A = 20
+A = 4.100619584
 A_e = np.pi / 4 #from table default value
 N = 50
 B = 20
-d = 5
-V = 21
-m_dot = 60
+d = 2.285
+V = 15
+m_dot = 273.34078
 s = 0.5
 C = 2.5
 T_amb = 273.15 
-delta_T = 40
+delta_T = 33.334
 
 
 
@@ -278,6 +281,7 @@ SPL_inlet_broadband = np.array([10 * np.log10(P2) + 20 * np.log10(rho * c**2 / P
 
 #Inlet rotor-stator interaction tones
 G_ij = np.array([[1,0.580], [0.625,0.205]])
+
 a_kl = np.array([[1,1],[1,0]])
 F = 2.053 * M_m**-2.31 * M_r**5
 if M_r <= 0.72:
@@ -336,6 +340,7 @@ SPL_inlet_distortion = np.array([10 * np.log10(P2) + 20 * np.log10(rho * c**2 / 
 
 #Combination tone noise
 G_ij = np.array([[1,1],[0.316,0.316]])
+
 F_8 = 10**(-6.75*(1.61-M_r))
 if M_r < 1:
     F_8 = 0
@@ -421,9 +426,10 @@ SPL_outlet_rotor = np.array([10 * np.log10(P2) + 20 * np.log10(rho * c**2 / Pref
 #Summation to obtain total fan noise
 #P2_fan = [P2_inlet_broadband[i] + P2_inlet_rotor[i] + P2_inlet_distortion[i] + P2_combination_tone[i] + P2_outlet_broadband[i] + P2_outlet_rotor[i] for i in range(len(frequency))]
 P2_fan = [P2_inlet_broadband[i] + P2_inlet_rotor[i] + P2_inlet_distortion[i] + P2_outlet_broadband[i] + P2_outlet_rotor[i] for i in range(len(frequency))]
+P2_2fan = [2*P2_inlet_broadband[i] + 2*P2_inlet_rotor[i] + 2*P2_inlet_distortion[i] + 2*P2_outlet_broadband[i] + 2*P2_outlet_rotor[i] for i in range(len(frequency))]
 
 SPL_fan = np.array([10 * np.log10(P2) + 20 * np.log10(rho * c**2 / Pref) for P2 in P2_fan])
-
+SPL_2fan = np.array([10 * np.log10(P2) + 20 * np.log10(rho * c**2 / Pref) for P2 in P2_2fan])
 
 #===================================================================================
 #Engine combustion noise
@@ -438,12 +444,12 @@ delta_T_des = design turbine temperature extraction [K]
 
 fp = peak frequency
 """
-Ac = 3
-mi_dot = 20
-Pti = 60E6
-Ti = 700
-Tj = 1100
-delta_T_des = 200
+Ac = 0.3 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+mi_dot = 27.334
+Pti = 2437307.099
+Ti = 808.3812315
+Tj = 1200
+delta_T_des =  691.9022561
 
 
 Pinf = 101325
@@ -519,9 +525,10 @@ D = 10**-0.16
 PI_star_combustion = 9.85E-7 * mi_dot_star / Ac_star * ((Tj_star - Ti_star) / Ti_star)**2 * Pti_star**2 * delta_T_des_star**-4
 
 P2_star_combustion = [PI_star_combustion * Ac_star / (4 * np.pi * r_s_star**2) * D * S_eta / (1 - M * np.cos(theta))**4 for S_eta in S_combustion]
+P2_2star_combustion = 2*P2_star_combustion
 
 SPL_combustion = np.array([10 * np.log10(P2) + 20 * np.log10(rho * c**2 / Pref) for P2 in P2_star_combustion])
-
+SPL_2combustion = np.array([10 * np.log10(P2) + 20 * np.log10(rho * c**2 / Pref) for P2 in P2_2star_combustion])
 
 #===================================================================================
 #Engine single stream circular jet noise
@@ -538,11 +545,11 @@ P = power deviation factor (deviation of accoustic power from V^8 law)
 ksi = strouhal number correction factor
 """
 
-Aj = 10
-rhoj = 0.08
+Aj = 0.50506
+rhoj =  0.7317754679
 Vj = 505.26
 delta_e = np.radians(3)
-Tj = 399
+Tj = 402.6101202
 
 Tj_star = Tj / T_amb
 Aj_star = Aj / A_e
@@ -601,8 +608,10 @@ for i_s in S_c_jet:
 PI_star_jet = 6.67E-5 * rhoj_star**w * Vj_star**8*P
 
 P2_star_jet = [PI_star_jet * Aj_star / (4 * np.pi * r_s_star**2) * D * S_eta / (1 - M * np.cos(theta-delta_e)) * ((Vj_star - M) / Vj_star)**m_theta for S_eta in F_jet]
+P2_2star_jet = 2*P2_star_jet
 
 SPL_jet = np.array([10 * np.log10(P2) + 10 * np.log10(rho **2 * c**4 / Pref**2) for P2 in P2_star_jet])
+SPL_2jet = np.array([10 * np.log10(P2) + 10 * np.log10(rho **2 * c**4 / Pref**2) for P2 in P2_2star_jet])
 #===================================================================================
 #Engine turbine noise
 #===================================================================================
@@ -613,15 +622,15 @@ hsj = turbine exit static enthalpy
 
 """ 
 
-A_t = 6
-hti = 1
-hsj = 0.9
+A_t =  1.669618547 * 0.5
+#hti = ...
+#hsj = ...
 
 A_t_star = A_t / A_e
 Ut_star = np.pi * N_star
 R_air = 287
-hti_star = hti / (R_air * T_amb)
-hsj_star = hsj / (R_air * T_amb)
+hti_star = 0.9 #hti / (R_air * T_amb) !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+hsj_star = 0.8 #hsj / (R_air * T_amb) !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 #Turbine braodband noise
 K = 8.589E-5
@@ -690,13 +699,15 @@ PI_star_turbine_tone = K * ((hti_star - hsj_star) / hti_star)**a * Ut_star**b
 
 P2_turbine_tone = [PI_star_turbine_tone * A_t_star / (4 * np.pi * r_s_star**2) * D * S_eta / (1 - M * np.cos(theta))**4 for S_eta in S_turbine_tone]
 
-SPL_turbine_tone = np.array([10 * np.log10(P2) + 20 * np.log10(rho * c**2 / Pref) for P2 in P2_turbine_broadband])  
+SPL_turbine_tone = np.array([10 * np.log10(P2) + 20 * np.log10(rho * c**2 / Pref) for P2 in P2_turbine_tone])  
 
 
-P2_turbine = [P2_turbine_broadband[i] + P2_turbine_tone[i] for i in range(len(frequency))]     
+P2_turbine = [P2_turbine_broadband[i] + P2_turbine_tone[i] for i in range(len(frequency))]  
+P2_2turbine = [2*P2_turbine_broadband[i] + 2*P2_turbine_tone[i] for i in range(len(frequency))]     
+   
 
 SPL_turbine = np.array([10 * np.log10(P2) + 20 * np.log10(rho * c**2 / Pref) for P2 in P2_turbine])  
-
+SPL_2turbine = np.array([10 * np.log10(P2) + 20 * np.log10(rho * c**2 / Pref) for P2 in P2_2turbine]) 
 
 #===================================================================================
 #Total engine noise
@@ -710,7 +721,11 @@ for i in range(len(frequency)):
     count = 0
     
     
-
+count = 0
+SPL_both_engines = []
+for i in range(len(frequency)):
+    count = 10**(SPL_2fan[i]/10) + 10**(SPL_2combustion[i]/10) + 10**(SPL_2jet[i]/10) + 10**(SPL_2turbine[i]/10)
+    SPL_both_engines.append(10*np.log10(count))
 
 plt.close()
 plt.figure()
@@ -728,27 +743,35 @@ plt.figure()
 ##plt.plot(frequency, SPL_combination_tone, label='Combination tone noise')
 #plt.plot(frequency, SPL_outlet_broadband, label='Outlet broadband noise')
 #plt.plot(frequency, SPL_outlet_rotor, label='Outlet rotor-stator interaction tones noise')
-#plt.plot(frequency, SPL_fan, label='Total fan noise')
+plt.plot(frequency, SPL_fan, label='Fan noise')
 
-#plt.plot(frequency, SPL_combustion, label='Combustion noise')
+plt.plot(frequency, SPL_combustion, label='Combustion noise')
 
-#plt.plot(frequency, SPL_jet, label='Jet noise')
-
-plt.plot(frequency, SPL_single_engine, label='Total engine noise')
+plt.plot(frequency, SPL_jet, label='Jet noise')
 
 #plt.plot(frequency, SPL_turbine_broadband, label='Turbine broadband noise')
 #plt.plot(frequency, SPL_turbine_tone, label='Turbine tone noise')
-#plt.plot(frequency, SPL_turbine, label='Total turbine noise')
+plt.plot(frequency, SPL_turbine, label='Turbine noise')
+
+plt.plot(frequency, SPL_single_engine, label='Total engine noise')
+
+plt.plot(frequency, SPL_both_engines, label='Total engine noise')
 
 plt.xscale('log')
-plt.ylim([0,120])
+plt.xlim([10**1.5,10**4.5])
+plt.ylim([15,200])
+plt.xlabel('1/3 Octave Band central frequency [Hz]')
+plt.ylabel('SPL [dB]')
 
 #plt.plot(frequency, SPL_nlg_lst, label='Nose landing gear wheel noise')
 #plt.plot(frequency, SPL_mlg_lst, label='Main landing gear wheel noise')
 #plt.plot(frequency, SPL_s_nlg_lst, label='Nose landing gear strut noise')
 #plt.plot(frequency, SPL_s_mlg_lst, label='Main landing gear strut noise')
 
-
+plt.rc('axes', labelsize=16)    # fontsize of the x and y labels
+plt.rc('xtick', labelsize=16)    # fontsize of the tick labels
+plt.rc('ytick', labelsize=16)    # fontsize of the tick labels
+plt.rc('legend', fontsize=16)    # legend fontsize
 plt.legend()
 plt.show()
 
@@ -757,4 +780,4 @@ print('Combination tone noise is excluded in fan noise module (recommendation)')
 print('Assumption: polar directivity angle theta of 90 degrees') 
 print('Possibly change Ae reference engine area to obtain lower noise values')
 print('If noise levels allow, add main landing gear contribution twice')
-print('Skipped shock noise module due to lack of information (recommendation)')
+print('NO shock noise module due to lack of information (recommendation), no shock at the end (see propulsive design)')
