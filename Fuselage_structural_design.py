@@ -148,17 +148,17 @@ def max_fuselage_stresses(t, R, x_array, P_c, P_cruise, z_vl, rudder_load, momen
 
     return bending_stresses_bottom, bending_stresses_top, shear_stresses
 
-bmb, bmt, sh1 =(max_fuselage_stresses(0.1, widthf/2, x_array, P_c, P_cruise, z_vl, 0, moments, shears))
+bmb, bmt, sh1 =(max_fuselage_stresses(0.001, widthf/2, x_array, P_c, P_cruise, z_vl, 0, moments, shears))
 
 idx = moments.index(min(moments))
 
 
 plt.plot(x_array, bmb)
 plt.plot(x_array, bmt)
-# plt.plot(x_array, sh1)
-
-#plt.plot(x_array, moments)
-#plt.plot(x_array, shears)
+plt.plot(x_array, sh1)
+print(min(moments))
+# plt.plot(x_array, moments)
+# plt.plot(x_array, shears)
 plt.show()
 
 
