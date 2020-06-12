@@ -38,7 +38,7 @@ def cabin_design(fractioninfus,fractionintail,HYDROGENVOLUME,top_selecter = 0,po
     wfloor=round(total-0.18,3)
     
     
-    seat_length=22
+    seat_length=22*0.0254
     
     #two types I exits
     #two types III exits

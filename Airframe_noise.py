@@ -27,20 +27,19 @@ PI_mlg = main landing gear noise accoustic power
 
 import numpy as np
 import matplotlib.pyplot as plt
-import Class_2_estimation as cl2
 import input 
 
 rs = 104.815
 
-bw = cl2.b
-Aw = cl2.S
-Ah = 4
-Av = 1.7
-Af = 2 * 5.97
+bw = input.b
+Aw = input.S
+Ah = input.Sh
+Av = input.Sv
+Af = 12.1
 flap_defl = np.radians(60)
-bh = 9
-bv = 5
-bf = 6
+bh = input.bh
+bv = input.bv
+bf = 2 * 5.97
 mu_inf = 1.84E-5
 frequency = np.arange(10,100010,10)
 U = input.v_approach
@@ -753,7 +752,7 @@ plt.plot(frequency, SPL_jet, label='Jet noise')
 #plt.plot(frequency, SPL_turbine_tone, label='Turbine tone noise')
 plt.plot(frequency, SPL_turbine, label='Turbine noise')
 
-plt.plot(frequency, SPL_single_engine, label='Total engine noise')
+plt.plot(frequency, SPL_single_engine, label='Total single engine noise')
 
 plt.plot(frequency, SPL_both_engines, label='Total engine noise')
 
