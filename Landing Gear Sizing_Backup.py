@@ -226,6 +226,6 @@ s_s_des, d_s, s_s_des_nose,d_s_n = energy_absorption()
 print ()
 print ('The required stroke length of the shock absorption is:',s_s_des,'and the required diameter equals:',d_s,'Both in meters')
 print ('Shock absorber stroke nose landing gear equals:',s_s_des_nose, 'meters, with a diameter of',d_s_n,'meters. diameter for main landing gear is taken.')
-
+print (x_cg_aft)
 # Roskam source 2 page 94: OLEO-pneumatic shock absorber explanation
 # same source: linearly decrease in tire presure and loadpage 51

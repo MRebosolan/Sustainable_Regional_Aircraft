@@ -353,7 +353,9 @@ d_wheel_nose_lg = 0.5
 
 strut_length_main_lg = 1        #[m]
 strut_length_nose_lg = 0.75
-x_lg_front = 3.55 
+x_lg_front = 3.835
+x_main_lg = 15.4288
+x_main_lat = 2.295
 #Lift/drag ratios
 #------------------------------------------------------------------------------------------------------------------
 
