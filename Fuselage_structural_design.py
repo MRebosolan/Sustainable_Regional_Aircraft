@@ -25,7 +25,7 @@ ac_length = input.lf #dummy value
 x_ac = 12 #estimate
 lh = input.lh
 widthf = input.widthf
-
+n_ult = input.n_ult
 
 x_array = np.linspace(0, ac_length, 1000)
 
@@ -53,8 +53,8 @@ def internal_shear_and_moment_longitudinal(x, W= W_cruise, lf=ac_length, x_ac=x_
 moments=[]
 shears=[]
 for x in x_array:
-    moments.append(internal_shear_and_moment_longitudinal(x)[1])
-    shears.append(internal_shear_and_moment_longitudinal(x)[0])
+    moments.append(internal_shear_and_moment_longitudinal(x)[1] * n_ult)
+    shears.append(internal_shear_and_moment_longitudinal(x)[0] * n_ult)
 
 
 
@@ -156,7 +156,7 @@ idx = moments.index(min(moments))
 plt.plot(x_array, bmb)
 plt.plot(x_array, bmt)
 plt.plot(x_array, sh1)
-print(min(moments))
+
 # plt.plot(x_array, moments)
 # plt.plot(x_array, shears)
 plt.show()
