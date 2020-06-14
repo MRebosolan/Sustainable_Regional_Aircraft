@@ -399,3 +399,4 @@ t_c_tailh = 0.12           #t/c horizontal tail airfoil
 
 # inputs still needed for drag: Sh, Sv, c_MACh, nosecone (assume cockpit) and tailcone length, upsweep,
 # bypass ratio (10), width nose gear, width main gear, actual frontal area main gear.
+
