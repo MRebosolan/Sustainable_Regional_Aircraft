@@ -109,7 +109,18 @@ def CLASS1WEIGHTHYBRID(H_to_ker_ratio = input.H_to_ker_ratio, OEWINPUT = 1, top_
         d_top=0
         tm_tanksystem=0
         
-
+    #Required for payload range diagram
+    print(end1)
+    print(end2)
+    print(end3)
+    print(end4)
+    print(end5)
+    print(end6)
+    print(end7)
+    print(end8)
+    print(end9)
+    print(end10)
+    print(end11)
 
     INFO=[MTOW,OEW,FUEL,W_payload,(MZFW),(KEROSENE),(HYDROGEN),HYDROGENVOLUME,d_top,tm_tanksystem,cj_c]
     return INFO
