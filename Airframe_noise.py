@@ -29,7 +29,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import input 
 
-rs = 104.815
+rs = 2002.74
 
 bw = input.b
 Aw = input.S
@@ -725,10 +725,30 @@ SPL_both_engines = []
 for i in range(len(frequency)):
     count = 10**(SPL_2fan[i]/10) + 10**(SPL_2combustion[i]/10) + 10**(SPL_2jet[i]/10) + 10**(SPL_2turbine[i]/10)
     SPL_both_engines.append(10*np.log10(count))
+    count = 0
+
+count = 0
+SPL_tot = []
+for i in range(len(frequency)):
+    count = 10**(SPL_2fan[i]/10) + 10**(SPL_2combustion[i]/10) + 10**(SPL_2jet[i]/10) + 10**(SPL_2turbine[i]/10) + 10**(SPL_airframe_lst[i]/10)
+    SPL_tot.append(10*np.log10(count))
+    count = 0
+
+
+SPL_approach = np.genfromtxt('approach.csv')
+SPL_flyover = np.genfromtxt('flyover.csv')
+SPL_lateral = np.genfromtxt('lateral.csv')
+#
+#count = 0
+SPL_cumulative = []
+for i in range(len(frequency)):
+    count = 10**(SPL_approach[i]/10) + 10**(SPL_flyover[i]/10) + 10**(SPL_lateral[i]/10)
+    SPL_cumulative.append(count)
+    count = 0
 
 plt.close()
 plt.figure()
-#plt.plot(frequency, SPL_w_lst, label='Wing TE noise')
+#plt.plot(frequency, SPL_w_lst, label='Clean wing noise')
 #plt.plot(frequency, SPL_h_lst, label='Horizontal tail noise')
 #plt.plot(frequency, SPL_v_lst, label='Vertical tail noise')
 #plt.plot(frequency, SPL_f_lst, label='Wing TE flap noise')
@@ -742,23 +762,28 @@ plt.figure()
 ##plt.plot(frequency, SPL_combination_tone, label='Combination tone noise')
 #plt.plot(frequency, SPL_outlet_broadband, label='Outlet broadband noise')
 #plt.plot(frequency, SPL_outlet_rotor, label='Outlet rotor-stator interaction tones noise')
-plt.plot(frequency, SPL_fan, label='Fan noise')
+#plt.plot(frequency, SPL_fan, label='Fan noise')
 
-plt.plot(frequency, SPL_combustion, label='Combustion noise')
+#plt.plot(frequency, SPL_combustion, label='Combustion noise')
 
-plt.plot(frequency, SPL_jet, label='Jet noise')
+#plt.plot(frequency, SPL_jet, label='Jet noise')
 
 #plt.plot(frequency, SPL_turbine_broadband, label='Turbine broadband noise')
 #plt.plot(frequency, SPL_turbine_tone, label='Turbine tone noise')
-plt.plot(frequency, SPL_turbine, label='Turbine noise')
+#plt.plot(frequency, SPL_turbine, label='Turbine noise')
 
-plt.plot(frequency, SPL_single_engine, label='Total single engine noise')
+#plt.plot(frequency, SPL_single_engine, label='Total single engine noise')
 
-plt.plot(frequency, SPL_both_engines, label='Total engine noise')
+#plt.plot(frequency, SPL_both_engines, label='Total engine noise')
+
+plt.plot(frequency, SPL_approach, label='Approach noise')
+plt.plot(frequency, SPL_flyover, label='Flyover noise')
+plt.plot(frequency, SPL_lateral, label='Lateral noise')
+#plt.plot(frequency, SPL_cumulative, label='Cumulative noise')
 
 plt.xscale('log')
 plt.xlim([10**1.5,10**4.5])
-plt.ylim([15,200])
+plt.ylim([40,100])
 plt.xlabel('1/3 Octave Band central frequency [Hz]')
 plt.ylabel('SPL [dB]')
 
