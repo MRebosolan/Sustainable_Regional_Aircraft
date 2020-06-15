@@ -299,6 +299,8 @@ c_root_h = 2*Sh / ((1 + taper_h)*bh)
 c_tip_h = taper_h * c_root_h
 c_mac_h = 2/3 * c_root_h * (1 + taper_h + taper_h**2)/(1 + taper_h)
 x_rootchord_h = lf -c_root_h - 0.4
+
+pod_tail_fraction = 0.5    # is the fraction between fuel in the tail tank and podded tanks
 #------------------------------------------------------------------------------------------------------------------
 
 
