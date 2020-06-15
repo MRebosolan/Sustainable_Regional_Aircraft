@@ -355,30 +355,30 @@ def drag():
     ####### skin friction coeff
 
     # wing
-    Re_wing = min(Re, 44.62 * (c_MAC/k)**1.053 * M_cruise*1.16)
+    Re_wing = min(Re, 44.62 * (c_MAC/k)**1.053 * M_cruise**1.16)
     Cf_lam_wing = 1.328 / np.sqrt(Re_wing)
     Cf_tur_wing = 0.455 / ((np.log10(Re_wing) ** 2.58) * (1 + 0.144 * M_cruise ** 2) ** 0.65)
     Cftot_wing = 0.45 * Cf_lam_wing + 0.55 * Cf_tur_wing  # values for average between smooth metal and composites
 
     # v tail
-    Re_vtail = min(Re, 44.62 * (c_MACv/k)**1.053 * M_cruise*1.16)
+    Re_vtail = min(Re, 44.62 * (c_MACv/k)**1.053 * M_cruise**1.16)
     Cf_lam_vtail = 1.328 / np.sqrt(Re_vtail)
     Cf_tur_vtail = 0.455 / ((np.log10(Re_vtail) ** 2.58) * (1 + 0.144 * M_cruise ** 2) ** 0.65)
     Cftot_tailv = 0.45 * Cf_lam_vtail + 0.55 * Cf_tur_vtail  # values for average between smooth metal and composites
 
     # h tail
-    Re_htail = min(Re, 44.62 * (c_MACh/k)**1.053 * M_cruise*1.16)
+    Re_htail = min(Re, 44.62 * (c_MACh/k)**1.053 * M_cruise**1.16)
     Cf_lam_htail = 1.328/np.sqrt(Re_htail)
     Cf_tur_htail = 0.455/((np.log10(Re_htail)**2.58) * (1 + 0.144 * M_cruise**2)**0.65)
     Cftot_tailh = 0.45 * Cf_lam_htail + 0.55 * Cf_tur_htail  # values for average between smooth metal and composites
 
     # Nacelle
-    Re_nacelle = min(Re, 44.62 * ((l_nacelle) / k) ** 1.053 * M_cruise * 1.16)
+    Re_nacelle = min(Re, 44.62 * ((l_nacelle) / k) ** 1.053 * M_cruise ** 1.16)
     Cf_lam_nacelle = 1.328 / np.sqrt(Re_nacelle)
     Cf_tur_nacelle = 0.455 / ((np.log10(Re_nacelle) ** 2.58) * (1 + 0.144 * M_cruise ** 2) ** 0.65)
     Cftot_nacelle = 0.2 * Cf_lam_nacelle + 0.8 * Cf_tur_nacelle  # values for average between smooth metal and composites
 
-    #print("Re_specific=", Re_wing, Re_vtail, Re_htail, Re_fus, Re_nacelle) # verified by checking if the actual Re is lower than Re cutoff
+    #print("Re_specific=", Re_wing, Re_vtail, Re_htail,  Re_nacelle) # verified by checking if the actual Re is lower than Re cutoff
     #print("Cf_lam_sp=", Cf_lam_wing, Cf_lam_vtail, Cf_lam_htail, Cf_lam_fus, Cf_lam_nacelle) # Only depends on Re: verified
     #print("Cf_tur_sp=", Cf_tur_wing, Cf_tur_vtail, Cf_tur_htail, Cf_tur_fus, Cf_tur_nacelle) # Only depends on Re: verified
     #print("Cf = ", Cftot_wing, Cftot_tailv, Cftot_tailh, Cftot_fus, Cftot_nacelle)  # verified, average between smooth metal and composites

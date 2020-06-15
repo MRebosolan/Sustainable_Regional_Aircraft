@@ -232,7 +232,7 @@ CLmax_clean  = 1.8
 CL0_clean    = 0.405
 Alpha0_clean = -3.936
 CLdes_clean  = 0.4567                              # from aero
-CD0_clean    = 0.022942                            # from aero
+CD0_clean    = 0.023877                            # from aero
 CLa_clean    = 0.09858                             ######NOT FIXED########
 
 #Take-off Configuration             
@@ -362,7 +362,7 @@ x_main_lat = 2.295
 #------------------------------------------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------------------------------------------
-LD_c = 19.8                         # L/D cruise at cl design 0.4567
+LD_c = 19.02                         # L/D cruise at cl design 0.4567
 LD_c2 = 17                         # L/D cruise2, determine after wing sizing and drag analysis
 LD_loiter = 17                     # L/D Loiter, determine after wing sizing and drag analysis
 
