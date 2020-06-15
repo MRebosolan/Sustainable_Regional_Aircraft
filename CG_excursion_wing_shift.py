@@ -48,7 +48,7 @@ pax_abreast = input.pax_abreast
 x_start_Cr = np.arange(0.2 * l_f, 0.8 * l_f, 0.1)   #x-location measured from the nose where root chord starts
 x_lemac = [i + x_lemac_Cr for i in x_start_Cr]
 x_engine = x_lemac       #Assume engine cg is at lemac
-print('Make x_eninge not wing location dependent if we end up having fuselage mounted engines')
+# print('Make x_eninge not wing location dependent if we end up having fuselage mounted engines')
 x_nacelle = x_engine     #assume nacelle cg is at engine cg
 x_ac = [i + 0.25 * MAC for i in x_lemac]            #assume ac at quarter chord point
 lh_fix = input.lh                   #distance between wing and horizontal tail aerodynamic centers
@@ -130,7 +130,7 @@ x_paint = l_f/2
 x_empennage = [x_ac[i] + (lh[i] + lv[i]) / 2 for i in range(len(x_start_Cr))] #Assume cg of empennage is in the middle of the aerodynamic center of horizontal and vertical tail, measured from the nose
 x_lg_front = input.x_lg_front    #cg location of front landing gear [m], measured from the nose, assumed to be 3 m (used for calculating cg at oew, not to be changed per se)
 x_lg_main = [i + 4.7 for i in x_start_Cr]     #cg location of main landing gear [m], assumed 2/3 root chord length further than start of root chord (used for calculating cg at oew, not to be changed per se)
-print("In calculation of cg @ OEW, take into account the exact tank placement and cg location once agreed on a specific configuration")
+# print("In calculation of cg @ OEW, take into account the exact tank placement and cg location once agreed on a specific configuration")
 
 def cg_excursion_wing_shift():
     plt.close()
