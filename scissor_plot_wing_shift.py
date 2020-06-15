@@ -293,8 +293,12 @@ def scissor_wing_shift():
             
     lowest = combi.index(min(combi))#+Sh_min_lst.index(min(Sh_min_lst)))/2)
     x = 19
-    minimum = Sh_min_lst[51 ]
-    min_Sh_over_S = combi[51] * 1# (1+input.horizontal_margin)
+    # minimum = Sh_min_lst[51 ]
+    # min_Sh_over_S = combi[51] * 1# (1+input.horizontal_margin)
+    
+    minimum = min(Sh_min_lst)
+    min_Sh_over_S = minimum[0]
+    
     Sh_min = min_Sh_over_S * S
     x_Cr_opt_nose = minimum[1]
     cg_stab_lim = minimum[2] 
@@ -335,12 +339,12 @@ def scissorplot(stabilityplot,controlplot, ShS, frontcg, aftcg, Sh_over_S):
 
     plt.plot([frontcg*100,aftcg*100], [Sh_over_S, Sh_over_S], color = 'r', marker = '|', label = 'CG range')
     plt.ylim(-0.05,0.5)
-    plt.xlim(0, 150)
+    plt.xlim(0, 100)
     plt.grid()
     plt.xlabel("Xcg/MAC [%]")
     plt.ylabel("Sh/S [-]")
     plt.legend(loc = 'upper right')
-    plt.title('Tail Tank and Drop Tank')
+    # plt.title('Tail Tank and Drop Tank')
     plt.show()
     
 
