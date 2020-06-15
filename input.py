@@ -70,7 +70,7 @@ half_chord_sweep_hor = np.radians(20)   # deg, sweep at half chord of horizontal
 
 
 
-Sv = 14.65                       # [m2] CRJ700 | Obtain realistic value from Vtail area sizing
+Sv = 14.63                       # [m2] CRJ700 | Obtain realistic value from Vtail area sizing
 bv = 4.99                        # [m] vertical tail span CRJ700 # [m] Horizontal tail span
 zh = bv * 0.95                    # Height of horizontal stabilizer measured from the bottom of the vertical tail [m]
 
@@ -353,7 +353,9 @@ d_wheel_nose_lg = 0.5
 
 strut_length_main_lg = 1        #[m]
 strut_length_nose_lg = 0.75
-x_lg_front = 3.55 
+x_lg_front = 3.835
+x_main_lg = 15.4288
+x_main_lat = 2.295
 #Lift/drag ratios
 #------------------------------------------------------------------------------------------------------------------
 
@@ -377,6 +379,7 @@ x_engine = 13                      # cg location of engines, measured from the n
 x_nacelle = 13                     # cg location of engine nacelles, measured from the nose of the aircraft [m], TBD
 
 #Drag parameters
+#-----------------------------------------------------------------------------------------------------------------
 k = 0.634 * 10**-5         # Surface factor for skin friction coefficient, for smooth paint (need to reconsider if composites are used)
 IF_wing   = 1.0         # Interference factors
 IF_tailv  = 1.0
@@ -384,7 +387,18 @@ IF_tailh  = 1.04
 IF_fus    = 1.0
 IF_nacelle = 1.0
 cds_nose = 0.64                                     # obtain from adsee graph, this one is for a/d = 3.6, e/d = 2
-dflap = 20                                     # 20 deg for takeoff and 60 deg for landing
+dflap = 0                                     # 20 deg for takeoff and 60 deg for landin
+c_MACv = 3            # MAC length vertical tail                          # THIS IS GONNA CHANGE
+x_cm_wing = 0.36       #x/c max thickness
+x_cm_tailv = 0.30         #x/c max thickness vertical tail
+x_cm_tailh = 0.30         #x/c max thickness horizontal tail
+t_c_wing = 0.14        #t/c wing airfoil
+t_c_tailv = 0.12           #t/c vertical tail airfoil
+t_c_tailh = 0.12           #t/c horizontal tail airfoil
+
+nosegear_width = 0.127    # m
+maingear_width = 0.235    # m
 
 # inputs still needed for drag: Sh, Sv, c_MACh, nosecone (assume cockpit) and tailcone length, upsweep,
 # bypass ratio (10), width nose gear, width main gear, actual frontal area main gear.
+

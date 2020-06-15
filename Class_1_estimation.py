@@ -1,8 +1,9 @@
 import input 
+import math
 from CarbonFootprint import cf
 from cabindesign import cabin_design
 
-def CLASS1WEIGHTHYBRID(H_to_ker_ratio = input.H_to_ker_ratio, OEWINPUT = 1, top_selecter = 0,fractioninfus=1,fractionintail=0.35):
+def CLASS1WEIGHTHYBRID(H_to_ker_ratio = input.H_to_ker_ratio, OEWINPUT = 1, top_selecter = 0,fractioninfus=0.5,fractionintail=1):
     W_hydrosys=H_to_ker_ratio*1500 #initial guess for hydro system weight
     e=2.71828182846
     n_pax= input.Npax
@@ -97,9 +98,9 @@ def CLASS1WEIGHTHYBRID(H_to_ker_ratio = input.H_to_ker_ratio, OEWINPUT = 1, top_
     MZFW=MTOW-FUEL
     KEROSENE=(1-H_to_ker_ratio)*FUEL
     HYDROGEN=FUEL-KEROSENE
-    HYDROGENVOLUME=1.072*HYDROGEN/HYDROGEN_DENSITY #NASA PAPER
-    print(HYDROGENVOLUME)
+    HYDROGENVOLUME=1.072*HYDROGEN/HYDROGEN_DENSITY*1 #NASA PAPER
     
+
     if HYDROGENVOLUME!=0:
         t_cyl,m_cyl, tm_cyl, d_cyl,l_cyl,t_tail,m_tail, tm_tail, d_tail,l_tail\
            ,t_top,m_top,tm_top,d_top,l_top,t_pod,m_pod,tm_pod,d_pod,l_pod,totalcabinlength,V_tank_cyl, V_tank_tail, V_tank_top,V_tank_pod,\
@@ -108,8 +109,21 @@ def CLASS1WEIGHTHYBRID(H_to_ker_ratio = input.H_to_ker_ratio, OEWINPUT = 1, top_
     else:
         d_top=0
         tm_tanksystem=0
+    
+    
         
-
+    #Required for payload range diagram
+    print(end1)
+    print(end2)
+    print(end3)
+    print(end4)
+    print(end5)
+    print(end6)
+    print(end7)
+    print(end8)
+    print(end9)
+    print(end10)
+    print(end11)
 
     INFO=[MTOW,OEW,FUEL,W_payload,(MZFW),(KEROSENE),(HYDROGEN),HYDROGENVOLUME,d_top,tm_tanksystem,cj_c]
     return INFO

@@ -39,6 +39,7 @@ print(S)
 AR = inp.AR
 MTOW = inp.MTOW
 widthf = inp.widthf
+wingloading = inp.wingloading
 
 V_C = inp.V_C  # Cruise Speed knots
 V_D = inp.V_dive  # Dive Speed knots
@@ -68,18 +69,18 @@ Sh = inp.Sh       # horizontal tail area
 Sv = inp.Sv      # vertical tail area                                        # WILL CHANGE
 taperh = inp.taper_h   # taper h tail
 taperv = inp.taper_v   # taper v tail
-AR_h   = inp.AR_h
-AR_v   = inp.AR_v
-sweep_c4h = np.arctan(np.tan(inp.half_chord_sweep_hor) - 4 / AR_h * ((25 - 50) / 100 * (1 - taperh) / (1 + taperh)))
-sweep_c4v = np.arctan(np.tan(inp.half_chord_sweep_vert) - 4 / AR_v * ((25 - 50) / 100 * (1 - taperv) / (1 + taperv)))
+AR_h   = inp.AR_h        #  AR horizontal tail
+AR_v   = inp.AR_v         # AR vertical tail
+sweep_c4h = np.arctan(np.tan(inp.half_chord_sweep_hor) - 4 / AR_h * ((25 - 50) / 100 * (1 - taperh) / (1 + taperh)))   # quarter chord sweep h tail
+sweep_c4v = np.arctan(np.tan(inp.half_chord_sweep_vert) - 4 / AR_v * ((25 - 50) / 100 * (1 - taperv) / (1 + taperv)))     #quarter chord sweep v tail
 c_MACh = inp.c_mac_h   # MAC length horizontal tail
-c_MACv = 3            # MAC length vertical tail                          # THIS IS GONNA CHANGE
-x_cm_wing = 0.36       #x/c max thickness
-x_cm_tailv = 0.30         #x/c max thickness vertical tail
-x_cm_tailh = 0.30         #x/c max thickness horizontal tail               # Check
-t_c_wing = 0.14        #t/c wing airfoil
-t_c_tailv = 0.12           #t/c vertical tail airfoil
-t_c_tailh = 0.12           #t/c horizontal tail airfoil                   # Check
+c_MACv = inp.c_MACv            # MAC length vertical tail                          # THIS IS GONNA CHANGE
+x_cm_wing = inp.x_cm_wing      #x/c max thickness
+x_cm_tailv = inp.x_cm_tailv        #x/c max thickness vertical tail
+x_cm_tailh = inp.x_cm_tailh        #x/c max thickness horizontal tail
+t_c_wing = inp.t_c_wing        #t/c wing airfoil
+t_c_tailv = inp.t_c_tailv           #t/c vertical tail airfoil
+t_c_tailh = inp.t_c_tailh           #t/c horizontal tail airfoil
 
 #### FUSELAGE INPUTS
 Df = widthf
@@ -99,13 +100,14 @@ Tto = inp.Tto          # take-off thrust
 
 #### LANDING GEAR
 d_nose = inp.d_wheel_nose_lg + inp.strut_length_nose_lg    # length nose gear
-w_nose = 0.2                                              # total width nose gear
-d_main = inp.d_wheel_main_lg + inp.strut_length_main_lg         # length main gear
-w_main = 0.2                                              # total width main gear
+w_nose = inp.nosegear_width                               # total width nose gear
+d_main = inp.d_wheel_main_lg + inp.strut_length_main_lg      # length main gear
+w_main = inp.maingear_width                             # total width main gear
 main_amount = 2                                         # Main landing gear amount
-S_mlg = d_main * w_main                                 # reference frontal area main landing gear
-S_nlg = d_nose * w_nose                                 # reference area nose landing gear
-Sa_main = 0.6 * S_mlg                                   # actual frontal area main landing gear
+S_mlg = d_main * (w_main * 2.5)                                 # reference frontal area main landing gear
+S_nlg = d_nose * (w_nose * 2.5)                                # reference area nose landing gear
+Sa_main = 0.25 / S                                   # actual frontal area main landing gear
+print("Samain = ", Sa_main, S_mlg)
 
 #### PODS
 output_cabin = cabindesign.cabin_design(0.5, 1, 26, top_selecter = 0, podlength=5)
@@ -341,7 +343,7 @@ def drag():
     S_wet_wing = 1.07 * 2 * S
     S_wet_tailh = 1.05 * 2 * Sh
     S_wet_tailv = 1.05 * 2 * Sv
-    S_wet_nacelle = (25 * (1 + B)**0.2 * (Tto/ 100e3)**0.8) * 2
+    S_wet_nacelle = 4.5 * 2.49 * (2 + 0.33 * 0.35  + 0.8 * 0.33 * 0.9 + 1.15 * (1 - 0.33) * 0.8) * 2
 
     ####### skin friction coeff
 
@@ -398,18 +400,27 @@ def drag():
         wavedrag = 0.002 * (1 + 2.5 * (M_cruise - Mdd)/0.05)**2.5
 
     #print("Mdd=", Mdd, M_cruise)
-    #print("wavedrag=", wavedrag) # verified
+    print("wavedrag=", wavedrag) # verified
 
     ## Drag due to fuselage upsweep (upsweep in rad, Amax is max cross-sectional area)
     dragupsweep = 3.83 * upsweep**2.5 * Amax_fus / S
 
-    #print("dragupsweep=", dragupsweep)  # verified
+    print("dragupsweep=", dragupsweep)  # verified
 
     ## landing gear drag (add this from ADSEE)
-    cds_main = main_amount * 0.04955 * np.exp(5.615 * Sa_main / S_mlg)
-    drag_lg = 0 #(cds_nose + cds_main) * (S_nlg + main_amount * S_mlg) / S
+    # for nose gear: e/d = 2.5, a/d = 7.67
+    # cds_nose = 0.49
+    # cds_main = main_amount * 0.04955 * np.exp(5.615 * Sa_main / S_mlg)
+    #
+    # print("Lg drag", cds_nose, cds_main)
+    #
+    # draglg = (cds_nose + cds_main) * (S_nlg + main_amount * S_mlg) / S
 
-    #print("drag lg = ", drag_lg)       # not correct still
+    K_uc_to = 4.5e-5    # factor that relates flap deflection to lg drag, this one is for takeoff
+
+    draglg = wingloading * K_uc_to * MTOW**(-0.215)# http://pure.tudelft.nl/ws/files/10056382/Metz_AIAA_Aircraft_Performance_2016.pdf
+
+    print("drag lg = ", draglg)       # not correct still
 
     ## flap drag
     if dflap > 10:
@@ -417,10 +428,10 @@ def drag():
     else:
         drag_flap = 0
 
-    #print("drag_flap=",SwfS, drag_flap) # verified by checking if drag increases with flap deflection
+    print("drag_flap=",SwfS, drag_flap) # verified by checking if drag increases with flap deflection
 
     ### Tot Misc drag
-    drag_misc = wavedrag + dragupsweep + drag_flap + drag_lg
+    drag_misc = wavedrag + dragupsweep + drag_flap + draglg / S
     leakage   = 1.02                                     # 2-5 % of total CDO
     print("drag misc =", drag_misc)
 
@@ -430,47 +441,44 @@ def drag():
     CD0tailh = (S_wet_tailh * Cftot_tailh * IF_tailh * FF_tailh)
     CD0tailv = (S_wet_tailv * Cftot_tailv * IF_tailv * FF_tailv)
     CD0nacelle = (S_wet_nacelle * Cftot_nacelle * IF_nacelle * FF_nacelle)
+    print("Nacelle: ", S_wet_nacelle, Cftot_nacelle, IF_nacelle, FF_nacelle)
 
-    CD0 = (1 / S * (CD0wing + CD0tailh + CD0tailv + CD0nacelle) + CD0fus + CD0pods + drag_misc) * leakage
+    CD0 = ((CD0wing + CD0tailh + CD0tailv + CD0nacelle)/S + CD0fus + CD0pods + drag_misc) * leakage
 
-    print("CD0=", CD0)
-    print("Wing fraction = ", CD0wing/CD0/S)
-    print("Horizontal tail fraction = ", CD0tailh / CD0/S)
-    print("Vertical tail  fraction = ", CD0tailv / CD0/S)
-    print("Engine nacelle fraction = ", CD0nacelle / CD0/S)
-    print("Fuselage fraction = ", CD0fus / CD0)
-    print("Pods fraction = ", CD0pods / CD0)
-    print("Miscellaneous = ", drag_misc / CD0)
+    print("CD0=", CD0, )
+    print("CD0 Wing fraction = ", CD0wing/ S)
+    print("CD0 Horizontal tail fraction = ", CD0tailh/S )
+    print("CD0 Vertical tail  fraction = ", CD0tailv / S)
+    print("CD0 Engine nacelle fraction = ", CD0nacelle / S)
+    print("CD0 Fuselage fraction = ", CD0fus )
+    print("CD0 Pods fraction = ", CD0pods )
+    print("CD0 Landing Gear fraction = ", draglg / S)
+    print("CD0 Miscellaneous fraction= ", drag_misc )
+
     ####################### Lift induced drag
     df1 = 0      # flap deflection - clean
     df2 = 1.047  # flap deflection - Lnd
     df3 = 0.349  # flap deflection - TO
-
     oswaldclean = 1.78 * (1 - 0.045 * AR**0.68) - 0.64 + 0.0046 * df1
     oswaldTO = 1.78 * (1 - 0.045 * AR**0.68) - 0.64 + 0.0046 * df3
     oswaldLnd = 1.78 * (1 - 0.045 * AR**0.68) - 0.64 + 0.0046 * df2
-
     d_CD_twist = 0          #0.00004 * (phi_tip - phi_MGC) #effect of twist
-
     dAR = 0                 #effect of wing tips
     AR_eff = AR + dAR
-    print("AReff=", AR_eff)
-
 #    K_ground = (33 * (h/b)**1.5)/ (1 + 33 * (h/b)**1.5) #  ground effect
 #
-#    ######################### Total drag polar #######################
+    ######################### Total drag polar #######################
     clrange = np.arange(-1.0, 2.5, 0.1)
     Draglist = []
-
     for i in clrange:
         C_D = CD0 + (i - CL_des)**2/(np.pi*AR_eff*oswaldclean)
         Draglist.append(C_D)
 
-    return oswaldclean, oswaldTO, oswaldLnd, Draglist, clrange
+    return Draglist, clrange
 
 wing, geom, cross1, hld, ail, x2, CL_clean_list, CL_landing_list, CL_to_list, alpha_range, CLmax_list = wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S, v_approach, V_C_TAS)
 
-osclean,osTO,osLnd, Draglist, clrange = drag()
+Draglist, clrange = drag()
 
 #----------------------------- .txt File Airfoil Coordinates
 
@@ -601,9 +609,6 @@ plt.xlabel('y [m]')
 #plt.ylabel('y/c [-]')
 #plt.xlabel('x/c [-]')
 #
-
-
-
 plt.figure(5)
 plt.grid("minor")
 plt.plot(alpha_range[0], CL_clean_list)
@@ -620,10 +625,14 @@ plt.legend(["clean", "take-off", "landing",  "stall clean", "stall take-off", "s
 
 plt.figure(6)
 plt.grid()
+plt.xlabel(r"$C_L$ [-]")
+plt.ylabel(r"$C_D$ [-]")
 plt.plot(clrange, Draglist)
 
 plt.figure(7)
 plt.grid()
+plt.xlabel(r"$C_L$ [-]")
+plt.ylabel(r"$L/D$ [-]")
 plt.plot(clrange, clrange/Draglist)
 plt.show()
 
