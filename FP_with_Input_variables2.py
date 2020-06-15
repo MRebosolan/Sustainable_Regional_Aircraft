@@ -2,6 +2,7 @@ import input
 import Class_2_estimation as Cl2
 import numpy as np
 import matplotlib.pyplot as plt
+from Class_1_estimation import Mff4,Mff5
 """
 Responsible person(s): Rick and Tobias
 
@@ -417,8 +418,8 @@ def max_range(H,Vcr,F,S,A,e,CD0,c_t,g=g,rho_c=rho_c): #only holds at constant al
     eta_t = T*Vcr/(F*H/g)
     Cl = np.sqrt(CD0*np.pi*A*e)
     Cd = 2*CD0
-    W1 = 33000*g
-    W2 = 30000*g
+    W1 = MTOW*Mff4
+    W2 = MTOW*Mff5
 
     Range = 2/(c_t*Cd)*np.sqrt(1/S*2/rho_c*Cl)*(np.sqrt(W1)-np.sqrt(W2))*(10**(-3))   
     Range2 = (eta_t*H/g*Cl/Cd*np.log(W1/W2))*(10**(-3))  
