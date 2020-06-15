@@ -353,6 +353,9 @@ d_wheel_nose_lg = 0.5
 
 strut_length_main_lg = 1        #[m]
 strut_length_nose_lg = 0.75
+strut_diam_nose_lg = 0.0233
+strut_diam_main_lg = 0.2797
+
 x_lg_front = 3.835
 x_main_lg = 15.4288
 x_main_lat = 2.295
@@ -388,6 +391,8 @@ IF_fus    = 1.0
 IF_nacelle = 1.0
 cds_nose = 0.64                                     # obtain from adsee graph, this one is for a/d = 3.6, e/d = 2
 dflap = 0                                     # 20 deg for takeoff and 60 deg for landin
+dflap_to = 20
+dflap_landing = 60
 c_MACv = 3            # MAC length vertical tail                          # THIS IS GONNA CHANGE
 x_cm_wing = 0.36       #x/c max thickness
 x_cm_tailv = 0.30         #x/c max thickness vertical tail
@@ -396,6 +401,9 @@ t_c_wing = 0.14        #t/c wing airfoil
 t_c_tailv = 0.12           #t/c vertical tail airfoil
 t_c_tailh = 0.12           #t/c horizontal tail airfoil
 
+nosegear_width = 0.127    # m
+maingear_width = 0.235    # m
 
 # inputs still needed for drag: Sh, Sv, c_MACh, nosecone (assume cockpit) and tailcone length, upsweep,
 # bypass ratio (10), width nose gear, width main gear, actual frontal area main gear.
+
