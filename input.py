@@ -197,17 +197,14 @@ mu_br = 0.3                        # braking coefficient during landing, to be r
 h_sc = 50 * 0.3048                 # screen height equal to 50 ft [m]
 e = 0.81                           # [-], Oswald effiency factor, to be refined as this comes from roskam statistics
 #------------------------------------------------------------------------------------------------------------------
-CD0 = 0.022942088963253383                    # [-], to be refined (roskam) DONE IN MIDTERM, TALK TO JORN
-CD0_togd = 0.0273944744513126   # [-], to be refined as this comes from roskam statistics
-CD0_landGD = 0.031008941863001988      # [-], to be refined as this comes from roskam statistics
+CD0 = 0.022942088963253383         # [-], from aero
+CD0_togd = 0.0273944744513126   # [-], from aero
+CD0_landGD = 0.031008941863001988      # [-], from aero
 Trev = 50000                       # [N], maximum thrust reverse force applied during braking
 c_t = 0.0002                       # [1/s] specific fuel consumption, to be refined
 
-
 v_approach = 81.13                # m/s, update from flight performance
 mach_app = v_approach/340.3        # 
-
-
 
 #Parameters regarding aerodynamics
 #------------------------------------------------------------------------------------------------------------------
@@ -234,9 +231,9 @@ Re_Lnd     = 16326981
 CLmax_clean  = 1.8
 CL0_clean    = 0.405
 Alpha0_clean = -3.936
-CLdes_clean  = 0.44888                              ######NOT FIXED########
-CD0_clean    = 0                                    ######NOT FIXED########           
-CLa_clean    = 0.09858                              ######NOT FIXED########
+CLdes_clean  = 0.4567                              # from aero
+CD0_clean    = 0.022942                            # from aero
+CLa_clean    = 0.09858                             ######NOT FIXED########
 
 #Take-off Configuration             
 CLmax_to  = 2.1
