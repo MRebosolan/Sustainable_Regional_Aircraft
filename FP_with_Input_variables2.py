@@ -83,7 +83,7 @@ rho_c = input.rho_c                       #Density at 10km cruise altitude
 rho_0 = input.rho0
 g = input.g
 S = Cl2.S
-T_to = 121000 
+T_to = input.Tto 
 T_1500m = T_to * (0.974 / rho_0)**(3/4)
 Vcr = input.V_C_TAS
 A = input.AR
@@ -106,7 +106,7 @@ CD0_landGD = input.CD0_landGD
 #Parameters to be changed
 W = 30000 * g 
 rho = 0.974
-rho_to = 0.974  #rho_0                        #Can be changed, depending on the runway height Both from 
+rho_to = 0.974  #rho_0                #Can be changed, depending on the runway height Both from 
 nmax = 2.6                            # obtain nmax from max_load_factor function
 V_nmax = 96.5
 
@@ -420,12 +420,12 @@ def max_range(H,Vcr,F,S,A,e,CD0,c_t,g=g,rho_c=rho_c): #only holds at constant al
     W1 = 33000*g
     W2 = 30000*g
 
-    Range = 2/(c_t*Cd)*np.sqrt(1/S*2/rho_c*Cl)*(np.sqrt(W1)-np.sqrt(W2))    
-    Range2 = eta_t*H/g*Cl/Cd*np.log(W1/W2)  
+    Range = 2/(c_t*Cd)*np.sqrt(1/S*2/rho_c*Cl)*(np.sqrt(W1)-np.sqrt(W2))*(10**(-3))   
+    Range2 = (eta_t*H/g*Cl/Cd*np.log(W1/W2))*(10**(-3))  
     return Range, Range2,eta_t,Cl,Cd,F
 
 Range,Range2,eta_t,Cl,Cd,F = max_range(H,Vcr,F,S,A,e,CD0,c_t)
-
+print (Range,Range2)
 #print (Range,Range2,eta_t,Cl,Cd)
 #
 #    #---------------------------------------------------------

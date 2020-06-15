@@ -126,5 +126,5 @@ def CLASS1WEIGHTHYBRID(H_to_ker_ratio = input.H_to_ker_ratio, OEWINPUT = 1, top_
     print(end11)
 
     INFO=[MTOW,OEW,FUEL,W_payload,(MZFW),(KEROSENE),(HYDROGEN),HYDROGENVOLUME,d_top,tm_tanksystem,cj_c]
-    return INFO
-
+    return INFO,Mff4,Mff5
+Mff4,Mff5 = CLASS1WEIGHTHYBRID(H_to_ker_ratio = input.H_to_ker_ratio, OEWINPUT = 1, top_selecter = 0,fractioninfus=0.5,fractionintail=1)
