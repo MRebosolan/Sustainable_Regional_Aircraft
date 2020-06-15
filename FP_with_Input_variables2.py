@@ -2,6 +2,7 @@ import input
 import Class_2_estimation as Cl2
 import numpy as np
 import matplotlib.pyplot as plt
+
 """
 Responsible person(s): Rick and Tobias
 
@@ -83,7 +84,7 @@ rho_c = input.rho_c                       #Density at 10km cruise altitude
 rho_0 = input.rho0
 g = input.g
 S = Cl2.S
-T_to = 121000 
+T_to = input.Tto 
 T_1500m = T_to * (0.974 / rho_0)**(3/4)
 Vcr = input.V_C_TAS
 A = input.AR
@@ -106,7 +107,7 @@ CD0_landGD = input.CD0_landGD
 #Parameters to be changed
 W = 30000 * g 
 rho = 0.974
-rho_to = 0.974  #rho_0                        #Can be changed, depending on the runway height Both from 
+rho_to = 0.974  #rho_0                #Can be changed, depending on the runway height Both from 
 nmax = 2.6                            # obtain nmax from max_load_factor function
 V_nmax = 96.5
 
@@ -152,6 +153,7 @@ print(T_to_eq / MTOW)
 #    
 #    fig, axs = plt.subplots(1, 2)
 #    #fig.suptitle('Jet Performance Diagrams')
+#
 #    D_SL = np.genfromtxt('SL_drag.csv')
 #    #Pa_SL = [T_to * v for v in V]
 #    #Preq_SL = [D_SL * v for v in V]
@@ -176,7 +178,7 @@ print(T_to_eq / MTOW)
 #    axs[1].set(xlabel='Airspeed [m/s]', ylabel='Power [MW]')
 #    axs[1].legend()
 #    
-#    #np.savetxt('SL_drag.csv',D)
+#    np.savetxt('SL_drag.csv',D)
 #    
 #    axs[0].set_xlim([0,250])
 #    axs[1].set_xlim([0,250])
@@ -190,242 +192,242 @@ print(T_to_eq / MTOW)
 #    plt.show()
 #    return 
 #    
-##performance_diagrams(T_to, CD0, rho_0, rho_to, S, W, A, e, CLmax_to, MTOW)   
-#    
-# 
-#def max_ROC_s(T_to, CD0, S, A, e, rho_0):
-#    """ 
-#    This function computes the maximum steady rate of climb achievable at different flight conditions for which you must manually select 
-#    the densities (change rho_lst) and aircraft weight (W_lst) for the altitudes of interest.
-#    
-#    T_to = Take off thrust at sea-level [N]
-#    CD0 = zero lift drag coefficient at a certain configuration [-]
-#    rho_lst = range of densities at corresponding flight altitudes for which you want to calculate the maximum steady rate of climb
-#    S = wing surface area [m^2]
-#    W_lst = range of weights at corresponding flight alitudes at which you want to calculate the maximum steady rate of climb [N]
-#    A = wing aspect ratio [-]
-#    e = Oswald efficiency factor at certain configuration
-#    h = range of altitudes at corresponding flight alitudes at which you want to calculate the maximum steady rate of climb 
-#    
-#    Pa = power available [W]
-#    Preq = power required [W]
-#    D = drag [N]
-#    V = velocity range for which the performance diagrams are constructed [m/s]
-#    """
-#    rho_lst = [1.225, 0.7365, 0.4135] 		#densities at sea level, 5 km, 10 km alitude 
-#    W_lst = [400000, 355000, 350000]					#weights at the corresponding above alitudes [N]!
-#    V = np.arange(1,301,1)
-#    output_lst = []
-#    for i in range(len(rho_lst)):
-#        T = (rho_lst[i] / rho_0)**(3/4) * T_to
-#        Pa = np.array([T*i for i in V])
-#        Preq = np.array([CD0 * 0.5 * rho_lst[i] * j**3 * S + 2 * W_lst[i]**2 / (np.pi * A * e * rho_lst[i] * j * S) for j in V])          
-#        Pa_min_Pr = list(np.subtract(Pa,Preq))
-#        max_ROC = max(Pa_min_Pr)/W_lst[i]
-#        idx_max_ROC = Pa_min_Pr.index(max(Pa_min_Pr))
-#        text = 'max steady ROC at altitude with density of', rho_lst[i], '=', max_ROC, 'm/s with corresponding airspeed of', V[idx_max_ROC], 'm/s'
-#        output_lst.append(text)
-#    return output_lst
-#
-##print(max_ROC_s(T_to, CD0, S, A, e, rho_0))
-#
-#n = np.linspace(1,2.6,6)
-#
-#def max_load_factor_steepest_turn(T_to, CD0, rho_0, rho, S, W, A, e, CLmax):
-#    """ 
-#    This function plots the maximum achievable load factor in a turn against airspeed. Adjust CLmax to the right aircraft configuration and also take into account
-#    the structural nmax that you don't exceed that value. Read off nmax at various speed and whit that compute the steepest turn. 
-#    
-#    """
-#    V = np.arange(1,301,1)
-#    T = T_to * (rho / rho_0)**(3/4)
-#    V_stall_lst = []
-#    for j in range(len(n)):
-#        D = j * np.array([CD0 * 0.5 * rho * i**2 * S + 2 * W**2 / (np.pi * A * e * rho * i**2 * S) for i in V])
-#        Preq = j * np.array([CD0 * 0.5 * rho * i**3 * S + 2 * W**2 / (np.pi * A * e * rho * i * S) for i in V])
-#        
-#        V_stall_lst.append(np.sqrt(n[j] * W * 2 / (S * rho * CLmax)))
-#        D = np.ma.masked_where(V < V_stall_lst[j], D)
-#        Preq = np.ma.masked_where(V < V_stall_lst[j], Preq)           
-#        
-#        plt.scatter(V, D, s=1, label='Drag [N], n ='+str(round(n[j],1)), color='red')
-#     
-#    plt.axhline(y=T, label='Thrust [N]', color='green')   
-#    plt.legend()
-#    plt.show()
-#    return 
-#
-##max_load_factor_steepest_turn(T_to, CD0, rho_0, rho, S, W, A, e, CLmax)
-#
-#def steepest_turn_and(V, nmax, g=g):
-#    """
-#    This function computes the radius for the steepest turn. Get the maximum load factor at the speed of interest from the 
-#    graph constucted by the function max_load_factor_steepest_turn. This function can also be used to compute the minimum turn radius.
-#    For this, readd off the nmax at various speeds from the above mentioned graph and compute the R with this function for each of the combinations.
-#    See what yields the minimum turn radius R (should be at a slightly lower speed than at which nmax is achieved in a turn). Finally, the minimum time 
-#    to turn can be calculated with the minimum turn radius by doing 2piR/V (take V where Rmin is achieved).This speed should be slightly higher than the 
-#    speed at which minimum turn radius is achieved but slightly lower than speed at which nmax is achieved. All of this is calculated for one specific alitude
-#    which you can change by varying the input parameter rho.
-#    """
-#    R = V**2 / (g * np.sqrt(nmax**2 - 1))
-#    return R
-#
-#
-#
-#def turn_radius(V, rate, g=g):
-#     """ 
-#     This function computes the turn radius, bank angle and load factor for a particular rate # turn (so for rate use a value incidacting 
-#     a rate ... turn) at a particular airspeed of interest [m/s]
-#     angular = angular velocity during the turn [rad/s]
-#     R = turn radius [m]
-#     phi = bank angle [rad]
-#     n = load factor during the turn [-]
-#     
-#     """
-#     angular = rate * np.radians(3)      
-#     R = V / angular
-#     phi = np.arctan(V**2 / (g * R))
-#     n = 1 / np.cos(phi)
-#     return R, phi, n
-#
-#
-#
-#def dimensional(c,rho,V,S):             #converts aerdynamic coefficient into aerodynamic force
-#    return 0.5 * rho * V**2 * S * c
-#
-##---------------------------------------------------------
-##Take-off and landing performance
-##---------------------------------------------------------
-#
-#"""take-off and landing input dummy parameters"""                                                             #[-]
-#                        #[kg/m^3]
-#CD_togd = CD0_togd + CL_to**2 / (np.pi * A * e)                         #[-]
-#
-#def take_off_distances(CLmax, CD_togd, rho_to, S, CL_to, MTOW, T_to, mu, g, h_s, gamma_climb):
-#    """
-#    This function calculates the take-off ground run distance (s_to), airborne distance(x_airborne) and horizontal distance covered until 
-#    screen height is reached (x_tot) at maximum take off weight. 
-#    Assumptions: no ground effect, no runway slope, no wind
-#    
-#    Vmin = stall speed [m/s]
-#    Vlof = lift off speed [m/s]
-#    Vbar = average speed during take off [m/s]
-#    D_to = average drag force during take off [N]
-#    L_to = average lift force during take off [N]
-#    a_bar = average acceleration during take off [m/s^2]
-#    R = transition radius [m]
-#    h_trans = height gained during transition [m]
-#    
-#    The thrust seems to high as the take off distances are very low, also may reconsider friction coefficients
-#    """
-#    Vmin = np.sqrt(MTOW * 2 /(S * rho_to * CLmax))                  #or change to Vs, depends on whether the wing is sized for Vs or for CLmax
-#    Vlof = 1.05 * Vmin 
-#    print('Vlof = ', Vlof)                                           
-#    Vbar = Vlof / np.sqrt(2)                                       
-#    D_to = dimensional(CD_togd, rho_to, Vbar, S)                    
-#    L_to = dimensional(CL_to, rho_to, Vbar, S)
-#    T_bar = T_to / np.sqrt(2)                      
-#    a_bar = g / MTOW * (T_bar - D_to - mu * (MTOW - L_to))           #
-#    
-#    s_to = Vlof**2 / (2 * a_bar)                                    
-#    print('x_gr_to = ', s_to)
-#    R = Vlof**2 / (0.15 * g)
-#    x_trans = R * np.sin(gamma_climb)
-#    print('x_tr = ', x_trans)
-#    h_trans = R * (1 - np.cos(gamma_climb))
-#    if h_trans < h_s:
-#        x_climb = (h_s - h_trans) / np.tan(gamma_climb)
-#    else:
-#        x_climb = 0
-#    print('x_cl = ', x_climb)
-#    x_airborne = x_trans + x_climb
-#    x_tot = s_to + x_airborne
-#    print('x_to = ', x_tot)
-#    return s_to, x_airborne, x_tot
-#    
-#print(take_off_distances(CLmax, CD_togd, rho_to, S, CL_to, MTOW, T_to, mu, g, h_s, gamma_climb))
-#
-#def landing_distances(MLW, S, rho_land, CLmax, gamma_app, h_s, CD_land, CL_land, T_rev, mu_brake, g=g):
-#    R = 1.3**2 * (MLW * 2 /(S * rho_land * CLmax)) / (0.1 * g)
-#    print('R_la = ', R)
-#    x_airborne = R * np.sin(gamma_app) + (h_s - (1 - np.cos(gamma_app)) * R) / np.tan(gamma_app)
-#    print('x_ap = ',R * np.sin(gamma_app) )
-#    print('x_fl = ', x_airborne - R * np.sin(gamma_app))
-#    Vmin = np.sqrt(MLW * 2 /(S * rho_land * CLmax))
-#    V_app = 1.3 * Vmin
-#    print('V_ap = ', V_app)
-#    x_trans = 2.6 * Vmin
-#    print('x_rot = ', x_trans)
-#    V_bar = V_app / np.sqrt(2)
-#    D_land = dimensional(CD_land, rho_land, V_bar, S)
-#    L_land = dimensional(CL_land, rho_land, V_bar, S)
-#    T_rev_bar = T_rev / np.sqrt(2)
-#    x_brake = MLW**2 / (2 * g * S) * 2 / rho_land * 1.3**2 / CLmax * 1 / (T_rev_bar + D_land + mu_brake * (MLW - L_land))
-#    print('x_br = ', x_brake)
-#    x_gr = x_trans + x_brake
-#    print('x_gr_la =', x_gr)
-#    required_field_length = 10 / 6 * x_gr
-#    print('RFL = ', required_field_length)
-#    x_tot = x_airborne + x_gr
-#    print('x_la = ', x_tot)
-#    
-#    return x_airborne, x_trans, x_brake, x_gr, x_tot, required_field_length, V_bar, V_app
-#
-#x_airborne, x_trans, x_brake, x_gr, x_tot, required_field_length, V_bar, Vap = landing_distances(MLW, S, rho_land, CLmax, gamma_app, h_s, CD_land, CL_land, T_rev, mu_brake)
-##print(landing_distances(MLW, S, rho_land, CLmax, gamma_app, h_s, CD_land, CL_land, T_rev, mu_brake, g=g))
-#print('Approach speed: ', Vap)
-#
-#
-#
-#
-## for a specific point in time where W will be constant but undefined
-#def optimal_flight_condition(A,e,CD0,S=S,rho_c=rho_c,g=g,c_t=c_t):    #we seek to maximze V/F or minimize F/V
-#    """
-#    This would be the optimal velocity, Cl and Cd at one specific
-#    moment in time.
-#    """
-#    T = T_to * (rho_c / rho_0)**(3/4)
-#    F =c_t*T
-#    W = 31500*g    # Still variable value                                
-#    Clopt = np.sqrt(1/3*CD0*np.pi*A*e)
-#    Cdopt = 4/3*CD0
-#    Vopt = np.sqrt(W/S*2/rho_c*1/Clopt)
-#             
-#    #FoverV = 1/(1/(F)*np.sqrt(W/S*2/rho*1/Cl_c))  #Fuel flow | max thrust = constant i.e. as sealevel
-#    #beta = np.arctan(F_over_V)
-#    VoverF = Vopt/F # Maximize
-#    return VoverF,F,Vopt,Clopt
-#
-#VoverF,F,Vopt,Clopt = optimal_flight_condition(A,e,CD0)
-#
-##Note that W1/W2 are variable and need to be (re) determined
-#def max_range(H,Vcr,F,S,A,e,CD0,c_t,g=g,rho_c=rho_c): #only holds at constant altitude  
-#    """
-#    eta_t is the total efficiency
-#    Cl due to operation limitations 
-#    Cd idem.
-#    W1 is the initial weight (W4)
-#    W2 is the final weight (W5)
-#    Currently the values it prints are quite off.... they are very
-#    sensitive to the value of c_t. Also, the value of F is rather high
-#    due to the fact that the heating value H is 3 times higher for
-#    hydrogen than for kerosene
-#    """
-#    T = T_to * (rho_c / rho_0)**(3/4)
-#    F = c_t*T 
-#    eta_t = T*Vcr/(F*H/g)
-#    Cl = np.sqrt(CD0*np.pi*A*e)
-#    Cd = 2*CD0
-#    W1 = 33000*g
-#    W2 = 30000*g
-#
-#    Range = 2/(c_t*Cd)*np.sqrt(1/S*2/rho_c*Cl)*(np.sqrt(W1)-np.sqrt(W2))    
-#    Range2 = eta_t*H/g*Cl/Cd*np.log(W1/W2)  
-#    return Range, Range2,eta_t,Cl,Cd,F
-#
-#Range,Range2,eta_t,Cl,Cd,F = max_range(H,Vcr,F,S,A,e,CD0,c_t)
-#
-##print (Range,Range2,eta_t,Cl,Cd)
+#performance_diagrams(T_1500m, CD0_togd, rho_0, 0.974, S, W, A, e, CLmax_to, MTOW)   
+    
+ 
+def max_ROC_s(T_to, CD0, S, A, e, rho_0):
+    """ 
+    This function computes the maximum steady rate of climb achievable at different flight conditions for which you must manually select 
+    the densities (change rho_lst) and aircraft weight (W_lst) for the altitudes of interest.
+    
+    T_to = Take off thrust at sea-level [N]
+    CD0 = zero lift drag coefficient at a certain configuration [-]
+    rho_lst = range of densities at corresponding flight altitudes for which you want to calculate the maximum steady rate of climb
+    S = wing surface area [m^2]
+    W_lst = range of weights at corresponding flight alitudes at which you want to calculate the maximum steady rate of climb [N]
+    A = wing aspect ratio [-]
+    e = Oswald efficiency factor at certain configuration
+    h = range of altitudes at corresponding flight alitudes at which you want to calculate the maximum steady rate of climb 
+    
+    Pa = power available [W]
+    Preq = power required [W]
+    D = drag [N]
+    V = velocity range for which the performance diagrams are constructed [m/s]
+    """
+    rho_lst = [1.225, 0.7365, 0.4135] 		#densities at sea level, 5 km, 10 km alitude 
+    W_lst = [400000, 355000, 350000]					#weights at the corresponding above alitudes [N]!
+    V = np.arange(1,301,1)
+    output_lst = []
+    for i in range(len(rho_lst)):
+        T = (rho_lst[i] / rho_0)**(3/4) * T_to
+        Pa = np.array([T*i for i in V])
+        Preq = np.array([CD0 * 0.5 * rho_lst[i] * j**3 * S + 2 * W_lst[i]**2 / (np.pi * A * e * rho_lst[i] * j * S) for j in V])          
+        Pa_min_Pr = list(np.subtract(Pa,Preq))
+        max_ROC = max(Pa_min_Pr)/W_lst[i]
+        idx_max_ROC = Pa_min_Pr.index(max(Pa_min_Pr))
+        text = 'max steady ROC at altitude with density of', rho_lst[i], '=', max_ROC, 'm/s with corresponding airspeed of', V[idx_max_ROC], 'm/s'
+        output_lst.append(text)
+    return output_lst
+
+#print(max_ROC_s(T_to, CD0, S, A, e, rho_0))
+
+n = np.linspace(1,2.6,6)
+
+def max_load_factor_steepest_turn(T_to, CD0, rho_0, rho, S, W, A, e, CLmax):
+    """ 
+    This function plots the maximum achievable load factor in a turn against airspeed. Adjust CLmax to the right aircraft configuration and also take into account
+    the structural nmax that you don't exceed that value. Read off nmax at various speed and whit that compute the steepest turn. 
+    
+    """
+    V = np.arange(1,301,1)
+    T = T_to * (rho / rho_0)**(3/4)
+    V_stall_lst = []
+    for j in range(len(n)):
+        D = j * np.array([CD0 * 0.5 * rho * i**2 * S + 2 * W**2 / (np.pi * A * e * rho * i**2 * S) for i in V])
+        Preq = j * np.array([CD0 * 0.5 * rho * i**3 * S + 2 * W**2 / (np.pi * A * e * rho * i * S) for i in V])
+        
+        V_stall_lst.append(np.sqrt(n[j] * W * 2 / (S * rho * CLmax)))
+        D = np.ma.masked_where(V < V_stall_lst[j], D)
+        Preq = np.ma.masked_where(V < V_stall_lst[j], Preq)           
+        
+        plt.scatter(V, D, s=1, label='Drag [N], n ='+str(round(n[j],1)), color='red')
+     
+    plt.axhline(y=T, label='Thrust [N]', color='green')   
+    plt.legend()
+    plt.show()
+    return 
+
+#max_load_factor_steepest_turn(T_to, CD0, rho_0, rho, S, W, A, e, CLmax)
+
+def steepest_turn_and(V, nmax, g=g):
+    """
+    This function computes the radius for the steepest turn. Get the maximum load factor at the speed of interest from the 
+    graph constucted by the function max_load_factor_steepest_turn. This function can also be used to compute the minimum turn radius.
+    For this, readd off the nmax at various speeds from the above mentioned graph and compute the R with this function for each of the combinations.
+    See what yields the minimum turn radius R (should be at a slightly lower speed than at which nmax is achieved in a turn). Finally, the minimum time 
+    to turn can be calculated with the minimum turn radius by doing 2piR/V (take V where Rmin is achieved).This speed should be slightly higher than the 
+    speed at which minimum turn radius is achieved but slightly lower than speed at which nmax is achieved. All of this is calculated for one specific alitude
+    which you can change by varying the input parameter rho.
+    """
+    R = V**2 / (g * np.sqrt(nmax**2 - 1))
+    return R
+
+
+
+def turn_radius(V, rate, g=g):
+     """ 
+     This function computes the turn radius, bank angle and load factor for a particular rate # turn (so for rate use a value incidacting 
+     a rate ... turn) at a particular airspeed of interest [m/s]
+     angular = angular velocity during the turn [rad/s]
+     R = turn radius [m]
+     phi = bank angle [rad]
+     n = load factor during the turn [-]
+     
+     """
+     angular = rate * np.radians(3)      
+     R = V / angular
+     phi = np.arctan(V**2 / (g * R))
+     n = 1 / np.cos(phi)
+     return R, phi, n
+
+
+
+def dimensional(c,rho,V,S):             #converts aerdynamic coefficient into aerodynamic force
+    return 0.5 * rho * V**2 * S * c
+
+#---------------------------------------------------------
+#Take-off and landing performance
+#---------------------------------------------------------
+
+"""take-off and landing input dummy parameters"""                                                             #[-]
+                        #[kg/m^3]
+CD_togd = CD0_togd + CL_to**2 / (np.pi * A * e)                         #[-]
+
+def take_off_distances(CLmax, CD_togd, rho_to, S, CL_to, MTOW, T_to, mu, g, h_s, gamma_climb):
+    """
+    This function calculates the take-off ground run distance (s_to), airborne distance(x_airborne) and horizontal distance covered until 
+    screen height is reached (x_tot) at maximum take off weight. 
+    Assumptions: no ground effect, no runway slope, no wind
+    
+    Vmin = stall speed [m/s]
+    Vlof = lift off speed [m/s]
+    Vbar = average speed during take off [m/s]
+    D_to = average drag force during take off [N]
+    L_to = average lift force during take off [N]
+    a_bar = average acceleration during take off [m/s^2]
+    R = transition radius [m]
+    h_trans = height gained during transition [m]
+    
+    The thrust seems to high as the take off distances are very low, also may reconsider friction coefficients
+    """
+    Vmin = np.sqrt(MTOW * 2 /(S * rho_to * CLmax))                  #or change to Vs, depends on whether the wing is sized for Vs or for CLmax
+    Vlof = 1.05 * Vmin 
+    print('Vlof = ', Vlof)                                           
+    Vbar = Vlof / np.sqrt(2)                                       
+    D_to = dimensional(CD_togd, rho_to, Vbar, S)                    
+    L_to = dimensional(CL_to, rho_to, Vbar, S)
+    T_bar = T_to / np.sqrt(2)                      
+    a_bar = g / MTOW * (T_bar - D_to - mu * (MTOW - L_to))           #
+    
+    s_to = Vlof**2 / (2 * a_bar)                                    
+    print('x_gr_to = ', s_to)
+    R = Vlof**2 / (0.15 * g)
+    x_trans = R * np.sin(gamma_climb)
+    print('x_tr = ', x_trans)
+    h_trans = R * (1 - np.cos(gamma_climb))
+    if h_trans < h_s:
+        x_climb = (h_s - h_trans) / np.tan(gamma_climb)
+    else:
+        x_climb = 0
+    print('x_cl = ', x_climb)
+    x_airborne = x_trans + x_climb
+    x_tot = s_to + x_airborne
+    print('x_to = ', x_tot)
+    return s_to, x_airborne, x_tot
+    
+print(take_off_distances(CLmax, CD_togd, rho_to, S, CL_to, MTOW, T_to, mu, g, h_s, gamma_climb))
+
+def landing_distances(MLW, S, rho_land, CLmax, gamma_app, h_s, CD_land, CL_land, T_rev, mu_brake, g=g):
+    R = 1.3**2 * (MLW * 2 /(S * rho_land * CLmax)) / (0.1 * g)
+    print('R_la = ', R)
+    x_airborne = R * np.sin(gamma_app) + (h_s - (1 - np.cos(gamma_app)) * R) / np.tan(gamma_app)
+    print('x_ap = ',R * np.sin(gamma_app) )
+    print('x_fl = ', x_airborne - R * np.sin(gamma_app))
+    Vmin = np.sqrt(MLW * 2 /(S * rho_land * CLmax))
+    V_app = 1.3 * Vmin
+    print('V_ap = ', V_app)
+    x_trans = 2.6 * Vmin
+    print('x_rot = ', x_trans)
+    V_bar = V_app / np.sqrt(2)
+    D_land = dimensional(CD_land, rho_land, V_bar, S)
+    L_land = dimensional(CL_land, rho_land, V_bar, S)
+    T_rev_bar = T_rev / np.sqrt(2)
+    x_brake = MLW**2 / (2 * g * S) * 2 / rho_land * 1.3**2 / CLmax * 1 / (T_rev_bar + D_land + mu_brake * (MLW - L_land))
+    print('x_br = ', x_brake)
+    x_gr = x_trans + x_brake
+    print('x_gr_la =', x_gr)
+    required_field_length = 10 / 6 * x_gr
+    print('RFL = ', required_field_length)
+    x_tot = x_airborne + x_gr
+    print('x_la = ', x_tot)
+    
+    return x_airborne, x_trans, x_brake, x_gr, x_tot, required_field_length, V_bar, V_app
+
+x_airborne, x_trans, x_brake, x_gr, x_tot, required_field_length, V_bar, Vap = landing_distances(MLW, S, rho_land, CLmax, gamma_app, h_s, CD_land, CL_land, T_rev, mu_brake)
+#print(landing_distances(MLW, S, rho_land, CLmax, gamma_app, h_s, CD_land, CL_land, T_rev, mu_brake, g=g))
+print('Approach speed: ', Vap)
+
+
+
+
+# for a specific point in time where W will be constant but undefined
+def optimal_flight_condition(A,e,CD0,S=S,rho_c=rho_c,g=g,c_t=c_t):    #we seek to maximze V/F or minimize F/V
+    """
+    This would be the optimal velocity, Cl and Cd at one specific
+    moment in time.
+    """
+    T = T_to * (rho_c / rho_0)**(3/4)
+    F =c_t*T
+    W = 31500*g    # Still variable value                                
+    Clopt = np.sqrt(1/3*CD0*np.pi*A*e)
+    Cdopt = 4/3*CD0
+    Vopt = np.sqrt(W/S*2/rho_c*1/Clopt)
+             
+    #FoverV = 1/(1/(F)*np.sqrt(W/S*2/rho*1/Cl_c))  #Fuel flow | max thrust = constant i.e. as sealevel
+    #beta = np.arctan(F_over_V)
+    VoverF = Vopt/F # Maximize
+    return VoverF,F,Vopt,Clopt
+
+VoverF,F,Vopt,Clopt = optimal_flight_condition(A,e,CD0)
+
+#Note that W1/W2 are variable and need to be (re) determined
+def max_range(H,Vcr,F,S,A,e,CD0,c_t,g=g,rho_c=rho_c): #only holds at constant altitude  
+    """
+    eta_t is the total efficiency
+    Cl due to operation limitations 
+    Cd idem.
+    W1 is the initial weight (W4)
+    W2 is the final weight (W5)
+    Currently the values it prints are quite off.... they are very
+    sensitive to the value of c_t. Also, the value of F is rather high
+    due to the fact that the heating value H is 3 times higher for
+    hydrogen than for kerosene
+    """
+    T = T_to * (rho_c / rho_0)**(3/4)
+    F = c_t*T 
+    eta_t = T*Vcr/(F*H/g)
+    Cl = np.sqrt(CD0*np.pi*A*e)
+    Cd = 2*CD0
+    W1 = MTOW*Mff4
+    W2 = MTOW*Mff5
+
+    Range = 2/(c_t*Cd)*np.sqrt(1/S*2/rho_c*Cl)*(np.sqrt(W1)-np.sqrt(W2))*(10**(-3))   
+    Range2 = (eta_t*H/g*Cl/Cd*np.log(W1/W2))*(10**(-3))  
+    return Range, Range2,eta_t,Cl,Cd,F
+
+Range,Range2,eta_t,Cl,Cd,F = max_range(H,Vcr,F,S,A,e,CD0,c_t)
+print (Range,Range2)
+#print (Range,Range2,eta_t,Cl,Cd)
 #
 #    #---------------------------------------------------------
 ##Cruise economics
@@ -437,7 +439,7 @@ W_pay = input.W_payload
 R_des = input.Design_range
 OEW = input.OEW
 cj_c = input.cj_c
-LD_c = input.LD_c
+LD_c = input.LD_c 
 percent = 67
 W_fuel_max_pay = Cl2.M_fuel_kg
 W_fuel_max = W_fuel_max_pay / percent * 100
@@ -478,33 +480,34 @@ for i in end_i:
 #    return R_AB, W_AB, R_BC, W_BC, R_CD, W_CD
     
 #R_AB, W_AB, R_BC, W_BC, R_CD, W_CD = payload_range_diagram()   
-
-def payload_range_diagram():
-    R_AB = np.arange(0, R_des + 1, 1)
-    W_AB = (R_des+1) * [W_pay]
-    
-    
-    R_D = Vcr / g / cj_c * LD_c * np.log(1/end5_D) / 1000
-    R_BD = np.arange(R_des, R_D + 1, 1)
-    W_D = 0
-    W_BD = [W_pay - (W_pay - W_D) / (R_D - R_des) * (R - R_des) for R in R_BD]
-    
-    plt.figure()
-    plt.plot(R_AB, W_AB, color='green', label='Max payload')
-    plt.plot(R_BD, W_BD, color='blue', label='Exchange payload')
-    plt.xlim([0,2500])
-    plt.ylim([0,9000])
-    plt.xlabel('Range [km]')
-    plt.ylabel('Payload weight [kg]')
-    plt.rc('axes', labelsize=16)    # fontsize of the x and y labels
-    plt.rc('xtick', labelsize=16)    # fontsize of the tick labels
-    plt.rc('ytick', labelsize=16)    # fontsize of the tick labels
-    plt.rc('legend', fontsize=16)    # legend fontsize
-    plt.legend()
-    plt.show()
-    return 
-
-payload_range_diagram()
+#
+#def payload_range_diagram():
+#    R_AB = np.arange(0, R_des + 1, 1)
+#    W_AB = (R_des+1) * [W_pay]
+#    
+#    
+#    R_D = Vcr / g / cj_c * LD_c * np.log(1/end5_D) / 1000
+#    print(R_D)
+#    R_BD = np.arange(R_des, R_D + 1, 1)
+#    W_D = 0
+#    W_BD = [W_pay - (W_pay - W_D) / (R_D - R_des) * (R - R_des) for R in R_BD]
+#    
+#    plt.figure()
+#    plt.plot(R_AB, W_AB, color='green', label='Max payload')
+#    plt.plot(R_BD, W_BD, color='blue', label='Exchange payload')
+#    plt.xlim([0,5000])
+#    plt.ylim([0,9000])
+#    plt.xlabel('Range [km]')
+#    plt.ylabel('Payload weight [kg]')
+#    plt.rc('axes', labelsize=16)    # fontsize of the x and y labels
+#    plt.rc('xtick', labelsize=16)    # fontsize of the tick labels
+#    plt.rc('ytick', labelsize=16)    # fontsize of the tick labels
+#    plt.rc('legend', fontsize=16)    # legend fontsize
+#    plt.legend()
+#    plt.show()
+#    return 
+#
+#payload_range_diagram()
 
 
     
