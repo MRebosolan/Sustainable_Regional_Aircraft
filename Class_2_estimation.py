@@ -230,7 +230,7 @@ while abs((OEW_class1_kg - OEWINPUT)*100/OEWINPUT)>= 0.01:
     
     W_equipment = APU_weight + cargo_equipment_weight + furnishing_weight + instrumentation_weight + oxygen_system_weight + paint_weight + airconditioning_pressurization_weight + flight_control_weight + electrical_system_weight
     
-    OEW_class2 = W_struct + W_powerplant + W_equipment
+    OEW_class2 = (W_struct + W_powerplant + W_equipment)
     
     
     
