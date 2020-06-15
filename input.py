@@ -365,7 +365,7 @@ x_main_lat = 2.295
 #------------------------------------------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------------------------------------------
-LD_c = 19.8                          # L/D cruise, determine after wing sizing and drag analysis
+LD_c = 15 #19.8                          # L/D cruise, determine after wing sizing and drag analysis
 LD_c2 = 17                         # L/D cruise2, determine after wing sizing and drag analysis
 LD_loiter = 17                     # L/D Loiter, determine after wing sizing and drag analysis
 
