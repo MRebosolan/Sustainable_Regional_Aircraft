@@ -123,7 +123,7 @@ def cabin_design(fractioninfus,fractionintail,HYDROGENVOLUME,top_selecter = 0,po
     MACH=input.mach_cruise
     Reynolds=input.V_C_TAS*lf/k_v
     Cfturb=0.455/((math.log(Reynolds,10))**2.58*(1+0.144*MACH**2)**0.65)
-    CDzerofus=Cfturb*FFbody*fuselage_area/70 #ref area CRJ700
+    CDzerofus=Cfturb*FFbody*fuselage_area/62.248 #ref area CRJ700
     
     if V_tank_pod>0.01:
         Q_interference=1.3
@@ -133,7 +133,7 @@ def cabin_design(fractioninfus,fractionintail,HYDROGENVOLUME,top_selecter = 0,po
         FFpods=1+0.35/lambdaf_pods
         Reynolds_pods=input.V_C_TAS*podlength/k_v
         Cfturb_pods=0.455/((math.log(Reynolds_pods,10))**2.58*(1+0.144*MACH**2)**0.65)
-        CDzeropods=Q_interference*Cfturb_pods*FFpods*pod_area/70
+        CDzeropods=Q_interference*Cfturb_pods*FFpods*pod_area/62.248
         poddrag=2*0.5*input.rho_c*(input.V_C_TAS)**2*(pod_area)*CDzeropods*(1-top_selecter) #two pods
         print('pods: ',poddrag)
     else: poddrag,Cfturb_pods,CDzeropods,Reynolds_pods,pod_area,lambdaf_pods,FFpods=0,0,0,0,0,0,0
