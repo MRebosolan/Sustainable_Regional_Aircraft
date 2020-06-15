@@ -130,23 +130,23 @@ dist = np.round(np.min(dist),4) #the maximum distance between the nose and nose 
 
 def lat_pos_lg(z_main_lg=z_main_lg,dist=dist,x_main_lg=x_main_lg,x_cg_aft=x_cg_aft):
     y_lg_list = []
-    b_n_list = []
-    d = 0.005
-    for y_lg in np.arange(d,4+d,d):
-        b_n = [x_cg_aft-dist]   #distance from most forward nose lg to aft cg.
-        for i in range(len(b_n)):
-            alpha = np.arctan2(y_lg,b_n[i])
-            c = b_n[i]*np.sin(alpha)
-            psi = np.arctan2(z_main_lg,c)
-            if psi < np.radians(55) and b_n[i] < x_cg_aft:
-                y_lg_list.append(y_lg)
-                b_n_list.append(b_n[i])
-            else:
-                continue  
-    return y_lg_list, b_n_list
+    y_lg = 0.0025
+    i = True
+    b_n = x_cg-dist
+    while i:
+        alpha = np.arctan2(y_lg,b_n)
+        c = b_n*np.sin(alpha)
+        psi = np.arctan2(z_main_lg,c)
+        if psi < np.radians(55) and b_n < x_cg_aft:
+            y_lg_list.append(y_lg)
+            print (np.degrees(alpha),c,np.degrees(psi),b_n)
+            i = False
+        else:
+            i = True
+            y_lg = y_lg + 0.0025
+    return y_lg_list
 
-y_lg_list, b_n_list = lat_pos_lg(z_main_lg)
-
+y_lg_list = lat_pos_lg(z_main_lg)
 #def req_htail_area(x_main_lg,Cl_htail=Cl_htail,x_ac_htail=x_ac_htail,x_cg = x_cg_fwrd,rho_to=rho_to,Vlof=Vlof,MTOW=MTOW,htail_sweep=htail_sweep): 
     #htail_area = -((x_main_lg-x_cg)*MTOW  - sc_shift.momentcoefficient*.5*rho_to*(Vlof**2)*S*sc_shift.MAC )  /(0.5*rho_to*(Vlof)**2*Cl_htail)/(x_ac_htail-x_main_lg)
     #return htail_area
@@ -204,9 +204,9 @@ print ()
 print ('ESWL nose and ESWL for main, respectively:', ESWL_n,ESWL_m,'kg')
 
 #DUMMY#######################
-D_o = 26         # [in] outside tire diameter, also: Dt
-load_radius = 11.2 # obtain from table section 2.4.5 roskam book IV
-s_t = D_o - 2*(load_radius) #[TBD]
+D_o = 17.5         # [in] outside tire diameter, also: Dt
+load_radius = 7.4 # obtain from table section 2.4.5 roskam book IV
+s_t = (D_o - 2*(load_radius))/12 #[TBD]
 #############################
 
 w_td = 10 #[fps] touch down rate in feet per second; for FAR 25.723 certified aircraft, otherwiswe take 10
@@ -226,6 +226,6 @@ s_s_des, d_s, s_s_des_nose,d_s_n = energy_absorption()
 print ()
 print ('The required stroke length of the shock absorption is:',s_s_des,'and the required diameter equals:',d_s,'Both in meters')
 print ('Shock absorber stroke nose landing gear equals:',s_s_des_nose, 'meters, with a diameter of',d_s_n,'meters. diameter for main landing gear is taken.')
-print (x_cg_aft)
+
 # Roskam source 2 page 94: OLEO-pneumatic shock absorber explanation
 # same source: linearly decrease in tire presure and loadpage 51
