@@ -100,7 +100,6 @@ h_s = input.h_sc                      #screen height [m]
 gamma_climb = input.gamma_cl          #taken from boeing 737  
 gamma_app = input.gamma_ap            #gamma approach
 MLW = input.MLW                       #Maximum landing weight [N]
-T_rev = input.Trev                    #total thrust reverse during braking, TBD
 CD0_landGD = input.CD0_landGD
 
 #Parameters to be changed
@@ -113,9 +112,6 @@ V_nmax = 96.5
 rho_land = rho_to                #might be changed
 CL_land = CLmax            
 CD_land = CD0_landGD + CL_land**2  / (np.pi * A * e)
-T_to_eq = T_to / (rho_to / rho_0)**0.75
-print(T_to_eq)
-print(T_to_eq / MTOW)
 
 #
 #
@@ -344,7 +340,12 @@ def take_off_distances(CLmax, CD_togd, rho_to, S, CL_to, MTOW, T_to, mu, g, h_s,
     print('x_to = ', x_tot)
     return s_to, x_airborne, x_tot
     
-print(take_off_distances(CLmax, CD_togd, rho_to, S, CL_to, MTOW, T_to, mu, g, h_s, gamma_climb))
+#print(take_off_distances(CLmax, CD_togd, 1.225, S, CL_to, MTOW, 85000, mu, g, h_s, gamma_climb))
+#print(take_off_distances(CLmax, CD_togd, 0.974, S, CL_to, MTOW, T_1500m, mu, g, h_s, gamma_climb))
+#
+#T_to_eq = T_1500m / (rho_to / rho_0)**0.75
+#print(T_to_eq)
+#print(T_to_eq / MTOW)
 
 def landing_distances(MLW, S, rho_land, CLmax, gamma_app, h_s, CD_land, CL_land, T_rev, mu_brake, g=g):
     R = 1.3**2 * (MLW * 2 /(S * rho_land * CLmax)) / (0.1 * g)
@@ -372,9 +373,11 @@ def landing_distances(MLW, S, rho_land, CLmax, gamma_app, h_s, CD_land, CL_land,
     
     return x_airborne, x_trans, x_brake, x_gr, x_tot, required_field_length, V_bar, V_app
 
-x_airborne, x_trans, x_brake, x_gr, x_tot, required_field_length, V_bar, Vap = landing_distances(MLW, S, rho_land, CLmax, gamma_app, h_s, CD_land, CL_land, T_rev, mu_brake)
-#print(landing_distances(MLW, S, rho_land, CLmax, gamma_app, h_s, CD_land, CL_land, T_rev, mu_brake, g=g))
-print('Approach speed: ', Vap)
+#x_airborne, x_trans, x_brake, x_gr, x_tot, required_field_length, V_bar, Vap = landing_distances(MLW, S, rho_land, CLmax, gamma_app, h_s, CD_land, CL_land, T_rev, mu_brake)
+T_rev_sl = T_to*0.5#input.Trev                    #total thrust reverse during braking, TBD
+T_rev_1500m = T_1500m
+print(landing_distances(MLW, S, 1.225, CLmax, gamma_app, h_s, CD_land, CL_land, T_rev_sl, mu_brake, g=g))
+print(landing_distances(MLW, S, 0.974, CLmax, gamma_app, h_s, CD_land, CL_land, T_rev_1500m, mu_brake, g=g))
 
 
 
