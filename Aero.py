@@ -39,6 +39,7 @@ print(S)
 AR = inp.AR
 MTOW = inp.MTOW
 widthf = inp.widthf
+wingloading = inp.wingloading
 
 V_C = inp.V_C  # Cruise Speed knots
 V_D = inp.V_dive  # Dive Speed knots
@@ -342,7 +343,7 @@ def drag():
     S_wet_wing = 1.07 * 2 * S
     S_wet_tailh = 1.05 * 2 * Sh
     S_wet_tailv = 1.05 * 2 * Sv
-    S_wet_nacelle = (25 * (1 + B)**0.2 * (Tto/ 100e3)**0.8) * 2
+    S_wet_nacelle = 4.5 * 2.49 * (2 + 0.33 * 0.35  + 0.8 * 0.33 * 0.9 + 1.15 * (1 - 0.33) * 0.8) * 2
 
     ####### skin friction coeff
 
@@ -399,21 +400,27 @@ def drag():
         wavedrag = 0.002 * (1 + 2.5 * (M_cruise - Mdd)/0.05)**2.5
 
     #print("Mdd=", Mdd, M_cruise)
-    #print("wavedrag=", wavedrag) # verified
+    print("wavedrag=", wavedrag) # verified
 
     ## Drag due to fuselage upsweep (upsweep in rad, Amax is max cross-sectional area)
     dragupsweep = 3.83 * upsweep**2.5 * Amax_fus / S
 
-    #print("dragupsweep=", dragupsweep)  # verified
+    print("dragupsweep=", dragupsweep)  # verified
 
     ## landing gear drag (add this from ADSEE)
     # for nose gear: e/d = 2.5, a/d = 7.67
-    cds_nose = 0.49
-    cds_main = main_amount * 0.04955 * np.exp(5.615 * Sa_main / S_mlg)
-    draglg = (cds_nose + cds_main) * (S_nlg + main_amount * S_mlg) / S
+    # cds_nose = 0.49
+    # cds_main = main_amount * 0.04955 * np.exp(5.615 * Sa_main / S_mlg)
+    #
+    # print("Lg drag", cds_nose, cds_main)
+    #
+    # draglg = (cds_nose + cds_main) * (S_nlg + main_amount * S_mlg) / S
 
+    K_uc_to = 4.5e-5    # factor that relates flap deflection to lg drag, this one is for takeoff
 
-    #print("drag lg = ", drag_lg)       # not correct still
+    draglg = wingloading * K_uc_to * MTOW**(-0.215)# http://pure.tudelft.nl/ws/files/10056382/Metz_AIAA_Aircraft_Performance_2016.pdf
+
+    print("drag lg = ", draglg)       # not correct still
 
     ## flap drag
     if dflap > 10:
@@ -421,10 +428,10 @@ def drag():
     else:
         drag_flap = 0
 
-    #print("drag_flap=",SwfS, drag_flap) # verified by checking if drag increases with flap deflection
+    print("drag_flap=",SwfS, drag_flap) # verified by checking if drag increases with flap deflection
 
     ### Tot Misc drag
-    drag_misc = wavedrag + dragupsweep + drag_flap + draglg
+    drag_misc = wavedrag + dragupsweep + drag_flap + draglg / S
     leakage   = 1.02                                     # 2-5 % of total CDO
     print("drag misc =", drag_misc)
 
@@ -434,18 +441,19 @@ def drag():
     CD0tailh = (S_wet_tailh * Cftot_tailh * IF_tailh * FF_tailh)
     CD0tailv = (S_wet_tailv * Cftot_tailv * IF_tailv * FF_tailv)
     CD0nacelle = (S_wet_nacelle * Cftot_nacelle * IF_nacelle * FF_nacelle)
+    print("Nacelle: ", S_wet_nacelle, Cftot_nacelle, IF_nacelle, FF_nacelle)
 
-    CD0 = (1 / S * (CD0wing + CD0tailh + CD0tailv + CD0nacelle) + CD0fus + CD0pods + drag_misc) * leakage
+    CD0 = ((CD0wing + CD0tailh + CD0tailv + CD0nacelle)/S + CD0fus + CD0pods + drag_misc) * leakage
 
     print("CD0=", CD0, )
-    print("CD0 Wing fraction = ", CD0wing/CD0/S)
-    print("CD0 Horizontal tail fraction = ", CD0tailh / CD0/S)
-    print("CD0 Vertical tail  fraction = ", CD0tailv / CD0/S)
-    print("CD0 Engine nacelle fraction = ", CD0nacelle / CD0/S)
-    print("CD0 Fuselage fraction = ", CD0fus / CD0)
-    print("CD0 Pods fraction = ", CD0pods / CD0)
-    print("CD0 Landing Gear fraction = ", draglg / CD0)
-    print("CD0 Miscellaneous fraction= ", drag_misc / CD0)
+    print("CD0 Wing fraction = ", CD0wing/ S)
+    print("CD0 Horizontal tail fraction = ", CD0tailh/S )
+    print("CD0 Vertical tail  fraction = ", CD0tailv / S)
+    print("CD0 Engine nacelle fraction = ", CD0nacelle / S)
+    print("CD0 Fuselage fraction = ", CD0fus )
+    print("CD0 Pods fraction = ", CD0pods )
+    print("CD0 Landing Gear fraction = ", draglg / S)
+    print("CD0 Miscellaneous fraction= ", drag_misc )
 
     ####################### Lift induced drag
     df1 = 0      # flap deflection - clean
