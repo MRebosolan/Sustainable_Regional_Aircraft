@@ -464,6 +464,9 @@ def drag():
     df2 = 1.047  # flap deflection - Lnd
     df3 = 0.349  # flap deflection - TO
     oswaldclean = 1.78 * (1 - 0.045 * AR**0.68) - 0.64 + 0.0046 * df1
+
+    print("e=",oswaldclean)
+
     oswaldTO = 1.78 * (1 - 0.045 * AR**0.68) - 0.64 + 0.0046 * df3
     oswaldLnd = 1.78 * (1 - 0.045 * AR**0.68) - 0.64 + 0.0046 * df2
     d_CD_twist = 0          #0.00004 * (phi_tip - phi_MGC) #effect of twist
