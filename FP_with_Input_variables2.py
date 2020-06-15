@@ -2,7 +2,7 @@ import input
 import Class_2_estimation as Cl2
 import numpy as np
 import matplotlib.pyplot as plt
-from Class_1_estimation import Mff4,Mff5
+
 """
 Responsible person(s): Rick and Tobias
 
