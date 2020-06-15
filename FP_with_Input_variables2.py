@@ -388,7 +388,7 @@ def optimal_flight_condition(A,e,CD0,S=S,rho_c=rho_c,g=g,c_t=c_t):    #we seek t
     """
     T = T_to * (rho_c / rho_0)**(3/4)
     F =c_t*T
-    W = 31500*g    # Still variable value                                
+    W = MTOW(1-0.03346922107635999)    # Still variable value                                
     Clopt = np.sqrt(1/3*CD0*np.pi*A*e)
     Cdopt = 4/3*CD0
     Vopt = np.sqrt(W/S*2/rho_c*1/Clopt)
@@ -418,15 +418,19 @@ def max_range(H,Vcr,F,S,A,e,CD0,c_t,g=g,rho_c=rho_c): #only holds at constant al
     eta_t = T*Vcr/(F*H/g)
     Cl = np.sqrt(CD0*np.pi*A*e)
     Cd = 2*CD0
-    W1 = MTOW*Mff4
-    W2 = MTOW*Mff5
+    W1 = MTOW*(1-0.03346922107635999)
+    W2 = MTOW*(1-0.2905605894506181)
 
-    Range = 2/(c_t*Cd)*np.sqrt(1/S*2/rho_c*Cl)*(np.sqrt(W1)-np.sqrt(W2))*(10**(-3))   
-    Range2 = (eta_t*H/g*Cl/Cd*np.log(W1/W2))*(10**(-3))  
-    return Range, Range2,eta_t,Cl,Cd,F
 
-Range,Range2,eta_t,Cl,Cd,F = max_range(H,Vcr,F,S,A,e,CD0,c_t)
-print (Range,Range2)
+    range_c_altitude = 2/(c_t*Cd)*np.sqrt(1/S*2/rho_c*Cl)*(np.sqrt(W1)-np.sqrt(W2))/1000 #km  
+    range_unified = (eta_t*H/g*Cl/Cd*np.log(W1/W2))/1000 #km 
+    range_cruise = Vcr/c_t*input.LD_c*np.log(W1/W2)/1000
+    print (range_unified,range_cruise)
+    print ()
+    print (Cl/Cd,input.LD_c)
+    return 
+
+max_range(H,Vcr,F,S,A,e,CD0,c_t)
 #print (Range,Range2,eta_t,Cl,Cd)
 #
 #    #---------------------------------------------------------
