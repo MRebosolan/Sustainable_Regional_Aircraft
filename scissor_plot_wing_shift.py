@@ -63,9 +63,8 @@ z_position_wing = input.z_position_wing
 zero_lift_angle = input.zero_lift_angle
 e_tail = input.e_tail                   #Oswald efficiency factor
 x_lemac_Cr = input.x_lemac_rootchord         #x location of leading edge mac measured from root chord [m]
-
 #Inputs varient with wing position
-
+input.Cldes_clean
 x_start_Cr = shift.x_start_Cr
 lemac = shift.x_lemac
 xh = input.x_lemac_rootchord_h + input.x_rootchord_h + 0.25*input.c_mac_h
@@ -293,8 +292,12 @@ def scissor_wing_shift():
             
     lowest = combi.index(min(combi))#+Sh_min_lst.index(min(Sh_min_lst)))/2)
     x = 19
-    minimum = Sh_min_lst[51 ]
-    min_Sh_over_S = combi[51] * 1# (1+input.horizontal_margin)
+    minimum = Sh_min_lst[50 ]
+    min_Sh_over_S = combi[50] * 1# (1+input.horizontal_margin)
+    
+    # minimum = min(Sh_min_lst)
+    # min_Sh_over_S = minimum[0]
+    
     Sh_min = min_Sh_over_S * S
     x_Cr_opt_nose = minimum[1]
     cg_stab_lim = minimum[2] 
@@ -313,14 +316,17 @@ def scissor_wing_shift():
     
     tailarm = lh[index] + MAC * (0.25-xac_cruise)
     
-    Dtrim = trimdrag(cm_cruise, tail_armh, Sh_min,  CL, cg_aft, xac_cruise, MAC), trimdrag(cm_cruise, tail_armh, Sh_min,  CL, cg_fwd, xac_cruise, MAC)
+    CL_trim = input.Cldes_clean
+    Dtrim = trimdrag(cm_cruise, tail_armh, Sh_min,  CL_trim, cg_aft, xac_cruise, MAC), trimdrag(cm_cruise, tail_armh, Sh_min,  CL_trim, cg_fwd, xac_cruise, MAC)
+    
+    Dtrim_approach = trimdrag(cm_ac, tail_armh, Sh_min,  CL, cg_aft, xac, MAC), trimdrag(cm_ac, tail_armh, Sh_min,  CL, cg_fwd, xac, MAC)
 
     
 
     rotation = np.array(rotation)
 
     
-    return Sh_min_lst, min_Sh_over_S, x_Cr_opt_nose, cg_stab_lim, cg_aft, cg_cont_lim, cg_fwd, Dtrim, Sh_min, controlplot, stabilityplot, ShS,index, momentcoefficient, aerodynamiccenter, rotation, combi
+    return Sh_min_lst, min_Sh_over_S, x_Cr_opt_nose, cg_stab_lim, cg_aft, cg_cont_lim, cg_fwd, Dtrim, Sh_min, controlplot, stabilityplot, ShS,index, momentcoefficient, aerodynamiccenter, rotation, combi, Dtrim_approach
 
 
 
@@ -332,26 +338,27 @@ def scissorplot(stabilityplot,controlplot, ShS, frontcg, aftcg, Sh_over_S):
     plt.plot(stabilityplot*100,ShS, color = 'b', label = 'Stability aft limit')
     plt.plot(controlplot*100,ShS, color = 'orange', label = 'Control margin')
     plt.plot(controlplot*100 -5,ShS, color = 'grey', label = 'Control fwd limit')
+    
+    plt.plot(np.array(Sh_min_lst)[:,5]*100,rotation[:,0], color = 'grey', label = 'Control fwd limit')
 
     plt.plot([frontcg*100,aftcg*100], [Sh_over_S, Sh_over_S], color = 'r', marker = '|', label = 'CG range')
     plt.ylim(-0.05,0.5)
-    plt.xlim(0, 150)
+    plt.xlim(0, 100)
     plt.grid()
     plt.xlabel("Xcg/MAC [%]")
     plt.ylabel("Sh/S [-]")
     plt.legend(loc = 'upper right')
-    plt.title('Tail Tank and Drop Tank')
+    # plt.title('Tail Tank and Drop Tank')
     plt.show()
     
 
 
 
-Sh_min_lst, min_Sh_over_S, x_Cr_opt_nose, cg_stab_lim, cg_aft, cg_cont_lim, cg_fwd, Dtrim, Sh_min, controlplot, stabilityplot, ShS, index, momentcoefficient, aerodynamiccenter, rotation, combi = scissor_wing_shift()
+Sh_min_lst, min_Sh_over_S, x_Cr_opt_nose, cg_stab_lim, cg_aft, cg_cont_lim, cg_fwd, Dtrim, Sh_min, controlplot, stabilityplot, ShS, index, momentcoefficient, aerodynamiccenter, rotation, combi, Dtrim_approach = scissor_wing_shift()
 scissorplot(stabilityplot, controlplot, ShS, cg_fwd, cg_aft, min_Sh_over_S)
 print(min_Sh_over_S, 'sh over s')
 print(x_Cr_opt_nose, 'root location')
 
-#todo: check capability of horizontal tail for providing negative lift to sufficiently rotate the aircraft at take-off
 
 cg_fully_loaded = shift.cg_loaded_lst[index]
 

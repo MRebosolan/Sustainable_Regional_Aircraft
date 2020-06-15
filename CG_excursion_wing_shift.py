@@ -17,7 +17,7 @@ from cabindesign import cabin_design
 
 t_cyl,m_cyl, tm_cyl, d_cyl,l_cyl,t_tail,m_tail, tm_tail, d_tail,l_tail\
            ,t_top,m_top,tm_top,d_top,l_top,t_pod,m_pod,tm_pod,d_pod,l_pod,totalcabinlength,V_tank_cyl, V_tank_tail, V_tank_top,V_tank_pod,\
-           tm_tanksystem,CGtank,CGfuelfull,CGcomb,totdrag,fuselage_weight,CDzerofus,FFbody,Cfturb,fuselage_area,CDzeropods,fusdrag,poddrag,tailcone_length=cabin_design(0.5,1,26,0)
+           tm_tanksystem,CGtank,CGfuelfull,CGcomb,totdrag,fuselage_weight,CDzerofus,FFbody,Cfturb,fuselage_area,CDzeropods,fusdrag,poddrag,tailcone_length=cabin_design(input.pod_tail_fraction,1,cl2.class1[7],0)
            
            
 #Raw inputs
@@ -48,7 +48,7 @@ pax_abreast = input.pax_abreast
 x_start_Cr = np.arange(0.2 * l_f, 0.8 * l_f, 0.1)   #x-location measured from the nose where root chord starts
 x_lemac = [i + x_lemac_Cr for i in x_start_Cr]
 x_engine = x_lemac       #Assume engine cg is at lemac
-print('Make x_eninge not wing location dependent if we end up having fuselage mounted engines')
+# print('Make x_eninge not wing location dependent if we end up having fuselage mounted engines')
 x_nacelle = x_engine     #assume nacelle cg is at engine cg
 x_ac = [i + 0.25 * MAC for i in x_lemac]            #assume ac at quarter chord point
 lh_fix = input.lh                   #distance between wing and horizontal tail aerodynamic centers
@@ -97,9 +97,9 @@ w_cyl_tank=tm_cyl
 w_tank = w_pod_tank+w_tail_tank+w_cyl_tank
 x_tank = (w_pod_tank * x_pod_tank + w_tail_tank * x_tail_tank + w_cyl_tank * x_cyl_tank)/(w_tank)
 
-w_pod_fuel=V_tank_pod*input.rho_hydrogen
-w_tail_fuel=V_tank_tail*input.rho_hydrogen
-w_cyl_fuel=V_tank_cyl*input.rho_hydrogen
+w_pod_fuel= (1- input.pod_tail_fraction)* cl2.df['SRA']['Max fuel weight']
+w_tail_fuel=input.pod_tail_fraction* cl2.df['SRA']['Max fuel weight']
+w_cyl_fuel=0
 # x_fuel = x_tank                 #fuel cg measured from nose, assumed same as tank cg as most likely the tank will be symmetrical
 
 x_fuel_fuselage = (w_tail_fuel *x_tail_tank + w_cyl_fuel * x_cyl_tank)/(w_tail_fuel + w_cyl_fuel)
@@ -130,7 +130,7 @@ x_paint = l_f/2
 x_empennage = [x_ac[i] + (lh[i] + lv[i]) / 2 for i in range(len(x_start_Cr))] #Assume cg of empennage is in the middle of the aerodynamic center of horizontal and vertical tail, measured from the nose
 x_lg_front = input.x_lg_front    #cg location of front landing gear [m], measured from the nose, assumed to be 3 m (used for calculating cg at oew, not to be changed per se)
 x_lg_main = [i + 4.7 for i in x_start_Cr]     #cg location of main landing gear [m], assumed 2/3 root chord length further than start of root chord (used for calculating cg at oew, not to be changed per se)
-print("In calculation of cg @ OEW, take into account the exact tank placement and cg location once agreed on a specific configuration")
+# print("In calculation of cg @ OEW, take into account the exact tank placement and cg location once agreed on a specific configuration")
 
 def cg_excursion_wing_shift():
     plt.close()
