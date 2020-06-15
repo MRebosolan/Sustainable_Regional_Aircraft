@@ -396,6 +396,8 @@ t_c_wing = 0.14        #t/c wing airfoil
 t_c_tailv = 0.12           #t/c vertical tail airfoil
 t_c_tailh = 0.12           #t/c horizontal tail airfoil
 
+nosegear_width = 0.127    # m
+maingear_width = 0.235    # m
 
 # inputs still needed for drag: Sh, Sv, c_MACh, nosecone (assume cockpit) and tailcone length, upsweep,
 # bypass ratio (10), width nose gear, width main gear, actual frontal area main gear.
