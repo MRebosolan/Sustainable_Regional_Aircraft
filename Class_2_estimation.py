@@ -303,7 +303,7 @@ wing = [{'data': 'Wing Area', 'SRA': S, 'F28':tom2(1), '737-200':tom2(1)},
 aircraftpar = aircraftpar.append(wing, ignore_index = True, sort = False)
 
 
-latex = df.to_latex(index = False)#, caption = "System weight breakdown... not yet final caption")
+latex = df.to_latex(index = True)#, caption = "System weight breakdown... not yet final caption")
 print("Uncomment the caption for the final version")
 
 print(df)

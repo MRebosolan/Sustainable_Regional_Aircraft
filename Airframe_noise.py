@@ -29,7 +29,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import input 
 
-rs = 2002.74
+rs = 2
 
 bw = input.b
 Aw = input.S
@@ -706,7 +706,9 @@ P2_2turbine = [2*P2_turbine_broadband[i] + 2*P2_turbine_tone[i] for i in range(l
    
 
 SPL_turbine = np.array([10 * np.log10(P2) + 20 * np.log10(rho * c**2 / Pref) for P2 in P2_turbine])  
-SPL_2turbine = np.array([10 * np.log10(P2) + 20 * np.log10(rho * c**2 / Pref) for P2 in P2_2turbine]) 
+SPL_2turbine = np.array([10 * np.log10(P2) + 20 * np.log10(rho * c**2 / Pref) for P2 in P2_2turbine])
+
+ 
 
 #===================================================================================
 #Total engine noise
@@ -739,12 +741,15 @@ SPL_approach = np.genfromtxt('approach.csv')
 SPL_flyover = np.genfromtxt('flyover.csv')
 SPL_lateral = np.genfromtxt('lateral.csv')
 #
-#count = 0
-SPL_cumulative = []
+
+
+SPL_takeoff = []
+count = 0
 for i in range(len(frequency)):
-    count = 10**(SPL_approach[i]/10) + 10**(SPL_flyover[i]/10) + 10**(SPL_lateral[i]/10)
-    SPL_cumulative.append(count)
+    count = 10**(SPL_airframe_lst[i]/10) + 10**(SPL_both_engines[i]/10)
+    SPL_takeoff.append(10*np.log10(count))
     count = 0
+
 
 plt.close()
 plt.figure()
@@ -754,7 +759,7 @@ plt.figure()
 #plt.plot(frequency, SPL_f_lst, label='Wing TE flap noise')
 #plt.plot(frequency, SPL_nlg_tot_lst, label='Nose landing gear noise')
 #plt.plot(frequency, SPL_mlg_tot_lst, label='Main landing gear noise')
-#plt.plot(frequency, SPL_airframe_lst, label='Total airframe noise')
+plt.plot(frequency, SPL_airframe_lst, label='Total airframe noise')
 
 #plt.plot(frequency, SPL_inlet_broadband, label='Inlet broadband noise')
 #plt.plot(frequency, SPL_inlet_rotor, label='Inlet rotor-stator interaction tones noise')            #Possibly change this to eta to shift the curves
@@ -763,27 +768,27 @@ plt.figure()
 #plt.plot(frequency, SPL_outlet_broadband, label='Outlet broadband noise')
 #plt.plot(frequency, SPL_outlet_rotor, label='Outlet rotor-stator interaction tones noise')
 #plt.plot(frequency, SPL_fan, label='Fan noise')
-
+#
 #plt.plot(frequency, SPL_combustion, label='Combustion noise')
-
+#
 #plt.plot(frequency, SPL_jet, label='Jet noise')
 
 #plt.plot(frequency, SPL_turbine_broadband, label='Turbine broadband noise')
 #plt.plot(frequency, SPL_turbine_tone, label='Turbine tone noise')
 #plt.plot(frequency, SPL_turbine, label='Turbine noise')
-
+#
 #plt.plot(frequency, SPL_single_engine, label='Total single engine noise')
 
-#plt.plot(frequency, SPL_both_engines, label='Total engine noise')
-
-plt.plot(frequency, SPL_approach, label='Approach noise')
-plt.plot(frequency, SPL_flyover, label='Flyover noise')
-plt.plot(frequency, SPL_lateral, label='Lateral noise')
+plt.plot(frequency, SPL_both_engines, label='Total engine noise')
+plt.plot(frequency, SPL_takeoff, label='Total take-off noise')
+#plt.plot(frequency, SPL_approach, label='Approach noise')
+#plt.plot(frequency, SPL_flyover, label='Flyover noise')
+#plt.plot(frequency, SPL_lateral, label='Lateral noise')
 #plt.plot(frequency, SPL_cumulative, label='Cumulative noise')
 
 plt.xscale('log')
 plt.xlim([10**1.5,10**4.5])
-plt.ylim([40,100])
+plt.ylim([0,150])
 plt.xlabel('1/3 Octave Band central frequency [Hz]')
 plt.ylabel('SPL [dB]')
 
@@ -792,11 +797,11 @@ plt.ylabel('SPL [dB]')
 #plt.plot(frequency, SPL_s_nlg_lst, label='Nose landing gear strut noise')
 #plt.plot(frequency, SPL_s_mlg_lst, label='Main landing gear strut noise')
 
-plt.rc('axes', labelsize=16)    # fontsize of the x and y labels
-plt.rc('xtick', labelsize=16)    # fontsize of the tick labels
-plt.rc('ytick', labelsize=16)    # fontsize of the tick labels
-plt.rc('legend', fontsize=16)    # legend fontsize
-plt.legend()
+plt.rc('axes', labelsize=26)    # fontsize of the x and y labels
+plt.rc('xtick', labelsize=26)    # fontsize of the tick labels
+plt.rc('ytick', labelsize=26)    # fontsize of the tick labels
+plt.rc('legend', fontsize=26)    # legend fontsize
+plt.legend(loc='upper right', ncol=2)
 plt.show()
 
 
