@@ -138,8 +138,8 @@ def req_htail_area(x_cg_aft,x_ac_htail, x_cg_front, front_weight,x_ac, momentcoe
 
 
 
-print('Read off acutal values for cprime_c from SEAD lecture 5 slides 18-20 once wing is designed')
-print('Change to *1.6 in DCLmax if double slotted flaps are used, see slide 35 ADSEE II')
+# print('Read off acutal values for cprime_c from SEAD lecture 5 slides 18-20 once wing is designed')
+# print('Change to *1.6 in DCLmax if double slotted flaps are used, see slide 35 ADSEE II')
 def scissor_wing_shift():
     Sh_min_lst = []
     rotation = []
