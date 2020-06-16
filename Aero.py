@@ -164,6 +164,7 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S, v_approach, V_C_TAS):
     p_cruise = 101325 * (1 - 0.0065*inp.Cruise_alt*1000/288)**(9.80665/(287*0.0065))
     q = 0.5 * 1.4 * p_cruise * M_cruise**2
     CL_cruise = MTOW/(q*S)
+    print("CL_cruise=", CL_cruise)
     sweep_c2 = np.arctan(np.tan(sweep_c4) - 4/AR * ((50-25)/100 * (1 - taper)/(1 + taper))) #* 180/np.pi
     t_c = min((np.cos(sweep_c2)**3 * (0.935 - (M_cruise + 0.03) * np.cos(sweep_c2)) - 0.115 * CL_cruise**1.5) \
           / (np.cos(sweep_c2)**2), 0.18)  #Upper limit for wing thickness
@@ -191,7 +192,6 @@ def wing_geometry(M_cruise, S, AR, MTOW, V_C, widthf, V_S, v_approach, V_C_TAS):
     print(AR_check)
 
     WS_cr_start = 0.9843800695598843 * MTOW / S
-
     WS_cr_end = 0.9629656887889539 * MTOW / S
 
     CL_des = 1.1/q * (0.5*(WS_cr_start + WS_cr_end))
@@ -423,9 +423,9 @@ def drag():
     #print("drag lg = ", draglg)       # not correct still
 
     ## flap drag
-    drag_flap_to = 0.0144 * SwfS * (dflap_to - 10) / S
+    drag_flap_to = 0.0144 * SwfS * (dflap_to - 10) 
 
-    drag_flap_landing = 0.0144 * SwfS * (dflap_landing - 10) / S
+    drag_flap_landing = 0.0144 * SwfS * (dflap_landing - 10)
 
     print("drag_flap=", SwfS) # verified by checking if drag increases with flap deflection
 
@@ -465,7 +465,7 @@ def drag():
     df3 = 0.349  # flap deflection - TO
     oswaldclean = 1.78 * (1 - 0.045 * AR**0.68) - 0.64 + 0.0046 * df1
 
-    print("e=",oswaldclean)
+    print("1/piAe=", 1 / (np.pi*AR*oswaldclean))
 
     oswaldTO = 1.78 * (1 - 0.045 * AR**0.68) - 0.64 + 0.0046 * df3
     oswaldLnd = 1.78 * (1 - 0.045 * AR**0.68) - 0.64 + 0.0046 * df2
@@ -475,10 +475,10 @@ def drag():
 #    K_ground = (33 * (h/b)**1.5)/ (1 + 33 * (h/b)**1.5) #  ground effect
 #
     ######################### Total drag polar #######################
-    clrange = np.arange(-1.0, 2.5, 0.1)
+    clrange = np.arange(-1.0, 2.5, 0.01)
     Draglist = []
     for i in clrange:
-        C_D = CD0 + (i - CL_des)**2/(np.pi*AR_eff*oswaldclean)
+        C_D = CD0 + (i - 0.127272727272)**2/(np.pi*AR_eff*oswaldclean)
         Draglist.append(C_D)
 
     return Draglist, clrange
@@ -616,19 +616,19 @@ Draglist, clrange = drag()
 #plt.ylabel('y/c [-]')
 #plt.xlabel('x/c [-]')
 #
-# plt.figure(5)
-# plt.grid("minor")
-# plt.plot(alpha_range[0], CL_clean_list)
-# plt.plot(alpha_range[2], CL_to_list)
-# plt.plot(alpha_range[1], CL_landing_list)
-# plt.plot(CLmax_list[1][0], CLmax_list[0][0], marker=".", color="blue")
-# plt.plot(CLmax_list[1][2], CLmax_list[0][2], marker=".", color="orange")
-# plt.plot(CLmax_list[1][1], CLmax_list[0][1], marker=".", color="green")
-# plt.ylim(0, 2.5)
-# plt.xlim(-5, 25)
-# plt.xlabel(r"$\alpha$ [deg]")
-# plt.ylabel(r"$C_L$ [-]")
-# plt.legend(["clean", "take-off", "landing",  "stall clean", "stall take-off", "stall landing"], loc="upper left")
+plt.figure(5)
+plt.grid("minor")
+plt.plot(alpha_range[0], CL_clean_list)
+plt.plot(alpha_range[2], CL_to_list)
+plt.plot(alpha_range[1], CL_landing_list)
+plt.plot(CLmax_list[1][0], CLmax_list[0][0], marker=".", color="blue")
+plt.plot(CLmax_list[1][2], CLmax_list[0][2], marker=".", color="orange")
+plt.plot(CLmax_list[1][1], CLmax_list[0][1], marker=".", color="green")
+plt.ylim(0.4, 1.2)
+plt.xlim(-5, 25)
+plt.xlabel(r"$\alpha$ [deg]")
+plt.ylabel(r"$C_L$ [-]")
+plt.legend(["clean", "take-off", "landing",  "stall clean", "stall take-off", "stall landing"], loc="upper left")
 
 plt.figure(6)
 plt.grid()
@@ -642,6 +642,7 @@ plt.grid()
 plt.xlabel(r"$C_L$ [-]")
 plt.ylabel(r"$L/D$ [-]")
 plt.xlim(-0.5, 1.8)
+plt.ylim(15, 18)
 plt.plot(clrange, clrange/Draglist)
 plt.show()
 
