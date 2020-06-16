@@ -431,7 +431,6 @@ def drag():
 
     ### Excresence drag
     leakage   = 1.02                                     # 2-5 % of total CDO
-
     ############ FINAL ZERO LIFT DRAG
 
     CD0wing = (S_wet_wing * Cftot_wing * IF_wing * FF_wing)
@@ -642,7 +641,7 @@ plt.grid()
 plt.xlabel(r"$C_L$ [-]")
 plt.ylabel(r"$L/D$ [-]")
 plt.xlim(-0.5, 1.8)
-plt.ylim(15, 18)
+plt.ylim(0, 18)
 plt.plot(clrange, clrange/Draglist)
 plt.show()
 
