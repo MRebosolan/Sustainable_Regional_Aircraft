@@ -33,7 +33,7 @@ CD0_landGD = input.CD0_landGD
 #Parameters to be changed
 W = 30000 * g 
 rho = 0.974
-rho_to = 0.974  #rho_0                #Can be changed, depending on the runway height Both from 
+rho_to = 1.05807  #rho_0                #Can be changed, depending on the runway height Both from 
 nmax = 2.6                            # obtain nmax from max_load_factor function
 V_nmax = 96.5
 
@@ -80,7 +80,7 @@ def performance_diagrams(rho_0, rho, e, clmax=CLmax, mtow=MTOW,s=S,a=A,MTOW=MTOW
 #   
     w = MTOW
     v = np.arange(1,301,1)
-    t = t_to * (rho / rho_0)
+    t = t_to * (rho / rho_0)**(3/4)
     pa = np.array([t*i for i in v])
     d = np.array([cd0 * 0.5 * rho * i**2 * s + 2 * w**2 / (np.pi * a * e * rho * i**2 * s) for i in v])
     preq = np.array([cd0 * 0.5 * rho * i**3 * s + 2 * w**2 / (np.pi * a * e * rho * i * s) for i in v])
@@ -128,12 +128,12 @@ def performance_diagrams(rho_0, rho, e, clmax=CLmax, mtow=MTOW,s=S,a=A,MTOW=MTOW
     
     axs[0].set_xlim([0,250])
     axs[1].set_xlim([0,250])
-    axs[0].set_ylim([0,t*2/1000])
+    axs[0].set_ylim([0,t_to*2/1000])
     axs[1].set_ylim([0, pa[-1]*1.2/1000000])
-    plt.rc('axes', labelsize=16)    # fontsize of the x and y labels
-    plt.rc('xtick', labelsize=16)    # fontsize of the tick labels
-    plt.rc('ytick', labelsize=16)    # fontsize of the tick labels
-    plt.rc('legend', fontsize=16)    # legend fontsize
+    plt.rc('axes', labelsize=8)    # fontsize of the x and y labels
+    plt.rc('xtick', labelsize=8)    # fontsize of the tick labels
+    plt.rc('ytick', labelsize=8)    # fontsize of the tick labels
+    plt.rc('legend', fontsize=8)    # legend fontsize
     plt.show()
     return 
    
