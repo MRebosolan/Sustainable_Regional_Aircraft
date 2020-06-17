@@ -347,7 +347,7 @@ def max_load_factor_steepest_turn(T_to, CD0, rho_0, rho, S, W, A, e, CLmax_clean
     return n_plot_lst, V_plot_lst
 
 #n_plot_lst, V_plot_lst = max_load_factor_steepest_turn(15000, 0.021, rho_0, 0.59, 30, 60000, 7, 1, 1.4)
-n_plot_lst, V_plot_lst = max_load_factor_steepest_turn(T_to, CD0, rho_0,0.59, S, MTOW, A, e, CLmax_clean)
+#n_plot_lst, V_plot_lst = max_load_factor_steepest_turn(T_to, CD0, rho_0,0.59, S, MTOW, A, e, CLmax_clean)
 V_steepest  =np.ma.masked_where(n_plot_lst < max(n_plot_lst),V_plot_lst)
 
 V_steepestSL = np.genfromtxt('VsteepestSL.csv')
@@ -413,8 +413,8 @@ def steepest_turn():
                  bbox_to_anchor=(2.2, 1.1),fancybox=True, shadow=False, ncol=1)
     plt.show()
     return
-steepest_turn()
-    
+#steepest_turn()
+#    
     
 #n_steepest_turn = max(n_plot_lst)
 #V_steepest_turn_indices = [i for i,d in enumerate(n_plot_lst) if d==n_steepest_turn]
@@ -504,8 +504,8 @@ def R_V_T_V_diagrams():
     plt.show()
 
     return 
-
-R_V_T_V_diagrams()        
+#
+#R_V_T_V_diagrams()        
 
 
             
@@ -693,7 +693,7 @@ W_fuel_max = W_fuel_max_pay / percent * 100
 W_fuel_exchange = W_fuel_max - W_fuel_max_pay
 W_pay_max_fuel = W_pay - W_fuel_exchange
 
-end_i = [0.99651,0.99651,0.998255,0.99302,0.99651,0.99651,0.9971422253661717,0.9939283669854275,0.99651,0.997208]
+end_i = [0.99651,0.99651,0.998255,0.99302,0.99651,0.99651,0.9967731493823129,0.9939283669854275,0.99651,0.997208]
 
 Mff_D = 1 - W_fuel_max_pay / OEW
 
@@ -727,34 +727,34 @@ for i in end_i:
 #    return R_AB, W_AB, R_BC, W_BC, R_CD, W_CD
     
 #R_AB, W_AB, R_BC, W_BC, R_CD, W_CD = payload_range_diagram()   
-#
-#def payload_range_diagram():
-#    R_AB = np.arange(0, R_des + 1, 1)
-#    W_AB = (R_des+1) * [W_pay]
-#    
-#    
-#    R_D = Vcr / g / cj_c * LD_c * np.log(1/end5_D) / 1000
-#    print(R_D)
-#    R_BD = np.arange(R_des, R_D + 1, 1)
-#    W_D = 0
-#    W_BD = [W_pay - (W_pay - W_D) / (R_D - R_des) * (R - R_des) for R in R_BD]
-#    
-#    plt.figure()
-#    plt.plot(R_AB, W_AB, color='green', label='Max payload')
-#    plt.plot(R_BD, W_BD, color='blue', label='Exchange payload')
-#    plt.xlim([0,5000])
-#    plt.ylim([0,9000])
-#    plt.xlabel('Range [km]')
-#    plt.ylabel('Payload weight [kg]')
-#    plt.rc('axes', labelsize=16)    # fontsize of the x and y labels
-#    plt.rc('xtick', labelsize=16)    # fontsize of the tick labels
-#    plt.rc('ytick', labelsize=16)    # fontsize of the tick labels
-#    plt.rc('legend', fontsize=16)    # legend fontsize
-#    plt.legend()
-#    plt.show()
-#    return 
-#
-#payload_range_diagram()
+
+def payload_range_diagram():
+    R_AB = np.arange(0, R_des + 1, 1)
+    W_AB = (R_des+1) * [W_pay]
+    
+    
+    R_D = Vcr / g / cj_c * LD_c * np.log(1/end5_D) / 1000
+    print(R_D)
+    R_BD = np.arange(R_des, R_D + 1, 1)
+    W_D = 0
+    W_BD = [W_pay - (W_pay - W_D) / (R_D - R_des) * (R - R_des) for R in R_BD]
+    
+    plt.figure()
+    plt.plot(R_AB, W_AB, color='green', label='Max payload')
+    plt.plot(R_BD, W_BD, color='blue', label='Exchange payload')
+    plt.xlim([0,5000])
+    plt.ylim([0,9000])
+    plt.xlabel('Range [km]')
+    plt.ylabel('Payload weight [kg]')
+    plt.rc('axes', labelsize=16)    # fontsize of the x and y labels
+    plt.rc('xtick', labelsize=16)    # fontsize of the tick labels
+    plt.rc('ytick', labelsize=16)    # fontsize of the tick labels
+    plt.rc('legend', fontsize=16)    # legend fontsize
+    plt.legend()
+    plt.show()
+    return 
+
+payload_range_diagram()
 
 
     
