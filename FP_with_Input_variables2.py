@@ -260,7 +260,7 @@ CD_land = CD0_landGD + CL_land**2  / (np.pi * A * e)
 #print(max_ROC_s(T_to, CD0, S, A, e, rho_0,g,MTOW))
 nmax = input.n_max
 n_ult = input.n_ult
-n = np.linspace(1,nmax,10)
+n = np.linspace(1,nmax,15)
 
 
 
@@ -279,7 +279,7 @@ def max_load_factor_steepest_turn(T_to, CD0, rho_0, rho, S, W, A, e, CLmax_clean
     for j in range(len(n)):
         D =  np.array([n[j] * (CD0 * 0.5 * rho * i**2 * S + 2 * W**2 / (np.pi * A * e * rho * i**2 * S)) for i in V]) 
         Preq =  np.array([n[j] * (CD0 * 0.5 * rho * i**3 * S + 2 * W**2 / (np.pi * A * e * rho * i * S)) for i in V])
-        V_stall_lst.append(np.sqrt(n[j] * W * 2 / (S * rho * CLmax)))
+        V_stall_lst.append(np.sqrt(n[j] * W * 2 / (S * rho * CLmax_clean)))
         D_plot = np.ma.masked_where(V < V_stall_lst[j], D)
         D_lst.append(D)
         Preq = np.ma.masked_where(V < V_stall_lst[j], Preq) 
@@ -291,10 +291,10 @@ def max_load_factor_steepest_turn(T_to, CD0, rho_0, rho, S, W, A, e, CLmax_clean
             plt.text(V[-1]-25,D_plot[-1]/1000,'n='+str(round(n[j],2)),horizontalalignment='left',fontsize=16)
     plt.axhline(y=T/1000, label='Thrust', color='green')  
     print(V_stall_lst)
-    plt.rc('axes', labelsize=26)    # fontsize of the x and y labels
-    plt.rc('xtick', labelsize=26)    # fontsize of the tick labels
-    plt.rc('ytick', labelsize=26)    # fontsize of the tick labels
-    plt.rc('legend', fontsize=26)    # legend fontsize
+    plt.rc('axes', labelsize=22)    # fontsize of the x and y labels
+    plt.rc('xtick', labelsize=22)    # fontsize of the tick labels
+    plt.rc('ytick', labelsize=22)    # fontsize of the tick labels
+    plt.rc('legend', fontsize=22)    # legend fontsize
     plt.xlabel('Airspeed [m/s]')
     plt.ylabel('Force [kN]')
     plt.legend(markerscale=10)
@@ -335,7 +335,7 @@ def max_load_factor_steepest_turn(T_to, CD0, rho_0, rho, S, W, A, e, CLmax_clean
         n_plot_lst.remove(n_plot_lst[min_V])
       
     n_plot_lst = n_lst
-    V_plot_lst = V_lst
+    V_plot_lst = [V_lst[i] for i in range(len(V_lst))]
     plt.subplot(1,2,2)
     plt.plot(V_plot_lst, n_plot_lst, 'bo-')
     plt.xlabel('Airspeed [m/s]')
@@ -346,8 +346,14 @@ def max_load_factor_steepest_turn(T_to, CD0, rho_0, rho, S, W, A, e, CLmax_clean
   
     return n_plot_lst, V_plot_lst
 
-n_plot_lst, V_plot_lst = max_load_factor_steepest_turn(T_to, CD0_togd, rho_0, 0.974, S, MTOW, A, e, CLmax_to)
+#n_plot_lst, V_plot_lst = max_load_factor_steepest_turn(15000, 0.021, rho_0, 0.59, 30, 60000, 7, 1, 1.4)
+#n_plot_lst, V_plot_lst = max_load_factor_steepest_turn(T_to, CD0, rho_0,0.59, S, MTOW, A, e, CLmax_clean)
+V_steepest  =np.ma.masked_where(n_plot_lst < max(n_plot_lst),V_plot_lst)
 
+V_steepestSL = np.genfromtxt('VsteepestSL.csv')
+V_steepest1500 = np.genfromtxt('Vsteepest1500.csv')
+V_steepestSL = V_steepestSL[9:11]
+V_steepest1500 = V_steepest1500[9:11]
 #np.savetxt('nSL.csv', n_plot_lst)
 #np.savetxt('VSL.csv', V_plot_lst)
 nSL = np.genfromtxt('nSL.csv')   
@@ -367,15 +373,57 @@ def steepest_turn_and(V, nmax, g=g):
     """
     R = V**2 / (g * np.sqrt(nmax**2 - 1))
     return R
+#
+def steepest_turn():
+    nmax = max(n_plot_lst)
+    R_cr = [v**2 / (g * np.sqrt(nmax**2 - 1))/1000 for v in V_steepest]
+    T_cr = [2*np.pi * R_cr[i]*1000/V_steepest[i] for i in range(len(V_steepest))]
+    R_SL = [v**2 / (g * np.sqrt(nmax**2 - 1))/1000 for v in V_steepestSL]
+    T_SL = [2*np.pi * R_SL[i]*1000/V_steepestSL[i] for i in range(len(V_steepestSL))]
+    R_1500 = [v**2 / (g * np.sqrt(nmax**2 - 1))/1000 for v in V_steepest1500]
+    T_1500 = [2*np.pi * R_1500[i]*1000/V_steepest1500[i] for i in range(len(V_steepest1500))]
+    
+    #plt.close('all')
+    
+    fig, ax = plt.subplots(nrows=2, ncols=3, sharex=True, sharey=False, figsize=(5.5, 5.5))
 
-n_steepest_turn = max(n_plot_lst)
-V_steepest_turn_indices = [i for i,d in enumerate(n_plot_lst) if d==n_steepest_turn]
-V_steepest = max(V_plot_lst[i] for i in V_steepest_turn_indices)
-
-R_steepest_turn = steepest_turn_and(V_steepest, n_steepest_turn)
-print('Steepest turn radius = ', R_steepest_turn)
-print('Steepest turn load factor = ', n_steepest_turn)
-print('Steepest turn airspeed = ', V_steepest)
+    fig.text(0.42, 0.04, 'Airspeed [m/s]', ha='center', fontsize=22)
+    #fig.text(0.04, 0.5, 'common Y', va='center', rotation='vertical')
+ 
+    l1, = ax[0,2].plot(V_steepest, R_cr, 'ro-', label='cruise altitude')
+    ax[0,0].plot(V_steepestSL, R_SL, 'bo-', label='sea level')
+    ax[0,1].plot(V_steepest1500, R_1500, 'go-', label='1500 m altitude')
+    #ax[0].set_xlabel('Airspeed [m/s]')
+    ax[0,0].set_ylabel('Steepest turn radius [km]')
+    #ax[0].set_ylim([0,12.5])
+    l2, = ax[1,0].plot(V_steepestSL, T_SL, 'bo-', label='sea level')
+    l3, = ax[1,1].plot(V_steepest1500, T_1500, 'go-', label='1500 m altitude')
+    ax[1,2].plot(V_steepest, T_cr,'ro-', label='cruise altitude')
+    #ax[1].set_xlabel('Airspeed [m/s]')
+    ax[1,0].set_ylabel('Steepest turn time [s]')
+    #ax[1].set_ylim([0,250])
+    fig.subplots_adjust(bottom=0.15, wspace=0.2)
+    ax[0,0].set_ylim([0,2.5])
+    ax[0,1].set_ylim([0,2.5])
+    ax[0,2].set_ylim([0,2.5])
+    ax[1,0].set_ylim([20,65])
+    ax[1,1].set_ylim([20,65])
+    ax[1,2].set_ylim([20,65])
+    ax[1,1].legend(handles = [l2,l3,l1] , labels=[ 'sea level', '1500m altitude','cruise altitude'],loc='center left', 
+                 bbox_to_anchor=(2.2, 1.1),fancybox=True, shadow=False, ncol=1)
+    plt.show()
+    return
+#steepest_turn()
+#    
+    
+#n_steepest_turn = max(n_plot_lst)
+#V_steepest_turn_indices = [i for i,d in enumerate(n_plot_lst) if d==n_steepest_turn]
+#V_steepest = max(V_plot_lst[i] for i in V_steepest_turn_indices)
+#
+#R_steepest_turn = steepest_turn_and(V_steepest, n_steepest_turn)
+#print('Steepest turn radius = ', R_steepest_turn)
+#print('Steepest turn load factor = ', n_steepest_turn)
+#print('Steepest turn airspeed = ', V_steepest)
 
 R_time_lst = []
 min_lst = []
@@ -404,9 +452,22 @@ def R_V_T_V_diagrams():
         T = 2*np.pi*R*1000/V_plot_lst[i]
         T_lst.append(T)
     phi_lst = [np.arccos(1/i) for i in n_plot_lst]
+    V = np.arange(1,301,1)
+    n_rate1 = 1 / np.cos(np.radians(25))
+    V_stall_rate1SL = np.sqrt(n_rate1 * MTOW * 2 / (S * 1.225 * CLmax_clean))
+    V_plot =np.ma.masked_where(V < V_stall_rate1SL, V) 
+   
+#    R_rate1 = [v**2 / (g * np.sqrt(n_rate1**2-1)) / 1000 for v in V]
+    R_rate1 = np.genfromtxt('R_rate1SL.csv')
+    T_rate1 = [2*np.pi*R_rate1[i]*1000/V[i] for i in range(len(V))]
+    phi_rate1 = len(V) * [25]
 #    np.savetxt('RSL.csv', R_lst)
 #    np.savetxt('TSL.csv', T_lst)
 #    np.savetxt('phiSL.csv', phi_lst)
+#    np.savetxt('R_rate1SL.csv', R_rate1)
+#    np.savetxt('T_rate1SL.csv', T_rate1)
+    
+    #T_rate1 = np.genfromtxt('T_rate1SL.csv')
     RSL = np.genfromtxt('RSL.csv') /1000
     R1500 = np.genfromtxt('R1500.csv')/1000
     TSL = np.genfromtxt('TSL.csv')
@@ -414,33 +475,40 @@ def R_V_T_V_diagrams():
     phiSL = np.genfromtxt('PhiSL.csv')
     phi1500 = np.genfromtxt('Phi1500.csv')
     
-    
+    #plt.close('all')
     fig, ax = plt.subplots(ncols=3)
     l1, = ax[0].plot(V_plot_lst, R_lst, 'ro-', label='cruise altitude')
+    l1a, = ax[0].plot(V_plot, R_rate1, '-', color='orange', label='sea level rate 1 turn')
     ax[0].plot(VSL, RSL, 'bo-', label='sea level')
     ax[0].plot(V1500, R1500, 'go-', label='1500 m altitude')
     ax[0].set_xlabel('Airspeed [m/s]')
     ax[0].set_ylabel('Minimum turn radius [km]')
+    ax[0].set_ylim([0,12.5])
     l2, = ax[1].plot(VSL, TSL, 'bo-', label='sea level')
     ax[1].plot(V_plot_lst, T_lst,'ro-', label='cruise altitude')
     ax[1].plot(V1500, T1500, 'go-', label='1500 m altitude')
+    ax[1].plot(V_plot, T_rate1,'-', color='orange')
     ax[1].set_xlabel('Airspeed [m/s]')
     ax[1].set_ylabel('Minimum time to turn [s]')
+    ax[1].set_ylim([0,250])
     l3, = ax[2].plot(V1500, np.degrees(phi1500), 'go-', label='1500 m altitude')
     ax[2].plot(VSL, np.degrees(phiSL), 'bo-', label='sea level')
     ax[2].plot(V_plot_lst, np.degrees(phi_lst), 'ro-', label='cruise altitude')
+    ax[2].plot(V_plot, phi_rate1, '-', color='orange')
     ax[2].set_xlabel('Airspeed [m/s]')
     ax[2].set_ylabel('Corresponding bank angle [deg]')
-    #fig.subplots_adjust(bottom=0.3, wspace=0.2)
+    fig.subplots_adjust(bottom=0.1, wspace=0.2)
     
-    ax[1].legend(handles = [l2,l3,l1] , labels=[ 'sea level', '1500m altitude','cruise altitude'],loc='upper center', 
-                 bbox_to_anchor=(0.5, -0.1),fancybox=True, shadow=False, ncol=3)
+    ax[1].legend(handles = [l2,l3,l1,l1a] , labels=[ 'sea level', '1500m altitude','cruise altitude','sea level rate 1 turn'],loc='upper center', 
+                 bbox_to_anchor=(0.5, -0.1),fancybox=True, shadow=False, ncol=4)
     plt.show()
 
-    return
-
+    return 
+#
 #R_V_T_V_diagrams()        
-        
+
+
+            
 
 def turn_radius(V, rate, g=g):
      """ 
@@ -625,7 +693,7 @@ W_fuel_max = W_fuel_max_pay / percent * 100
 W_fuel_exchange = W_fuel_max - W_fuel_max_pay
 W_pay_max_fuel = W_pay - W_fuel_exchange
 
-end_i = [0.99651,0.99651,0.998255,0.99302,0.99651,0.99651,0.9971422253661717,0.9939283669854275,0.99651,0.997208]
+end_i = [0.99651,0.99651,0.998255,0.99302,0.99651,0.99651,0.9967731493823129,0.9939283669854275,0.99651,0.997208]
 
 Mff_D = 1 - W_fuel_max_pay / OEW
 
@@ -659,34 +727,34 @@ for i in end_i:
 #    return R_AB, W_AB, R_BC, W_BC, R_CD, W_CD
     
 #R_AB, W_AB, R_BC, W_BC, R_CD, W_CD = payload_range_diagram()   
-#
-#def payload_range_diagram():
-#    R_AB = np.arange(0, R_des + 1, 1)
-#    W_AB = (R_des+1) * [W_pay]
-#    
-#    
-#    R_D = Vcr / g / cj_c * LD_c * np.log(1/end5_D) / 1000
-#    print(R_D)
-#    R_BD = np.arange(R_des, R_D + 1, 1)
-#    W_D = 0
-#    W_BD = [W_pay - (W_pay - W_D) / (R_D - R_des) * (R - R_des) for R in R_BD]
-#    
-#    plt.figure()
-#    plt.plot(R_AB, W_AB, color='green', label='Max payload')
-#    plt.plot(R_BD, W_BD, color='blue', label='Exchange payload')
-#    plt.xlim([0,5000])
-#    plt.ylim([0,9000])
-#    plt.xlabel('Range [km]')
-#    plt.ylabel('Payload weight [kg]')
-#    plt.rc('axes', labelsize=16)    # fontsize of the x and y labels
-#    plt.rc('xtick', labelsize=16)    # fontsize of the tick labels
-#    plt.rc('ytick', labelsize=16)    # fontsize of the tick labels
-#    plt.rc('legend', fontsize=16)    # legend fontsize
-#    plt.legend()
-#    plt.show()
-#    return 
-#
-#payload_range_diagram()
+
+def payload_range_diagram():
+    R_AB = np.arange(0, R_des + 1, 1)
+    W_AB = (R_des+1) * [W_pay]
+    
+    
+    R_D = Vcr / g / cj_c * LD_c * np.log(1/end5_D) / 1000
+    print(R_D)
+    R_BD = np.arange(R_des, R_D + 1, 1)
+    W_D = 0
+    W_BD = [W_pay - (W_pay - W_D) / (R_D - R_des) * (R - R_des) for R in R_BD]
+    
+    plt.figure()
+    plt.plot(R_AB, W_AB, color='green', label='Max payload')
+    plt.plot(R_BD, W_BD, color='blue', label='Exchange payload')
+    plt.xlim([0,5000])
+    plt.ylim([0,9000])
+    plt.xlabel('Range [km]')
+    plt.ylabel('Payload weight [kg]')
+    plt.rc('axes', labelsize=16)    # fontsize of the x and y labels
+    plt.rc('xtick', labelsize=16)    # fontsize of the tick labels
+    plt.rc('ytick', labelsize=16)    # fontsize of the tick labels
+    plt.rc('legend', fontsize=16)    # legend fontsize
+    plt.legend()
+    plt.show()
+    return 
+
+payload_range_diagram()
 
 
     
