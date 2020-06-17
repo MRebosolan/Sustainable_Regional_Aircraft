@@ -230,7 +230,7 @@ while abs((OEW_class1_kg - OEWINPUT)*100/OEWINPUT)>= 0.01:
     
     W_equipment = APU_weight + cargo_equipment_weight + furnishing_weight + instrumentation_weight + oxygen_system_weight + paint_weight + airconditioning_pressurization_weight + flight_control_weight + electrical_system_weight
     
-    OEW_class2 = (W_struct + W_powerplant + W_equipment)
+    OEW_class2 = W_struct + W_powerplant + W_equipment
     
     
     OEWINPUT = to_kg(OEW_class2)
@@ -301,8 +301,8 @@ wing = [{'data': 'Wing Area', 'SRA': S, 'F28':tom2(1), '737-200':tom2(1)},
                ]
 aircraftpar = aircraftpar.append(wing, ignore_index = True, sort = False)
 
-
-latex = df.to_latex(index = False)#, caption = "System weight breakdown... not yet final caption")
+df['SRA']['MTOW'] = input.MTOM
+latex = df.to_latex(index = True)#, caption = "System weight breakdown... not yet final caption")
 print("Uncomment the caption for the final version")
 
 print(df)
