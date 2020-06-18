@@ -127,7 +127,7 @@ L_wing = trapezoidal_integration(x_array, lift_array)
 W_wing = trapezoidal_integration(x_array, weight_array)
 
 
-def wing_root_reaction_forces (L_wing, x_lift, W_wing, x_weight, W_engine, x_engine, T_to):
+def wing_root_reaction_forces (L_wing, x_lift, W_wing, x_weight, W_engine, x_engine, T_to, W_proptank=0, x_proptank=0):
     #Drag reaction forces not included yet
     R_z = W_wing + W_engine - L_wing  #upwards positive
     M_x = x_lift*L_wing - x_weight*W_wing - x_engine*W_engine #left hand positive
