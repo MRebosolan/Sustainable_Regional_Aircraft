@@ -17,7 +17,7 @@ SMC = b/AR #standar mean chord
 LE_sweep = input.LE_sweep
 widthf = input.widthf
 wing_length = 0.5*(b)
-wing_weight = 3000*9.81
+wing_weight = 5179*9.81
 T_to = input.Tto
 
 print(wingloading*S*0.5)
@@ -92,7 +92,7 @@ def general_lift_d (x, a=11.4, b=15861):
     return loading_at_x
 
 
-def general_weight_d (x, slope=-450.248, intercept=5148.26):
+def general_weight_d (x, slope=-781.842, intercept=8913):
     #Insert weight distribution. Current is linear for wing weight of 300*9.81
     weight_at_x = intercept + slope*x
     return weight_at_x
@@ -126,10 +126,10 @@ weight_array = generate_weight_data_points(x_array)
 L_wing = trapezoidal_integration(x_array, lift_array)
 W_wing = trapezoidal_integration(x_array, weight_array)
 x_tank = 7.44
-W_tank = 168 * 9.81
+W_tank = 568 * 9.81
 
 
-def wing_root_reaction_forces (L_wing, x_lift, W_wing, x_weight, W_engine, x_engine, T_to, W_tank=W_tank, x_tank=x_tank):
+def wing_root_reaction_forces (L_wing, x_lift, W_wing, x_weight, W_engine, x_engine, T_to, W_tank, x_tank):
     #Drag reaction forces not included yet
     R_z = W_wing + W_engine - L_wing + W_tank  #upwards positive
     M_x = x_lift*L_wing - x_weight*W_wing - x_engine*W_engine -x_tank*W_tank #left hand positive
@@ -138,7 +138,7 @@ def wing_root_reaction_forces (L_wing, x_lift, W_wing, x_weight, W_engine, x_eng
     return (R_z, M_x, R_x, M_z)
 
 
-R_z, M_x, R_x, M_z = wing_root_reaction_forces(L_wing, x_lift, wing_weight, x_weight, w_engine, x_engine_root, T_to)
+R_z, M_x, R_x, M_z = wing_root_reaction_forces(L_wing, x_lift, wing_weight, x_weight, w_engine, x_engine_root, T_to, W_tank, x_tank)
 
 
 def internal_x_bending_moment(x, x_array=x_array, lift_array=lift_array, w_engine=w_engine, \
