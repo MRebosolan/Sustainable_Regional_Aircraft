@@ -42,7 +42,7 @@ Vlof = 1.05 * Vmin
 V_c = 0.514444*input.V_C
 x_v =  sc_shift.x_ac_v_nose-sc_shift.cg_loaded_nose   # input.x_v  #Distance Aerodynamic centre Vtail to c.g.
 vtail_sweep = input.half_chord_sweep_vert # Radians
-AR_vtail = input.AR_v
+AR_vtail = 0.9 * input.AR_v
 taper_v = input.taper_v
 x_cg  = sc_shift.cg_loaded_nose  
 
@@ -57,7 +57,7 @@ def S_v(Vbar_v,S,b,x_v):
     S_r = Sr_over_Sv*S_v             # Rudder area
     return S_v,S_r
 S_v,S_r = S_v(Vbar_v,S,b,x_v)
-
+print (S_r,S_v)
 def rudder_design(y_engine,T_OEI,S,b,vtail_sweep,taper_v,AR_vtail,x_cg,rho_to,Vmin):
     stepsize = 0.0025
     running= True
@@ -87,7 +87,7 @@ def rudder_design(y_engine,T_OEI,S,b,vtail_sweep,taper_v,AR_vtail,x_cg,rho_to,Vm
         K_b = 0.97                    # [TODO] Obtained from F. 8.51 and 8.52 Roskam VI
         #a_delta_cl = 0.66            # Obtained from F. 8.53 Roskam VI
         a_delta_CL_cl=    1.10 #1.1   # S (0.55+0.78)/2 # between 0.5-0.78 Alpha_delta_CL/Alpha_delta_cl F. 8.53 Roskam VI
-        cl_delta_theory = 4.55        # [1/rad] 4.85 for Joukovsky t/c .09, 5.05 for NACA 0012 Obtained from F. 8.14 Roskam VI
+        cl_delta_theory = 4.42        # [1/rad] 4.85 for Joukovsky t/c .09, 5.05 for NACA 0012 Obtained from F. 8.14 Roskam VI
          
         Mach_to = Vmc/np.sqrt(288.15*1.4*287) # S 0.1987 Mach number at sealevel
         beta  = (1-(Mach_to**2))**0.5 # S Compressibility effect Prandtl
@@ -138,6 +138,7 @@ def rudder_design(y_engine,T_OEI,S,b,vtail_sweep,taper_v,AR_vtail,x_cg,rho_to,Vm
             #print ('The required surface area for the vertical tail equals:',S_vlist[-1])
             #print ('The required rudder area for the vertical tail equals:',Sr_over_Sv*S_vlist[-1])
             print (b_v_c1)
+            print ('yo',lv,z_v)
             running = False
     
     return S_vlist,S_vlist1,delta_r_calc,S_vfinal,delta_r_calc_list,Cn_delta_r_list
@@ -161,17 +162,20 @@ plt.ylabel('Rudder deflection $\delta$ [$deg$]')
 plt.grid(b=True, which='major', color='#666666', linestyle='-')
 plt.minorticks_on()
 plt.grid(b=True, which='minor', color='#999999', linestyle='-', alpha=0.2)
-"""
-plt.subplot(133)
+
+fig = plt.figure(11)
 plt.plot(S_vlist1,Cn_delta_r_list)#,[S_vlist1[0],S_vlist1[-1]],[-25,-25])
 plt.xlabel('Vertical tail area [m2]')
 plt.ylabel('Rudder deflection $\delta$ [deg]')
 plt.grid(b=True, which='major', color='#666666', linestyle='-')
 plt.minorticks_on()
 plt.grid(b=True, which='minor', color='#999999', linestyle='-', alpha=0.2)
-"""
+
 
 plt.show()
 print (S_vfinal[0],S_vfinal[0]*Sr_over_Sv,np.sqrt(S_vfinal[0]*1.7))
+
+
+
 #print ('make sure that K_vh and A_vhf_over_Avf, cl_alpha_v and Cl_cl_delta_theory have the correct values; it needs to be adjusted by hand')
 #print ('CRJ700 has 11.07 [m2] vtail area, if we were to take the relative same thrust, we would have ~15 [m2] ')

@@ -233,7 +233,7 @@ CL0_clean    = 0.405
 Alpha0_clean = -3.936
 CLdes_clean  = 0.4567                              # from aero
 CD0_clean    = 0.023877                            # from aero
-CLa_clean    = 0.09858                             ######NOT FIXED########
+CLa_clean    = 0.09858                            
 
 #Take-off Configuration             
 CLmax_to  = 2.1
