@@ -29,4 +29,3 @@ def vert_tail_weight(Sv, VD, half_chord_sweep_vert, bv, Sh, zh):
     #Kv=1 for fuselage mounted hor tails, use Kv_fin_mounted for fin mounted hor tails
     vert_tail_weight = Kv * Sv * ((3.81 * (Sh ** 0.2 * VD)) / (1000 * (cos(half_chord_sweep_vert)) ** 0.5) - 0.287)
     return vert_tail_weight
-

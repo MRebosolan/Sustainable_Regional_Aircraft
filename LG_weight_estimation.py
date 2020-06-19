@@ -1,7 +1,5 @@
-"""
-input: certain constant, MTOW
-output: landing gear weight
-"""
+
+
 
 #Parameters for LG weight
 #Gear compartment.........Ag.....Bg.....Cg.....Dg

@@ -232,8 +232,7 @@ while abs((OEW_class1_kg - OEWINPUT)*100/OEWINPUT)>= 0.01:
     
     OEW_class2 = W_struct + W_powerplant + W_equipment
     
-    
-    
+
     OEWINPUT = to_kg(OEW_class2)
     OEW_plot_class2.append(OEWINPUT)
 
@@ -310,6 +309,7 @@ df['SRA']['MTOW'] = input.MTOM
 # # print(aircraftpar)
 
 
+
 # try:
 #     file = open('C://Users//jornv//Google Drive//DSE upload//Class2dataframe.txt', 'w')
 #     file.write(latex)
@@ -319,11 +319,24 @@ df['SRA']['MTOW'] = input.MTOM
 #     #print('you cannot update files, ask jorn if necessary')
     
     
-    
+
+try:
+    file = open('C://Users//jornv//Google Drive//DSE upload//Class2dataframe.txt', 'w')
+    file.write(latex)
+    file.close()
+except:
+    print()
+    #print('you cannot update files, ask jorn if necessary')
+
+print ('yahoo',to_kg(LG.LG_weight(Kgr, MTOW)[0]))
+print ('the nose',to_kg(LG.LG_weight(Kgr, MTOW)[1]))
+
 S = input.S
 b = input.b
 MTOM = to_kg(MTOW)
 MTOW = 9.81*MTOM
 OEM = OEWINPUT
 Tto = T_TO_newton
+print (W_empennage*0.45359237)
+print (W_fuselage*0.45359237)
 # print (S,b**2/8)

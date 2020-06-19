@@ -17,7 +17,7 @@ SMC = b/AR #standar mean chord
 LE_sweep = input.LE_sweep
 widthf = input.widthf
 wing_length = 0.5*(b)
-wing_weight = 3000*9.81
+wing_weight = 5179*9.81
 T_to = input.Tto
 
 print(wingloading*S*0.5)
@@ -92,7 +92,7 @@ def general_lift_d (x, a=11.4, b=15861):
     return loading_at_x
 
 
-def general_weight_d (x, slope=-450.248, intercept=5148.26):
+def general_weight_d (x, slope=-781.842, intercept=8913):
     #Insert weight distribution. Current is linear for wing weight of 300*9.81
     weight_at_x = intercept + slope*x
     return weight_at_x
@@ -125,22 +125,25 @@ x_lift = trapezoidal_integration(x_array, x_array*lift_array)/trapezoidal_integr
 weight_array = generate_weight_data_points(x_array)
 L_wing = trapezoidal_integration(x_array, lift_array)
 W_wing = trapezoidal_integration(x_array, weight_array)
+x_tank = 7.44
+W_tank = 568 * 9.81
 
 
-def wing_root_reaction_forces (L_wing, x_lift, W_wing, x_weight, W_engine, x_engine, T_to):
+def wing_root_reaction_forces (L_wing, x_lift, W_wing, x_weight, W_engine, x_engine, T_to, W_tank, x_tank):
     #Drag reaction forces not included yet
-    R_z = W_wing + W_engine - L_wing  #upwards positive
-    M_x = x_lift*L_wing - x_weight*W_wing - x_engine*W_engine #left hand positive
+    R_z = W_wing + W_engine - L_wing + W_tank  #upwards positive
+    M_x = x_lift*L_wing - x_weight*W_wing - x_engine*W_engine -x_tank*W_tank #left hand positive
     R_x = T_to #aft-ward positive
     M_z = T_to * x_engine #left hand positive
     return (R_z, M_x, R_x, M_z)
 
 
-R_z, M_x, R_x, M_z = wing_root_reaction_forces(L_wing, x_lift, wing_weight, x_weight, w_engine, x_engine_root, T_to)
+R_z, M_x, R_x, M_z = wing_root_reaction_forces(L_wing, x_lift, wing_weight, x_weight, w_engine, x_engine_root, T_to, W_tank, x_tank)
 
 
 def internal_x_bending_moment(x, x_array=x_array, lift_array=lift_array, w_engine=w_engine, \
-                              weight_array=weight_array, x_engine = x_engine_root, R_z = R_z, M = M_x):
+                              weight_array=weight_array, x_engine = x_engine_root, R_z = R_z, M = M_x, \
+                              x_tank=x_tank, W_tank=W_tank):
     #counterclockwise positive
 
     x = min(x_array, key=lambda y:abs(y-x))
@@ -156,7 +159,11 @@ def internal_x_bending_moment(x, x_array=x_array, lift_array=lift_array, w_engin
         engine_distance = x - x_engine
     else:
         engine_distance = 0
-    moment_at_x = M + R_z*x + lift*(x-x_lift) - w_engine*engine_distance - weight*(x-x_weight)
+    if x > x_tank:
+        tank_distance = x - x_tank
+    else:
+        tank_distance = 0
+    moment_at_x = M + R_z * x + lift * (x - x_lift) - w_engine * engine_distance - weight * (x - x_weight) - W_tank*tank_distance
     return moment_at_x
 
 def internal_z_bending_moment(x, R_x=R_x, T_to=T_to, x_engine=x_engine_root, M_z=M_z):
@@ -169,7 +176,7 @@ def internal_z_bending_moment(x, R_x=R_x, T_to=T_to, x_engine=x_engine_root, M_z
 
 
 def internal_vertical_shear_force(x, x_array=x_array, lift_array=lift_array, w_engine=w_engine,\
-    weight_array=weight_array, x_engine = x_engine_root, R_z = R_z):
+    weight_array=weight_array, x_engine = x_engine_root, R_z = R_z, W_tank=W_tank, x_tank=x_tank):
     #downward positive
 
     x = min(x_array, key=lambda y: abs(y - x))
@@ -183,7 +190,11 @@ def internal_vertical_shear_force(x, x_array=x_array, lift_array=lift_array, w_e
         n=1
     else:
         n=0
-    shear_at_x = R_z + lift - weight - w_engine * n
+    if x > x_tank:
+        t=1
+    else:
+        t=0
+    shear_at_x = R_z + lift - weight - w_engine * n - W_tank * t
     return shear_at_x
 
 def internal_longitudinal_shear_force(x, R_x=R_x, T_to=T_to, x_engine=x_engine_root):
@@ -203,16 +214,16 @@ for i in x_array[2:]:
     shear_array.append(internal_vertical_shear_force(i))
     moment_array2.append(internal_z_bending_moment(i))
     shear_array2.append(internal_longitudinal_shear_force(i))
-#
-# plt.plot(x_array[2:], moment_array)
-# plt.plot(x_array[2:], shear_array)
+
+plt.plot(x_array[2:], moment_array)
+plt.plot(x_array[2:], shear_array)
 #plt.plot(x_array[2:], moment_array2)
 #plt.plot(x_array[2:], shear_array2)
 
 plt.xlabel("spanwise coordinate")
 #plt.ylabel("loads in N/moments in N/m")
 plt.ylabel("stresses in MPa")
-#plt.show()
+plt.show()
 
 #-----------------------------------------------------------------------------------------------------
 

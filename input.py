@@ -176,15 +176,12 @@ Cruise_alt_max_CRJ = 12497         # Max operating altitude
 A = 14                             # Correlation constant for emission index based on Jet-A fuel (advanced LDI tech as reference)
 eq = 0.4                           # equivalence ratio (fuel/air // fuel/air stoichiometric)
 fa_st = 1. / 34.33                 # stoichiometric fuel/air ratio for H2
-fa = eq * fa_st                    # actual fuel/air ratio
-P3 = 0.7                           # fuel injector inlet pressure MPA
-T3 = 800                           # fuel injector inlet temperature 600 K approach, 700 K cruise, 800K take-off
-dPP = 5                            # dP/P fuel injector air flow pressure drop ratio
+fa =  0.003790922423              # actual fuel/air ratio
+P3 = 2.437307                           # fuel injector inlet pressure MPA
+T3 = 808.3812315                           # fuel injector inlet temperature 600 K approach, 700 K cruise, 800K take-off
+dPP = 4                            # dP/P fuel injector air flow pressure drop ratio
 # kg NOx/ kg fuel
 NOx_H2 = A * P3 ** 0.594 * np.exp(T3 / 350) * fa ** 1.6876 * (100 * dPP) ** -0.56 / 1000
-
-
-
 
 #Parameters related to flight performance
 #------------------------------------------------------------------------------------------------------------------
@@ -233,7 +230,7 @@ CL0_clean    = 0.405
 Alpha0_clean = -3.936
 CLdes_clean  = 0.4567                              # from aero
 CD0_clean    = 0.023877                            # from aero
-CLa_clean    = 0.09858                             ######NOT FIXED########
+CLa_clean    = 0.09858                            
 
 #Take-off Configuration             
 CLmax_to  = 2.1
