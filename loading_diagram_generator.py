@@ -12,6 +12,8 @@ t_cyl,m_cyl, tm_cyl, d_cyl,l_cyl,t_tail,m_tail, tm_tail, d_tail,l_tail\
            ,t_top,m_top,tm_top,d_top,l_top,t_pod,m_pod,tm_pod,d_pod,l_pod,totalcabinlength,V_tank_cyl, V_tank_tail, V_tank_top,V_tank_pod,\
            tm_tanksystem,CGtank,CGfuelfull,CGcomb,totdrag,fuselage_weight,CDzerofus,FFbody,Cfturb,fuselage_area,CDzeropods,fusdrag,poddrag,tailcone_length=cabin_design(input.pod_tail_fraction,1,cl2.class1[7],0)
 
+cl2.df.insert(1, 'C.G.', [0.0 for i in range(len(cl2.df))], True)
+# cl2.df = (cl2.df['C.G.']).round(1)
 #Raw inputs
 MTOW = cl2.MTOM                 #kg
 OEW = cl2.OEM                   #kg
@@ -33,9 +35,12 @@ xh = input.x_lemac_rootchord_h + input.x_rootchord_h + 0.25*input.c_mac_h
 lh = 14.509248628717762                  #distance between wing and horizontal tail aerodynamic centers
 lv = input.lv                 #distance between wing and vertical tail aerodynamic centers
 x_ac = x_lemac + MAC / 4               #x location of wing aerodynamic center measured from the nose of the aircraft
-x_apu = input.x_apu             #cg location of the apu measured from the nose of the aircraft [m]
+x_apu = input.x_apu             #cg location of the apu measured from the nose of the aircraft [m]\
+cl2.df['C.G.']['APU'] = x_apu
 x_engine = input.x_LEMAC_nose       #cg location of engines, measured from the nose of the aircraft [m]
+cl2.df['C.G.']['Engine'] = x_engine
 x_nacelle = x_engine    #cg location of engine nacelles, measured from the nose of the aircraft [m]
+cl2.df['C.G.']['Nacelle'] = x_nacelle
 Cr = input.Cr                   #wing root chord length [m]
 Ct = input.Ct                   #wing tip chord length [m]
 b = cl2.b                       #wing span [m]
@@ -81,6 +86,7 @@ w_cyl_tank=tm_cyl
 
 w_tank = w_pod_tank+w_tail_tank+w_cyl_tank
 x_tank = (w_pod_tank * x_pod_tank + w_tail_tank * x_tail_tank + w_cyl_tank * x_cyl_tank)/(w_tank)
+cl2.df['C.G.']['Hydrogen tanks'] = x_tank
 
 w_pod_fuel= (1- input.pod_tail_fraction)* cl2.df['SRA']['Max fuel weight']
 w_tail_fuel=input.pod_tail_fraction* cl2.df['SRA']['Max fuel weight']
@@ -94,27 +100,39 @@ w_lg_main = cl2.df['SRA']['Main LG']    #kg
 w_lg_front = cl2.df['SRA']['Nose LG']    #kg
 w_fuselage = cl2.df['SRA']['Fuselage']
 x_fuselage = l_f/2 
+cl2.df['C.G.']['Fuselage'] = x_fuselage
 w_powercontrols = cl2.df['SRA']['Power controls']
 x_powercontrols = x_engine
+cl2.df['C.G.']['Power controls'] = x_powercontrols
 w_electrical = cl2.df['SRA']['Electrical systems']
 x_electrical = input.x_LEMAC_nose
+cl2.df['C.G.']['Electrical systems'] = x_electrical
 w_instruments = cl2.df['SRA']['Instruments']
 x_instruments = input.x_first_pax /3
+cl2.df['C.G.']['Instruments'] = x_instruments
 w_flightcontrols = cl2.df['SRA']['Flight controls']
 x_flightcontrols = x_start_Cr+Cr
+cl2.df['C.G.']['Flight controls'] = x_flightcontrols
 w_airconditioning = cl2.df['SRA']['Air conditioning']
 x_airconditioning = l_f/2
+cl2.df['C.G.']['Air conditioning'] = x_airconditioning
 w_furnishing = cl2.df['SRA']['Furnishing']
 x_furnishing = l_f/2
+cl2.df['C.G.']['Furnishing'] = x_furnishing
 w_cargohandling = cl2.df['SRA']['Cargo handling']
 x_cargohandling = x_cargo_aft *input.cargo_aft_fraction + x_cargo_fwd *input.cargo_fwd_fraction 
+cl2.df['C.G.']['Cargo handling'] = x_cargohandling
 w_paint = cl2.df['SRA']['Miscellanous/paint']
 x_paint = l_f/2
+cl2.df['C.G.']['Miscellanous/paint'] = x_paint
 
 
 x_empennage = x_ac + (lh + lv) / 2 #Assume cg of empennage is in the middle of the aerodynamic center of horizontal and vertical tail, measured from the nose
+cl2.df['C.G.']['Empennage'] = x_empennage
 x_lg_front = input.x_lg_front    #cg location of front landing gear [m], measured from the nose, assumed to be 3 m (used for calculating cg at oew, not to be changed per se)
+cl2.df['C.G.']['Nose LG'] = x_lg_front
 x_lg_main = x_start_Cr + 4.7     #cg location of main landing gear [m], assumed 2/3 root chord length further than start of root chord (used for calculating cg at oew, not to be changed per se)
+cl2.df['C.G.']['Main LG'] = x_lg_main
 print("In calculation of cg @ OEW, take into account the exact tank placement and cg location once agreed on a specific configuration")
 
 
@@ -137,6 +155,7 @@ def wing_cg(sweep, b, Cr, Ct, MAC, x_lemac_Cr, x_lemac):
     return x_cg_nose, x_cg_mac
 
 x_cg_wing_nose, x_cg_wing_mac = wing_cg(sweep, b, Cr, Ct, MAC, x_lemac_Cr, x_lemac)
+cl2.df['C.G.']['Wing group'] = x_cg_wing_nose
 print(x_cg_wing_nose, x_cg_wing_mac)
 #vary x_start_Cr
 
@@ -157,7 +176,7 @@ def cg_OEW_wrt_lemac(x_engine, w_engine, x_nacelle, w_nacelle, x_empennage, w_em
 
 cg_oew_wrt_lemac, cg_oew_nose =  cg_OEW_wrt_lemac(x_engine, w_engine, x_nacelle, w_nacelle, x_empennage, w_empennage, x_apu, w_apu, x_tank, w_tank, x_cg_wing_nose, w_wing, x_lg_front, w_lg_front, x_lg_main, w_lg_main, OEW, x_lemac, MAC)  
 print('C.G. @ OEW = ', cg_oew_wrt_lemac, 'MAC')   
-    
+cl2.df['C.G.']['OEW'] = cg_oew_nose
 
 # new cg calculation, returns new cg and new weight
 def loadingcg(w_old, cg_old, w_item, cg_item):
@@ -273,3 +292,22 @@ def loading():
 
 cg_fwd, cg_aft = loading()  
 print('CG range:', cg_fwd, '-', cg_aft, 'MAC')
+
+
+# cgs = 
+# cl2.df = cl2.df.insert(1, "C.G. Location", cgs, True)
+
+latex = cl2.df.to_latex(index = True, caption = "Summary table for Class-II estimation", label = 'tab:class2table', na_rep = 'None')
+print("Uncomment the caption for the final version")
+
+print(cl2.df)
+# print(aircraftpar)
+
+
+try:
+    file = open('C://Users//jornv//Google Drive//DSE upload//Class2dataframe.txt', 'w')
+    file.write(latex)
+    file.close()
+except:
+    print()
+    #print('you cannot update files, ask jorn if necessary')

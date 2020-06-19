@@ -246,77 +246,77 @@ plt.ylabel("OEW in kg")
 plt.legend()
 plt.show()
 
-df = pd.DataFrame({'data': ['MTOW','OEW'],
+df = pd.DataFrame({'Component': ['MTOW','OEW'],
 'SRA': [MTOW, OEW_class2],
 'F28': [65000, 31219],
 '737-200':[115500,60210]})
 
-zfw_fuel=[{'data': 'Zero fuel weight', 'SRA': W_zfw, 'F28':31219+14380, '737-200': 60210+32790},
-         {'data': 'Max fuel weight', 'SRA': W_fuel, 'F28':17331, '737-200': 34781},
-         {'data': 'Max payload', 'SRA': W_payload, 'F28':14380, '737-200': 34790}]
+zfw_fuel=[{'Component': 'Zero fuel weight', 'SRA': W_zfw, 'F28':31219+14380, '737-200': 60210+32790},
+         {'Component': 'Max fuel weight', 'SRA': W_fuel, 'F28':17331, '737-200': 34781},
+         {'Component': 'Max payload', 'SRA': W_payload, 'F28':14380, '737-200': 34790}]
 df = df.append(zfw_fuel, ignore_index = True, sort = False)
 
-wng = [{'data': 'Wing group', 'SRA': W_wing, 'F28':7330, '737-200': 10613},
-       {'data': 'Empennage', 'SRA': W_empennage, 'F28':1632 , '737-200':2718},
-       {'data': 'Fuselage', 'SRA': W_fuselage, 'F28':7043, '737-200':12108},
-       {'data': 'Nacelle', 'SRA': W_nacelles, 'F28':834, '737-200':1392},
-       {'data': 'Landing gear', 'SRA': W_landing_gear, 'F28':2759, '737-200':4354},
-       {'data': 'Main LG', 'SRA': W_landing_gear_main},
-       {'data': 'Nose LG', 'SRA': W_landing_gear_nose},
-       {'data': 'Total structural', 'SRA': W_struct, 'F28':19598, '737-200':31185}]
+wng = [{'Component': 'Wing group', 'SRA': W_wing, 'F28':7330, '737-200': 10613},
+       {'Component': 'Empennage', 'SRA': W_empennage, 'F28':1632 , '737-200':2718},
+       {'Component': 'Fuselage', 'SRA': W_fuselage, 'F28':7043, '737-200':12108},
+       {'Component': 'Nacelle', 'SRA': W_nacelles, 'F28':834, '737-200':1392},
+       {'Component': 'Landing gear', 'SRA': W_landing_gear, 'F28':2759, '737-200':4354},
+       {'Component': 'Main LG', 'SRA': W_landing_gear_main},
+       {'Component': 'Nose LG', 'SRA': W_landing_gear_nose},
+       {'Component': 'Total structural', 'SRA': W_struct, 'F28':19598, '737-200':31185}]
 df = df.append(wng, ignore_index = True, sort = False)
 
 
-power =[{'data': 'Engines', 'SRA': W_engines, 'F28':4495, '737-200':6217},
-       {'data': 'Exhaust', 'F28':127, '737-200':1007},
-       {'data': 'Kerosene system', 'SRA': W_fuel_system_kerosene, 'F28':545, '737-200':575},
-       {'data': 'Hydrogen tanks', 'SRA': W_fuel_system_hydrogen},
-       {'data': 'Power controls', 'SRA': W_power_controls, 'F28':215, '737-200':378},
-       {'data': 'Total propulsion', 'SRA': W_powerplant, 'F28':5382, '737-200':8177}]
+power =[{'Component': 'Engines', 'SRA': W_engines, 'F28':4495, '737-200':6217},
+       {'Component': 'Exhaust', 'F28':127, '737-200':1007},
+       {'Component': 'Kerosene system', 'SRA': W_fuel_system_kerosene, 'F28':545, '737-200':575},
+       {'Component': 'Hydrogen tanks', 'SRA': W_fuel_system_hydrogen},
+       {'Component': 'Power controls', 'SRA': W_power_controls, 'F28':215, '737-200':378},
+       {'Component': 'Total propulsion', 'SRA': W_powerplant, 'F28':5382, '737-200':8177}]
 df = df.append(power, ignore_index = True, sort = False)
 
-equipment = [{'data': 'Electrical systems', 'SRA': electrical_system_weight, 'F28':1892, '737-200':1066+956},
-             {'data': 'Instruments', 'SRA': instrumentation_weight, 'F28':302, '737-200':625},
-             {'data': 'Flight controls', 'SRA': flight_control_weight, 'F28':1387+364, '737-200':2348+873},
-             {'data': 'APU', 'SRA': APU_weight, 'F28':346, '737-200':836},
-             {'data': 'Air conditioning', 'SRA': airconditioning_pressurization_weight + oxygen_system_weight, 'F28':1074, '737-200':1416},
-             {'data': 'Furnishing', 'SRA': furnishing_weight, 'F28':4030, '737-200':6643},
-             {'data': 'Cargo handling', 'SRA': cargo_equipment_weight},
-             {'data': 'Miscellanous/paint', 'SRA': paint_weight, '737-200':124},
-             {'data': 'Total fixed equipment', 'SRA': W_equipment, 'F28':9395, '737-200':14887}]
+equipment = [{'Component': 'Electrical systems', 'SRA': electrical_system_weight, 'F28':1892, '737-200':1066+956},
+             {'Component': 'Instruments', 'SRA': instrumentation_weight, 'F28':302, '737-200':625},
+             {'Component': 'Flight controls', 'SRA': flight_control_weight, 'F28':1387+364, '737-200':2348+873},
+             {'Component': 'APU', 'SRA': APU_weight, 'F28':346, '737-200':836},
+             {'Component': 'Air conditioning', 'SRA': airconditioning_pressurization_weight + oxygen_system_weight, 'F28':1074, '737-200':1416},
+             {'Component': 'Furnishing', 'SRA': furnishing_weight, 'F28':4030, '737-200':6643},
+             {'Component': 'Cargo handling', 'SRA': cargo_equipment_weight},
+             {'Component': 'Miscellanous/paint', 'SRA': paint_weight, '737-200':124},
+             {'Component': 'Total fixed equipment', 'SRA': W_equipment, 'F28':9395, '737-200':14887}]
 df = df.append(equipment, ignore_index = True, sort = False)
 
-df['fraction'] = df['SRA']/MTOW
-df['F28 fraction'] = df['F28']/df['F28'][0]
-df['737 fraction'] = df['737-200']/df['737-200'][0]
-df['SRA'] = to_kg(df['SRA'])
-df['F28'] = to_kg(df['F28'])
-df['737-200'] = to_kg(df['737-200'])
-df = df.set_index('data')
+df['SRA fraction'] = (df['SRA']/MTOW).round(3)
+df['F28 fraction'] = (df['F28']/df['F28'][0]).round(3)
+df['737 fraction'] = (df['737-200']/df['737-200'][0]).round(3)
+df['SRA'] = to_kg(df['SRA']).round(1)
+df['F28'] = to_kg(df['F28']).round(1)
+df['737-200'] = to_kg(df['737-200']).round(1)
+df = df.set_index('Component')
 
 x = df.loc['MTOW','SRA']
 
 
 aircraftpar = pd.DataFrame()
-wing = [{'data': 'Wing Area', 'SRA': S, 'F28':tom2(1), '737-200':tom2(1)},
+wing = [{'Component': 'Wing Area', 'SRA': S, 'F28':tom2(1), '737-200':tom2(1)},
                ]
 aircraftpar = aircraftpar.append(wing, ignore_index = True, sort = False)
 
 df['SRA']['MTOW'] = input.MTOM
-latex = df.to_latex(index = True)#, caption = "System weight breakdown... not yet final caption")
-print("Uncomment the caption for the final version")
+# latex = df.to_latex(index = True, caption = "Summary table for Class-II estimation", label = 'tab:class2table', na_rep = 'None')
+# print("Uncomment the caption for the final version")
 
-print(df)
-# print(aircraftpar)
+# print(df)
+# # print(aircraftpar)
 
 
-try:
-    file = open('C://Users//jornv//Google Drive//DSE upload//Class2dataframe.txt', 'w')
-    file.write(latex)
-    file.close()
-except:
-    print()
-    #print('you cannot update files, ask jorn if necessary')
+# try:
+#     file = open('C://Users//jornv//Google Drive//DSE upload//Class2dataframe.txt', 'w')
+#     file.write(latex)
+#     file.close()
+# except:
+#     print()
+#     #print('you cannot update files, ask jorn if necessary')
     
     
     

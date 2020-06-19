@@ -19,6 +19,7 @@ import Class_2_estimation as cl2
 from Xacregression_scissor import Xacregression, Xacregression_app
 import Aero
 import CG_excursion_wing_shift as shift
+import pandas as pd
 
 #Inputs invarient with wing position
 MAC = input.MAC
@@ -283,7 +284,8 @@ def scissor_wing_shift():
         xlemac = input.x_lemac_rootchord + x_start_Cr[i]
         rotationshs = req_htail_area(cg_aft_lst[i]*MAC + xlemac , xh, cg_fwd_lst[i]*MAC + xlemac, MTOW-1750, shift.x_ac[i], cm_ac_takeoff)
         rotation.append([rotationshs[0], rotationshs[1],cg_aft_lst[i]*MAC + xlemac,shift.x_ac[i] + shift.lh_fix, cg_fwd_lst[i]*MAC + xlemac,  MTOW, shift.x_ac[i], cm_ac_takeoff])
-    
+        if i == 50:
+            break
     
     
     combi = []
@@ -371,3 +373,5 @@ x_ac_v_nose = shift.x_ac[index] + shift.lv_fix
 x_ac_wing_approx = shift.x_ac[index]
 print(cg_loaded_nose)
 print("Check that the final cg position after fuel loading is the same as above value for cg_loaded_nose, check with loading diagram after manually changing all input parameters")
+
+
