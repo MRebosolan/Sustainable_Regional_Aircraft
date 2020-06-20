@@ -201,7 +201,7 @@ CD0 = 0.022942088963253383         # [-], from aero
 CD0_togd = 0.0273944744513126   # [-], from aero
 CD0_landGD = 0.031008941863001988      # [-], from aero
 Trev = 50000                       # [N], maximum thrust reverse force applied during braking
-c_t = 0.0002                       # [1/s] specific fuel consumption, to be refined
+c_t = 0.0002                       # [N/N/s] specific fuel consumption, to be refined
 
 v_approach = 81.13                # m/s, update from flight performance
 mach_app = v_approach/340.3        # 

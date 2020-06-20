@@ -75,7 +75,7 @@ def rudder_design(y_engine,T_OEI,S,b,vtail_sweep,taper_v,AR_vtail,x_cg,rho_to,Vm
         chord_t_c1 = taper_v*chord_r_c1
         MAC_v_cl1 = chord_r_c1*2/3*((1+taper_v+taper_v**2)/(1+taper_v))
         z_v = MAC_v_cl1/chord_r_c1*taper_v*b_v_c1 #vertical distance from AC_vtail to AC_aircraft
-        lv = 23.50+.5*chord_r_c1+np.tan(vtail_sweep)*z_v- 1/4*MAC_v_cl1-x_cg_aft
+        lv = 23.50+.5*chord_r_c1+np.tan(vtail_sweep)*z_v- 1/4*MAC_v_cl1-x_cg
 
         Nt_crit = y_engine*T_OEI      # Critical engine-out yawing moment
         N_D = 0.25                    # For jet driven aircraft with high by-pass ratio 0.15 for low b.p.r.
@@ -85,11 +85,11 @@ def rudder_design(y_engine,T_OEI,S,b,vtail_sweep,taper_v,AR_vtail,x_cg,rho_to,Vm
         #Keep in mind that we need the max. value, so alpha (which would be the beta, can be roughly between 0 and 30 degrees)
         
        # cf_over_c = 0.3              # Rudder chord/vtail chord
-        k_acc = 0.67                  # S Obtained from F. 8.14 Roskam VI
+        k_acc = 0.7552 #0.67            # S Obtained from F. 8.14 Roskam VI
         K_b = 0.97                    # [TODO] Obtained from F. 8.51 and 8.52 Roskam VI
         #a_delta_cl = 0.66            # Obtained from F. 8.53 Roskam VI
-        a_delta_CL_cl=    1.10 #1.1   # S (0.55+0.78)/2 # between 0.5-0.78 Alpha_delta_CL/Alpha_delta_cl F. 8.53 Roskam VI
-        cl_delta_theory = 4.42        # [1/rad] 4.85 for Joukovsky t/c .09, 5.05 for NACA 0012 Obtained from F. 8.14 Roskam VI
+        a_delta_CL_cl=    1.18 #1.1   # S (0.55+0.78)/2 # between 0.5-0.78 Alpha_delta_CL/Alpha_delta_cl F. 8.53 Roskam VI
+        cl_delta_theory = 3.62        # [1/rad] 4.85 for Joukovsky t/c .09, 5.05 for NACA 0012 Obtained from F. 8.14 Roskam VI
          
         Mach_to = Vmc/np.sqrt(288.15*1.4*287) # S 0.1987 Mach number at sealevel
         beta  = (1-(Mach_to**2))**0.5 # S Compressibility effect Prandtl
@@ -121,69 +121,44 @@ def rudder_design(y_engine,T_OEI,S,b,vtail_sweep,taper_v,AR_vtail,x_cg,rho_to,Vm
         delta_r_calc = np.degrees(((N_D+1)*Nt_crit)/(q_mc*S*b*Cn_delta_r))    #[rad] rudder deflection, 25 degrees max Roskam book VI p 494
         delta_r_calc_list.append(delta_r_calc)
 
-        if abs(delta_r_calc) > 35:
+        if abs(delta_r_calc) > 40:
             S_new = S_vlist[-1]+stepsize
             S_vlist.append(S_new)
-            S_vlist1.append(S_new)
-            S_vfinal[0] = S_new+2*stepsize #Added 1 additional setpsize for safety
             running = True
-       
-        elif abs(delta_r_calc) <= 25 and abs(delta_r_calc) > 15 and len(S_vlist1)<20000:
-            S_new = S_vlist1[-1]+stepsize
-            S_vlist1.append(S_new)
-            S_vlist[-1]=S_new
-            running = True
-        
         else:
-            S_vlist[-1] = S_vlist[-1] + stepsize
+            S_vlist.append(S_vlist[-1]+stepsize)
+            #print ('Done in',len(S_vlist),'iterations.')
             print ('The deflection angle equals:',delta_r_calc,'[deg]')
             print ('The required surface area for the vertical tail equals:',S_vlist[-1])
             print ('The required rudder area for the vertical tail equals:',Sr_over_Sv*S_vlist[-1])
-            print ('vtial ac to nose:',lv+x_cg_aft)
-            print ('vtail rchord',chord_r_c1)
+            print ('vtail root chord',chord_r_c1)
+            print ('vtail tip chord', chord_t_c1)
             print ('MAC',MAC_v_cl1)
             print ('span',b_v_c1)
-            print (z_v)
+            print ('Vertical distance to MAC:',z_v)
+            print ('Distance leading a.c. to nose',lv+x_cg)
+            print ('Half chord sweep:', 35, 'degrees')
+            print ('lv',lv)
+            print ('vtail volume', lv*S_vlist[-1]/S/b)
+            print ('Sv/S',S_vlist[-1]/S)
+            #print (MAC_v_cl1)
+            #print ()
+            #print ()
+            #print ('Vtail span',b_v_c1)
+            #print ('Vtail distance aerodynamic centre to nose',lv+x_cg_aft)
+            #print ('Vtail root chord',chord_r_c1)
+            #print ('Vtail tip chord',chord_t_c1)
+            #print ('Vtail MAC',MAC_v_cl1)
+            #print ('Vtail MAC location measured from bottom of the vtail', z_v)
             running = False
-    
-    return S_vlist,S_vlist1,delta_r_calc,S_vfinal,delta_r_calc_list,Cn_delta_r_list
 
-S_vlist,S_vlist1,delta_r_calc,S_vfinal,delta_r_calc_list,Cn_delta_r_list = rudder_design(y_engine, T_OEI, S, b, vtail_sweep, taper_v, AR_vtail, x_cg, rho_to, Vmin)
+    return S_vlist,delta_r_calc
 
-fig = plt.figure(10)
-plt.subplot(121)
-plt.plot(S_vlist1,delta_r_calc_list)#,[S_vlist1[0],S_vlist1[-1]],[-25,-25])
-plt.xlabel('$S_{v}$ [$m_{2}$]')
-plt.ylabel('Rudder deflection $\delta$ [deg]')
-plt.grid(b=True, which='major', color='#666666', linestyle='-')
-plt.minorticks_on()
-plt.grid(b=True, which='minor', color='#999999', linestyle='-', alpha=0.2)
+S_vlist,delta_r_calc = rudder_design(y_engine, T_OEI, S, b, vtail_sweep, taper_v, AR_vtail, x_cg, rho_to, Vmin)
+
+Vtail_area = S_vlist[-1]
+Rudder_def = delta_r_calc
 
 
-plt.subplot(122)
-plt.plot(Cn_delta_r_list,delta_r_calc_list)#,[S_vlist1[0],S_vlist1[-1]],[-25,-25])
-plt.xlabel('$C_{n_{\delta_{r}}}$ [-]')
-plt.ylabel('Rudder deflection $\delta$ [$deg$]')
-plt.grid(b=True, which='major', color='#666666', linestyle='-')
-plt.minorticks_on()
-plt.grid(b=True, which='minor', color='#999999', linestyle='-', alpha=0.2)
-
-fig = plt.figure(11)
-plt.plot(S_vlist1,Cn_delta_r_list)#,[S_vlist1[0],S_vlist1[-1]],[-25,-25])
-plt.xlabel('Vertical tail area [m2]')
-plt.ylabel('Rudder deflection $\delta$ [deg]')
-plt.grid(b=True, which='major', color='#666666', linestyle='-')
-plt.minorticks_on()
-plt.grid(b=True, which='minor', color='#999999', linestyle='-', alpha=0.2)
-
-
-plt.show()
-print ()
-print (S_vfinal[0],S_vfinal[0]*Sr_over_Sv,np.sqrt(S_vfinal[0]*1.7))
-print ()
-print (S_vfinal[0]/S)
-
-#Htail area = 23.58m**2
-#span htail = 9.7m
 #print ('make sure that K_vh and A_vhf_over_Avf, cl_alpha_v and Cl_cl_delta_theory have the correct values; it needs to be adjusted by hand')
 #print ('CRJ700 has 11.07 [m2] vtail area, if we were to take the relative same thrust, we would have ~15 [m2] ')

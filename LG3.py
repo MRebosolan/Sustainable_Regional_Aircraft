@@ -36,10 +36,10 @@ Cl_htail = input.cl_htail_max                     # tbd
 
 #Variables that will not change
 g = input.g
-MTOW = g*Cl2.MTOM
+MTOW = 1.0*g*Cl2.MTOM
 theta = np.radians(input.theta)                                 # tip-back angle ~15 degrees
-x_cg  = sc_shift.cg_loaded_nose                                 # x location of the cg
-x_cg_fwrd = sc_shift.cg_fwd*sc_shift.MAC + sc_shift.xlemac      # x location of most forward cg
+x_cg  = sc_shift.cg_loaded_nose                                # x location of the cg
+x_cg_fwrd = sc_shift.cg_fwd*sc_shift.MAC + sc_shift.xlemac       # x location of most forward cg
 x_cg_aft = sc_shift.cg_aft*sc_shift.MAC + sc_shift.xlemac       # x-location of most aft cg
 x_ac_htail = sc_shift.x_ac_h_nose                               # distance from aerodynamic centre to nose of htail airfoil
 S = Cl2.S
@@ -210,7 +210,7 @@ s_t_nose = (17.5-2*7.4)/12
 #############################
 
 w_td = 10 #[fps] touch down rate in feet per second; for FAR 25.723 certified aircraft, otherwiswe take 10
-N_g = 2.0 #1.5-2 Landing gear load factor
+N_g = 1.5 #1.5-2 Landing gear load factor
 eta_t = 0.47 # tire energy absorption efficiency
 eta_s = 0.8 # show absorption efficiency; OLEO-pneumatic
 
